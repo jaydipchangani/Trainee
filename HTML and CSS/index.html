@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index</title>
+</head>
+<body>
+    <h1>Trainee Form</h1>
+    <form>
+    <table>
+        <tr>
+            <td><label for="fname">Full Name</label></td>
+            <td><input type="text" required id="fname" name="fname" placeholder="First Name">
+                <input type="text" required id="mname" name="mname" placeholder="Middle Name">
+                <input type="text" required id="lname" name="lname" placeholder="Last Name">
+            </td>
+        </tr>
+
+        <tr>
+            <td><label for="mobile">Mobile Number</label></td>
+            <td><input type="tel" required id="mobile" name="mobile" placeholder="123-456-7890" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"></td>
+        </tr>
+
+        <tr>
+            <td><label for="mail">Email id</label></td>
+            <td><input type="email" required id="email" name="email" placeholder="abc@gmail.com"></td>
+        </tr>
+
+        <tr>
+            <td><label for="gender">Gender</label></td>
+            <td><input type="radio" id="male" name="gender"> <label for="male">Male</label>
+                <input type="radio" id="female" name="gender"> <label for="female">Female</label></td>
+        </tr>
+        <tr>
+            <td><label for="add">Address</label></td>
+            <td><textarea id="add" cols="auto" rows="2" required placeholder="Full address "></textarea></td>
+        </tr>
+        <tr>
+            <td><label for="intrest">Intrest area</label></td>
+            <td>
+                <select id="intrest" name="intrest">
+                    <option value="Full Stack Developer" >Full Stack Developer</option>
+                    <option value="Cyber security">Cyber security</option>
+                    <option value="UI/UX">UI/UX</option>
+                    <option value="Cloud">Cloud</option>
+                    <option value="Data Science">Data Science</option>  
+                </select>
+            </td>
+        </tr>
+        
+        <tr>
+            <td><label for="cv">Upload your CV</label></td>
+            <td><input type="file" required id="cv" name="cv"></td>
+        </tr>
+
+        <tr>
+            <td><label for="portfolio">Portfolio Link</label></td>
+            <td><input type="url" required id="portfolio" name="portfolio"></td>
+        </tr>
+
+        <tr>
+            <td><input type="submit"></td>
+        </tr>
+
+    </table>    
+</form>
+</body>
+</html>
