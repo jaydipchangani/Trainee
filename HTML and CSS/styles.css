@@ -1,4 +1,6 @@
-
+body{
+    font-family: Arial, sans-serif;
+}
 #heading{
     text-align: center;
 }
@@ -11,17 +13,30 @@ form{
 
 table{
     
-    border: 10px black;
-    background-color: antiquewhite;
+    
+    background-color: rgb(220, 238, 237);
     padding: 10px;
+    
 
 }
 
-table tr{
-    
+input{
+    border-radius: 50% black;
 }
 
 table td{
-    padding: 3px;
+    padding: 5px;
+    padding-bottom: 15px;
 
+}
+
+#fname,#lname,#mname{
+    border-radius: 4px;
+}
+#submit{
+    width: 70px;
+    height: 25px;
+    background-color: aqua;
+    border-radius: 3px;
+    
 }

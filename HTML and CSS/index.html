@@ -10,7 +10,7 @@
     <h1 id="heading">Trainee Form</h1>
     <form>
         <center>
-    <table border="2">
+    <table >
         <tr>
             <td><label for="fname">Full Name</label></td>
             <td><input type="text" required id="fname" name="fname" placeholder="First Name">
@@ -21,7 +21,7 @@
 
         <tr>
             <td><label for="mobile">Mobile Number</label></td>
-            <td><input type="tel" required id="mobile" name="mobile" placeholder="123-456-7890" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"></td>
+            <td><input type="tel" required id="mobile" name="mobile" placeholder="123-456-7890" pattern="[0-9]{3}[0-9]{3}[0-9]{4}"></td>
         </tr>
 
         <tr>
@@ -58,11 +58,11 @@
 
         <tr>
             <td><label for="portfolio">Portfolio Link</label></td>
-            <td><input type="url" required id="portfolio" name="portfolio"></td>
+            <td><input type="url" required id="portfolio" name="portfolio" placeholder="https://www.abc.com" value="https://"></td>
         </tr>
 
         <tr>
-            <td><input type="submit"></td>
+            <td><input type="submit" id="submit"></td>
         </tr>
 
     </table>    
