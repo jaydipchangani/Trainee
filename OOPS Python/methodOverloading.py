@@ -9,7 +9,7 @@ class Cal:
         res=0
         for i in args:
             args=args-i
-        return re
+        return res
 
 example1=Cal()
 
