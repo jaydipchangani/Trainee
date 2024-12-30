@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Event Listener Example</title>
+</head>
+<body>
+
+    <h1 id="para" onmouseover="mousein()">Hello, Welcome to my page</h1>
+    <h3 id="para" >(You can hover meabove text for fun !!)</h3>
+
+  <button id="myButton">Click Me</button>
+
+  <button onclick="displayDate()" onmouseover="mousein()">The time is?</button>
+  <script>
+
+    const paragraph=document.getElementById("para");
+    const button = document.getElementById("myButton");
+
+
+    function buttonClicked() {
+      alert("Button clicked!");
+      
+    }
+
+    function displayDate(){
+        alert(Date())
+    }
+
+    paragraph.addEventListener("mouseover", function() {
+        paragraph.style.backgroundColor = "lightgray";
+        paragraph.style.color="white"
+      });
+  
+      paragraph.addEventListener("mouseout", function() {
+        paragraph.style.backgroundColor = "white";
+        paragraph.style.color="black"
+      });
+
+    button.addEventListener("click", buttonClicked); 
+  </script>
+
+</body>
+</html>
