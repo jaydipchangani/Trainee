@@ -44,6 +44,13 @@
 <button id="hide">Hide</button>
 <button id="show">Show</button>
 
+<hr style="height: 5px; background-color:black; width:100% "> 
+
+<h1 id="color-change">What to change my background color ?</h1>
+<button id="change">Change</button>
+<button id="nochange">No Change</button>
+
+
   <script>
     $(document).ready(function(){
 
@@ -87,6 +94,13 @@
       });
       $("#show").click(function(){
         $("#hp").show();
+      });
+
+      $("#change").click(function(){
+        $("#color-change").css("background-color","lightblue");
+      });
+      $("#nochange").click(function(){
+        $("#color-change").css("background-color","white");
       });
 
     
