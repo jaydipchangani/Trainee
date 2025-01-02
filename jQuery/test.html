@@ -11,6 +11,8 @@
   <p class="p2">Hello my dear friend, welocme to my website second time !!</p>
   <p class="p3">Hello my dear friend, welocme to my website third time !!</p>
 
+  <h2 id="myDiv">How are you ?</h2>
+
   <button id="myButton">Click Me Now</button>
 
   <script>
@@ -35,7 +37,13 @@
         $(this).css("background-color", "yellow");
       });
     
-    
+    $("#myDiv").mouseover(function(){
+        $("body").css("cursor", "pointer"); 
+      });
+
+    $("#myDiv").mouseout(function(){
+        $("body").css("cursor", "default"); 
+      });
 
     
   </script>
