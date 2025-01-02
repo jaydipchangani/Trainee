@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>jQuery Example</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+</head>
+<body>
+
+  <h1 id="myclass">Hello, jQuery!</h1>
+  <p class="p1">Hello my dear friend, welocme to my website !!</p>
+  <p class="p2">Hello my dear friend, welocme to my website second time !!</p>
+  <p class="p3">Hello my dear friend, welocme to my website third time !!</p>
+
+  <button id="myButton">Click Me Now</button>
+
+  <script>
+    $(document).ready(function(){
+
+    $(".p1").css("color", "blue"); 
+
+    $("#myclass").html("New content"); 
+
+    $(".p2").append("<p>This is a new paragraph.</p>"); 
+
+    $(".p3").css("background-color", "lightgrey"); 
+
+    $("#myButton").css("background-color","pink")
+    });
+
+    $("#myButton").click(function(){
+        alert("Button clicked!");
+      });
+
+    $("#myButton").mouseover(function(){
+        $(this).css("background-color", "yellow");
+      });
+    
+    
+
+    
+  </script>
+
+</body>
+</html>
