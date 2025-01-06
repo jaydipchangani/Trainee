@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 1-1</title>
+</head>
+<body>
+    <h1>Join Us</h1>
+
+    <div>
+        <form>
+            <table>
+
+                <tr>
+                    <td><h3>General Information</h3></td>
+                </tr>
+
+                <tr>
+                    <td><label for="fulName">Name</label></td>
+                    <td><input type="text" name="full-name" placeholder="Enter Your Full Name" required ></td>
+                </tr>
+                
+                <tr>
+                    <td><label for="dob">Date of Birth</label></td>
+                    <td><input type="date" name="dob" required></td>
+                </tr>
+                <tr>
+                    <td><label for="email">Email</label></td>
+                    <td><input type="email" name="email-id" placeholder="Enter Your Email ID" required ></td>
+                </tr>
+
+                <tr>
+                    <td><label for="mobileNumber">Mobile Number</label></td>
+                    <td><input type="tel" name="mobile-number" placeholder="Enter Your Mobile Number"pattern="[0-9]{3}[0-9]{3}[0-9]{4}" required ></td>
+                </tr>
+
+                <tr>
+                    <td><label for="gender">Gender</label></td>
+                    <td><input type="radio" id="male" name="gender" required> <label for="male">Male</label>
+                        <input type="radio" id="female" name="gender"> <label for="female">Female</label></td>
+                </tr>
+
+                <tr>
+                    <td><label for="intrest">Intrest area</label></td>
+                    <td>
+                        <select id="intrest" name="intrest" required>
+                            <option value="Full Stack Developer" >Full Stack Developer</option>
+                            <option value="Cyber security">Cyber security</option>
+                            <option value="UI/UX">UI/UX</option>
+                            <option value="Cloud">Cloud</option>
+                            <option value="Data Science">Data Science</option>  
+                        </select>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><label for="linkedin">LinkedIn URL</label></td>
+                    <td><input type="url" name="linkedin" placeholder="https://linkedin.com/in/jaydip-changani" required></td>
+                </tr>
+
+                <tr>
+                    <td><label for="github">GitHub URL</label></td>
+                    <td><input type="url" name="github" placeholder="https://github.com/jaydipchangani" required></td>
+                </tr>
+
+                <tr>
+                    <td><label for="portfolio">Portfolio URL</label></td>
+                    <td><input type="url" name="portfolio" ></td>
+                </tr>
+
+                <tr>
+                    <td><h3>Educational Information</h3></td>
+                </tr>
+
+                <tr>
+                    <td><label for="highest degree">Highest Degree</label></td>
+                    <td>
+                        <select id="highest degree" name="highest degree" required>
+                            <option value="B.Tech" >B.Tech</option>
+                            <option value="M.Tech">M.Tech</option>
+                            <option value="B.Sc">B.Sc</option>
+                            <option value="M.Sc">M.Sc</option>
+                            <option value="BCA">BCA</option>
+                            <option value="SSC">SSC</option>
+                            <option value="HSC">HSC</option>
+                        </select>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><label for="major">Major</label></td>
+                    <td><input list="major" name="major" required>
+                        <datalist id="major">
+                        <option value="Computer Science"></option>
+                        <option value="Information Technology"></option>
+                        <option value="Applications"></option>
+                        <option value="Website"></option>
+                        <option value="Security"></option>
+                        </datalist>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><label for="university">University / College Name</label></td>
+                    <td><input type="text" name="university" required></td>
+                </tr>
+
+                <tr>
+                    <td><label for="graduationYear">Graduation Year</label></td>
+                    <td><input type="number" name="graduationYear" min="2005" max="2027" required></td>
+                </tr>
+
+                <tr>
+                    <td><label for="cgpa">CGPA</label></td>
+                    <td><input type="number" name="cgpa" min="5" max="10"></td>
+                </tr>
+
+                <tr>
+                    <td><label for="cv">CV / Resume</label></td>
+                    <td><input type="file" required name="cv" accept=".pdf"></td>
+                </tr>
+
+                <tr>
+                    <td><br></td>
+                </tr>
+
+                <tr>
+                    <td><input type="submit" value="Submit"></td>   
+                </tr>
+            </table>
+        </form>
+    </div>
+</body>
+</html>
