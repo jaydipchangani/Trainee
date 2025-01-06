@@ -12,7 +12,7 @@ table {
     margin-top: 20px;
   }
 
-  input[type="number"]{
+  input[type="text"]{
     text-align: center;
     width: 20%;
   }
@@ -20,7 +20,10 @@ table {
   input{
     text-align: center;
   }
-
+.pad{
+    padding: 0 30px;
+    
+}
   .left{
     border-left: none;
     text-align: center;
