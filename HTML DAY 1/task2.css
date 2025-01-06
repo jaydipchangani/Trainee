@@ -1,4 +1,8 @@
 form,table{
     text-align: center;
+    border-collapse: collapse;
 }
 
+.c2{
+    width: 50%;
+}
