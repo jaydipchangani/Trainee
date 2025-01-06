@@ -1,8 +1,58 @@
-form,table{
-    text-align: center;
-    border-collapse: collapse;
-}
 
-.c2{
-    width: 50%;
-}
+table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  td{
+    text-align: center;
+  }
+  button {
+    display: flex; 
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  input[type="number"]{
+    text-align: center;
+    width: 20%;
+  }
+
+  input{
+    text-align: center;
+  }
+
+  .left{
+    border-left: none;
+    text-align: center;
+  }
+
+  .right{
+    border-right: none;
+    text-align: center;
+  }
+
+  .mix{
+    border-left: none;
+    border-right: none;
+    text-align: center;
+  }
+
+  .top{
+    border-top: none;
+    text-align: center;
+  }
+
+  .bottom{
+    border-bottom: none;
+  }
+  .mid{
+    text-align: center;
+  }
+
+  .all{
+    border: none;
+  }
+
+  .text-left{
+    text-align: left;
+  }
