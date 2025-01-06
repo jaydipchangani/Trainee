@@ -19,7 +19,18 @@ form{
             align-items: center;
             height: 70vh; 
 }
-
+.image-container {
+    display: flex;
+    justify-content: space-between;
+}
+.image-container div {
+    flex: 1;
+    margin: 5px;
+}
+.image-container img {
+    width: 50%;
+    height: auto;
+}
 table{
     
     padding: 10px;
