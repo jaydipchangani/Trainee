@@ -36,7 +36,7 @@ body {
 }
 
 .job button {
-    background-color: #4CAF50;
+    background-color: #0463f3;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -44,5 +44,31 @@ body {
 }
 
 .job button:hover {
-    background-color: #45a049;
+    background-color: #0463f3;
+}
+
+.link{
+    text-decoration: none;
+    color: #0463f3;
+}
+h1, h2, h3 {
+    color: #0463f3;
+}
+h1 {
+    text-align: center;
+    margin-top: 20px;
+}
+p {
+    margin: 0 20px;
+}
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+ul li {
+    background: #fff;
+    margin: 10px 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
 }
