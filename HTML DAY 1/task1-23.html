@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="task1-23.css">
 </head>
 <body>
+    <h1 class="heading">Career</h1>
     <div class="job-container">
         <div class="job" onmouseover="highlight(this)" onmouseout="unhighlight(this)" onclick="showDetails('You are applying as Software engineer')">
             <img src="https://images.unsplash.com/photo-1573496774379-b930dba17d8b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c29mdHdhcmUlMjBlbmdpbmVlcnxlbnwwfHwwfHx8MA%3D%3D" alt="Software Engineer">
@@ -35,7 +36,7 @@
         }
 
         function unhighlight(element) {
-            element.style.backgroundColor = "";
+            element.style.backgroundColor = "lightblue";
         }
 
         function showDetails(jobId) {

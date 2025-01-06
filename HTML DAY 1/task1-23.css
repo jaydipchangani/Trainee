@@ -1,5 +1,8 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: "Figtree", sans-serif;
+}
+.heading{
+    text-align: center;
 }
 
 .job-container {
