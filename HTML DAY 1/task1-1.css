@@ -1,0 +1,67 @@
+body{
+    font-family: "Figtree", sans-serif;
+    background-color: rgb(220, 238, 237);
+}
+.heading{
+    text-align: center;
+}
+form{
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: rgb(255, 255, 255);
+    
+}
+
+.form-box{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 160vh; 
+}
+table{
+    
+    padding: 10px;
+    
+}
+
+input{
+    border-radius: 50% black;
+}
+input[type="text"],
+input[type="date"],
+input[type="email"],
+input[type="number"],
+input[type="date"],input[type="tel"],
+input[type="url"],input[list="major"],select,input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+
+table td{
+    padding: 5px;
+
+}
+
+#fname,#lname,#mname{
+    border-radius: 4px;
+}
+#submit{
+    font-size: 20px;
+    color: #fff;
+    background-color: #0e5e89;
+    color: #fff;
+    font-weight: 400;
+    padding: 10px 20px;
+    display: inline-block;
+    border: 0px;
+    font-family: "Figtree", sans-serif;
+    text-align: center;
+}
+
