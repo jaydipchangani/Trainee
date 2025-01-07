@@ -10,5 +10,6 @@ input{
 }
 
 .btn{
-    width: 70px;
+    width: 60px;
+    border: 1px solid black;
 }
