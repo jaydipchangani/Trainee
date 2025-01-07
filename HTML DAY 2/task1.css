@@ -19,13 +19,13 @@ table{
     width: 90%;
     height: auto;
     margin-top: 40px;
-    border: 2px solid gray;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
     margin: 0 auto; 
-    border-collapse: collapse; 
+
 }
 
 td,tr{
-    border: 2px solid grey;
+    border: 1px solid rgb(160, 160, 160);;
   
     
 }
