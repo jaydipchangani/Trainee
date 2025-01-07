@@ -1,39 +1,36 @@
 body{
     background-color: whitesmoke;
-    font-family: Arial, sans-serif;
     margin: 0;
-    padding: 50px 0px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    padding: 10px 10px;
+   
 }
 
 .heading{
     text-align: center;
     color: blue;
-    background-color: #ABCCDD;
+    padding: 0px;
+
 }
 
 table{
-    
-    width: 90%;
+    background-color: #ABCCDD;
+    width: 100%;
     height: auto;
-    margin-top: 40px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
     margin: 0 auto; 
-
+    border-collapse: collapse;
+    border: 3px outset #ffffff;
+    
+    
 }
 
-td,tr{
-    border: 1px solid rgb(180, 176, 176);
-    background-color: #ABCCDD;
-  
-    
+td{
+    border: 2px inset rgb(231, 231, 231);
+    padding-bottom: 3px;
 }
 
 img{
-    height: 120px;
-    width: 200px;
+    height: 100px;
+    width: 150px;
     display: block;
     margin-left: auto;
     margin-right: auto;
