@@ -11,11 +11,11 @@ body{
 .heading{
     text-align: center;
     color: blue;
-
+    background-color: #ABCCDD;
 }
 
 table{
-    background-color: #ABCCDD;
+    
     width: 90%;
     height: auto;
     margin-top: 40px;
@@ -25,7 +25,8 @@ table{
 }
 
 td,tr{
-    border: 1px solid rgb(160, 160, 160);;
+    border: 1px solid rgb(180, 176, 176);
+    background-color: #ABCCDD;
   
     
 }
