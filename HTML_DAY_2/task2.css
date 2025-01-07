@@ -2,11 +2,14 @@
     border: 1px solid black;
     padding: 10px;
 }
+input:invalid{
+    border: 1px solid red;
+}
 
 input{
     width: 100%;
     border-radius: 3px;
-    border: 1px solid red;
+    border: 1px solid black;
 }
 
 .btn{
