@@ -8,20 +8,26 @@
 <body>
     <canvas id="myCanvas" width="700" height="500" style="border: 1px solid black;"></canvas>
 
-  <script>
-    const canvas = document.getElementById('myCanvas');
-    const ctx = canvas.getContext('2d');
 
+    <script>
+        const canvas = document.getElementById('myCanvas');
+        const ctx = canvas.getContext('2d');
 
-    ctx.fillStyle = 'rgb(219,162,173)';
-    ctx.fillRect(20, 20, 350, 250);
+    
+        canvas.width = 600;
+        canvas.height = 500;
 
  
-    ctx.fillStyle = 'rgb(143,240,173)';
-    ctx.fillRect(150, 150, 350, 250);
+        ctx.globalAlpha = 0.7;
 
-    ctx.fillStyle = 'rgb(153,191,121)'; 
-    ctx.fillRect(150, 150, 220, 120);
+   
+        ctx.fillStyle = '#E5B4B4';
+        ctx.fillRect(50, 50, 350, 250);
 
-  </script>
+
+        ctx.fillStyle = '#90EE90';
+        ctx.fillRect(200, 150, 350,250);
+    </script>
+
+
 </html>
