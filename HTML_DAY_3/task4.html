@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #extension{
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <table border="1">
+    <form>
+        <tr>
+            <th>Allow Only if Image</th>
+        </tr>
+        <tr>
+            <td><label>Select Image:
+                <input id='inputfile' type='file' name='inputfile' ><br>
+                <br>
+                <input type="button" value="Upload" onclick="getoutput()">
+                
+                <br>
+                <input id='extension' type='text' name='extension'>
+                <br>
+                
+              </label>
+              <br>
+
+
+            </td>
+        </tr>
+    </form>
+    </table>
+
+    <script>
+        
+        function getoutput(){
+
+            var exe=inputfile.value.split('.')[1];
+
+            if(exe=='jpg' || exe=='jpeg' || exe =='png' || exe =='gif')
+            {
+                extension.value="File is image File Type = " + inputfile.value.split('.')[1];
+            }
+            else
+            {
+                extension.value="File is Not Image"
+            }
+            
+        }
+        
+    </script>
+</body>
+</html>
