@@ -1,45 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task 6</title>
-    <link rel="stylesheet" href="task6.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modal Example with Toolbar</title>
+
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="task6.css">
 </head>
 <body>
-    <div>
 
-        <div class="sidebar">
-            <h1 class="heading">Zoho Books</h1>
-            <ul>
-                <li><i class="fas fa-tachometer-alt"></i> Dashboard</li>
-                <li><i class="fas fa-box"></i> Items</li>
-                <li><i class="fas fa-university"></i> Banking</li>
-                <li><i class="fas fa-dollar-sign"></i> Sales</li>
-                <li><i class="fas fa-users"></i> Customers</li>
-                <li><i class="fas fa-file-invoice"></i> Retailer Invoices</li>
-                <li><i class="fas fa-file-alt"></i> Invoices</li>
-                <li><i class="fas fa-money-bill-wave"></i> Payments Received</li>
-                <li><i class="fas fa-sync"></i> Recurring Invoices</li>
-                <li><i class="fas fa-sticky-note"></i> Credit Notes</li>
-                <li><i class="fas fa-shopping-cart"></i> Purchases</li>
-                <li><i class="fas fa-clock"></i> Time Tracking</li>
-                <li><i class="fas fa-file-invoice-dollar"></i> e-Way Bills</li>
-                <li><i class="fas fa-file-alt"></i> GST Filing</li>
-            </ul>
-        </div>
-
-        <div class="main">
-            <div class="titlebar">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Search in Customers">
-            </div>
-            <div>
-                
-            </div>
-        </div>
-
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">Modal title</h2>
+      <button class="close-top-btn" id="close-top">
+        <i class="fas fa-times"></i>
+      </button>
     </div>
+    <div class="modal-body">
+
+      <div class="toolbar">
+        <button class="toolbar-btn" id="add-link"><i class="fas fa-link"></i></button>
+        <button class="toolbar-btn" id="add-bookmark"><i class="fas fa-bookmark"></i></button>
+        <button class="toolbar-btn" id="align-left"><i class="fas fa-align-left"></i></button>
+        <button class="toolbar-btn" id="align-center"><i class="fas fa-align-center"></i></button>
+        <button class="toolbar-btn" id="align-right"><i class="fas fa-align-right"></i></button>
+        <button class="toolbar-btn" id="align-justify"><i class="fas fa-align-justify"></i></button>
+      </div>
+
+      <div contenteditable="true" class="editable-content">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn close-btn">Close</button>
+      <button class="btn save-btn">Save changes</button>
+    </div>
+  </div>
+
 </body>
 </html>

@@ -14,7 +14,7 @@
         float: right;
         width: 45%;
         padding: 10px;
-        
+    }
     table{
         border: 1px solid black;
         border-collapse: collapse;
@@ -24,6 +24,15 @@
         border: 1px solid black;
         border-collapse: collapse;
     }
+    
+
+    
+    input[type="button"]{
+        background-color: #3073AD;
+        border-radius: 2px;
+        height: 25px;
+        border: 0px;
+        color: white;
     }
 </style>
 <body>
@@ -34,12 +43,12 @@
         <form>
           <div>
             <label for="firstname">Firstname:</label>
-            <input type="text" id="firstname" name="firstname">
+            <input type="text" id="firstname" name="firstname" required>
           </div>
           <br>
           <div>
-            <input type="button" value="Submit1" onclick="submit1()">
-            <input type="button" value="Submit2" onclick="submit2()">
+            <input type="button" value="Submit1" onclick="submit1()"  >
+            <input type="button" value="Submit2" onclick="submit2()" >
           </div>
         </form>
 

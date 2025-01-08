@@ -3,333 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task 7</title>
-    <link rel="stylesheet">
+    <title>Task 6</title>
+    <link rel="stylesheet" href="task6.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* Basic reset and default styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
-    color: #333;
-  }
-  
-  /* Layout */
-  .container {
-    display: flex;
-  }
-  
-  /* Sidebar styles */
-  .sidebar {
-    width: 250px;
-    background-color: #2c3338;
-    color: white;
-    height: 110vh;
-    overflow-y: auto;
-    position: relative;
-    top: -20px;
-  }
-  
-  .logo {
-   width: 200px;
-   padding: 10px;
-  }
-  
-  /* Sidebar navigation */
-  .sidebar ul {
-    list-style-type: none;
-  }
-  
-  .sidebar li {
-    padding: 10px 20px;
-    cursor: pointer;
-  }
-  
-  .sidebar li:hover {
-    background-color: #23282d;
-  }
-  
-  .sidebar i {
-    margin-right: 10px;
-  }
-  
-  /* Main content area */
-  .main-content {
-    flex-grow: 1;
-    padding: 20px;
-    background-color: #ddd;
-    position: relative;
-    top: -20px;
-  }
-  
-  /* Header styles */
-  header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
-    margin-bottom: 20px;
-  }
-  
-  /* Search bar */
-  .search-bar {
-    display: flex;
-    align-items: center;
-    background-color: #f5f5f5;
-    padding: 5px 10px;
-    border-radius: 14px;
-    width: 1000px;
-  }
-  
-  .search-bar input {
-    border: none;
-    background: none;
-    margin-left: 10px;
-  }
-  
-  /* Header icons and user profile */
-  .header-right {
-    display: flex;
-    align-items: center;
-  }
-  
-  .header-right i {
-    margin-right: 15px;
-  }
-  
-  .user-profile img {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    margin-right: 15px;
-  }
-  
-  /* Page title and tips button */
-  .page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .page-tips {
-    background: none;
-    border: 1px solid #ddd;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  /* Form styles */
-  .customer-form {
-    max-width: 600px;
-  }
-  
-  .form-row {
-    margin-bottom: 15px;
-  }
-  
-  .form-row label {
-    display: block;
-    margin-bottom: 5px;
-  }
-  
-  /* Input styles */
-  input[type="text"],
-  input[type="email"],
-  input[type="tel"],
-  input[type="url"],
-  select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-  
-  /* Radio button group */
-  .radio-group {
-    display: flex;
-    gap: 15px;
-  }
-  
-  /* Multiple inputs in a row */
-  .input-group,
-  .phone-inputs {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .input-group > *,
-  .phone-inputs > * {
-    flex: 1;
-  }
-  
-  /* Help icon */
-  .help-icon {
-    color: #666;
-    margin-left: 5px;
-    cursor: pointer;
-  }
-  
-  /* Form action buttons */
-  .form-actions {
-    margin-top: 20px;
-  }
-  
-  .btn-save,
-  .btn-cancel {
-    padding: 8px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .btn-save {
-    background-color: #0066cc;
-    color: white;
-    border: none;
-  }
-  
-  .btn-cancel {
-    background: none;
-    border: 1px solid #ddd;
-    margin-left: 10px;
-  }
-  
-  /* Hover effects */
-  .btn-save:hover {
-    background-color: #0052a3;
-  }
-  
-  .btn-cancel:hover {
-    background-color: #f5f5f5;
-  }
-
-  .head{
-    
-    width: 100%;
-    margin-top: 0px;
-  }
-    </style>
 </head>
 <body>
-    <header class="head">
-        <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.6_dSo-PBiVxzjb1s3S5I_AHaBb%26pid%3DApi&f=1&ipt=f7d7084e450988ea4ad0d0d505f55499d674d4c21859f4b35cf7eea435ef2b16&ipo=images" alt="Logo" class="logo">
-    </div>
-        <div class="search-bar">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Search in Customers">
+    <div>
+
+        <div class="sidebar">
+            <h1 class="heading">Zoho Books</h1>
+            <ul>
+                <li><i class="fas fa-tachometer-alt"></i> Dashboard</li>
+                <li><i class="fas fa-box"></i> Items</li>
+                <li><i class="fas fa-university"></i> Banking</li>
+                <li><i class="fas fa-dollar-sign"></i> Sales</li>
+                <li><i class="fas fa-users"></i> Customers</li>
+                <li><i class="fas fa-file-invoice"></i> Retailer Invoices</li>
+                <li><i class="fas fa-file-alt"></i> Invoices</li>
+                <li><i class="fas fa-money-bill-wave"></i> Payments Received</li>
+                <li><i class="fas fa-sync"></i> Recurring Invoices</li>
+                <li><i class="fas fa-sticky-note"></i> Credit Notes</li>
+                <li><i class="fas fa-shopping-cart"></i> Purchases</li>
+                <li><i class="fas fa-clock"></i> Time Tracking</li>
+                <li><i class="fas fa-file-invoice-dollar"></i> e-Way Bills</li>
+                <li><i class="fas fa-file-alt"></i> GST Filing</li>
+            </ul>
         </div>
-        <div class="header-right">
-            <i class="fas fa-bell"></i>
-            <i class="fas fa-cog"></i>
-            <div class="user-profile">
-                <img src="https://plus.unsplash.com/premium_photo-1669688173781-7ac8317079dd?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8YSUyMG1hbnxlbnwwfHwwfHx8MA%3D%3D" alt="User">
+
+        <div class="main">
+            <div class="titlebar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search in Customers">
+            </div>
+            <div>
+                
             </div>
         </div>
-    </header>
-    <div class="container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            
-            <nav class="sidebar-nav">
-                <ul>
-                    <li><i class="fas fa-tachometer-alt"></i> Dashboard</li>
-                    <li><i class="fas fa-box"></i> Items</li>
-                    <li><i class="fas fa-university"></i> Banking</li>
-                    <li><i class="fas fa-dollar-sign"></i> Sales</li>
-                    <li><i class="fas fa-users"></i> Customers</li>
-                    <li><i class="fas fa-file-invoice"></i> Retailer Invoices</li>
-                    <li><i class="fas fa-file-alt"></i> Invoices</li>
-                    <li><i class="fas fa-money-bill-wave"></i> Payments Received</li>
-                    <li><i class="fas fa-sync"></i> Recurring Invoices</li>
-                    <li><i class="fas fa-sticky-note"></i> Credit Notes</li>
-                    <li><i class="fas fa-shopping-cart"></i> Purchases</li>
-                    <li><i class="fas fa-clock"></i> Time Tracking</li>
-                    <li><i class="fas fa-file-invoice-dollar"></i> e-Way Bills</li>
-                    <li><i class="fas fa-file-alt"></i> GST Filing</li>
-                </ul>
-            </nav>
-        </aside>
 
-        
-        <main class="main-content">
-            
-
-            <div class="content">
-                <div class="page-header">
-                    <h1>New Customer</h1>
-                    <button class="page-tips"><i class="fas fa-lightbulb"></i> Page Tips</button>
-                </div>
-
-                <form class="customer-form">
-                    <div class="customer-type">
-                        <label>Customer Type</label><br><br>
-                        <div class="radio-group">
-                            <input type="radio" id="business" name="customer-type" checked>
-                            <label for="business">Business</label>
-                            <input type="radio" id="individual" name="customer-type">
-                            <label for="individual">Individual</label>
-                        </div>
-                    </div><br>
-
-                    <div class="form-row">
-                        <label>Primary Contact</label>
-                        <div class="input-group">
-                            <select name="salutation" required>
-                                <option value="">Salutation</option>
-                                <option value="Mr.">Mr.</option>
-                                <option value="Mrs.">Mrs.</option>
-                                <option value="Ms.">Ms.</option>
-                            </select>
-                            <input type="text" pattern="[A-Za-z]+" placeholder="First Name" required autofocus >
-                            <input type="text"pattern="[A-Za-z]+" placeholder="Last Name" required >
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <label>Company Name</label>
-                        <input type="text" required pattern="[A-Za-z]+">
-                    </div>
-
-                    <div class="form-row">
-                        <label>Customer Display Name*</label>
-                        <input type="text" required pattern="[A-Za-z]+">
-                      
-                    </div>
-
-                    <div class="form-row">
-                        <label>Customer Email</label>
-                        <input type="email" pattern="[A-Za-z]+">
-                        
-                    </div>
-
-                    <div class="form-row">
-                        <label>Customer Phone</label>
-                        <div class="phone-inputs">
-                            <input type="tel" placeholder="Work Phone">
-                            <input type="tel" placeholder="Mobile">
-                        </div>
-                       
-                    </div>
-
-                    <div class="form-row">
-                        <label>Website</label>
-                        <input type="url">
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="submit" class="btn-save">Save</button>
-                        <button type="button" class="btn-cancel">Cancel</button>
-                    </div>
-                </form>
-            </div>
-        </main>
     </div>
 </body>
 </html>
