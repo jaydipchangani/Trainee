@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modal Example with Toolbar</title>
+  <!-- Font Awesome Link -->
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="task7.css">
+</head>
+<body>
+  <!-- Modal Structure -->
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">Modal title</h2>
+      <button class="close-top-btn" id="close-top">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <button class="toolbar-btn" id="add-link"><i class="fas fa-link"></i></button>
+        <button class="toolbar-btn" id="add-bookmark"><i class="fas fa-bookmark"></i></button>
+        <button class="toolbar-btn" id="align-left"><i class="fas fa-align-left"></i></button>
+        <button class="toolbar-btn" id="align-center"><i class="fas fa-align-center"></i></button>
+        <button class="toolbar-btn" id="align-right"><i class="fas fa-align-right"></i></button>
+        <button class="toolbar-btn" id="align-justify"><i class="fas fa-align-justify"></i></button>
+      </div>
+      <!-- Editable Content -->
+      <div contenteditable="true" class="editable-content">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn close-btn">Close</button>
+      <button class="btn save-btn">Save changes</button>
+    </div>
+  </div>
+
+</body>
+</html>
