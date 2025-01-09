@@ -82,6 +82,11 @@ body{
     justify-content: space-between;
 
 }
+a{
+    text-decoration: none;
+    color: black;
+}
+
 
 .barElements{
     display: flex;

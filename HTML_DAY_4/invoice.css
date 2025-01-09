@@ -103,6 +103,10 @@ button:hover{
 
 }
 
+a{
+  text-decoration: none;
+  color: black;
+}
 
 .search-input{
     width: 260px;
