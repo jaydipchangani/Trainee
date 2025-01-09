@@ -74,10 +74,10 @@
     
                         <tbody>
                             <tr>
-                                <td>John Doe</td>
-                                <td>ABC Company</td>
-                                <td>john@email.com</td>
-                                <td>89898989998</td>
+                                <td>Rajdeep</td>
+                                <td>XYS Company</td>
+                                <td>rajdeeep@email.com</td>
+                                <td>9856452156</td>
                                 <td>Active</td>
                                 <td class="actions">
                                     <i class="fas fa-edit"></i>
@@ -86,10 +86,21 @@
                             </tr>
     
                             <tr>
-                                <td>John Doe</td>
-                                <td>ABC Company</td>
-                                <td>john@email.com</td>
-                                <td>89898989998</td>
+                                <td> Doe</td>
+                                <td>ASSW </td>
+                                <td>asedc@email.com</td>
+                                <td>89562614570</td>
+                                <td>Inctive</td>
+                                <td class="actions">
+                                    <i class="fas fa-edit"></i>
+                                    <i class="fas fa-trash"></i>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Raheel</td>
+                                <td>Why Company</td>
+                                <td>raheel@email.com</td>
+                                <td>9696325845</td>
                                 <td>Active</td>
                                 <td class="actions">
                                     <i class="fas fa-edit"></i>
@@ -97,43 +108,33 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>John Doe</td>
-                                <td>ABC Company</td>
-                                <td>john@email.com</td>
-                                <td>89898989998</td>
+                                <td>Rajdeep</td>
+                                <td>XYS Company</td>
+                                <td>rajdeeep@email.com</td>
+                                <td>9856452156</td>
                                 <td>Active</td>
                                 <td class="actions">
                                     <i class="fas fa-edit"></i>
                                     <i class="fas fa-trash"></i>
                                 </td>
                             </tr>
+    
                             <tr>
-                                <td>John Doe</td>
-                                <td>ABC Company</td>
-                                <td>john@email.com</td>
-                                <td>89898989998</td>
-                                <td>Active</td>
+                                <td> Doe</td>
+                                <td>ASSW </td>
+                                <td>asedc@email.com</td>
+                                <td>89562614570</td>
+                                <td>Inctive</td>
                                 <td class="actions">
                                     <i class="fas fa-edit"></i>
                                     <i class="fas fa-trash"></i>
                                 </td>
                             </tr>
                             <tr>
-                                <td>John Doe</td>
-                                <td>ABC Company</td>
-                                <td>john@email.com</td>
-                                <td>89898989998</td>
-                                <td>Active</td>
-                                <td class="actions">
-                                    <i class="fas fa-edit"></i>
-                                    <i class="fas fa-trash"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>John Doe</td>
-                                <td>ABC Company</td>
-                                <td>john@email.com</td>
-                                <td>89898989998</td>
+                                <td>Raheel</td>
+                                <td>Why Company</td>
+                                <td>raheel@email.com</td>
+                                <td>9696325845</td>
                                 <td>Active</td>
                                 <td class="actions">
                                     <i class="fas fa-edit"></i>
@@ -164,7 +165,7 @@
     <div id="popup" class="popup">
         <form>
                     
-            <h2>Add Customer</h2>
+        <h2>Add Customer</h2>
         <div class="input-group">
           <div>
             <label for="name">Name:</label>
@@ -187,7 +188,7 @@
         </div>
         <label for="address">Address:</label><br>
         <input type="text" id="address" required>
-        <button type="submit" onclick="saveCustomer()">Save</button>
+        <button type="submit" >Save</button>
         <button type="button" onclick="closePopup()">Cancel</button>
     </form>
 
@@ -209,14 +210,11 @@
       }
       
       function saveCustomer() {
-        // Get form values
         var name = document.getElementById("name").value;
         var company = document.getElementById("company").value;
         var email = document.getElementById("email").value;
         var mobile = document.getElementById("mobile").value;
         var address = document.getElementById("address").value;
-      
-        // TODO: Send data to server (e.g., using AJAX)
       
         closePopup();
       }
