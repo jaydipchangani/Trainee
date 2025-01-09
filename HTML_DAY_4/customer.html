@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <title>Customer</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+
+        }
+        .mainWindow{
+            height: 600px;
+
+        }
+        .header{
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            background-color: rgb(255, 255, 255);
+            border-bottom: 1px solid black;
+            height: 60px;
+            padding-top: 10px;
+        }
+        .logo{
+            display: flex;
+            justify-content: center;
+            align-self: start;
+            background-color: white;
+            width: 15%;
+            padding-left: 10px;
+            
+        }
+        .admin{
+            display: flex;
+            justify-content: center;
+            align-self: start;
+            width: 15%;
+            background-color: white;
+            padding-right: 30px;
+        }
+
+        .body{
+            display: flex;
+            height: 100%;
+        }
+
+        .sidebar{
+            display: flex;
+            flex-direction: column;
+            min-width: 15%;
+            background-color: white;
+            height: 100%;
+            border-right: 1px solid black;
+            justify-content: flex-start;
+            
+    
+        }
+        .menu{
+            border-bottom: 1px solid black;
+            width: 100%;
+            height: 70px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+        }
+        .sidebar :hover{
+            background-color: #0097D4;
+            color: white;
+        }
+        
+        .bodyMain{
+            display: flex;
+            width: 100%;
+            background-color: white;
+            padding-left: 25px;
+            height: 70%;
+            align-items: flex-start;
+            flex-direction: column;
+        }
+       
+        .mainBar{
+            background-color: white;
+            display: flex;
+            width: 95%;
+            height: 10%;
+            justify-content: space-between;
+  
+        }
+       
+        .barElements{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .addCustomer{
+            background-color: #0097D4;
+            height: 30px;
+            width: 130px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+        }
+
+        button:hover{
+            background-color: #177db4;
+    
+        }
+
+        select{
+            width: 130px;
+        }
+        .search-input{
+            width: 260px;
+            border-radius: 5px;
+            padding-left: 10px;
+        }
+        #searchBtn{
+            position: relative;
+            right: 25px;
+            top: 1px;
+            
+        }
+        .customerTable{
+          
+            width: 95%;
+        }
+        .table {
+            width: 100%;
+            margin: 10px;
+            border-collapse: collapse;
+          }
+          
+          th,
+          td {
+            border: 1px solid gray;
+            padding: 10px;
+            text-align: center;
+          }
+          
+          .pagination {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 0px;
+            margin: 20px 0;
+          }
+          
+          .pagination button {
+            padding: 10px;
+            border: 1px solid black;
+            background-color: #0097D4;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+          }
+          .pagination button:hover{
+            background-color:#177db4 ;
+          }
+          
+          .actions {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+          }
+
+
+
+          .popup {
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: none; /* Initially hidden */
+          }
+          
+          .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none; /* Initially hidden */
+          }
+          
+          /* Style for input fields */
+          .input-group {
+            display: flex;
+            margin-bottom: 15px;
+          }
+          
+          .input-group label {
+            width: 120px;
+            margin-right: 10px;
+            text-align: right;
+          }
+          
+          .input-group input {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+          }
+          
+          /* Style for buttons */
+          .buttons {
+            text-align: right;
+          }
+          
+          .buttons button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+          }
+          
+          .buttons button.save {
+            background-color: #4CAF50;
+            color: white;
+          }
+          
+          .buttons button.cancel {
+            background-color: #ccc;
+          }
+    </style>
+</head>
+<body>
+    <div class="mainWindow">
+        
+        <div class="header">
+            <div class="logo">
+                <img src="logo.png" alt="Satva logo">
+            </div>
+            <div class="admin">
+                <svg width="40" height="50">
+                    <circle cx="15" cy="30" r="15" fill="#0094D4" />
+                </svg>
+                <h3>Super Admin</h3>
+            </div>
+        </div>
+        
+        <div class="body">
+            <div class="sidebar">
+                <div class="menu"><h3>Customer</h3></div>
+                <div class="menu"><h3>Invoice</h3></div>
+                <div class="menu"><h3>Report</h3></div>
+            </div>
+
+            <div class="bodyMain">
+
+                <div class="customer">
+                    <h2>Customer</h2>
+                </div>
+                
+                <div class ="mainBar">
+                    <div class="barElements">
+                        <div class="search-bar">
+                            <input type="text" class="search-input" placeholder="Search">
+                            
+                                <i class="fas fa-search" id="searchBtn"></i>
+                            
+                        </div>
+                    </div>
+
+                    <div class="barElements">
+                        <select>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                            <option value="status" selected disabled>Status</option>
+                          </select>
+                    </div>
+
+                    <div class="barElements">
+                        <button class="addCustomer" onclick="showPopup()">+ Add Customer</button>
+                    </div>
+                </div>
+                
+                <div class="customerTable">
+                    <table class="table" border="1">
+                        <thead>
+                            <tr>
+                                <td>Name</td>
+                                <td>Company Name</td>
+                                <td>Email</td>
+                                <td>Mobile Number</td>
+                                <td>Status</td>
+                                <td>Action</td>
+                            </tr>
+                        </thead>
+    
+                        <tbody>
+                            <tr>
+                                <td>John Doe</td>
+                                <td>ABC Company</td>
+                                <td>john@email.com</td>
+                                <td>89898989998</td>
+                                <td>Active</td>
+                                <td class="actions">
+                                    <i class="fas fa-edit"></i>
+                                    <i class="fas fa-trash"></i>
+                                </td>
+                            </tr>
+    
+                            <tr>
+                                <td>John Doe</td>
+                                <td>ABC Company</td>
+                                <td>john@email.com</td>
+                                <td>89898989998</td>
+                                <td>Active</td>
+                                <td class="actions">
+                                    <i class="fas fa-edit"></i>
+                                    <i class="fas fa-trash"></i>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>John Doe</td>
+                                <td>ABC Company</td>
+                                <td>john@email.com</td>
+                                <td>89898989998</td>
+                                <td>Active</td>
+                                <td class="actions">
+                                    <i class="fas fa-edit"></i>
+                                    <i class="fas fa-trash"></i>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>John Doe</td>
+                                <td>ABC Company</td>
+                                <td>john@email.com</td>
+                                <td>89898989998</td>
+                                <td>Active</td>
+                                <td class="actions">
+                                    <i class="fas fa-edit"></i>
+                                    <i class="fas fa-trash"></i>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>John Doe</td>
+                                <td>ABC Company</td>
+                                <td>john@email.com</td>
+                                <td>89898989998</td>
+                                <td>Active</td>
+                                <td class="actions">
+                                    <i class="fas fa-edit"></i>
+                                    <i class="fas fa-trash"></i>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>John Doe</td>
+                                <td>ABC Company</td>
+                                <td>john@email.com</td>
+                                <td>89898989998</td>
+                                <td>Active</td>
+                                <td class="actions">
+                                    <i class="fas fa-edit"></i>
+                                    <i class="fas fa-trash"></i>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="pagination">
+                        <button type="button" class="prev">Prev</button>
+                        <button type="button" class="btn">1</button>
+                        <button type="button" class="btn">2</button>
+                        <button type="button" class="btn">3</button>
+                        <button type="button" class="btn">4</button>
+                        <button type="button" class="btn">5</button>
+                        <button type="button" class="btn">6</button>
+                        <button type="button" class="next">Next</button>
+                    </div>
+                </div>
+            </div>
+            
+
+        </div>
+        
+    
+
+    </div>
+    
+</body>
+</html>
