@@ -33,7 +33,7 @@
             <div class="bodyMain">
 
                 <div class="customer">
-                    <h2>Customer</h2>
+                    <h2>Invoice</h2>
                 </div>
                 
                 <div class ="mainBar">
@@ -63,22 +63,22 @@
                     <table class="table" border="1">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Company Name</th>
-                                <th>Email</th>
-                                <th>Mobile Number</th>
-                                <th>Status</th>
-                                <th>Action</th>
+                                <th>Number</th>
+                                <th>Customer</th>
+                                <th>Date</th>
+                                <th>Due date</th>
+                                <th>Payment Status</th>
+                                <th></th>
                             </tr>
                         </thead>
     
                         <tbody>
                             <tr>
-                                <td>John Doe</td>
-                                <td>ABC Company</td>
-                                <td>john@email.com</td>
-                                <td>89898989998</td>
-                                <td>Active</td>
+                                <td>Jaydip Changani</td>
+                                <td>Satva Solution</td>
+                                <td>jc@satvasolutions.com</td>
+                                <td>7698630446</td>
+                                <td>Paid</td>
                                 <td class="actions">
                                     <i class="fas fa-edit"></i>
                                     <i class="fas fa-trash"></i>
@@ -90,7 +90,42 @@
                                 <td>ABC Company</td>
                                 <td>john@email.com</td>
                                 <td>89898989998</td>
-                                <td>Active</td>
+                                <td>Unpaid</td>
+                                <td class="actions">
+                                    <i class="fas fa-edit"></i>
+                                    <i class="fas fa-trash"></i>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>Jaydip Changani</td>
+                                <td>Satva Solution</td>
+                                <td>jc@satvasolutions.com</td>
+                                <td>7698630446</td>
+                                <td>Paid</td>
+                                <td class="actions">
+                                    <i class="fas fa-edit"></i>
+                                    <i class="fas fa-trash"></i>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>John Doe</td>
+                                <td>ABC Company</td>
+                                <td>john@email.com</td>
+                                <td>89898989998</td>
+                                <td>Partialy Paid</td>
+                                <td class="actions">
+                                    <i class="fas fa-edit"></i>
+                                    <i class="fas fa-trash"></i>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Jaydip Changani</td>
+                                <td>Satva Solution</td>
+                                <td>jc@satvasolutions.com</td>
+                                <td>7698630446</td>
+                                <td>Paid</td>
                                 <td class="actions">
                                     <i class="fas fa-edit"></i>
                                     <i class="fas fa-trash"></i>
@@ -101,40 +136,7 @@
                                 <td>ABC Company</td>
                                 <td>john@email.com</td>
                                 <td>89898989998</td>
-                                <td>Active</td>
-                                <td class="actions">
-                                    <i class="fas fa-edit"></i>
-                                    <i class="fas fa-trash"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>John Doe</td>
-                                <td>ABC Company</td>
-                                <td>john@email.com</td>
-                                <td>89898989998</td>
-                                <td>Active</td>
-                                <td class="actions">
-                                    <i class="fas fa-edit"></i>
-                                    <i class="fas fa-trash"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>John Doe</td>
-                                <td>ABC Company</td>
-                                <td>john@email.com</td>
-                                <td>89898989998</td>
-                                <td>Active</td>
-                                <td class="actions">
-                                    <i class="fas fa-edit"></i>
-                                    <i class="fas fa-trash"></i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>John Doe</td>
-                                <td>ABC Company</td>
-                                <td>john@email.com</td>
-                                <td>89898989998</td>
-                                <td>Active</td>
+                                <td>Paid</td>
                                 <td class="actions">
                                     <i class="fas fa-edit"></i>
                                     <i class="fas fa-trash"></i>
@@ -161,62 +163,6 @@
     
 
     </div>
-    <div id="popup" class="popup">
-        <h2>Add Customer</h2>
-        <div class="input-group">
-          <div>
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" pattern="[A-Za-z\s]{2,50}" required>
-          </div>
-          <div>
-            <label for="company">Company:</label>
-            <input type="text" id="company" name="company" pattern="[A-Za-z\s]{2,50}" required>
-          </div>
-        </div>
-        <div class="input-group">
-          <div>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" pattern="[0-9]{10}" title="Mobile number must be exactly 10 digits." required>
-          </div>
-          <div>
-            <label for="mobile">Mobile:</label>
-            <input type="tel" id="mobile" name="mobile"  required>
-          </div>
-        </div>
-        <label for="address">Address:</label><br>
-        <input type="text" id="address" required>
-        <button type="submit" onclick="saveCustomer()">Save</button>
-        <button type="button" onclick="closePopup()">Cancel</button>
-      </div>
-      
-      <script>
-      function showPopup() {
-        document.getElementById("popup").style.display = "block";
-      }
-      
-      function closePopup() {
-        
-        document.getElementById("popup").style.display = "none";
-        document.getElementById("name").value = "";
-        document.getElementById("company").value = "";
-        document.getElementById("email").value = "";
-        document.getElementById("mobile").value = "";
-        document.getElementById("address").value = "";
-      }
-      
-      function saveCustomer() {
-        // Get form values
-        var name = document.getElementById("name").value;
-        var company = document.getElementById("company").value;
-        var email = document.getElementById("email").value;
-        var mobile = document.getElementById("mobile").value;
-        var address = document.getElementById("address").value;
-      
-        // TODO: Send data to server (e.g., using AJAX)
-      
-        closePopup();
-      }
-      </script>
     
 </body>
 </html>
