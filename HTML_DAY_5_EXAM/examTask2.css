@@ -1,0 +1,25 @@
+body{
+    font-family: sans-serif;
+}
+.mainDiv{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+}
+#invoicetable{
+    border-collapse: collapse;
+    width: 40%;
+
+
+}
+th{
+    background-color: #dedede;
+    text-align: left;
+}
+
+th,td{
+    height: 30px;
+    width: 10%;
+}
