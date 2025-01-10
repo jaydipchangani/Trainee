@@ -86,7 +86,10 @@ a:hover{
     background-color: #e6dcd8;
     font-size: 5em;
     padding-left: 300px;
-    font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-family: "Dancing Script", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
 }
 .tableCompany td{
     width: 25%;
