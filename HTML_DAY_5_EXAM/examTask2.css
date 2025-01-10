@@ -11,7 +11,7 @@ body{
 #invoicetable{
     border-collapse: collapse;
     width: 45%;
-
+    border: 1px soild black;
 
 }
 #invoicetable th{
@@ -27,6 +27,7 @@ body{
 #timeTable{
     width: 45%;
     text-align: center;
+    border: 1px solid black;
 }
 
 #timeTable .leftAlign{
