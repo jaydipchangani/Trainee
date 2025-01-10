@@ -5,15 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HTML Task 6</title>
 </head>
-<body>
+<body >
+    <center>
+        <div style="background-color: antiquewhite; width: 500px;
+        height: 150px; ">    
     <h1>Upload</h1>
     <h3>Only Excel Files</h3>
     <form >
       <input type="file" name="file" accept=".xlsx" id="file"  onchange="return fileValidation()" required>
-
+        
       <input type="submit" value="Upload" >
     </form>
 
+</div>
+    <br><br>
+    <div style="background-color: antiquewhite; width: 500px;
+        height: 150px; ">  
     <h1>Download File</h1>
 
     <a href="song.mp3" download>
@@ -23,6 +30,8 @@
     <a href="testVideo.mp4" download>
         Click Here to download Video file
       </a>
+    </div>
+    </center>
 
     <script>
         function fileValidation() {
