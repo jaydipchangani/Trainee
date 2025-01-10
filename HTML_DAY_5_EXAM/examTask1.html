@@ -4,14 +4,119 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HTML EXAM TASK 1</title>
+    <style>
+        body{
+            background-color: white;
+            height: 500px;
+            
+           
+        }
+        .studentRegistration{
+            display: flex;
+            justify-content: flex-end;
+            padding-right: 50px;
+            
+        }
+        .studentRegistration a{
+            color: #8f312f;
+        }
+        
+    </style>
 </head>
 <body>
+    <div class="studentRegistration">
+            <a href="examTask1.html">Student Registration Form</a>
+        </div>
     <div class="mainTable">
-        <table border="1">
+        
+        <table>
             <form>
                 <tr>
-                    <td></td>
+                    <td>First Name: </td>
+                    <td><input type="text" name="firstName" required placeholder="Enter your first name" autofocus></td>
                 </tr>
+
+                <tr>
+                    <td>Last Name: </td>
+                    <td><input type="text" name="lastName" required placeholder="Enter your last name" ></td>
+                </tr>
+
+                <tr>
+                    <td>Email: </td>
+                    <td><input type="email" name="email" required placeholder="it should contain @." ></td>
+                </tr>
+
+                <tr>
+                    <td>Mobile: </td>
+                    <td><input type="text" name="lastName" required placeholder="only 10 digits are allowed"></td>
+                </tr>
+
+                <tr>
+                    <td>Gender: </td>
+                    <td>
+                        <input type="radio" name="gender" value="male">Male
+                        <input type="radio" name="gender" value="female">Female
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Date Of Birth: </td>
+                    <td><input type="date" name="dob" required ></td>
+                </tr>
+
+                <tr>
+                    <td>Address: </td>
+                    <td><textarea name="address" required rows="5" cols="30"></textarea></td>
+                </tr>
+
+                <tr>
+                    <td>City: </td>
+                    <td><input type="text" name="city" required></td>
+                </tr>
+
+                <tr>
+                    <td>Area PIN: </td>
+                    <td><input type="text" name="areaPin" required></td>
+                </tr>
+
+                <tr>
+                    <td>State: </td>
+                    <td><input type="text" name="state" required></td>
+                </tr>
+
+                <tr>
+                    <td>Qualification: </td>
+                    <td>
+                        <select name="qualification" required>
+                            <option value="selectQualification" disabled selected> Select Qualification</option>
+                            <option value="10th" >10th</option>
+                            <option value="12th">12th</option>
+                            <option value="Diploma">Diploma</option>
+                            <option value="bTech">B.Tech</option>
+                            <option value="mTech">M.Tech</option>
+                            <option value="bca">BCA</option>
+                            <option value="mca">MCA</option>
+
+                        </select>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Specialization:</td>
+                    <td>
+                        <input type="checkbox" name="computerScience" value="CS">Computer Science<br>
+                        <input type="checkbox" name="informationTechnology" value="IT">Information Technology<br>
+                        <input type="checkbox" name="computerArchitecture" value="CA">Computer Architecture<br>
+                        <input type="checkbox" name="teleCommunication" value="TC">Tele Communication
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Password:</td>
+                    <td><input type="password" name="password" required></td>
+                </tr>
+
+
             </form>
         </table>
     </div>
