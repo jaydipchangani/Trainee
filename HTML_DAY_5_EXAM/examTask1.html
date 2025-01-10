@@ -4,41 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HTML EXAM TASK 1</title>
-    <style>
-        body{
-            background-color: white;
-            height: 500px;
-            
-           
-        }
-        .studentRegistration{
-            display: flex;
-            justify-content: flex-end;
-            padding-right: 50px;
-            
-        }
-        .studentRegistration a{
-            color: #8f312f;
-        }
-        
-    </style>
+    <link href="examTask1.css" rel="stylesheet" >
 </head>
-<body>
+<body onload="document.getElementById('firstName').focus()">
+    <div class="mainDiv">
+
+    
     <div class="studentRegistration">
             <a href="examTask1.html">Student Registration Form</a>
         </div>
-    <div class="mainTable">
+
+    <div class="mainTable" >
         
         <table>
             <form>
                 <tr>
                     <td>First Name: </td>
-                    <td><input type="text" name="firstName" required placeholder="Enter your first name" autofocus></td>
+                    <td><input type="text" name="firstName" required placeholder="Enter your first name" autofocus pattern="[A-Za-z]{2,}" title="Enter more than 2 Character"></td>
                 </tr>
 
                 <tr>
                     <td>Last Name: </td>
-                    <td><input type="text" name="lastName" required placeholder="Enter your last name" ></td>
+                    <td><input type="text" name="lastName" required placeholder="Enter your last name" pattern="[A-Za-z]{2,}" title="Enter more than 2 Character" ></td>
                 </tr>
 
                 <tr>
@@ -48,14 +35,15 @@
 
                 <tr>
                     <td>Mobile: </td>
-                    <td><input type="text" name="lastName" required placeholder="only 10 digits are allowed"></td>
+                    <td><input type="tel" name="lastName" required placeholder="only 10 digits are allowed"   pattern="[1-9]{1}[1-9]{9}" title="Mobile number should be have 10 digits and do not start with 0"> 
+                    </td>
                 </tr>
 
                 <tr>
                     <td>Gender: </td>
                     <td>
-                        <input type="radio" name="gender" value="male">Male
-                        <input type="radio" name="gender" value="female">Female
+                        <input type="radio" name="gender" value="male" required>Male
+                        <input type="radio" name="gender" value="female" required>Female
                     </td>
                 </tr>
 
@@ -65,23 +53,23 @@
                 </tr>
 
                 <tr>
-                    <td>Address: </td>
-                    <td><textarea name="address" required rows="5" cols="30"></textarea></td>
+                    <td id="add">Address: </td>
+                    <td><textarea name="address" required rows="5" cols="66"></textarea></td>
                 </tr>
 
                 <tr>
                     <td>City: </td>
-                    <td><input type="text" name="city" required></td>
+                    <td><input type="text" name="city" required pattern="[A-Za-z\s]{2,}" title="Enter more than 2 Character"></td>
                 </tr>
 
                 <tr>
                     <td>Area PIN: </td>
-                    <td><input type="text" name="areaPin" required></td>
+                    <td><input type="text" name="areaPin" required pattern="[0-9]{6}" title="Area PIN should have excat 6 digits"></td>
                 </tr>
 
                 <tr>
                     <td>State: </td>
-                    <td><input type="text" name="state" required></td>
+                    <td><input type="text" name="state" required pattern="[A-Za-z\s]{2,} title="Enter more than 2 Character""></td>
                 </tr>
 
                 <tr>
@@ -101,9 +89,9 @@
                     </td>
                 </tr>
 
-                <tr>
-                    <td>Specialization:</td>
-                    <td>
+                <tr >
+                    <td id="specialization">Specialization:</td>
+                    <td><br>
                         <input type="checkbox" name="computerScience" value="CS">Computer Science<br>
                         <input type="checkbox" name="informationTechnology" value="IT">Information Technology<br>
                         <input type="checkbox" name="computerArchitecture" value="CA">Computer Architecture<br>
@@ -113,12 +101,17 @@
 
                 <tr>
                     <td>Password:</td>
-                    <td><input type="password" name="password" required></td>
+                    <td><input type="password" name="password" required title="Password Should gave atleast 8 Characters" pattern="(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@#$%^&+=]).{8,}"></td>
+                </tr>
+
+                <tr>
+                    <td><input type="submit" value="Registered" class="submitButton" ></td>
                 </tr>
 
 
             </form>
         </table>
     </div>
+</div>
 </body>
 </html>

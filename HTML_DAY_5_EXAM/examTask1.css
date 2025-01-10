@@ -1,0 +1,46 @@
+body{
+    background-color: #f2f2f2;
+    display: flex;
+    justify-content: center; 
+}
+.mainDiv{
+    background-color: #f2f2f2;
+
+}
+.studentRegistration{
+    position: relative;
+    left: 95%;
+    background-color: #f2f2f2;
+    padding-bottom: 10px;
+     
+}
+.studentRegistration a{
+    color: #8f312f;
+}
+
+input[type="text"],input[type="email"],input[type="tel"],input[type="password"],input[type="date"]{
+    width: 500px;
+   
+    height: 25px;
+}
+
+input,textarea,input[type="radio"]{
+    margin-bottom: 10px;
+}
+.submitButton{
+    background-color: #107502;
+    border: none;
+    color: white;
+    height: 30px;
+    width: 80px ;
+    justify-content: center;
+    border-radius: 5px;
+}
+#specialization{
+    position: relative;
+    bottom: 35px;
+}
+#add{
+    position: relative;
+    bottom: 38px;
+}
