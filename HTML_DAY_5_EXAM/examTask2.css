@@ -10,16 +10,26 @@ body{
 }
 #invoicetable{
     border-collapse: collapse;
-    width: 40%;
+    width: 45%;
 
 
 }
-th{
+#invoicetable th{
     background-color: #dedede;
     text-align: left;
 }
 
-th,td{
+#invoicetable th,td{
     height: 30px;
     width: 10%;
+}
+
+#timeTable{
+    width: 45%;
+    text-align: center;
+}
+
+#timeTable .leftAlign{
+    text-align: left;
+
 }
