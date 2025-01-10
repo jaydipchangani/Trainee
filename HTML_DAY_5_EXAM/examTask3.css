@@ -11,14 +11,13 @@ body{
 #invoicetable{
     border-collapse: collapse;
     width: 45%;
-
+    border: 1px soild black;
 
 }
 #invoicetable th{
     background-color: #dedede;
     text-align: left;
     color: red;
-
 }
 
 #invoicetable th,td{
@@ -29,11 +28,15 @@ body{
 #timeTable{
     width: 45%;
     text-align: center;
+    border: 1px solid black;
 }
 
 #timeTable .leftAlign{
     text-align: left;
 
+}
+.heightRow{
+    height: 50px;
 }
 
 table{
