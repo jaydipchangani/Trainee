@@ -8,13 +8,13 @@
 </head>
 <body>
 
-<div class="container mt-5 col-4">
-  <h2>Form Validation Example</h2>
+<div class="container mt-5 col-3">
+  
   <form id="validationForm">
 
     <div class="mb-3">
-      <label for="emailInput" class="form-label">Enter your email</label>
-      <input type="email" class="form-control" id="emailInput" placeholder="name@example.com" required>
+      <label for="emailInput" class="form-label">Email</label>
+      <input type="email" class="form-control is-valid " id="emailInput" placeholder="name@example.com" required>
       <div class="invalid-feedback">
         Please provide a valid email.
       </div>
@@ -24,7 +24,7 @@
 
     <div class="mb-3">
       <label for="passwordInput" class="form-label">Password</label>
-      <input type="password" class="form-control" id="passwordInput" placeholder="Password" required>
+      <input type="password" class="form-control is-valid" id="passwordInput" placeholder="Password" required>
       <div class="invalid-feedback">
         Password must be at least 6 characters long.
       </div>
@@ -34,22 +34,23 @@
 
     <div class="mb-3">
       <label for="confirmPasswordInput" class="form-label">Confirm Password</label>
-      <input type="password" class="form-control" id="confirmPasswordInput" placeholder="Confirm Password" required>
+      <input type="password" class="form-control is-invalid" id="confirmPasswordInput" placeholder="Confirm Password" required>
       <div class="invalid-feedback">
-        Passwords do not match.
+        This Field does not match the password.
       </div>
     </div>
 
     <div class="mb-3">
       <label for="urlInput" class="form-label">Enter a URL</label>
-      <input type="url" class="form-control" id="urlInput" placeholder="https://example.com" required>
+      <input type="url" class="form-control is-valid" id="urlInput" placeholder="https://example.com" required>
       <div class="invalid-feedback">
         Please provide a valid URL.
       </div>
 
     </div>
+<!-- 
+    <button type="submit" class="btn btn-primary">Submit</button> -->
 
-    <button type="submit" class="btn btn-primary">Submit</button>
   </form>
 </div>
 
