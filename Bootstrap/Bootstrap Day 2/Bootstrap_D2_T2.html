@@ -5,36 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register Account</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .form-control:focus {
-            border-color: #28a745;
-            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
-        }
-        .form-control.is-valid {
-            border-color: #28a745;
-        }
-        .form-control.is-invalid {
-            border-color: #dc3545;
-        }
-        .bg-custom {
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-        .form-container {
-            background: #faf6ff;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        .alert {
-            display: none;
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-        }
-    </style>
+    <link href="styles.css" rel="stylesheet">
 </head>
 <body class="bg-custom min-vh-100 d-flex align-items-center justify-content-center py-5">
-    <!-- Alert Messages -->
+
     <div class="alert alert-danger alert-dismissible fade" role="alert" id="errorAlert">
         Please fill all fields correctly!
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -54,24 +28,26 @@
                     <form id="registerForm" novalidate>
                         <div class="row g-3 mb-3">
                             <div class="col-12 col-sm-6">
-                                <input type="text" class="form-control" placeholder="First Name" required>
-                                <div class="invalid-feedback">Please enter your first name</div>
+                                <input type="text" class="form-control" placeholder="First Name" required 
+                                    pattern="^[a-zA-Z]+$" title="Only letters are allowed, no spaces.">
+                                <div class="invalid-feedback">Please enter a valid first name (letters only).</div>
                             </div>
                             <div class="col-12 col-sm-6">
-                                <input type="text" class="form-control" placeholder="Last Name" required>
-                                <div class="invalid-feedback">Please enter your last name</div>
+                                <input type="text" class="form-control" placeholder="Last Name" required 
+                                    pattern="^[a-zA-Z]+$" title="Only letters are allowed, no spaces.">
+                                <div class="invalid-feedback">Please enter a valid last name (letters only).</div>
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <input type="email" class="form-control" placeholder="Email" required>
+                            <input type="email" class="form-control" placeholder="Email" pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" required>
                             <div class="invalid-feedback">Please enter a valid email address</div>
                         </div>
 
                         <div class="mb-3">
                             <input type="password" class="form-control" placeholder="Password" required 
-                                   pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$">
-                            <div class="invalid-feedback">Password must be at least 8 characters with letters and numbers</div>
+                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$">
+                            <div class="invalid-feedback">Password must be at least 8 characters with uppercase, lowercase, special symbol, and numbers.</div>
                         </div>
 
                         <div class="mb-4">
@@ -82,7 +58,7 @@
                         <div class="mb-4">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="terms" required>
-                                <label class="form-check-label  text-black-50" for="terms" >
+                                <label class="form-check-label text-black-50" for="terms">
                                     I accept the 
                                     <a href="#" class="text-success text-decoration-none">Terms of Use</a> & 
                                     <a href="#" class="text-success text-decoration-none">Privacy Policy</a>
@@ -94,12 +70,11 @@
                         <button type="submit" class="btn btn-success w-100 mb-3">Register Now</button>
                     </form>
 
-                    
                 </div>
             </div>
             <p class="text-center text-light mt-3">
                 Already have an account? 
-                <a href="login.html" class="text-decoration-underline text-light ">Sign in</a>
+                <a href="login.html" class="text-decoration-underline text-light">Sign in</a>
             </p>
         </div>
     </div>
@@ -113,7 +88,14 @@
         const errorAlert = document.getElementById('errorAlert');
         const successAlert = document.getElementById('successAlert');
 
-        // Function to show alert
+        // Reset form on page load
+        window.addEventListener('load', () => {
+            form.reset();
+            inputs.forEach(input => {
+                input.classList.remove('is-valid', 'is-invalid');
+            });
+        });
+
         function showAlert(alertElement) {
             alertElement.style.display = 'block';
             alertElement.classList.add('show');
@@ -151,7 +133,6 @@
             } else {
                 showAlert(successAlert);
                 setTimeout(() => {
-                    
                     window.location.href = 'Bootstrap_D2_T3.html';
                 }, 3000);
             }

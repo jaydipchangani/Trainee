@@ -45,10 +45,10 @@
                             <label for="course" class="form-label">What Course Do You Need Help With?</label>
                             <select class="form-select" id="course" required>
                                 <option value="" selected>Select a Course</option>
-                                <option value="math">Mathematics</option>
-                                <option value="physics">Physics</option>
-                                <option value="chemistry">Chemistry</option>
-                                <option value="biology">Biology</option>
+                                <option value="web">Web Development</option>
+                                <option value="mobile">Mobile Development</option>
+                                <option value="seo">SEO</option>
+                                <option value="cs">Cyber Security</option>
                             </select>
                         </div>
 
@@ -56,15 +56,16 @@
                             <label for="tutor" class="form-label">Name of Preferred Tutor</label>
                             <select class="form-select" id="tutor" required>
                                 <option value="" selected>Anyone Available</option>
-                                <option value="john">John Doe</option>
-                                <option value="jane">Jane Smith</option>
-                                <option value="mike">Mike Johnson</option>
+                                <option value="jc">Jaydip Chanagni</option>
+                                <option value="rc">Rajdeep Chavda</option>
+                                <option value="sujal">Sujal</option>
+                                <option value="harsh">Harsh</option>
                             </select>
                         </div>
 
                         <div class="mb-3">
                             <label for="date" class="form-label">Calendar Date</label>
-                            <input type="date" class="form-control" id="date" required>
+                            <input type="date" class="form-control" placeholder="Example: May 28, 2014" id="date" required>
                         </div>
 
                         <div class="mb-3">
@@ -110,7 +111,7 @@
             }
         });
 
-        // Real-time validation
+
         document.querySelectorAll('input, select').forEach(input => {
             input.addEventListener('input', function() {
                 if (this.checkValidity()) {
