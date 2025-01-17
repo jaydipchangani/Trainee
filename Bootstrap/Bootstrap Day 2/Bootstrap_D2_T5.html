@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Appointment Scheduler</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
 </head>
 <body class="bg-light">
 
@@ -14,7 +13,6 @@
             Schedule Appointment
         </button>
     </div>
-
 
     <div class="modal fade" id="appointmentModal" tabindex="-1" aria-labelledby="appointmentModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -65,7 +63,7 @@
 
                         <div class="mb-3">
                             <label for="date" class="form-label">Calendar Date</label>
-                            <input type="date" class="form-control" placeholder="Example: May 28, 2014" id="date" required>
+                            <input type="date" class="form-control" id="date" required>
                         </div>
 
                         <div class="mb-3">
@@ -82,6 +80,20 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Format date to Month Day, Year
+        document.getElementById('date').addEventListener('input', function () {
+            const dateInput = this.value;
+            if (dateInput) {
+                const dateObject = new Date(dateInput);
+                const formattedDate = dateObject.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                this.value = formattedDate;
+            }
+        });
+
         document.getElementById('appointmentForm').addEventListener('submit', function(event) {
             event.preventDefault();
             
@@ -110,7 +122,6 @@
                 alert('Please fill in all required fields correctly.');
             }
         });
-
 
         document.querySelectorAll('input, select').forEach(input => {
             input.addEventListener('input', function() {
