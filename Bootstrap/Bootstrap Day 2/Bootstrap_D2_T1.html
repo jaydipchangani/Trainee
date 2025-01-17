@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day 2 Task 1</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5 col-4">
+
+
+        <button type="button" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="A demo of left Tooltip">
+            Left Demo
+        </button>
+
+        <button type="button" class="btn btn-success" data-bs-toggle="tooltip" data-bs-placement="Bottom" data-bs-title="A demo of Bottom Tooltip">
+            Bottom Demo
+        </button>
+
+        <button type="button" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="A demo of top Tooltip">
+            Top Demo
+        </button>
+
+        <button type="button" class="btn btn-info" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="A demo of right Tooltip">
+            Right Demo
+        </button>
+
+
+
+          
+    </div>
+    <script>
+        var tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+          new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+      </script>
+</body>
+</html>

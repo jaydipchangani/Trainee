@@ -1,0 +1,6 @@
+.btn-warning,.btn-info{
+    color:white
+}
+.btn-warning:hover, .btn-info:hover{
+    color:white
+}

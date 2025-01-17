@@ -3,70 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Learning</title>
-
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body{
-            padding: 20px;
+        .box1{
+            height: 301px;
         }
-        .container{
-            background-color: aqua;
-            height: 1000px;
-            gap: 20px;
-            display:grid;
-            grid-template-rows: repeat(10, 33.33%);
-            grid-template-columns: repeat(4, 24%);
-
+        .box2, .box3, .box4{
+            height: 95px;
         }
-        .item-1{
-            background-color: rgb(117, 117, 245);
-            grid-area: 1/1/3/2;
-            border-radius: 20px;
+        .box5{
+            height: 200px;
         }
-        .item-2{
-            background-color: bisque;
-            grid-area: 1/2/2/4;
+        .box6{
+            height: 93px;
         }
-        .item-3{
-            background-color: rgb(139, 147, 189);
+        .box{
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        .item-4{
-            background-color: rgb(169, 169, 169);
-        }
-        .item-5{
-            background-color: rgb(255, 125, 125);
-            grid-area: 2/3/4/5;
-        }
-        .item-6{
-            background-color: rgb(210, 245, 175);
-            grid-area: 3/1/4/3;
-        }
-        .item-7{
-            background-color: cadetblue;
-            grid-area:4/1/6/5
-        }
-        .item-8{
-            background-color: rgb(154, 119, 155);
-            grid-area:4/1/6/5
-        }
-        .item-9{
-            background-color: rgb(255, 251, 255);
-            grid-area:4/1/6/5
-        }
-
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="item-1">Hello</div>
-        <div class="item-2">Hello</div>
-        <div class="item-3">Hello</div>
-        <div class="item-4">Hello</div>
-        <div class="item-5">Hello</div>
-        <div class="item-6">Hello</div>
-        <div class="item-7">Hello</div>
-        <div class="item-8">Hello</div>
-        <div class="item-9">Hello</div>
+    <div class="m-5">
+
+        <div class="row g-2">
+
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="box box1 border border-dark ">1.</div>
+            </div>
+
+            <div class="col-12 col-md-3 col-lg-4">
+                <div class="row g-2">
+                    <div class="col-12">
+                        <div class="box border border-dark box2">2.</div>
+                    </div>
+                    <div class="col-12">
+                        <div class="box border border-dark box3">3.</div>
+                    </div>
+                    <div class="col-12">
+                        <div class="box border border-dark box4">4.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-3 col-lg-4">
+                <div class="row g-2">
+                    <div class="col-12">
+                        <div class="box border border-dark box5">5.</div>
+                    </div>
+                    <div class="col-12">
+                        <div class="box border border-dark box6">6.</div>
+                    </div>
+                </div>
+            </div>
+
+            
+
+
+
+        </div>
 
     </div>
 </body>

@@ -9,14 +9,12 @@
         .box1{
             height: 301px;
         }
-        .box2,.box3,.box4{
+        .box2, .box3, .box4{
             height: 95px;
         }
-
         .box5{
             height: 200px;
         }
-
         .box6{
             height: 93px;
         }
@@ -25,24 +23,20 @@
             justify-content: center;
             align-items: center;
         }
-
     </style>
 </head>
 <body>
-    <div class="container  mt-5 col-4">
+    <div class="container mt-5">
 
         <div class="row g-2">
-            
-            <div class="col-6 ">
-                <div class="row ">
-                    <div class="col-12 ">
-                        <div class="box box1 border border-dark d-flex justify-content-center align-items-center ">1.</div>
-                    </div>
-                   
-                </div>
+
+            <!-- First Column, adjusts based on screen size -->
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="box box1 border border-dark d-flex justify-content-center align-items-center">1.</div>
             </div>
 
-            <div class="col-3 ">
+            <!-- Second Column, adjusts based on screen size -->
+            <div class="col-12 col-md-3 col-lg-4">
                 <div class="row g-2">
                     <div class="col-12">
                         <div class="box border border-dark box2">2.</div>
@@ -53,12 +47,11 @@
                     <div class="col-12">
                         <div class="box border border-dark box4">4.</div>
                     </div>
-
-                    
                 </div>
             </div>
 
-            <div class="col-3 ">
+            <!-- Third Column, adjusts based on screen size -->
+            <div class="col-12 col-md-3 col-lg-4">
                 <div class="row g-2">
                     <div class="col-12">
                         <div class="box border border-dark box5">5.</div>
@@ -66,17 +59,11 @@
                     <div class="col-12">
                         <div class="box border border-dark box6">6.</div>
                     </div>
-
-
-                    
                 </div>
             </div>
+
         </div>
-        
 
-
-        
-        
     </div>
 </body>
 </html>
