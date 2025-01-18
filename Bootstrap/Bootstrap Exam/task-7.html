@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Day-2 Task-7</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        .btn{
+            min-height: 50px;
+            width: 10vw;
+        }
+
+        @media (max-width: 576px) {
+            .btn {
+                width: 80%;
+                margin: 5px auto !important;
+            }
+        }
+
+        .rounded-3{
+            border-radius: 50px !important;
+        }
+        .shadow-lg{
+            box-shadow: 3px 3px #aaaaaa !important;
+        }
+        .btn-success-gradient {
+            background: linear-gradient(to top, #28a745 50%, #218838b5 50%);
+            color: white;
+            border: none;
+        }
+        .btn-danger-gradient {
+            background: linear-gradient(to top, #dc3545 50%, #c82333b5 50%);
+            color: white;
+            border: none;
+        }
+        .btn-warning-gradient {
+            background: linear-gradient(to top, #ffc107 50%, #e0a800b5 50%);
+            color: white;
+            border: none;
+        }
+        .btn-info-gradient {
+            background: linear-gradient(to top, #17a2b8 50%, #138496b5 50%);
+            color: white;
+            border: none;
+        }
+        .btn-primary-gradient {
+            background: linear-gradient(to top, #007bff 50%, #0056b3b5 50%);
+            color: white;
+            border: none;
+        }
+        .bg-yellow{
+            background-color: lightyellow !important;
+        }
+
+        body{
+            display: flex;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0; 
+            flex-direction: column;
+            min-width: 100vw;
+            background-color: lightyellow;
+            
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container bg-yellow px-3 py-4 my-4">
+        <div class="row justify-content-center align-items-center text-center g-2">
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <button type="button" class="text-white rounded-0 btn btn-primary w-100">Primary</button>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <button type="button" class="text-white rounded-0 btn btn-success w-100">Success</button>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <button type="button" class="text-white rounded-0 btn btn-info w-100">Info</button>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <button type="button" class="text-white rounded-0 btn btn-warning w-100">Warning</button>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <button type="button" class="text-white rounded-0 btn btn-danger w-100">Danger</button>
+            </div>
+        </div>
+
+        <div class="row justify-content-center align-items-center text-center g-2 mt-3">
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <button type="button" class="btn btn-outline-primary w-100">Primary</button>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <button type="button" class="btn btn-outline-success w-100">Success</button>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <button type="button" class="btn btn-outline-info w-100">Info</button>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <button type="button" class="btn btn-outline-warning w-100">Warning</button>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <button type="button" class="btn btn-outline-danger w-100">Danger</button>
+            </div>
+        </div>
+
+        <div class="row justify-content-center align-items-center text-center g-2 mt-3">
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <button class="btn btn-primary-gradient text-white  w-100">Primary</button>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <button class="btn btn-success-gradient text-white  w-100">Success</button>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <button class="btn btn-info-gradient text-white  w-100">Info</button>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <button class="btn btn-warning-gradient text-white  w-100">Warning</button>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <button class="btn btn-danger-gradient text-white  w-100">Danger</button>
+            </div>
+        </div>
+
+        <div class="row justify-content-center align-items-center text-center g-2 mt-3">
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <button type="button" class="text-white btn btn-primary w-100 rounded-3">Primary</button>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <button type="button" class="text-white btn btn-success w-100 rounded-3">Success</button>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <button type="button" class="text-white btn btn-info w-100 rounded-3">Info</button>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <button type="button" class="text-white btn btn-warning w-100 rounded-3">Warning</button>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <button type="button" class="text-white btn btn-danger w-100 rounded-3">Danger</button>
+            </div>
+        </div>
+
+        
+
+        <div class="row justify-content-center align-items-center text-center g-2 mt-3">
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <button type="button" class="text-white shadow-lg btn btn-primary w-100">Primary</button>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <button type="button" class="text-white shadow-lg btn btn-success w-100">Success</button>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <button type="button" class="text-white shadow-lg btn btn-info w-100">Info</button>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <button type="button" class="text-white shadow-lg btn btn-warning w-100">Warning</button>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <button type="button" class="text-white shadow-lg btn btn-danger w-100">Danger</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
