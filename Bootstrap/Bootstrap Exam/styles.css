@@ -53,3 +53,28 @@ body{
     padding-top: 5%;
     padding-bottom: 5%;
 }
+
+
+.btn-danger {
+    background-color: #ff4757;
+    color: white;
+    border: none;
+    padding: 5px 15px;
+    font-size: 14px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
+.close-btn:hover {
+    background-color: #ff6b81;
+}
+
+.table-hover tbody thead tr {
+    border: none;
+}
+.table-hover tbody tr td {
+    border: none;
+}
+
+tbody{
+    color: #ff4757;
+}
