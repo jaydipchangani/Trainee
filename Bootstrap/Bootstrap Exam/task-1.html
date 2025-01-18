@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bootstrap Exam Task 1</title>
-    <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <!-- <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"> -->
     <link href="styles.css" rel="stylesheet">
 
     <style>
@@ -18,37 +16,40 @@
 <body>
     <div class="container-fluid vh-100">
         <div class="row h-100">
-            <!-- Left Side: Login Form -->
+
             <div class="col-md-6 d-flex flex-column justify-content-center pl-5 bg-light">
                 <h2 class="mb-5 pl-5">Welcome, Let's Get Started</h2>
                 <h4 class="mb-4 pl-5">Log In</h4>
                 <form id="loginForm" class="w-75 pl-5" novalidate>
-                    <!-- Email Field with Validation -->
+
                     <div class="form-group">
                         <label for="email">Email</label>
                         <input type="email" class="form-control" id="email"  pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" required>
                         <div class="invalid-feedback">Please enter a valid email address.</div>
                     </div>
-                    <!-- Password Field -->
+ 
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" class="form-control" id="password"  minlength="6" required>
+                        <input type="password" class="form-control" placeholder="Password" required 
+                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$">
+
+
                         <div class="invalid-feedback">Password must be at least 6 characters long.</div>
                         <a href="#" class="text-dark fw-bolder d-flex justify-content-end mt-2 text-decoration-none">Forgot password?</a>
                     </div>
-                    <!-- Submit Button -->
+
                     <button type="submit" class="btn btn-success">Log In</button>
                 </form>
             </div>
 
-            <!-- Right Side: Image -->
+ 
             <div class="col-md-6 d-none d-md-flex align-items-center justify-content-center">
                 <img src="https://img.freepik.com/premium-vector/enter-login-username-password-illustration_82783-1509.jpg?semt=ais_incoming" alt="Placeholder Image" class="img-fluid">
             </div>
         </div>
     </div>
 
-    <!-- Bootstrap JS and dependencies -->  
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.4/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -57,12 +58,12 @@
         document.getElementById('loginForm').addEventListener('submit', function (event) {
             event.preventDefault();
 
-            // Get form elements
+
             const email = document.getElementById('email');
             const password = document.getElementById('password');
             let isValid = true;
 
-            // Validate email
+
             if (!email.checkValidity()) {
                 email.classList.add('is-invalid');
                 email.classList.remove('is-valid');
@@ -72,7 +73,7 @@
                 email.classList.remove('is-invalid');
             }
 
-            // Validate password
+
             if (!password.checkValidity()) {
                 password.classList.add('is-invalid');
                 password.classList.remove('is-valid');
@@ -82,16 +83,16 @@
                 password.classList.remove('is-invalid');
             }
 
-            // If all fields are valid
+
             if (isValid) {
                 alert('Form submitted successfully!');
-                this.reset(); // Reset the form
+                this.reset(); 
                 email.classList.remove('is-valid');
                 password.classList.remove('is-valid');
             }
         });
 
-        // Add live validation on input
+  
         document.querySelectorAll('#loginForm input').forEach(input => {
             input.addEventListener('input', function () {
                 if (this.checkValidity()) {
