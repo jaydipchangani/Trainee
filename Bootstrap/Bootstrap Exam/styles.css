@@ -1,3 +1,23 @@
 body{
     font-family: 'Roboto', sans-serif;
 }
+.cell-1 {
+    height: 325px;
+    display: flex;
+    justify-content: center;
+
+    padding-top: 9%;
+}
+.cell-2 {
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.c-red {
+    color: white;
+    background-color: #ff6347;
+}
+.c-blue {
+    background-color: #acd8e8;
+}
