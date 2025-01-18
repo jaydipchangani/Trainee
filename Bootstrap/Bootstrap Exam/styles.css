@@ -21,6 +21,10 @@ body{
 .c-blue {
     background-color: #acd8e8;
 }
+
+/* task 3 */ 
+
+
 .hero {
     background-color: #72bab2;
     height: 70vh;
@@ -54,6 +58,7 @@ body{
     padding-bottom: 5%;
 }
 
+/* task 4 */
 
 .btn-danger {
     background-color: #ff4757;
@@ -77,4 +82,36 @@ body{
 
 tbody{
     color: #ff4757;
+}
+
+/* task 5 */
+.form-control {
+    border: 2px solid #dee2e6;
+    padding: 0.75rem;
+    border-radius: 4px;
+}
+.form-control:focus {
+    border-color: #80bdff;
+    box-shadow: none;
+}
+.form-title {
+    color: #00bcd4;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+.continue-btn {
+    background-color: #f5a623;
+    border: none;
+    padding: 0.75rem 2.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.continue-btn:hover {
+    background-color: #e69512;
+}
+.form-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
 }
