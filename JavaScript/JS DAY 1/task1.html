@@ -1,82 +1,46 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<style>
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    padding: 20px;
-}
-
-.container {
-    background-color: #e0e0e0;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.row {
-    margin-bottom: 10px;
-}
-
-.label {
-    font-weight: bold;
-}
-
-.input-field {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    box-sizing: border-box;
-}
-
-.button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task - 1</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="task1.css">
+    <style>
+        
+    </style>
 </head>
 <body>
-
-<div class="container">
-    <div class="row">
-        <div class="label">T1</div>
-        <input type="number" id="t1" name="t1" class="input-field" >
+    <div class="container">
+        <form id="calculationForm">
+            <div class="row mb-3">
+                <div class="col-12 col-md-4">
+                    <label for="input1" class="form-label">T1</label>
+                    <input id="input1" type="text" class="form-control" required>
+                </div>
+                <div class="col-12 col-md-4">
+                    <label for="input2" class="form-label">T2</label>
+                    <input id="input2" type="text" class="form-control" required>
+                </div>
+                <div class="col-12 col-md-4">
+                    <label for="input3" class="form-label">T3</label>
+                    <input id="input3" type="text" class="form-control" required>
+                </div>
+            </div>
+            <hr>
+            <div class="mb-3 btn_div">
+                <label for="input4" class="form-label">ANS</label>
+                <input id="input4" type="text" class="form-control" disabled>
+            </div>
+            <hr>
+            <div>
+                <button type="submit" id="calculateButton" class="btn btn-primary">Calculate</button>
+            </div>
+        </form>
     </div>
-    <div class="row">
-        <div class="label">T2</div>
-        <input type="number" id="t2" name="t2" class="input-field" >
-    </div>
-    <div class="row">
-        <div class="label">T3</div>
-        <input type="number" id="t3" name="t3" class="input-field" >
-    </div>
-    <div class="row">
-        <div class="label">ANS</div>
-        <input type="text" class="input-field" id="ans" name="ans"  readonly>
-    </div>
-    <div class="row">
-        <input type="button" value="Calculate" class="button" onclick="calculate()">
-    </div>
-</div>
 
-<script>
-    function calculate() {
-        var t1 = parseFloat(document.getElementById('t1').value);
-        var t2 = parseFloat(document.getElementById('t2').value);
-        var t3 = parseFloat(document.getElementById('t3').value);
-
-        const sum=t1+t2;
-        const result = sum + " | " + t3 + " | " + sum+t3;
-
-
-        document.getElementById("ans").value = result;
-    }
-</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="task1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>
 </html>
