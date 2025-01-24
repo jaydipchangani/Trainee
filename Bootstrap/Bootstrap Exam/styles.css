@@ -1,0 +1,117 @@
+body{
+    font-family: 'Roboto', sans-serif;
+}
+.cell-1 {
+    height: 325px;
+    display: flex;
+    justify-content: center;
+
+    padding-top: 9%;
+}
+.cell-2 {
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.c-red {
+    color: white;
+    background-color: #ff6347;
+}
+.c-blue {
+    background-color: #acd8e8;
+}
+
+/* task 3 */ 
+
+
+.hero {
+    background-color: #72bab2;
+    height: 70vh;
+}
+
+.navbar {
+    background-color: #4d807a;
+}
+    
+.footer {
+    position: relative;
+    text-align: center;
+    color: white;
+}
+
+.footer img {
+    width: 100%;
+    height: 40vh;
+    object-fit: cover;
+}
+
+.footer-para {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.service {
+    padding-top: 5%;
+    padding-bottom: 5%;
+}
+
+/* task 4 */
+
+.btn-danger {
+    background-color: #ff4757;
+    color: white;
+    border: none;
+    padding: 5px 15px;
+    font-size: 14px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+}
+.close-btn:hover {
+    background-color: #ff6b81;
+}
+
+.table-hover tbody thead tr {
+    border: none;
+}
+.table-hover tbody tr td {
+    border: none;
+}
+
+tbody{
+    color: #ff4757;
+}
+
+/* task 5 */
+.form-control {
+    border: 2px solid #dee2e6;
+    padding: 0.75rem;
+    border-radius: 4px;
+}
+.form-control:focus {
+    border-color: #80bdff;
+    box-shadow: none;
+}
+.form-title {
+    color: #00bcd4;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+.continue-btn {
+    background-color: #f5a623;
+    border: none;
+    padding: 0.75rem 2.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.continue-btn:hover {
+    background-color: #e69512;
+}
+.form-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+}

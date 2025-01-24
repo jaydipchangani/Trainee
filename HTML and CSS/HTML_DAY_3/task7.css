@@ -1,0 +1,206 @@
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+  }
+
+  .container {
+    display: flex;
+  }
+  
+
+  .sidebar {
+    width: 250px;
+    background-color: #2c3338;
+    color: white;
+    height: 110vh;
+    overflow-y: auto;
+    position: relative;
+    top: -20px;
+  }
+  
+  .logo {
+   width: 200px;
+   padding: 10px;
+  }
+  
+
+  .sidebar ul {
+    list-style-type: none;
+  }
+  
+  .sidebar li {
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+  
+  .sidebar li:hover {
+    background-color: #2EA3E7;
+  }
+  
+  .sidebar i {
+    margin-right: 10px;
+  }
+  
+
+  .main-content {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: #ddd;
+    position: relative;
+    top: -20px;
+  }
+  
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    margin-bottom: 20px;
+  }
+  
+
+  .search-bar {
+    display: flex;
+    align-items: center;
+    background-color: #f5f5f5;
+    padding: 5px 10px;
+    border-radius: 14px;
+    width: 1000px;
+  }
+  
+  .search-bar input {
+    border: none;
+    background: none;
+    margin-left: 10px;
+  }
+  
+
+  .header-right {
+    display: flex;
+    align-items: center;
+  }
+  
+  .header-right i {
+    margin-right: 15px;
+  }
+  
+  .user-profile img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 15px;
+  }
+  
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .page-tips {
+    background: none;
+    border: 1px solid #ddd;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+
+  .customer-form {
+    max-width: 600px;
+  }
+  
+  .form-row {
+    margin-bottom: 15px;
+  }
+  
+  .form-row label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="url"],
+  select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+
+  .radio-group {
+    display: flex;
+    gap: 15px;
+  }
+  
+
+  .input-group,
+  .phone-inputs {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .input-group > *,
+  .phone-inputs > * {
+    flex: 1;
+  }
+ 
+  .help-icon {
+    color: #666;
+    margin-left: 5px;
+    cursor: pointer;
+  }
+
+  .form-actions {
+    margin-top: 20px;
+  }
+  
+  .btn-save,
+  .btn-cancel {
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .btn-save {
+    background-color: #0066cc;
+    color: white;
+    border: none;
+  }
+  
+  .btn-cancel {
+    background: none;
+    border: 1px solid #ddd;
+    margin-left: 10px;
+  }
+  
+
+  .btn-save:hover {
+    background-color: #0052a3;
+  }
+  
+  .btn-cancel:hover {
+    background-color: #f5f5f5;
+  }
+
+  .head{
+    
+    width: 100%;
+    margin-top: 0px;
+  }

@@ -1,0 +1,127 @@
+body{
+   padding: 20px;
+   background-color: #e6dcd8;
+}
+.navigation{
+    background-color: #e6dcd8;
+    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: xx-large;
+}
+.logo{
+    display: flex;
+    justify-content: flex-start;
+    background-color: #e6dcd8;
+    
+}
+a{
+    text-decoration: none;
+    color: black;
+}
+a:hover{
+    text-decoration: underline;
+    
+}
+
+.menu{
+    display: flex;
+    justify-content: flex-end;
+    list-style-type: none;
+    justify-content: space-around;
+    width: 30%;
+    font-size: x-large;
+
+}
+
+.mainBody{
+    display: flex;
+    flex-direction: column;
+    background-color: #e6dcd8;
+
+    
+}
+
+.heading{
+    display: flex;
+    justify-content: flex-start;
+    width:100%;
+    background-color: #e6dcd8;
+    font-size: 7em;
+
+    padding-top: 15vh;
+}
+
+
+.aboutUs{
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 5vh;
+    height: 200px;
+    background-color: #e6dcd8;
+    font-size: larger;
+}
+
+.leftSection{
+    display: flex;
+    justify-content: flex-start;
+    background-color: #e6dcd8;
+    width: 65%;
+    height: 100px;
+
+}
+
+.leftContent{
+    width: 100%;
+    background-color: #e6dcd8;
+    line-height: 1.5;
+    text-align: justify;
+}
+
+.subHeading{
+    display: flex;
+    justify-content: flex-start;
+    width:50%;
+    background-color: #e6dcd8;
+    font-size: 5em;
+    padding-left: 300px;
+    font-family: "Dancing Script", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+.tableCompany td{
+    width: 25%;
+    height: 50px;
+    background-color: #e6dcd8;
+    text-align: right;
+}
+.address{
+    padding-right: 100px;
+    font-size: x-large;
+}
+hr{
+    width: 100%;
+    border-top: 2px solid black
+}
+.footerMain{
+    display: flex;
+    background-color: #e6dcd8;
+    padding-top: 20px;
+
+}
+.footerMain ul{
+    display: flex;
+    justify-content: space-between;
+    list-style-type: none;
+    width: 100%;
+    height: 50px;
+    font-size: large;
+}
+
+.lg{
+    width: 100px;
+    height: 100px;
+
+}
