@@ -1,0 +1,98 @@
+/* Style the form */
+/* #regForm {
+    background-color: #ffffff;
+    margin: 100px auto;
+    padding: 40px;
+    width: 70%;
+    min-width: 300px;
+  } */
+  
+  /* Style the input fields */
+
+  body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: 'Times New Roman', Times, serif;
+    
+
+  }
+
+  .container{
+    padding: 100px 0px;
+    height: 100vh;
+  }
+  form{
+    padding: 30px;
+    background-color: #dadada;
+  }
+  input,select {
+    padding: 10px !important;
+    width: 100%  !important;
+    font-size: 17px  !important;
+    font-family: Raleway;
+    border: 1px solid #aaaaaa  !important;
+    border-radius: 0 !important;
+  }
+  
+  /* Mark input boxes that gets an error on validation: */
+  input.invalid {
+    background-color: #ffdddd;
+  }
+  
+  /* Hide all steps by default: */
+  .tab {
+    display: none;
+  }
+  
+  /* Make circles that indicate the steps of the form: */
+  .step {
+    height: 15px;
+    width: 15px;
+    margin: 0 2px;
+    background-color: #bbbbbb;
+    border: none;
+    border-radius: 50%;
+    display: inline-block;
+    opacity: 0.5;
+  }
+  
+  /* Mark the active step: */
+  .step.active {
+    opacity: 1;
+  }
+  
+  /* Mark the steps that are finished and valid: */
+  .step.finish {
+    background-color: #04AA6D;
+  }
+
+  .heading{
+    text-align: center;
+  }
+
+  .btn{
+    border-radius: 0;
+    padding: 20px 40px;
+  }
+
+  @media (max-width: 768px) {
+    .btn {
+        padding: 15px 30px; /* Smaller padding for tablets */
+        font-size: 16px; /* Adjust font size for better readability */
+    }
+}
+
+/* Phone Style */
+@media (max-width: 576px) {
+    .btn {
+        padding: 10px 20px; /* Smaller padding for phones */
+        font-size: 14px; /* Further adjust font size for small screens */
+    }
+}
+
+td{
+    background: #dadada !important;
+    border: 1px white solid;
+}
