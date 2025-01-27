@@ -132,13 +132,14 @@ function validateAllFields() {
         document.getElementById("state").value;
       document.getElementById("zipCopy").value =
         document.getElementById("zip").value;
+      document.getElementById("countryCopy").value =document.getElementById("country")
   
       document.getElementById("address1Copy").disabled = true;
       document.getElementById("address2Copy").disabled = true;
       document.getElementById("cityCopy").disabled = true;
       document.getElementById("stateCopy").disabled = true;
       document.getElementById("zipCopy").disabled = true;
-      // document.getElementById('countryCopy').disabled = true;
+      //document.getElementById('countryCopy').disabled = true;
     } else {
       document.getElementById("address1Copy").value = "";
       document.getElementById("address2Copy").value = "";
