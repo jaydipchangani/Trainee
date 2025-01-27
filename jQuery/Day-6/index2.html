@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bootstrap Template</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+    <style>
+        .signature-pad {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            height: 200px;
+            width: 100%;
+        }
+
+        .ssn-input {
+            width: 50px;
+            /* Adjust the width as needed */
+            height: 50px;
+            text-align: center;
+            font-size: 1.5rem;
+            margin-right: 35px;
+            border-radius: 5px;
+        }
+
+        .ssn-input:focus {
+            outline: none;
+            border-color: #0d6efd;
+            /* Bootstrap's primary color */
+            box-shadow: 0 0 5px rgba(13, 110, 253, 0.5);
+        }
+
+        small{
+            color: rgb(126, 126, 126);
+        }
+
+        .form-check{
+            margin-top: 20px;
+        }
+
+        /* Apply green border for valid EIN inputs */
+        .ssn-input.is-valid {
+            padding-right: 10px;
+            background-image: none;
+            border-color: green !important;
+            color: black; /* Keep the text color black */
+        }
+
+        /* Apply red border for invalid EIN inputs */
+        .ssn-input.is-invalid {
+            padding-right: 10px;
+            background-image: none;
+            border-color: red !important;
+            color: black; /* Keep the text color black */
+        }
+
+
+        .ssn-input.is-valid {
+            padding-right: 10px;
+            background-image: none;
+            border-color: green !important;
+            color: black; /* Keep the text color black */
+        }
+
+        /* Apply red border for invalid EIN inputs */
+        .ssn-input.is-invalid {
+            padding-right: 10px;
+            background-image: none;
+            border-color: red !important;
+            color: black; /* Keep the text color black */
+        }
+
+        /* Optional: Focus effect for EIN inputs */
+       
+
+/* Remove the invalid-feedback message from EIN fields */
+.ssn-input.is-invalid + .invalid-feedback {
+    display: none;
+}
+
+/* Optional: Keep the border colors for valid/invalid EIN inputs */
+.ssn-input.is-valid {
+    border-color: green !important;
+    color: black; /* Keep text black */
+}
+
+.ssn-input.is-invalid {
+    border-color: red !important;
+    color: black; /* Keep text black */
+}
+
+/* Optional: Focus effect for EIN inputs */
+.ssn-input:focus.is-valid {
+    border-color: green !important;
+}
+
+.ssn-input:focus.is-invalid {
+    border-color: red !important;
+}
+
+.no-arrows::-webkit-inner-spin-button, 
+
+.no-arrows::-webkit-outer-spin-button {
+
+  -webkit-appearance: none;
+
+  margin: 0;
+
+}
+
+
+
+.no-arrows { 
+
+  -moz-appearance: textfield; 
+
+} 
+
+    </style>
+</head>
+
+<body>
+    <div class="container col-md=8 bg-light border rounded mt-3">
+        <div class="p-3 mt-5 border-bottom">
+            <h1>Request for Taxpayer Identification <br> Number and Certification</h1>
+            <p class="fs-5">Go to www.irs.gov/FormW9 for instructions and the latest information.</p>
+        </div>
+
+        <div class="p-3">
+            <form id="signatureForm" class="p-3">
+                <div class="my-3">
+                    <label for="entityName">
+                        1. Name of entity/individual. An entry is required. (For a sole proprietor or disregarded
+                        entity, enter the owner’s name on line 1, and enter the business/disregarded entity’s name on
+                        line 2.)
+                    </label>
+                    <input type="text" name="entityName" id="entityName" class="form-control w-50 mt-2">
+                </div>
+
+                <div class="my-3">
+                    <label for="businessName">
+                        2. Business name/disregarded entity name, if different from above.
+                    </label>
+                    <input type="text" name="businessName" id="businessName" class="form-control w-50 mt-2">
+                </div>
+
+                <div class="my-3">
+                    <label for="taxClassification" class="form-label">
+                        3.a Check the appropriate box for federal tax classification of the entity/individual whose name
+                        is entered on line 1. Check only one of the following seven boxes.
+                    </label>
+                    <div class="form-check">
+                        <input type="checkbox" name="taxClassification" id="individual" class="form-check-input">
+                        <label for="individual" class="form-check-label">Individual/sole proprietor</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" name="taxClassification" id="cCorporation" class="form-check-input">
+                        <label for="cCorporation" class="form-check-label">C Corporation</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" name="taxClassification" id="sCorporation" class="form-check-input">
+                        <label for="sCorporation" class="form-check-label">S Corporation</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" name="taxClassification" id="partnership" class="form-check-input">
+                        <label for="partnership" class="form-check-label">Partnership</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" name="taxClassification" id="trustEstate" class="form-check-input">
+                        <label for="trustEstate" class="form-check-label">Trust/estate</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" name="taxClassification" id="llc" class="form-check-input">
+                        <label for="llc" class="form-check-label">Limited liability company</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" name="taxClassification" id="other" class="form-check-input">
+                        <label for="other" class="form-check-label">Other</label>
+                    </div>
+                </div>
+
+                <div class="my-3">
+                    <label for="llcTaxClassification">
+                        If you selected "Limited liability company", enter the tax classification (C=C corporation, S=S
+                        corporation, P=Partnership)
+                    </label>
+                    <input type="text" name="llcTaxClassification" id="llcTaxClassification" class="form-control w-50 mt-2">
+                </div>
+
+                <div class="my-3">
+                    <label for="foreignPartners">
+                        3b. If on line 3a you checked “Partnership” or “Trust/estate,” or checked “LLC” and entered “P”
+                        as its tax classification, and you are providing this form to a partnership, trust, or estate in
+                        which you have an ownership interest, check this box if you have any foreign partners, owners,
+                        or beneficiaries.
+                    </label>
+                    <div class="form-check">
+                        <input type="checkbox" name="foreignPartners" id="foreignPartnersCheck" class="form-check-input">
+                        <label for="foreignPartnersCheck" class="form-check-label">Check Here</label>
+                    </div>
+                </div>
+
+                <div class="my-5">
+                    <p>4. Exemptions (codes apply only to certain entities, not individuals; see instructions on page
+                        3):</p>
+                </div>
+
+                <div class="my-3">
+                    <label for="exemptPayeeCode">
+                        Exempt payee code (if any)
+                    </label>
+                    <input type="text" name="exemptPayeeCode" id="exemptPayeeCode" class="form-control w-50 mt-2">
+                </div>
+
+                <div class="my-3">
+                    <label for="fatcaExemptionCode">
+                        Exemption from Foreign Account Tax Compliance Act (FATCA) reporting code (if any)
+                    </label>
+                    <input type="text" name="fatcaExemptionCode" id="fatcaExemptionCode" class="form-control w-50 mt-2">
+                </div>
+
+                <div class="my-3">
+                    <label for="address">
+                        5-6. Address (number, street, and apt. or suite no.)
+                    </label>
+                    <input type="text" name="address" id="address" class="form-control w-50 mt-2">
+                    <small>Number, Street, and Apt. or Suite No.</small>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="text" name="city" id="city" class="form-control mt-2">
+                            <small >City</small>
+                        </div>
+
+                        <div class="col-md-6">
+                            <input type="text" name="state" id="state" class="form-control mt-2">
+                            <small >State</small>
+                        </div>
+                    </div>
+
+                    <input type="text" name="zipCode" id="zipCode" class="form-control mt-2">
+                    <small >Zip Code</small>
+                </div>
+
+                <div class="my-3">
+                    <p>Requester's name</p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="text" name="requesterFirstName" id="requesterFirstName" class="form-control mt-2">
+                            <small >First Name</small>
+                        </div>
+
+                        <div class="col-md-6">
+                            <input type="text" name="requesterLastName" id="requesterLastName" class="form-control mt-2">
+                            <small >Last Name</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="my-3">
+                    <p>Requester's address</p>
+                    <input type="text" name="requesterAddress" id="requesterAddress" class="form-control w-50 mt-2">
+                    <small>Number, Street, and Apt. or Suite No.</small>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="text" name="requesterCity" id="requesterCity" class="form-control mt-2">
+                            <small>City</small>
+                        </div>
+
+                        <div class="col-md-6">
+                            <input type="text" name="requesterState" id="requesterState" class="form-control mt-2">
+                            <small>State</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="my-3">
+                    <label for="accountNumbers">
+                        7. List account number(s) here (optional)
+                    </label>
+                    <input type="text" name="accountNumbers" id="accountNumbers" class="form-control w-50 mt-2">
+                </div>
+
+                <div class="my-5">
+                    <h3>Part I - Taxpayer Identification Number (TIN)</h3>
+                    <hr>
+
+                    <div class="my-5">
+                        Enter your TIN in the appropriate box. The TIN provided must match the name given on line 1 to
+                        avoid backup withholding. For individuals, this is generally your social security number (SSN).
+                        However, for a resident alien, sole proprietor, or disregarded entity, see the instructions for
+                        Part I, later. For other entities, it is your employer identification number (EIN). If you do
+                        not have a number, see How to get a TIN, later.
+                    </div>
+
+                    <div class="mt-2">
+                        <b>Note:</b> If the account is in more than one name, see the instructions for line 1. Also see
+                        What Name and Number To Give the Requester for guidelines on whose number to enter.
+                    </div>
+                </div>
+
+                <div class="my-5">
+                    <h3>Social Security Number</h3>
+                    <hr>
+                    <div class="d-flex flex-wrap justify-content-center mt-5">
+                        <input type="text" maxlength="1" class="form-control ssn-input col-4 col-md-1" name="ssn1">
+                        <input type="text" maxlength="1" class="form-control ssn-input col-4 col-md-1" name="ssn2">
+                        <input type="text" maxlength="1" class="form-control ssn-input col-4 col-md-1" name="ssn3">
+                        <input type="text" maxlength="1" class="form-control ssn-input col-4 col-md-1" name="ssn4">
+                        <input type="text" maxlength="1" class="form-control ssn-input col-4 col-md-1" name="ssn5">
+                        <input type="text" maxlength="1" class="form-control ssn-input col-4 col-md-1" name="ssn6">
+                        <input type="text" maxlength="1" class="form-control ssn-input col-4 col-md-1" name="ssn7">
+                        <input type="text" maxlength="1" class="form-control ssn-input col-4 col-md-1" name="ssn8">
+                        <input type="text" maxlength="1" class="form-control ssn-input col-4 col-md-1" name="ssn9">
+                    </div>
+                </div>
+                
+                <div class="my-5">
+                    <h3>OR</h3>
+                    <hr>
+                    <h3 class="mt-5">Employer identification number</h3>
+                    <hr>
+                    <div class="d-flex flex-wrap justify-content-center mt-5">
+                        <input type="number" maxlength="1" class="form-control ssn-input col-4 col-md-1 no-arrows" name="ein1">
+                        <input type="number" maxlength="1" class="form-control ssn-input col-4 col-md-1 no-arrows" name="ein2">
+                        <input type="number" maxlength="1" class="form-control ssn-input col-4 col-md-1 no-arrows" name="ein3">
+                        <input type="number" maxlength="1" class="form-control ssn-input col-4 col-md-1 no-arrows" name="ein4">
+                        <input type="number" maxlength="1" class="form-control ssn-input col-4 col-md-1 no-arrows" name="ein5">
+                        <input type="number" maxlength="1" class="form-control ssn-input col-4 col-md-1 no-arrows" name="ein6">
+                        <input type="number" maxlength="1" class="form-control ssn-input col-4 col-md-1 no-arrows" name="ein7">
+                        <input type="number" maxlength="1" class="form-control ssn-input col-4 col-md-1 no-arrows" name="ein8">
+                        <input type="number" maxlength="1" class="form-control ssn-input col-4 col-md-1 no-arrows" name="ein9">
+                    </div>
+                </div>
+                
+
+                <div class="my-3">
+                    <h4>Part II - Certification</h4>
+                    <hr>
+
+                    <div class="mt-4">
+                        <p>Under penalties of perjury, I certify that:</p>
+                        <p>1. The number shown on this form is my correct taxpayer identification number (or I am
+                            waiting for a number to be issued to me); and</p>
+
+                        <p>2. I am not subject to backup withholding because: (a) I am exempt from backup withholding,
+                            or (b) I have not been notified by the Internal Revenue Service (IRS) that I am subject to
+                            backup withholding as a result of a failure to report all interest or dividends, or (c) the
+                            IRS has notified me that I am no longer subject to backup withholding; and</p>
+                        <p>3. I am a U.S. citizen or other U.S. person (defined below); and</p>
+
+                        <p>4. The FATCA code(s) entered on this form (if any) indicating that I am exempt from FATCA
+                            reporting is correct.</p>
+
+                        <p><b>Certification instructions.</b>You must cross out item 2 above if you have been notified
+                            by the IRS that you are currently subject to backup withholding because you have failed to
+                            report all interest and dividends on your tax return. For real estate transactions, item 2
+                            does not apply. For mortgage interest paid, acquisition or abandonment of secured property,
+                            cancellation of debt, contributions to an individual retirement arrangement (IRA), and
+                            generally, payments other than interest and dividends, you are not required to sign the
+                            certification, but you must provide your correct TIN. See the instructions for Part II,
+                            later.</p>
+                    </div>
+                </div>
+
+                <div class="my-5">
+                    <h5>Signature</h5>
+                    <canvas id="signature-pad" class="signature-pad"></canvas>
+                    <button type="button" id="clear" class="btn btn-secondary">Clear</button>
+                </div>
+
+                <div class="my-5">
+                    <h5>Date</h5>
+                    <input type="date" class="form-control w-25" name="submissionDate" id="submissionDate">
+                    <small>Date</small>
+                </div>
+
+                <hr>
+                <div class="d-flex justify-content-center gap-2">
+                    <button class="btn btn-secondary px-5" id="preview-btn">Preview PDF</button>
+                    <button class="btn btn-success px-5" id="submit-btn">Submit</button>
+                </div>  
+            </form>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+  
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script>
+
+
+$(document).ready(function() {
+    const IDNumberHandler = {
+        initialize: function() {
+            this.setupInputHandlers();
+            this.setupAutoFocus();
+        },
+
+        setupInputHandlers: function() {
+            // Handle SSN inputs
+            $('.ssn-input').on('input', function(e) {
+                const $input = $(this);
+                const value = $input.val();
+                
+                // Allow only numbers
+                if (!/^\d*$/.test(value)) {
+                    $input.val(value.replace(/\D/g, ''));
+                    return;
+                }
+
+                // Move to next input if value is entered
+                if (value.length === 1) {
+                    $input.next('.ssn-input').focus();
+                }
+            });
+
+            // Handle backspace
+            $('.ssn-input').on('keydown', function(e) {
+                if (e.keyCode === 8 && !$(this).val()) {
+                    $(this).prev('.ssn-input').focus();
+                }
+            });
+        },
+
+        setupAutoFocus: function() {
+            // Set autofocus on first SSN input
+            $('input[name="ssn1"]').focus();
+        }
+    };
+
+    // Module for handling signature pad
+    const SignaturePad = {
+        pad: null,
+
+        initialize: function() {
+            const canvas = document.getElementById('signature-pad');
+            this.pad = new SignaturePad(canvas, {
+                minWidth: 1,
+                maxWidth: 2.5,
+                penColor: 'black'
+            });
+
+            // Adjust canvas size to container
+            this.resizeCanvas();
+            
+            // Handle clear button
+            $('#clear').on('click', () => this.pad.clear());
+
+            // Handle window resize
+            $(window).on('resize', () => this.resizeCanvas());
+        },
+
+        resizeCanvas: function() {
+            const canvas = document.getElementById('signature-pad');
+            const ratio = Math.max(window.devicePixelRatio || 1, 1);
+            canvas.width = canvas.offsetWidth * ratio;
+            canvas.height = canvas.offsetHeight * ratio;
+            canvas.getContext("2d").scale(ratio, ratio);
+        },
+
+        isEmpty: function() {
+            return this.pad.isEmpty();
+        }
+    };
+
+    // Module for form validation and submission
+    const FormHandler = {
+        initialize: function() {
+            this.setupStateDropdown();
+            this.setupCityDropdown();
+            this.setupValidation();
+            this.setupSubmission();
+        },
+
+        setupStateDropdown: function() {
+            const states = [
+                "Alabama", "Alaska", "Arizona", "Arkansas", "California",
+                "Colorado", "Connecticut", "Delaware", "Florida", "Georgia",
+                "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa",
+                "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland",
+                "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri",
+                "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey",
+                "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio",
+                "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina",
+                "South Dakota", "Tennessee", "Texas", "Utah", "Vermont",
+                "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"
+            ];
+
+            const $stateSelect = $('<select>').addClass('form-control mt-2')
+                                            .attr('id', 'state')
+                                            .attr('name', 'state');
+            
+            $stateSelect.append($('<option>').val('').text('Select State'));
+            states.forEach(state => {
+                $stateSelect.append($('<option>').val(state).text(state));
+            });
+
+            $('#state').replaceWith($stateSelect);
+        },
+
+        setupCityDropdown: function() {
+            // This is a simplified example. In practice, you might want to load cities based on selected state
+            const $citySelect = $('<select>').addClass('form-control mt-2')
+                                           .attr('id', 'city')
+                                           .attr('name', 'city');
+            
+            $citySelect.append($('<option>').val('').text('Select City'));
+            $('#city').replaceWith($citySelect);
+
+            // Update cities when state changes
+            $('#state').on('change', function() {
+                // Here you would typically make an AJAX call to get cities for the selected state
+                // This is just a placeholder
+                const selectedState = $(this).val();
+                if (selectedState) {
+                    $citySelect.html('<option value="">Select City</option><option value="city1">City 1</option>');
+                } else {
+                    $citySelect.html('<option value="">Select City</option>');
+                }
+            });
+        },
+
+        setupValidation: function() {
+            $('#signatureForm').validate({
+                rules: {
+                    entityName: {
+                        required: true,
+                        minlength: 2
+                    },
+                    zipCode: {
+                        required: true,
+                        pattern: /^\d{5}(-\d{4})?$/
+                    },
+                    state: "required",
+                    city: "required",
+                    address: {
+                        required: true,
+                        minlength: 5
+                    },
+                    // Add validation rules for other fields as needed
+                },
+                messages: {
+                    entityName: {
+                        required: "Please enter the entity name",
+                        minlength: "Name must be at least 2 characters long"
+                    },
+                    zipCode: {
+                        required: "Please enter a zip code",
+                        pattern: "Please enter a valid zip code (12345 or 12345-6789)"
+                    },
+                    state: "Please select a state",
+                    city: "Please select a city",
+                    address: {
+                        required: "Please enter an address",
+                        minlength: "Address must be at least 5 characters long"
+                    }
+                },
+                errorClass: "is-invalid",
+                validClass: "is-valid",
+                highlight: function(element, errorClass, validClass) {
+                    $(element).addClass(errorClass).removeClass(validClass);
+                },
+                unhighlight: function(element, errorClass, validClass) {
+                    $(element).removeClass(errorClass).addClass(validClass);
+                }
+            });
+        },
+
+        setupSubmission: function() {
+            $('#submit-btn').on('click', function(e) {
+                e.preventDefault();
+                
+                if ($('#signatureForm').valid() && !SignaturePad.isEmpty()) {
+                    // Form is valid and signature is present
+                    // Here you would typically submit the form data
+                    $('#signatureForm')[0].reset();
+                    SignaturePad.pad.clear();
+                    $('.is-valid, .is-invalid').removeClass('is-valid is-invalid');
+                    alert('Form submitted successfully!');
+                } else {
+                    alert('Please fill in all required fields and provide a signature.');
+                }
+            });
+        }
+    };
+
+    // Initialize all modules
+    IDNumberHandler.initialize();
+    SignaturePad.initialize();
+    FormHandler.initialize();
+});
+    </script>
+</body>
+
+</html>

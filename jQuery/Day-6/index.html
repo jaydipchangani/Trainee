@@ -4,311 +4,314 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beneficial Owner Form</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Task 1</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 500vh;
-            background-color: rgb(236, 236, 236);
+        .container {
+            margin-top: 40px;
+            width: 900px;
+            height: 100%;
+            margin-bottom: 40px;
         }
-
-        .form-container {
-            max-width: 1000px;
+        .text-input {
+            border: none;
+            border-bottom: 1px solid #000;
+            outline: none;
+            font-size: 16px;
+            padding: 5px;
         }
-
-        .form-title {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .sm-text {
-            font-size: small;
+        .text-input:focus {
+            border-bottom: 2px solid #007bff; 
         }
     </style>
 </head>
 
 <body>
-    <div class="form-container">
-        <div class="card">
-            <div class=" text-center">
-                <h4 class="form-title">Certificate of Foreign Status of Beneficial Owner for United States Tax
-                    Withholding and Reporting (Individuals)</h4>
-                <h6 class="text-dark-emphasis">Department of the Treasury Internal Revenue Service</h6>
-            </div>
-            <hr class="bg-dark-subtle">
+    <div class="container border border-2">
 
-            <div class=" card-body pt-5">
-                <p class="sm-text">
+        <div class="top-heading my-3 p-4">
+            <h1 class="text-center fs-3">Certificate of Foreign Status of Beneficial Owner for United States Tax
+                Withholding and Reporting (Individuals)</h1>
 
-                    For use by individuals. Entities must use Form W-8BEN-E.<br><br>
+            <p class="text-center fw-light">Department of the Treasury Internal Revenue Service</p>
+        </div>
+        <hr>
 
-                    Go to www.irs.gov/FormW8BEN for instructions and the latest information.<br><br>
+        <div class="para p-4">
+            <p>For use by individuals. Entities must use Form W-8BEN-E.</p>
+            <p>Go to https://www.irs.gov/FormW8BEN for instructions and the latest information.</p>
+            <p>Give this form to the withholding agent or payer. Do not send to the IRS.</p>
+        </div>
 
-                    Give this form to the withholding agent or payer. Do not send to the IRS.<br><br>
-                </p>
+        <div class="caution p-4">
+            <h3 class="fs-4">Do NOT use this form if:</h3>
+            <ul>
+                <li>You are NOT an individual</li>
+                <li>You are a U.S. citizen or other U.S. person, including resident alien individual</li>
+                <li>You are a beneficial owner claiming that income is effectively connected with the conduct of trade
+                    or bsiness with the U.S. (other than personal services)</li>
+                <li>You are a beneficial owner who is receiving compensation for personal services performed in the
+                    United States</li>
+                <li>You are a person acting as an intermediary</li>
+            </ul>
+        </div>
+        <hr>
 
-            </div>
+        <div class="note p-4 my-4">
+            <span class="fs-5 fw-bold">Note:</span>
+            <p style="display: inline;">If you are resident in a FATCA partner jurisdiction (i.e., a Model 1 IGA
+                jurisdiction with reciprocity),
+                certain tax account information may be provided to your jurisdiction of residence.</p>
+        </div>
 
-            <div class=" card-body pt-5">
-                <h6>
-                    Do NOT use this form if:
-                </h6><br>
-                <ul>
-                    <li>You are NOT an individual</li>
-                    <li>You are a U.S. citizen or other U.S. person, including resident alien individual</li>
-                    <li>You are a beneficial owner claiming that income is effectively connected with the conduct of
-                        trade or bsiness with the U.S. (other than personal services)</li>
-                    <li>You are a beneficial owner who is receiving compensation for personal services performed in the
-                        United States</li>
-                    <li>You are a person acting as an intermediary</li>
-                </ul>
-            </div>
-
-            <hr class="bg-dark-subtle">
-            <div class="card-body mb-5">
-                <b>Note:</b> If you are resident in a FATCA partner jurisdiction (i.e., a Model 1 IGA jurisdiction with
-                reciprocity), certain tax account information may be provided to your jurisdiction of residence.
-            </div>
-
-
-            <div class="card-body">
-                <form id="beneficialOwnerForm" class="needs-validation" novalidate>
-                    <!-- Part I -->
-                    <h5>Part I: Identification of Beneficial Owner</h5>
-                    <p class="sm-text">See instructions</p>
-
-                    <div class="row mb-3">
-                        <label class="col-md-4 col-form-label" for="ownerName">Name of individual who is the beneficial
-                            owner</label>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control" id="ownerName" required>
-                            <div class="invalid-feedback">Please enter the name.</div>
-                        </div>
+        <div class="form p-4 mb-3">
+            <form id="myForm">
+                <div class="form-heading my-5">
+                    <h3 class="fs-4">Part I: Identification of Beneficial Owner</h3>
+                    <p class="fw-light">See instructions</p>
+                </div>
+                <hr>
+                <div class="row mb-3 mt-5 px-3">
+                    <label for="name" class="col-md-4 col-form-label fw-semibold">1. Name of individual who is the
+                        beneficial
+                        owner</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control border-2" name="name" id="name" required pattern="^[A-Za-z]+$"  oninput="this.value = this.value.replace(/[^A-Za-z]/g, '')">
                     </div>
-
-                    <div class="row mb-3">
-                        <label class="col-md-4 col-form-label" for="citizenship">Country of citizenship</label>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control" id="citizenship" required>
-                            <div class="invalid-feedback">Please enter the country of citizenship.</div>
-                        </div>
+                </div>
+                <div class="row mb-5 px-3">
+                    <label for="country" class="col-md-4 col-form-label fw-semibold">2. Country of Citizenship</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control border-2" name="country" id="country" required pattern="^[A-Za-z]+$"  oninput="this.value = this.value.replace(/[^A-Za-z]/g, '')">
                     </div>
+                </div>
 
-                    <div class="row mb-3">
-                        <label class="col-md-4 col-form-label">Permanent residence address</label>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control mb-2" placeholder="Street address" required>
-                            <p class="sm-text text-dark-emphasis">Street address</p>
 
-                            <input type="text" class="form-control mb-2" placeholder="Street address 2">
-                            <p class="sm-text text-dark-emphasis">Street address 2</p>
-
-                            <div class="row">
-                                <div class="col-md-6 ">
-                                    <input type="text" class="form-control" placeholder="City" required>
-                                    <p class="sm-text text-dark-emphasis">City</p>
-                                </div>
-
-                                <div class="col-md-6 ">
-                                    <input type="text" class="form-control" placeholder="State" required>
-                                    <p class="sm-text text-dark-emphasis">State</p>
-                                </div>
+                <div class="row mb-3 px-3">
+                    <div class="col-md-4">
+                        <label for="streetAddress" class="form-label fw-semibold">
+                            3. Permanent residence address street, apt., or suite no., or rural route. Do not use a P.O.
+                            box or in-care-of address.
+                        </label>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <input type="text" name="address1" id="address1" class="form-control border-2" required pattern="^[A-Za-z0-9.,'\- ]+$">
+                                <p>Street Address</p>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6 w-50 ">
-                                    <input type="text" class="form-control " placeholder="Zip" required>
-                                    <p class="sm-text text-dark-emphasis">Zip</p>
-                                </div>
-
-                                <div class="col-md-6 w-50">
-                                    <select class="form-control" required>
-                                        <option value="">Select country</option>
-                                        <option value="USA">USA</option>
-                                        <option value="Canada">Canada</option>
-                                        <option value="UK">UK</option>
-                                    </select>
-                                    <p class="sm-text text-dark-emphasis">Country</p>
-                                </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <input type="text" name="address2" id="address2" class="form-control border-2" required pattern="^[A-Za-z0-9.,'\- ]+$"><p>Street Address Line 2</p>
                             </div>
-
                         </div>
-
-                        <div class="invalid-feedback">Please complete the address.</div>
-                    </div>
-
-
-                    <div class="row mb-3 ">
-                        <label class="col-md-4 col-form-label">Mailing address (if different)</label>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control mb-2" placeholder="Street address" required>
-                            <p class="sm-text text-dark-emphasis">Street address</p>
-
-                            <input type="text" class="form-control mb-2" placeholder="Street address 2">
-                            <p class="sm-text text-dark-emphasis">Street address 2</p>
-
-                            <div class="row">
-                                <div class="col-md-6 ">
-                                    <input type="text" class="form-control" placeholder="City" required>
-                                    <p class="sm-text text-dark-emphasis">City</p>
-                                </div>
-
-                                <div class="col-md-6 ">
-                                    <input type="text" class="form-control" placeholder="State" required>
-                                    <p class="sm-text text-dark-emphasis">State</p>
-                                </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="city" id="city" class="form-control border-2" required pattern="^[A-Za-z ]+$" oninput="this.value = this.value.replace(/[^A-Za-z]/g, '')" ><p>City</p>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6 w-50 ">
-                                    <input type="text" class="form-control " placeholder="Zip" required>
-                                    <p class="sm-text text-dark-emphasis">Zip</p>
-                                </div>
-
-                                <div class="col-md-6 w-50">
-                                    <select class="form-control" required>
-                                        <option value="">Select country</option>
-                                        <option value="USA">USA</option>
-                                        <option value="Canada">Canada</option>
-                                        <option value="UK">UK</option>
-                                    </select>
-                                    <p class="sm-text text-dark-emphasis">Country</p>
-                                </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="state" id="state" class="form-control border-2" required pattern="^[A-Za-z ]+$" oninput="this.value = this.value.replace(/[^A-Za-z]/g, '')" ><p>State / Province</p>
                             </div>
-
                         </div>
-
-                        <div class="invalid-feedback">Please complete the address.</div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <label class="col-md-4 col-form-label" for="foreignTaxId">Foreign tax identifying number</label>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control" id="foreignTaxId" required>
-                            <div class="invalid-feedback">Please provide the foreign tax ID.</div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="zip" id="zip" class="form-control border-2" required pattern="^\d{6}$" oninput="this.value = this.value.replace(/[^0-9]/g, '')" >
+                                <p>Postal / Zip Code</p>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <select name="country" id="country" class="form-control">
+                                    <option value="" selected disabled>Please Select</option>
+                                    <option value="ind">India</option>
+                                    <option value="pak">Pakistan</option>
+                                    <option value="ban">Bangladesh</option>
+                                </select>
+                                <p>Country</p>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <label class="col-md-4 col-form-label" for="referenceNumber">Reference number(s)</label>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control" id="referenceNumber">
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <label class="col-md-4 col-form-label" for="date">Date</label>
-                        <div class="col-md-8">
-                            <input type="date" class="form-control" id="date" required>
+                        <!-- "Same as Above" Checkbox -->
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="sameAsAbove" onclick="copyAddress()">
+                            <label class="form-check-label" for="sameAsAbove">
+                                Same as above
+                            </label>
                         </div>
                     </div>
-
-                    <!-- Part II -->
-                    <h5>Part II: Treaty Claim</h5>
-
-                    <div class="row card-body mb-3">
-                        9.I certify that the beneficial owner is a resident of <input type="text" class="w-25">
-                        blanks within the meaning of the income tax treaty between the United States and that country.
-
-                        10. Special rates and conditions (if applicable-see instructions): The beneficial owner is
-                        claiming the provisions of Article and paragraph<input type="text" class="w-25">
-                        of the treaty identified on line 9 above to claim a
-                        <input type="text" class="w-25"> % rate of withholding on (specify type of income):
-                        <input type="text" class="w-25"> . Explain the additional conditions in the Article and
-                        paragraph the beneficial owner meets to
-                        be eligible for the rate of withholding:
-                        <input type="text" class="w-25">
+                </div>
+                
+                <div class="row mb-3 px-3">
+                    <div class="col-md-4">
+                        <label for="streetAddress" class="form-label fw-semibold">
+                            4. Mailing address (if different from above)
+                        </label>
                     </div>
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <input type="text" name="address1" id="address1Copy" class="form-control border-2" disabled>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <input type="text" name="address2" id="address2Copy" class="form-control border-2" disabled>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="city" id="cityCopy" class="form-control border-2" disabled>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="state" id="stateCopy" class="form-control border-2" disabled>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <input type="text" name="zip" id="zipCopy" class="form-control border-2" disabled>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <select name="country" id="countryCopy" class="form-control" >
+                                    <option value="" selected disabled>Please Select</option>
+                                    <option value="ind">India</option>
+                                    <option value="pak">Pakistan</option>
+                                    <option value="ban">Bangladesh</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+
+                <div class="row mb-3 px-3">
+                    <label for="taxnum" class="col-md-4 col-form-label fw-semibold">6. Foreign tax identifying number
+                        (see
+                        instructions)</label>
+                    <div class="col-md-8">
+                        <input type="number" class="form-control border-2" name="taxnum" id="taxnum" pattern="^\d+$" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                    </div>
+                </div>
+                <div class="row mb-3 px-3">
+                    <label for="refnum" class="col-md-4 col-form-label fw-semibold">7. Reference number(s) (see
+                        instructions)</label>
+                    <div class="col-md-8">
+                        <input type="number" class="form-control border-2" name="refnum" id="refnum" pattern="^\d+$" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                    </div>
+                </div>
+                <div class="row mb-3 px-3">
+                    <label for="dob" class="col-md-4 col-form-label fw-semibold">8. Date of birth (MM-DD-YYYY) (see
+                        instructions)</label>
+                    <div class="col-md-8">
+                        <input type="date" class="form-control border-2" name="dob" id="dob">
+                    </div>
+                </div>
 
 
-            </div>
-
-            <!-- Part III -->
-            <div class="card-body">
-                <h5>Part III: Certification</h5>
-                <p>
-                    Under penalties of perjury, I declare that I have examined the information on this form and to the
-                    best of my knowledge and belief it is true, correct, and complete. I further certify under penalties
-                    of perjury that:
+                <div class="part2 p-4 mb-3">
+                    <h3 class="fs-4">Part II: Claim of Tax Treaty Benefits</h3>
+                    <p class="fw-light">See instructions (for chapter 3 purposes only)</p>
+                    <hr>
+                    <div class="para9 my-5">
+                        <p>9.I certify that the beneficial owner is a resident of <input type="text" class="text-input" required pattern="^[A-Za-z]+$"  oninput="this.value = this.value.replace(/[^A-Za-z]/g, '')" title="Please enter letters only"> within the meaning of the
+                            income tax treaty between the United States and that country.</p>
+                        <br><br>
+                        <p>10. Special rates and conditions (if applicable-see instructions): The beneficial owner is claiming
+                            the provisions of Article and paragraph <input type="text" class="text-input" required pattern="^[A-Za-z]+$"  oninput="this.value = this.value.replace(/[^A-Za-z]/g, '')" title="Please enter letters only">
+                            of the treaty identified on line 9 above to claim a <input type="text" class="text-input" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                            % rate of withholding on (specify type of income): <input type="text" class="text-input" required pattern="^[A-Za-z]+$"  oninput="this.value = this.value.replace(/[^A-Za-z]/g, '')" title="Please enter letters only">
+                            . Explain the additional conditions in the Article and paragraph the beneficial owner meets to be
+                            eligible for the rate of withholding: <input type="text" class="text-input" required pattern="^[A-Za-z]+$"  oninput="this.value = this.value.replace(/[^A-Za-z]/g, '')"title="Please enter letters only">
+                        </p>
+                    </div>
+                </div>
+        
+                <div class="part3 p-4 mb-3">
+                    <div class="heading3 mb-5">
+                        <h3 class="fs-4">Part III: Certification</h3>
+                        <hr>
+                    </div>
+                    <p>Under penalties of perjury, I declare that I have examined the information on this form and to the best
+                        of my knowledge and belief it is true, correct, and complete. I further certify under penalties of
+                        perjury that:</p>
+        
                     <ul>
-                        <li>I am the individual that is the beneficial owner (or am authorized to sign for the individual that is the beneficial owner) of all the income to which this form relates or am using this form to document myself for chapter 4 purposes,</li>
+                        <li>I am the individual that is the beneficial owner (or am authorized to sign for the individual that
+                            is the beneficial owner) of all the income to which this form relates or am using this form to
+                            document myself for chapter 4 purposes,</li>
                         <li>The person named on line 1 of this form is not a U.S. person,</li>
                         <li>The income to which this form relates is:
                             <ul>
-                                <li>(a) not effectively connected with the conduct of a trade or business in the United States,</li>
-                                <li>(b) effectively connected but is not subject to tax under an applicable income tax treaty,</li>
+                                <li>(a) not effectively connected with the conduct of a trade or business in the United States,
+                                </li>
+                                <li>(b) effectively connected but is not subject to tax under an applicable income tax treaty,
+                                </li>
                                 <li>or(c) the partner’s share of a partnership's effectively connected income,</li>
                             </ul>
                         </li>
-                        <li>The person named on line 1 of this form is a resident of the treaty country listed on line 9 of the form (if any) within the meaning of the income tax treaty between the United States and that country, and</li>
-                        <li>For broker transactions or barter exchanges, the beneficial owner is an exempt foreign person as defined in the instructions.</li>
+        
+                        <li>The person named on line 1 of this form is a resident of the treaty country listed on line 9 of the
+                            form (if any) within the meaning of the income tax treaty between the United States and that
+                            country, and</li>
+                        <li>For broker transactions or barter exchanges, the beneficial owner is an exempt foreign person as
+                            defined in the instructions.</li>
                     </ul>
-
-                <p>Furthermore, I authorize this form to be provided to any withholding agent that has control, receipt, or custody of the income of which I am the beneficial owner or any withholding agent that can disburse or make payments of the income of which I am the beneficial owner. <b>I agree that I will submit a new form within 30 days if any certification made on this form becomes incorrect.</b></p>
-
-                </p>
-
-                <div class="row mb-3">
-                    <label class="col-md-4 col-form-label" for="signature">Signature</label>
-                    <div class="col-md-8">
-                        <input type="text" class="form-control" id="signature" required>
+        
+                    <p>Furthermore, I authorize this form to be provided to any withholding agent that has control, receipt, or
+                        custody of the income of which I am the beneficial owner or any withholding agent that can disburse or
+                        make payments of the income of which I am the beneficial owner.<b> I agree that I will submit a new form
+                            within 30 days if any certification made on this form becomes incorrect.</b></p>
+                </div>
+        
+                <div class="signature p-4 mb-3">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p class="fw-semibold">Signature of beneficial owner (or individual authorized to sign for
+                                beneficial owner)</p>
+                        </div>
+                        <div class="col-md-8 border border-2">
+                            <canvas id="sign-pad" style="width: 100%; height: 200px;"></canvas>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col text-end">
+                            <button class="btn btn-primary col-md-1" id="clear-btn">Clear</button>
+                        </div>
                     </div>
                 </div>
-
-                <div class="row mb-3">
-                    <label class="col-md-4 col-form-label" for="date">Date</label>
+        
+                <div class="row p-4 mb-3">
+                    <div class="col-md-4">
+                        <label for="date" class="form-label fw-semibold">Date (MM-DD-YYYY)</label>
+                    </div>
                     <div class="col-md-8">
-                        <input type="date" class="form-control" id="date" required>
+                        <input type="date" name="date" id="date" class="form-control border border-2">
                     </div>
                 </div>
-
-                <div class="row mb-3">
-                    <label class="col-md-4 col-form-label" for="printName">Print Name</label>
+                <div class="row p-4 mb-3">
+                    <div class="col-md-4">
+                        <label for="pname" class="form-label fw-semibold" required pattern="^[A-Za-z]+$"  oninput="this.value = this.value.replace(/[^A-Za-z]/g, '')">Print name of signer</label>
+                    </div>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" id="printName" required>
+                        <input type="text" name="pname" id="pname" required pattern="^[A-Za-z]+$"  oninput="this.value = this.value.replace(/[^A-Za-z]/g, '')" class="form-control border border-2">
                     </div>
                 </div>
-
-                <div class="row mb-3">
-                    <label class="col-md-4 col-form-label" for="capacity">Capacity</label>
+                <div class="row p-4 mb-3">
+                    <div class="col-md-4">
+                        <label for="capacity" class="form-label fw-semibold">Capacity in which acting (if form is not signed by
+                            beneficial owner)</label>
+                    </div>
                     <div class="col-md-8">
-                        <input type="text" class="form-control" id="capacity" required>
+                        <input type="text" name="capacity" id="capacity" class="form-control border border-2">
                     </div>
                 </div>
-
-            </div>
-
-
-
-
-            <!-- Buttons -->
-            <div class="d-flex justify-content-center">
-                <button type="button" class="btn btn-secondary me-2">Preview PDF</button>
-                <button type="submit" class="btn btn-success">Submit</button>
-            </div>
             </form>
         </div>
+        <div class="buttons text-center">
+            <button class="btn btn-secondary">Preview PDFs</button>
+            <button class="btn btn-success">Submit</button>
+        </div>
     </div>
-    </div>
-    </div>
-    </div>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        (function () {
-            'use strict';
-            const form = document.querySelector('#beneficialOwnerForm');
-            form.addEventListener('submit', function (event) {
-                if (!form.checkValidity()) {
-                    event.preventDefault();
-                    event.stopPropagation();
-                }
-                form.classList.add('was-validated');
-            });
-        })();
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+    <script src="script.js"></script>
 </body>
 
 </html>
