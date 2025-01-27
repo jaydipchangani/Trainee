@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,46 +11,78 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 230vh;
-            background-color: rgb(245, 200, 200);
+            height: 500vh;
+            background-color: rgb(236, 236, 236);
         }
 
         .form-container {
-            max-width: 800px;
+            max-width: 1000px;
         }
 
         .form-title {
             text-align: center;
             margin-bottom: 20px;
         }
+
+        .sm-text {
+            font-size: small;
+        }
     </style>
 </head>
+
 <body>
     <div class="form-container">
         <div class="card">
             <div class=" text-center">
-                <h4 class="form-title">Certificate of Foreign Status of Beneficial Owner for United States Tax Withholding and Reporting (Individuals)</h4>
+                <h4 class="form-title">Certificate of Foreign Status of Beneficial Owner for United States Tax
+                    Withholding and Reporting (Individuals)</h4>
                 <h6 class="text-dark-emphasis">Department of the Treasury Internal Revenue Service</h6>
             </div>
             <hr class="bg-dark-subtle">
 
-            <div class=" card-body pt-5 fs-6">
-               
+            <div class=" card-body pt-5">
+                <p class="sm-text">
+
                     For use by individuals. Entities must use Form W-8BEN-E.<br><br>
 
                     Go to www.irs.gov/FormW8BEN for instructions and the latest information.<br><br>
 
                     Give this form to the withholding agent or payer. Do not send to the IRS.<br><br>
+                </p>
 
-                
             </div>
+
+            <div class=" card-body pt-5">
+                <h6>
+                    Do NOT use this form if:
+                </h6><br>
+                <ul>
+                    <li>You are NOT an individual</li>
+                    <li>You are a U.S. citizen or other U.S. person, including resident alien individual</li>
+                    <li>You are a beneficial owner claiming that income is effectively connected with the conduct of
+                        trade or bsiness with the U.S. (other than personal services)</li>
+                    <li>You are a beneficial owner who is receiving compensation for personal services performed in the
+                        United States</li>
+                    <li>You are a person acting as an intermediary</li>
+                </ul>
+            </div>
+
+            <hr class="bg-dark-subtle">
+            <div class="card-body mb-5">
+                <b>Note:</b> If you are resident in a FATCA partner jurisdiction (i.e., a Model 1 IGA jurisdiction with
+                reciprocity), certain tax account information may be provided to your jurisdiction of residence.
+            </div>
+
 
             <div class="card-body">
                 <form id="beneficialOwnerForm" class="needs-validation" novalidate>
                     <!-- Part I -->
                     <h5>Part I: Identification of Beneficial Owner</h5>
+                    <p class="sm-text">See instructions</p>
+
                     <div class="row mb-3">
-                        <label class="col-md-4 col-form-label" for="ownerName">Name of individual who is the beneficial owner</label>
+                        <label class="col-md-4 col-form-label" for="ownerName">Name of individual who is the beneficial
+                            owner</label>
                         <div class="col-md-8">
                             <input type="text" class="form-control" id="ownerName" required>
                             <div class="invalid-feedback">Please enter the name.</div>
@@ -68,25 +101,85 @@
                         <label class="col-md-4 col-form-label">Permanent residence address</label>
                         <div class="col-md-8">
                             <input type="text" class="form-control mb-2" placeholder="Street address" required>
+                            <p class="sm-text text-dark-emphasis">Street address</p>
+
                             <input type="text" class="form-control mb-2" placeholder="Street address 2">
-                            <input type="text" class="form-control mb-2" placeholder="City" required>
-                            <input type="text" class="form-control mb-2" placeholder="State" required>
-                            <input type="text" class="form-control mb-2" placeholder="Zip" required>
-                            <select class="form-control" required>
-                                <option value="">Select country</option>
-                                <option value="USA">USA</option>
-                                <option value="Canada">Canada</option>
-                                <option value="UK">UK</option>
-                            </select>
-                            <div class="invalid-feedback">Please complete the address.</div>
+                            <p class="sm-text text-dark-emphasis">Street address 2</p>
+
+                            <div class="row">
+                                <div class="col-md-6 ">
+                                    <input type="text" class="form-control" placeholder="City" required>
+                                    <p class="sm-text text-dark-emphasis">City</p>
+                                </div>
+
+                                <div class="col-md-6 ">
+                                    <input type="text" class="form-control" placeholder="State" required>
+                                    <p class="sm-text text-dark-emphasis">State</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 w-50 ">
+                                    <input type="text" class="form-control " placeholder="Zip" required>
+                                    <p class="sm-text text-dark-emphasis">Zip</p>
+                                </div>
+
+                                <div class="col-md-6 w-50">
+                                    <select class="form-control" required>
+                                        <option value="">Select country</option>
+                                        <option value="USA">USA</option>
+                                        <option value="Canada">Canada</option>
+                                        <option value="UK">UK</option>
+                                    </select>
+                                    <p class="sm-text text-dark-emphasis">Country</p>
+                                </div>
+                            </div>
+
                         </div>
+
+                        <div class="invalid-feedback">Please complete the address.</div>
                     </div>
 
-                    <div class="row mb-3">
+
+                    <div class="row mb-3 ">
                         <label class="col-md-4 col-form-label">Mailing address (if different)</label>
                         <div class="col-md-8">
-                            <input type="text" class="form-control" placeholder="Mailing address">
+                            <input type="text" class="form-control mb-2" placeholder="Street address" required>
+                            <p class="sm-text text-dark-emphasis">Street address</p>
+
+                            <input type="text" class="form-control mb-2" placeholder="Street address 2">
+                            <p class="sm-text text-dark-emphasis">Street address 2</p>
+
+                            <div class="row">
+                                <div class="col-md-6 ">
+                                    <input type="text" class="form-control" placeholder="City" required>
+                                    <p class="sm-text text-dark-emphasis">City</p>
+                                </div>
+
+                                <div class="col-md-6 ">
+                                    <input type="text" class="form-control" placeholder="State" required>
+                                    <p class="sm-text text-dark-emphasis">State</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 w-50 ">
+                                    <input type="text" class="form-control " placeholder="Zip" required>
+                                    <p class="sm-text text-dark-emphasis">Zip</p>
+                                </div>
+
+                                <div class="col-md-6 w-50">
+                                    <select class="form-control" required>
+                                        <option value="">Select country</option>
+                                        <option value="USA">USA</option>
+                                        <option value="Canada">Canada</option>
+                                        <option value="UK">UK</option>
+                                    </select>
+                                    <p class="sm-text text-dark-emphasis">Country</p>
+                                </div>
+                            </div>
+
                         </div>
+
+                        <div class="invalid-feedback">Please complete the address.</div>
                     </div>
 
                     <div class="row mb-3">
@@ -104,40 +197,6 @@
                         </div>
                     </div>
 
-                    <!-- Part II -->
-                    <h5>Part II: Treaty Claim</h5>
-
-                    <div class="row mb-3">
-                        <label class="col-md-4 col-form-label">Treaty residency certification</label>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control" placeholder="Type a label" required>
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <label class="col-md-4 col-form-label">Special rates and conditions</label>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control mb-2" placeholder="Article and paragraph" required>
-                            <input type="text" class="form-control mb-2" placeholder="Percentage rate" required>
-                            <input type="text" class="form-control mb-2" placeholder="Type of income" required>
-                            <textarea class="form-control" placeholder="Explain additional conditions" required></textarea>
-                        </div>
-                    </div>
-
-                    <!-- Part III -->
-                    <h5>Part III: Certification</h5>
-                    <p>
-                        Under penalties of perjury, I declare that I have examined the information on this form and to the best of my knowledge
-                        and belief it is true, correct, and complete...
-                    </p>
-
-                    <div class="row mb-3">
-                        <label class="col-md-4 col-form-label" for="signature">Signature</label>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control" id="signature" required>
-                        </div>
-                    </div>
-
                     <div class="row mb-3">
                         <label class="col-md-4 col-form-label" for="date">Date</label>
                         <div class="col-md-8">
@@ -145,28 +204,94 @@
                         </div>
                     </div>
 
-                    <div class="row mb-3">
-                        <label class="col-md-4 col-form-label" for="printName">Print Name</label>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control" id="printName" required>
-                        </div>
+                    <!-- Part II -->
+                    <h5>Part II: Treaty Claim</h5>
+
+                    <div class="row card-body mb-3">
+                        9.I certify that the beneficial owner is a resident of <input type="text" class="w-25">
+                        blanks within the meaning of the income tax treaty between the United States and that country.
+
+                        10. Special rates and conditions (if applicable-see instructions): The beneficial owner is
+                        claiming the provisions of Article and paragraph<input type="text" class="w-25">
+                        of the treaty identified on line 9 above to claim a
+                        <input type="text" class="w-25"> % rate of withholding on (specify type of income):
+                        <input type="text" class="w-25"> . Explain the additional conditions in the Article and
+                        paragraph the beneficial owner meets to
+                        be eligible for the rate of withholding:
+                        <input type="text" class="w-25">
                     </div>
 
-                    <div class="row mb-3">
-                        <label class="col-md-4 col-form-label" for="capacity">Capacity</label>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control" id="capacity" required>
-                        </div>
-                    </div>
 
-                    <!-- Buttons -->
-                    <div class="d-flex justify-content-center">
-                        <button type="button" class="btn btn-secondary me-2">Preview PDF</button>
-                        <button type="submit" class="btn btn-success">Submit</button>
-                    </div>
-                </form>
             </div>
+
+            <!-- Part III -->
+            <div class="card-body">
+                <h5>Part III: Certification</h5>
+                <p>
+                    Under penalties of perjury, I declare that I have examined the information on this form and to the
+                    best of my knowledge and belief it is true, correct, and complete. I further certify under penalties
+                    of perjury that:
+                    <ul>
+                        <li>I am the individual that is the beneficial owner (or am authorized to sign for the individual that is the beneficial owner) of all the income to which this form relates or am using this form to document myself for chapter 4 purposes,</li>
+                        <li>The person named on line 1 of this form is not a U.S. person,</li>
+                        <li>The income to which this form relates is:
+                            <ul>
+                                <li>(a) not effectively connected with the conduct of a trade or business in the United States,</li>
+                                <li>(b) effectively connected but is not subject to tax under an applicable income tax treaty,</li>
+                                <li>or(c) the partner’s share of a partnership's effectively connected income,</li>
+                            </ul>
+                        </li>
+                        <li>The person named on line 1 of this form is a resident of the treaty country listed on line 9 of the form (if any) within the meaning of the income tax treaty between the United States and that country, and</li>
+                        <li>For broker transactions or barter exchanges, the beneficial owner is an exempt foreign person as defined in the instructions.</li>
+                    </ul>
+
+                <p>Furthermore, I authorize this form to be provided to any withholding agent that has control, receipt, or custody of the income of which I am the beneficial owner or any withholding agent that can disburse or make payments of the income of which I am the beneficial owner. <b>I agree that I will submit a new form within 30 days if any certification made on this form becomes incorrect.</b></p>
+
+                </p>
+
+                <div class="row mb-3">
+                    <label class="col-md-4 col-form-label" for="signature">Signature</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="signature" required>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-md-4 col-form-label" for="date">Date</label>
+                    <div class="col-md-8">
+                        <input type="date" class="form-control" id="date" required>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-md-4 col-form-label" for="printName">Print Name</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="printName" required>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <label class="col-md-4 col-form-label" for="capacity">Capacity</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="capacity" required>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-center">
+                <button type="button" class="btn btn-secondary me-2">Preview PDF</button>
+                <button type="submit" class="btn btn-success">Submit</button>
+            </div>
+            </form>
         </div>
+    </div>
+    </div>
+    </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -185,4 +310,5 @@
         })();
     </script>
 </body>
+
 </html>
