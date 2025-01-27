@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bootstrap Exam Task 1</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="styles.css" rel="stylesheet">
 
     <style>
@@ -30,11 +31,9 @@
  
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" class="form-control" placeholder="Password" required 
-                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$">
-
-
-                        <div class="invalid-feedback">Password must be at least 6 characters long.</div>
+                        <input type="password" class="form-control" required pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$">
+                            
+                        <div class="invalid-feedback">Password must be at least 6 characters long with uppercase,lowercase,number and a special symbol .</div>
                         <a href="#" class="text-dark fw-bolder d-flex justify-content-end mt-2 text-decoration-none">Forgot password?</a>
                     </div>
 
