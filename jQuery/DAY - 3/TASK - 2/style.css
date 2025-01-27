@@ -1,0 +1,44 @@
+#calendar {
+  max-width: 1100px;
+  margin: 20px auto;
+}
+.color-preview {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
+  display: inline-block;
+  vertical-align: middle;
+  border: 1px solid #ddd;
+}
+/* Custom Event Styles */
+.daily-event {
+  border-radius: 4px;
+  font-weight: bold;
+  background-color: #ff6b6b;
+
+}
+.weekly-event {
+  border-radius: 4px;
+  font-style: italic;
+  background-color: #4ecdc4;
+}
+.monthly-event {
+  border-radius: 4px;
+  text-decoration: underline;
+  background-color: #9b59b6;
+  
+}
+.hourly-event {
+  
+  border-radius: 4px;
+  letter-spacing: 1px;
+  
+  background-color: #f1c40f;
+  
+}
+.once-event {
+  border: 2px solid #3498db !important;
+  border-radius: 4px;
+  
+}

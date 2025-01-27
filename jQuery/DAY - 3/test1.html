@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Slab Calculator</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .error-feedback {
+            color: #dc3545;
+            font-size: 80%;
+            margin-top: 0.25rem;
+        }
+
+        .tax-slab {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .tax-slab h3 {
+            color: #0d6efd;
+            margin-bottom: 15px;
+        }
+
+        .tax-result {
+            background-color: #e7f5ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-4">
+        <h2 class="mb-4 text-center">Tax Slab Calculator</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <form id="taxForm" class="needs-validation" novalidate>
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label for="name">Name:</label>
+                            <input type="text" class="form-control" id="name" required pattern="[A-Za-z ]{2,50}">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="mobile">Mobile:</label>
+                            <input type="tel" class="form-control" id="mobile" required pattern="[0-9]{10}">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6 form-group">
+                            <label for="birthdate">Birthdate:</label>
+                            <input type="date" class="form-control" id="birthdate" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="gender">Gender:</label>
+                            <select class="form-select" id="gender" required>
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-4 form-group">
+                            <label for="income">Income:</label>
+                            <input type="number" class="form-control" id="income" required min="0" step="1000">
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label for="loan">Loan:</label>
+                            <input type="number" class="form-control" id="loan" required min="0" step="1000">
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label for="investment">Investment:</label>
+                            <input type="number" class="form-control" id="investment" required min="0" step="1000">
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12 text-center">
+                            <button type="submit" class="btn btn-primary px-4">Calculate</button>
+                            <button type="reset" class="btn btn-secondary ms-2 px-4">Reset</button>
+                        </div>
+                    </div>
+                </form>
+
+                <div id="taxResult" class="tax-result mt-4">
+                    <h4>Tax Calculation Results</h4>
+                    <div id="resultDetails"></div>
+                </div>
+
+                <div class="tax-slab">
+                    <h3>Tax Slabs</h3>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h5>For Men:</h5>
+                            <ul class="list-unstyled">
+                                <li>Up to 2.4L - No Tax</li>
+                                <li>2.4L to 6L - 10%</li>
+                                <li>Above 6L - 20%</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <h5>For Women:</h5>
+                            <ul class="list-unstyled">
+                                <li>Up to 2.6L - No Tax</li>
+                                <li>2.6L to 7L - 10%</li>
+                                <li>Above 7L - 20%</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <h5>For Senior Citizen:</h5>
+                            <ul class="list-unstyled">
+                                <li>Up to 3L - No Tax</li>
+                                <li>3L to 7L - 10%</li>
+                                <li>Above 7L - 20%</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <h2>Tax Exemptions:</h2>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>1. 80% of the Loan amount or 20% of total income, whichever is less, is non-taxable.</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p>2. Any amount invested up to 1,00,000 INR (1L) is non-taxable.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('taxForm').addEventListener('submit', (e) => {
+            // Check if the form is valid using the browser's built-in validation
+            if (!e.target.checkValidity()) {
+                e.preventDefault(); // Prevent submission
+                e.stopPropagation(); // Stop further event handling
+                e.target.classList.add('was-validated'); // Add Bootstrap validation styling
+                return;
+            }
+
+            e.preventDefault(); // Prevent actual form submission for custom handling
+
+            // Calculate Age
+            const birthdate = new Date(document.getElementById('birthdate').value);
+            const age = new Date().getFullYear() - birthdate.getFullYear();
+            console.log('Age: ', age); // Log age
+
+            // Get Form Values
+            const income = Number(document.getElementById('income').value);
+            const loan = Number(document.getElementById('loan').value);
+            const investment = Number(document.getElementById('investment').value);
+            const gender = document.getElementById('gender').value;
+            console.log('Income: ', income); // Log income
+            console.log('Loan: ', loan); // Log loan amount
+            console.log('Investment: ', investment); // Log investment amount
+            console.log('Gender: ', gender); // Log gender
+
+            // Tax Slabs
+            let noTax, lowTax;
+            if (age >= 60) {
+                noTax = 300000;
+                lowTax = 700000;
+            } else if (gender === 'female') {
+                noTax = 260000;
+                lowTax = 700000;
+            } else {
+                noTax = 240000;
+                lowTax = 600000;
+            }
+            console.log('No Tax Limit: ', noTax); // Log no tax limit
+            console.log('Low Tax Limit: ', lowTax); // Log low tax limit
+
+            // Calculate Exemptions
+            const loanExemption = Math.min(0.8 * loan, 0.2 * income);
+            console.log('Loan Exemption: ', loanExemption); // Log loan exemption
+            const investmentExemption = Math.min(investment, 100000);
+            console.log('Investment Exemption: ', investmentExemption); // Log investment exemption
+
+            // Calculate Taxable Income
+            const taxableIncome = income - loanExemption - investmentExemption;
+            console.log('Taxable Income: ', taxableIncome); // Log taxable income
+
+            // Calculate Tax
+            let tax = 0;
+            if (taxableIncome > noTax) {
+                tax = taxableIncome <= lowTax
+                    ? (taxableIncome) * 0.1
+                    :  (taxableIncome) * 0.2;
+            }
+            console.log('Calculated Tax: ', tax); // Log calculated tax
+
+            // Show Results
+            const resultSection = document.getElementById('taxResult');
+            resultSection.innerHTML = `
+                <h4>Tax Calculation Results</h4>
+                <p>Category: ${age >= 60 ? 'Senior Citizen' : gender === 'female' ? 'Woman' : 'Man'}</p>
+                <p>Gross Income: ₹${income.toLocaleString()}</p>
+                <p>Loan Exemption: ₹${loanExemption.toLocaleString()}</p>
+                <p>Investment Exemption: ₹${investmentExemption.toLocaleString()}</p>
+                <p><strong>Taxable Income: ₹${taxableIncome.toLocaleString()}</strong></p>
+                <p><strong>Tax Payable: ₹${tax.toLocaleString()}</strong></p>
+            `;
+            resultSection.style.display = 'block'; // Display result section
+        });
+    </script>
+</body>
+
+</html>
