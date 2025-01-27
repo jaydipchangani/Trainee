@@ -7,6 +7,9 @@ $("#submit-btn").on("click", function (event) {
 
        
     }
+    else{
+        alert("Fill whole form properly")
+    }
 });
 
        document.getElementById("preview-btn").addEventListener("click", (event) => {
