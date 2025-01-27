@@ -46,20 +46,6 @@ stateDropdown.addEventListener("change", () => {
     cityDropdown.value = "";  
 });
 
-// Prevent city selection if no state is selected
-// cityDropdown.addEventListener('click', function (event) {
-//     const selectedState = stateDropdown.value;
-
-//     // if (!selectedState) {
-//     //     event.preventDefault();
-//     //     alert('Please select a state first!');
-//     //     cityDropdown.classList.add('is-invalid');
-//     //     cityDropdown.classList.remove('is-valid');
-//     // } else {
-//     //     cityDropdown.classList.add('is-valid');
-//     //     cityDropdown.classList.remove('is-invalid');
-//     // }
-// });
 
 // Validate city selection
 cityDropdown.addEventListener('change', function () {
