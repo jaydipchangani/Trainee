@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing</title>
+</head>
+
+<body>
+    <!-- <p>hello 1 sit, amet consectetur adipisicing elit. Cum, ex eligendi quidem, fuga ratione
+        aperiam minus laudantium tenetur nihil, est obcaecati maiores. Possimus maiores perspiciatis vitae delectus
+        nesciunt, quas corrupt.</p>
+
+    <p> hello 2 ipsum dolor sit, amet consectetur adipisicing elit. Cum, ex eligendi quidem, fuga ratione
+        aperiam minus laudantium tenetur nihil, est obcaecati maiores. Possimus maiores perspiciatis vitae delectus
+        nesciunt, quas corrupti.</p>
+
+    <p>hello 3 ipsum dolor sit, amet consectetur adipisicing elit. Cum, ex eligendi quidem, fuga ratione
+        aperiam minus laudantium tenetur nihil, est obcaecati maiores. Possimus maiores perspiciatis vitae delectus
+        nesciunt, quas corrupti.</p>
+
+    <p>hello 4 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cum, ex eligendi quidem, fuga ratione
+        aperiam minus laudantium tenetur nihil, est obcaecati maiores. Possimus maiores perspiciatis vitae delectus
+        nesciunt, quas corrupti.</p>
+
+    <div id="info">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia assumenda, tempora adipisci rem explicabo,
+        nostrum voluptatum, debitis totam mollitia corporis minima fugit recusandae ea? Neque minima sed deleniti
+        facilis cumque!lon
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor assumenda velit incidunt delectus aut, quidem
+        saepe, nobis voluptates repellat porro quae deleniti consequuntur harum rem esse vitae! Ab, aspernatur atque?
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia assumenda, tempora adipisci rem explicabo,
+        nostrum voluptatum, debitis totam mollitia corporis minima fugit recusandae ea? Neque minima sed deleniti
+        facilis cumque!lon
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor assumenda velit incidunt delectus aut, quidem
+        saepe, nobis voluptates repellat porro quae deleniti consequuntur harum rem esse vitae! Ab, aspernatur atque?
+    </div>
+    <button id="show">Show</button>
+    <button id="hide">hide</button> -->
+
+    <form id="mainform">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>   
+
+        <button type="submit">Submit</button>
+
+    </form>
+
+    <div id="test">
+        <p>asdasgkakakjakjasas</p>
+    </div>
+
+</body>
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+    crossorigin="anonymous"></script>
+
+<script>
+
+    $(document).ready(function () {
+
+        // $('p').on(
+        //     {
+        //         click: function () {
+        //             console.log("clicked")
+        //         },
+        //         mouseleave: function () {
+        //             console.log("hovered")
+        //         }
+        //     }
+        // )
+
+        // $('#hide').click(function () {
+        //     $("#info").toggle(1000, function () {
+        //         console.log("info hidden")
+        //     })
+        // })
+
+        $("input").focus(function(){
+            $(this).css("background",'lightpink')
+        })
+
+        $("input").blur(function(){
+            $(this).css("background",'')
+        })
+
+        $('#mainform').submit(function(){
+
+            var name=$(this).val();
+            $('#test').html(name)
+        })
+    })
+
+
+</script>
+
+</html>
