@@ -6,149 +6,80 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bootstrap Template</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
     <style>
         .signature-pad {
-            border: 1px solid #ddd;
+            border: 1px solid #dddddd;
             border-radius: 5px;
             height: 200px;
-            width: 100%;
+            width: 300px;
         }
 
         .ssn-input {
             width: 50px;
-            /* Adjust the width as needed */
             height: 50px;
             text-align: center;
             font-size: 1.5rem;
-            margin-right: 35px;
+            margin-right: 5px;
             border-radius: 5px;
         }
 
         .ssn-input:focus {
             outline: none;
             border-color: #0d6efd;
-            /* Bootstrap's primary color */
             box-shadow: 0 0 5px rgba(13, 110, 253, 0.5);
         }
 
-        small{
-            color: rgb(126, 126, 126);
+        .ein-input{
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            font-size: 1.5rem;
+            margin-right: 5px;
+            border-radius: 5px;
         }
 
-        .form-check{
-            margin-top: 20px;
+        .ein-input:hover{
+
+            outline: none;
+            border-color: #0d6efd;
+            box-shadow: 0 0 5px rgba(13, 110, 253, 0.5);
+
         }
-
-        /* Apply green border for valid EIN inputs */
-        .ssn-input.is-valid {
-            padding-right: 10px;
-            background-image: none;
-            border-color: green !important;
-            color: black; /* Keep the text color black */
-        }
-
-        /* Apply red border for invalid EIN inputs */
-        .ssn-input.is-invalid {
-            padding-right: 10px;
-            background-image: none;
-            border-color: red !important;
-            color: black; /* Keep the text color black */
-        }
-
-
-        .ssn-input.is-valid {
-            padding-right: 10px;
-            background-image: none;
-            border-color: green !important;
-            color: black; /* Keep the text color black */
-        }
-
-        /* Apply red border for invalid EIN inputs */
-        .ssn-input.is-invalid {
-            padding-right: 10px;
-            background-image: none;
-            border-color: red !important;
-            color: black; /* Keep the text color black */
-        }
-
-        /* Optional: Focus effect for EIN inputs */
-       
-
-/* Remove the invalid-feedback message from EIN fields */
-.ssn-input.is-invalid + .invalid-feedback {
-    display: none;
-}
-
-/* Optional: Keep the border colors for valid/invalid EIN inputs */
-.ssn-input.is-valid {
-    border-color: green !important;
-    color: black; /* Keep text black */
-}
-
-.ssn-input.is-invalid {
-    border-color: red !important;
-    color: black; /* Keep text black */
-}
-
-/* Optional: Focus effect for EIN inputs */
-.ssn-input:focus.is-valid {
-    border-color: green !important;
-}
-
-.ssn-input:focus.is-invalid {
-    border-color: red !important;
-}
-
-.no-arrows::-webkit-inner-spin-button, 
-
-.no-arrows::-webkit-outer-spin-button {
-
-  -webkit-appearance: none;
-
-  margin: 0;
-
-}
-
-
-
-.no-arrows { 
-
-  -moz-appearance: textfield; 
-
-} 
-
     </style>
 </head>
 
-<body>
-    <div class="container col-md=8 bg-light border rounded mt-3">
+<body class="bg-success-subtle">
+    <div class="container col-12 col-md-8 bg-light">
         <div class="p-3 mt-5 border-bottom">
             <h1>Request for Taxpayer Identification <br> Number and Certification</h1>
-            <p class="fs-5">Go to www.irs.gov/FormW9 for instructions and the latest information.</p>
+            <p class="fa-1">Go to www.irs.gov/FormW9 for instructions and the latest information.</p>
         </div>
 
         <div class="p-3">
-            <form id="signatureForm" class="p-3">
+            <form id="signatureForm" class="needs-validation" novalidate>
                 <div class="my-3">
-                    <label for="entityName">
+                    <label for="entityName" class="">
                         1. Name of entity/individual. An entry is required. (For a sole proprietor or disregarded
                         entity, enter the owner’s name on line 1, and enter the business/disregarded entity’s name on
                         line 2.)
                     </label>
-                    <input type="text" name="entityName" id="entityName" class="form-control w-50 mt-2">
-                </div>
+                    <input type="text" name="entityName" id="entityName" class="form-control w-100 mt-2" required>
+                    <small class="text-danger" id="entityNameError"></small>
+                </div><br>
 
                 <div class="my-3">
                     <label for="businessName">
                         2. Business name/disregarded entity name, if different from above.
                     </label>
-                    <input type="text" name="businessName" id="businessName" class="form-control w-50 mt-2">
-                </div>
+                    <input type="text" name="businessName" id="businessName" class="form-control w-100 mt-2" required>
+                    <small class="text-danger" id="businessNameError"></small>
+                </div><br>
 
                 <div class="my-3">
                     <label for="taxClassification" class="form-label">
-                        3.a Check the appropriate box for federal tax classification of the entity/individual whose name
+                        3.Check the appropriate box for federal tax classification of the entity/individual whose name
                         is entered on line 1. Check only one of the following seven boxes.
                     </label>
                     <div class="form-check">
@@ -182,15 +113,20 @@
                         <input type="checkbox" name="taxClassification" id="other" class="form-check-input">
                         <label for="other" class="form-check-label">Other</label>
                     </div>
-                </div>
+                    <small class="text-danger" id="taxClassificationError"></small>
+                    <input type="text" name="llcTaxClassification" id="llcTaxClassification"
+                        class="form-control w-100 mt-2" placeholder="please type another response here">
+                </div><br>
 
                 <div class="my-3">
                     <label for="llcTaxClassification">
                         If you selected "Limited liability company", enter the tax classification (C=C corporation, S=S
                         corporation, P=Partnership)
                     </label>
-                    <input type="text" name="llcTaxClassification" id="llcTaxClassification" class="form-control w-50 mt-2">
-                </div>
+                    <input type="text" name="llcTaxClassification" id="llcTaxClassification"
+                        class="form-control w-100 mt-2">
+                    <small class="text-danger" id="llcTaxClassificationError"></small>
+                </div><br>
 
                 <div class="my-3">
                     <label for="foreignPartners">
@@ -200,10 +136,11 @@
                         or beneficiaries.
                     </label>
                     <div class="form-check">
-                        <input type="checkbox" name="foreignPartners" id="foreignPartnersCheck" class="form-check-input">
+                        <input type="checkbox" name="foreignPartners" id="foreignPartnersCheck"
+                            class="form-check-input" >
                         <label for="foreignPartnersCheck" class="form-check-label">Check Here</label>
                     </div>
-                </div>
+                </div><br>
 
                 <div class="my-5">
                     <p>4. Exemptions (codes apply only to certain entities, not individuals; see instructions on page
@@ -215,65 +152,82 @@
                         Exempt payee code (if any)
                     </label>
                     <input type="text" name="exemptPayeeCode" id="exemptPayeeCode" class="form-control w-50 mt-2">
+                    <small class="text-danger" id="exemptPayeeCodeError"></small>
                 </div>
 
                 <div class="my-3">
                     <label for="fatcaExemptionCode">
                         Exemption from Foreign Account Tax Compliance Act (FATCA) reporting code (if any)
                     </label>
-                    <input type="text" name="fatcaExemptionCode" id="fatcaExemptionCode" class="form-control w-50 mt-2">
-                </div>
+                    <input type="text" name="fatcaExemptionCode" id="fatcaExemptionCode"
+                        class="form-control w-50 mt-2">
+                    <small class="text-danger" id="fatcaExemptionCodeError"></small>
+                </div><br>
 
                 <div class="my-3">
                     <label for="address">
                         5-6. Address (number, street, and apt. or suite no.)
                     </label>
-                    <input type="text" name="address" id="address" class="form-control w-50 mt-2">
-                    <small>Number, Street, and Apt. or Suite No.</small>
+                    <input type="text" name="address" id="address" class="form-control w-100 mt-2" required>
+                    <small class="text-danger" id="addressError"></small>
+                    <small> Number, Street, and Apt. or Suite No.</small>
 
                     <div class="row">
                         <div class="col-md-6">
-                            <input type="text" name="city" id="city" class="form-control mt-2">
-                            <small >City</small>
+                            <input type="text" name="city" id="city" class="form-control mt-2" required>
+                            <small class="text-danger" id="cityError"></small>
+                            <small>City</small>
                         </div>
 
                         <div class="col-md-6">
-                            <input type="text" name="state" id="state" class="form-control mt-2">
-                            <small >State</small>
+                            <input type="text" name="state" id="state" class="form-control mt-2" required>
+                            <small class="text-danger" id="stateError"></small>
+                            <small>State</small>
                         </div>
                     </div>
 
-                    <input type="text" name="zipCode" id="zipCode" class="form-control mt-2">
-                    <small >Zip Code</small>
-                </div>
+                    <input type="text" name="zipCode" id="zipCode" class="form-control mt-2" required>
+                    <small class="text-danger" id="zipCodeError"></small>
+                    <small>Zip Code</small>
+                </div><br>
 
                 <div class="my-3">
                     <p>Requester's name</p>
                     <div class="row">
                         <div class="col-md-6">
-                            <input type="text" name="requesterFirstName" id="requesterFirstName" class="form-control mt-2">
-                            <small >First Name</small>
+                            <input type="text" name="requesterFirstName" id="requesterFirstName"
+                                class="form-control mt-2" required>
+                            <small class="text-danger" id="requesterFirstNameError"></small>
+                            <small>First Name</small>
                         </div>
 
                         <div class="col-md-6">
-                            <input type="text" name="requesterLastName" id="requesterLastName" class="form-control mt-2">
-                            <small >Last Name</small>
+                            <input type="text" name="requesterLastName" id="requesterLastName" class="form-control mt-2"
+                                required>
+                            <small class="text-danger" id="requesterLastNameError"></small>
+                            <small>Last Name</small>
                         </div>
                     </div>
-                </div>
+                </div><br>
 
                 <div class="my-3">
                     <p>Requester's address</p>
-                    <input type="text" name="requesterAddress" id="requesterAddress" class="form-control w-50 mt-2">
+                    <input type="text" name="requesterAddress" id="requesterAddress" class="form-control w-100 mt-2"
+                        required>
+                    <small class="text-danger" id="requesterAddressError"></small>
                     <small>Number, Street, and Apt. or Suite No.</small>
                     <div class="row">
                         <div class="col-md-6">
-                            <input type="text" name="requesterCity" id="requesterCity" class="form-control mt-2">
+                            <input type="text" name="requesterCity" id="requesterCity" class="form-control mt-2"
+                                required>
+                            <small class="text-danger" id="requesterCityError"></small>
                             <small>City</small>
                         </div>
 
                         <div class="col-md-6">
-                            <input type="text" name="requesterState" id="requesterState" class="form-control mt-2">
+                            <input type="text" name="requesterState" id="requesterState" class="form-control mt-2"
+                                required>
+                            <small class="text-danger" id="requesterStateError"></small>
                             <small>State</small>
                         </div>
                     </div>
@@ -283,7 +237,8 @@
                     <label for="accountNumbers">
                         7. List account number(s) here (optional)
                     </label>
-                    <input type="text" name="accountNumbers" id="accountNumbers" class="form-control w-50 mt-2">
+                    <input type="text" name="accountNumbers" id="accountNumbers" class="form-control w-100 mt-2">
+                    <small class="text-danger" id="accountNumbersError"></small>
                 </div>
 
                 <div class="my-5">
@@ -307,17 +262,18 @@
                 <div class="my-5">
                     <h3>Social Security Number</h3>
                     <hr>
-                    <div class="d-flex flex-wrap justify-content-center mt-5">
-                        <input type="text" maxlength="1" class="form-control ssn-input col-4 col-md-1" name="ssn1">
-                        <input type="text" maxlength="1" class="form-control ssn-input col-4 col-md-1" name="ssn2">
-                        <input type="text" maxlength="1" class="form-control ssn-input col-4 col-md-1" name="ssn3">
-                        <input type="text" maxlength="1" class="form-control ssn-input col-4 col-md-1" name="ssn4">
-                        <input type="text" maxlength="1" class="form-control ssn-input col-4 col-md-1" name="ssn5">
-                        <input type="text" maxlength="1" class="form-control ssn-input col-4 col-md-1" name="ssn6">
-                        <input type="text" maxlength="1" class="form-control ssn-input col-4 col-md-1" name="ssn7">
-                        <input type="text" maxlength="1" class="form-control ssn-input col-4 col-md-1" name="ssn8">
-                        <input type="text" maxlength="1" class="form-control ssn-input col-4 col-md-1" name="ssn9">
+                    <div class="d-flex justify-content-start mt-5">
+                        <input type="text" maxlength="1" class="form-control ssn-input" name="ssn1" aria-label="SSN digit" required>
+                        <input type="text" maxlength="1" class="form-control ssn-input" name="ssn2" aria-label="SSN digit" required>
+                        <input type="text" maxlength="1" class="form-control ssn-input" name="ssn3" aria-label="SSN digit" required>
+                        <input type="text" maxlength="1" class="form-control ssn-input" name="ssn4" aria-label="SSN digit" required>
+                        <input type="text" maxlength="1" class="form-control ssn-input" name="ssn5" aria-label="SSN digit" required>
+                        <input type="text" maxlength="1" class="form-control ssn-input" name="ssn6" aria-label="SSN digit" required>
+                        <input type="text" maxlength="1" class="form-control ssn-input" name="ssn7" aria-label="SSN digit" required>
+                        <input type="text" maxlength="1" class="form-control ssn-input" name="ssn8" aria-label="SSN digit" required>
+                        <input type="text" maxlength="1" class="form-control ssn-input" name="ssn9" aria-label="SSN digit" required>
                     </div>
+                    <small class="text-danger" id="ssnError"></small>
                 </div>
                 
                 <div class="my-5">
@@ -325,17 +281,18 @@
                     <hr>
                     <h3 class="mt-5">Employer identification number</h3>
                     <hr>
-                    <div class="d-flex flex-wrap justify-content-center mt-5">
-                        <input type="number" maxlength="1" class="form-control ssn-input col-4 col-md-1 no-arrows" name="ein1">
-                        <input type="number" maxlength="1" class="form-control ssn-input col-4 col-md-1 no-arrows" name="ein2">
-                        <input type="number" maxlength="1" class="form-control ssn-input col-4 col-md-1 no-arrows" name="ein3">
-                        <input type="number" maxlength="1" class="form-control ssn-input col-4 col-md-1 no-arrows" name="ein4">
-                        <input type="number" maxlength="1" class="form-control ssn-input col-4 col-md-1 no-arrows" name="ein5">
-                        <input type="number" maxlength="1" class="form-control ssn-input col-4 col-md-1 no-arrows" name="ein6">
-                        <input type="number" maxlength="1" class="form-control ssn-input col-4 col-md-1 no-arrows" name="ein7">
-                        <input type="number" maxlength="1" class="form-control ssn-input col-4 col-md-1 no-arrows" name="ein8">
-                        <input type="number" maxlength="1" class="form-control ssn-input col-4 col-md-1 no-arrows" name="ein9">
+                    <div class="d-flex justify-content-start mt-5">
+                        <input type="text" maxlength="1" class="form-control ein-input" name="ein1" aria-label="EIN digit" required>
+                        <input type="text" maxlength="1" class="form-control ein-input" name="ein2" aria-label="EIN digit" required>
+                        <input type="text" maxlength="1" class="form-control ein-input" name="ein3" aria-label="EIN digit" required>
+                        <input type="text" maxlength="1" class="form-control ein-input" name="ein4" aria-label="EIN digit" required>
+                        <input type="text" maxlength="1" class="form-control ein-input" name="ein5" aria-label="EIN digit" required>
+                        <input type="text" maxlength="1" class="form-control ein-input" name="ein6" aria-label="EIN digit" required>
+                        <input type="text" maxlength="1" class="form-control ein-input" name="ein7" aria-label="EIN digit" required>
+                        <input type="text" maxlength="1" class="form-control ein-input" name="ein8" aria-label="EIN digit" required>
+                        <input type="text" maxlength="1" class="form-control ein-input" name="ein9" aria-label="EIN digit" required>
                     </div>
+                    <small class="text-danger" id="einError"></small>
                 </div>
                 
 
@@ -376,226 +333,27 @@
 
                 <div class="my-5">
                     <h5>Date</h5>
-                    <input type="date" class="form-control w-25" name="submissionDate" id="submissionDate">
+                    <input type="date" class="form-control w-25" name="submissionDate" id="submissionDate" required>
+                    <small class="text-danger" id="submissionDateError"></small>
                     <small>Date</small>
                 </div>
 
+                <div>
+                    <iframe src="test.pdf" width="100%" height="600" frameborder="0"></iframe>
+                </div>
+
+
                 <hr>
                 <div class="d-flex justify-content-center gap-2">
-                    <button class="btn btn-secondary px-5" id="preview-btn">Preview PDF</button>
-                    <button class="btn btn-success px-5" id="submit-btn">Submit</button>
-                </div>  
+                    <button type="button" class="btn btn-secondary px-5" id="preview-btn">Preview PDF</button>
+                    <button type="submit" class="btn btn-success px-5" id="submit-btn">Submit</button>
+                </div>
             </form>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-  
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
-    <script>
-
-
-$(document).ready(function() {
-    const IDNumberHandler = {
-        initialize: function() {
-            this.setupInputHandlers();
-            this.setupAutoFocus();
-        },
-
-        setupInputHandlers: function() {
-            // Handle SSN inputs
-            $('.ssn-input').on('input', function(e) {
-                const $input = $(this);
-                const value = $input.val();
-                
-                // Allow only numbers
-                if (!/^\d*$/.test(value)) {
-                    $input.val(value.replace(/\D/g, ''));
-                    return;
-                }
-
-                // Move to next input if value is entered
-                if (value.length === 1) {
-                    $input.next('.ssn-input').focus();
-                }
-            });
-
-            // Handle backspace
-            $('.ssn-input').on('keydown', function(e) {
-                if (e.keyCode === 8 && !$(this).val()) {
-                    $(this).prev('.ssn-input').focus();
-                }
-            });
-        },
-
-        setupAutoFocus: function() {
-            // Set autofocus on first SSN input
-            $('input[name="ssn1"]').focus();
-        }
-    };
-
-    // Module for handling signature pad
-    const SignaturePad = {
-        pad: null,
-
-        initialize: function() {
-            const canvas = document.getElementById('signature-pad');
-            this.pad = new SignaturePad(canvas, {
-                minWidth: 1,
-                maxWidth: 2.5,
-                penColor: 'black'
-            });
-
-            // Adjust canvas size to container
-            this.resizeCanvas();
-            
-            // Handle clear button
-            $('#clear').on('click', () => this.pad.clear());
-
-            // Handle window resize
-            $(window).on('resize', () => this.resizeCanvas());
-        },
-
-        resizeCanvas: function() {
-            const canvas = document.getElementById('signature-pad');
-            const ratio = Math.max(window.devicePixelRatio || 1, 1);
-            canvas.width = canvas.offsetWidth * ratio;
-            canvas.height = canvas.offsetHeight * ratio;
-            canvas.getContext("2d").scale(ratio, ratio);
-        },
-
-        isEmpty: function() {
-            return this.pad.isEmpty();
-        }
-    };
-
-    // Module for form validation and submission
-    const FormHandler = {
-        initialize: function() {
-            this.setupStateDropdown();
-            this.setupCityDropdown();
-            this.setupValidation();
-            this.setupSubmission();
-        },
-
-        setupStateDropdown: function() {
-            const states = [
-                "Alabama", "Alaska", "Arizona", "Arkansas", "California",
-                "Colorado", "Connecticut", "Delaware", "Florida", "Georgia",
-                "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa",
-                "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland",
-                "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri",
-                "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey",
-                "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio",
-                "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina",
-                "South Dakota", "Tennessee", "Texas", "Utah", "Vermont",
-                "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"
-            ];
-
-            const $stateSelect = $('<select>').addClass('form-control mt-2')
-                                            .attr('id', 'state')
-                                            .attr('name', 'state');
-            
-            $stateSelect.append($('<option>').val('').text('Select State'));
-            states.forEach(state => {
-                $stateSelect.append($('<option>').val(state).text(state));
-            });
-
-            $('#state').replaceWith($stateSelect);
-        },
-
-        setupCityDropdown: function() {
-            // This is a simplified example. In practice, you might want to load cities based on selected state
-            const $citySelect = $('<select>').addClass('form-control mt-2')
-                                           .attr('id', 'city')
-                                           .attr('name', 'city');
-            
-            $citySelect.append($('<option>').val('').text('Select City'));
-            $('#city').replaceWith($citySelect);
-
-            // Update cities when state changes
-            $('#state').on('change', function() {
-                // Here you would typically make an AJAX call to get cities for the selected state
-                // This is just a placeholder
-                const selectedState = $(this).val();
-                if (selectedState) {
-                    $citySelect.html('<option value="">Select City</option><option value="city1">City 1</option>');
-                } else {
-                    $citySelect.html('<option value="">Select City</option>');
-                }
-            });
-        },
-
-        setupValidation: function() {
-            $('#signatureForm').validate({
-                rules: {
-                    entityName: {
-                        required: true,
-                        minlength: 2
-                    },
-                    zipCode: {
-                        required: true,
-                        pattern: /^\d{5}(-\d{4})?$/
-                    },
-                    state: "required",
-                    city: "required",
-                    address: {
-                        required: true,
-                        minlength: 5
-                    },
-                    // Add validation rules for other fields as needed
-                },
-                messages: {
-                    entityName: {
-                        required: "Please enter the entity name",
-                        minlength: "Name must be at least 2 characters long"
-                    },
-                    zipCode: {
-                        required: "Please enter a zip code",
-                        pattern: "Please enter a valid zip code (12345 or 12345-6789)"
-                    },
-                    state: "Please select a state",
-                    city: "Please select a city",
-                    address: {
-                        required: "Please enter an address",
-                        minlength: "Address must be at least 5 characters long"
-                    }
-                },
-                errorClass: "is-invalid",
-                validClass: "is-valid",
-                highlight: function(element, errorClass, validClass) {
-                    $(element).addClass(errorClass).removeClass(validClass);
-                },
-                unhighlight: function(element, errorClass, validClass) {
-                    $(element).removeClass(errorClass).addClass(validClass);
-                }
-            });
-        },
-
-        setupSubmission: function() {
-            $('#submit-btn').on('click', function(e) {
-                e.preventDefault();
-                
-                if ($('#signatureForm').valid() && !SignaturePad.isEmpty()) {
-                    // Form is valid and signature is present
-                    // Here you would typically submit the form data
-                    $('#signatureForm')[0].reset();
-                    SignaturePad.pad.clear();
-                    $('.is-valid, .is-invalid').removeClass('is-valid is-invalid');
-                    alert('Form submitted successfully!');
-                } else {
-                    alert('Please fill in all required fields and provide a signature.');
-                }
-            });
-        }
-    };
-
-    // Initialize all modules
-    IDNumberHandler.initialize();
-    SignaturePad.initialize();
-    FormHandler.initialize();
-});
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="script2.js"></script>
 </body>
 
 </html>
