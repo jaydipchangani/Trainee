@@ -1,100 +1,93 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Testing</title>
+<title>Add and Show Data in Tables</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<style>
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+</style>
 </head>
-
 <body>
-    <!-- <p>hello 1 sit, amet consectetur adipisicing elit. Cum, ex eligendi quidem, fuga ratione
-        aperiam minus laudantium tenetur nihil, est obcaecati maiores. Possimus maiores perspiciatis vitae delectus
-        nesciunt, quas corrupt.</p>
 
-    <p> hello 2 ipsum dolor sit, amet consectetur adipisicing elit. Cum, ex eligendi quidem, fuga ratione
-        aperiam minus laudantium tenetur nihil, est obcaecati maiores. Possimus maiores perspiciatis vitae delectus
-        nesciunt, quas corrupti.</p>
+<h2>Add Data</h2>
 
-    <p>hello 3 ipsum dolor sit, amet consectetur adipisicing elit. Cum, ex eligendi quidem, fuga ratione
-        aperiam minus laudantium tenetur nihil, est obcaecati maiores. Possimus maiores perspiciatis vitae delectus
-        nesciunt, quas corrupti.</p>
+<table id="addDataTable">
+  <tr>
+    <th>Name</th>
+    <th>Age</th>
+    <th>Action</th>
+  </tr>
+  <tr>
+    <td><input type="text" id="name"></td>
+    <td><input type="number" id="age"></td>
+    <td><button onclick="addData()">Add</button>
+        <button onclick="deleteData()">Remove</button></td>
+    
+  </tr>
+</table>
 
-    <p>hello 4 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Cum, ex eligendi quidem, fuga ratione
-        aperiam minus laudantium tenetur nihil, est obcaecati maiores. Possimus maiores perspiciatis vitae delectus
-        nesciunt, quas corrupti.</p>
+<h2>Show Data</h2>
 
-    <div id="info">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia assumenda, tempora adipisci rem explicabo,
-        nostrum voluptatum, debitis totam mollitia corporis minima fugit recusandae ea? Neque minima sed deleniti
-        facilis cumque!lon
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor assumenda velit incidunt delectus aut, quidem
-        saepe, nobis voluptates repellat porro quae deleniti consequuntur harum rem esse vitae! Ab, aspernatur atque?
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia assumenda, tempora adipisci rem explicabo,
-        nostrum voluptatum, debitis totam mollitia corporis minima fugit recusandae ea? Neque minima sed deleniti
-        facilis cumque!lon
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor assumenda velit incidunt delectus aut, quidem
-        saepe, nobis voluptates repellat porro quae deleniti consequuntur harum rem esse vitae! Ab, aspernatur atque?
-    </div>
-    <button id="show">Show</button>
-    <button id="hide">hide</button> -->
-
-    <form id="mainform">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required>
-
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>   
-
-        <button type="submit">Submit</button>
-
-    </form>
-
-    <div id="test">
-        <p>asdasgkakakjakjasas</p>
-    </div>
-
-</body>
-<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
-    crossorigin="anonymous"></script>
+<table id="showDataTable">
+  <tr>
+    <th>Name</th>
+    <th>Age</th>
+  </tr>
+</table>
 
 <script>
+let data = []; // Array to store the data in JavaScript
 
-    $(document).ready(function () {
+function addData() {
+  const name = $('#name').val();
+  const age = $('#age').val();
 
-        // $('p').on(
-        //     {
-        //         click: function () {
-        //             console.log("clicked")
-        //         },
-        //         mouseleave: function () {
-        //             console.log("hovered")
-        //         }
-        //     }
-        // )
+  if (name && age) {
+    data.push({ name, age }); //Add data to the JavaScript array
 
-        // $('#hide').click(function () {
-        //     $("#info").toggle(1000, function () {
-        //         console.log("info hidden")
-        //     })
-        // })
+    // Update the show data table
+    showData();
 
-        $("input").focus(function(){
-            $(this).css("background",'lightpink')
-        })
+    // Clear input fields
+    $('#name').val('');
+    $('#age').val('');
+  } else {
+    alert('Please enter both name and age.');
+  }
+}
 
-        $("input").blur(function(){
-            $(this).css("background",'')
-        })
+function deleteData() {
+  data.pop(); // Remove the last item from the array
 
-        $('#mainform').submit(function(){
+  // Update the show data table
+  showData();
+}
 
-            var name=$(this).val();
-            $('#test').html(name)
-        })
-    })
+function showData() {
+  $('#showDataTable tr:gt(0)').remove(); // Remove existing rows (except header)
 
+  data.forEach(item => {
+    const row = `<tr><td>${item.name}</td><td>${item.age}</td></tr>`;
+    $('#showDataTable').append(row);
+  });
+}
 
+// Initial load of data (if any)
+ 
 </script>
 
+</body>
 </html>

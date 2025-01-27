@@ -1,0 +1,34 @@
+
+body {
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.container{
+    
+    padding: 50px;
+    background-color: #e0e0e0;
+    
+}
+
+label {
+    font-weight: bold;
+}
+input:disabled {
+    background-color: #f0f0f0;
+}
+
+input{
+    border-radius: 0 !important;
+}
+
+.btn_div{
+    padding: 20px 0 ;
+}
+hr{
+    color: #ffffff;
+    height: 6px;
+    padding: 1% 0;
+}
