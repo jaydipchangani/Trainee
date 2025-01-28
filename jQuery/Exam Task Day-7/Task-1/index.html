@@ -74,7 +74,7 @@
             </div>
             <div id="alertContainer"></div>
         </div>
-    </div>Satva1213#
+    </div>
 
     <script>
         $(document).ready(function () {
@@ -101,11 +101,11 @@
                     data: JSON.stringify({ email, password }),
                     success: function (response) {
                         if (response.token) {
-                            localStorage.setItem('jwtToken', response.token);
+                            localStorage.setItem('jwtToken', response.token); // Store JWT token in localStorage
                             showAlert('Login successful! Redirecting...', 'success');
 
                             setTimeout(() => {
-                                window.location.href = 'dashboard.html'; // Replace with your dashboard page
+                                window.location.href = 'dashboard.html?token=' + response.token; // Redirect to dashboard with token
                             }, 2000);
                         } else {
                             showAlert('Invalid credentials. Please try again.', 'danger');

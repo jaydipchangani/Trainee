@@ -1,157 +1,395 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Intercompany Transaction</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction Reconciliation</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
     <style>
-        .container {
+        .transaction-container {
+            display: flex;
+            justify-content: space-between;
             margin-top: 20px;
         }
 
-        .table-bordered {
-            border: 1px solid #dee2e6;
-        }
-
-        .transaction-row {
-            cursor: move;
-        }
-
-        .reconciled-column {
-            background-color: #e9ecef;
-        }
-
-        .transaction-detail {
-            display: none;
-            position: absolute;
-            background-color: #fff;
+        .transaction-list {
             border: 1px solid #ccc;
+            width: 34%;
+            min-height: 300px;
             padding: 10px;
-            z-index: 1;
+        }
+
+        .drop-zone {
+            border: 2px dashed #007bff;
+            min-height: 150px;
+            margin-top: 20px;
+        }
+
+        .transaction-item {
+            flex-direction: column;
+            display: flex;
+            background-color: #f8f9fa;
+            padding: 10px;
+            margin-bottom: 10px;
+            cursor: move;
+            align-content: center;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .expanded {
+            background-color: #e9ecef;
+            margin-top: 10px;
+        }
+
+        .transaction-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .transaction-table td, .transaction-table th {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        #loading {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Intercompany Transaction</h2>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Company 1</th>
-                    <th>Reconciled</th>
-                    <th>Exclude</th>
-                    <th>Company 2</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="transaction-row" id="unreconciled-row-1"></td>
-                    <td class="reconciled-column" id="reconciled-column-1"></td>
-                    <td></td>
-                    <td class="transaction-row" id="unreconciled-row-2"></td>
-                </tr>
-                <tr>
-                    <td colspan="4"></td>
-                </tr>
-                <tr>
-                    <td class="transaction-row" id="unreconciled-row-3"></td>
-                    <td class="reconciled-column" id="reconciled-column-2"></td>
-                    <td></td>
-                    <td class="transaction-row" id="unreconciled-row-4"></td>
-                </tr>
-                <tr>
-                    <td colspan="4"></td>
-                </tr>
-                <tr>
-                    <td class="transaction-row" id="unreconciled-row-5"></td>
-                    <td class="reconciled-column" id="reconciled-column-3"></td>
-                    <td></td>
-                    <td class="transaction-row" id="unreconciled-row-6"></td>
-                </tr>
-                <tr>
-                    <td colspan="4"></td>
-                </tr>
-                <tr>
-                    <td class="transaction-row" id="unreconciled-row-7"></td>
-                    <td class="reconciled-column" id="reconciled-column-4"></td>
-                    <td></td>
-                    <td class="transaction-row" id="unreconciled-row-8"></td>
-                </tr>
-                <tr>
-                    <td colspan="4"></td>
-                </tr>
-                <tr>
-                    <td class="transaction-row" id="unreconciled-row-9"></td>
-                    <td class="reconciled-column" id="reconciled-column-5"></td>
-                    <td></td>
-                    <td class="transaction-row" id="unreconciled-row-10"></td>
-                </tr>
-            </tbody>
-        </table>
+
+<div class="container">
+    <h2 class="my-4">Transaction Reconciliation</h2>
+
+    <!-- Tabs Section -->
+    <div class="tabs">
+        <ul class="nav nav-tabs" id="transactionTabs">
+            <li class="nav-item">
+                <a class="nav-link active" id="unreconciledTab" href="#">Unreconciled</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="reconciledTab" href="#">Reconciled</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="excludeTab" href="#">Exclude</a>
+            </li>
+        </ul>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            // Fetch data from API for first and last rows
-            $.ajax({
-                url: 'your_api_endpoint', // Replace with your actual API endpoint
-                type: 'GET',
-                success: function(data) {
-                    $('#unreconciled-row-1').html(data.company1_row1);
-                    $('#unreconciled-row-2').html(data.company2_row1);
-                    $('#unreconciled-row-9').html(data.company1_row2);
-                    $('#unreconciled-row-10').html(data.company2_row2);
-                }
-            });
+    <div class="transaction-container">
+        <!-- Company 1 List -->
+        <div id="company1List" class="transaction-list">
+            <h4>Company 1</h4>
+        </div>
 
-            // Drag and drop functionality
-            $('.transaction-row').draggable({
-                connectToSortable: '.reconciled-column',
-                helper: 'clone'
-            });
+        <!-- Center Drop Zone -->
+        <div id="centerDropZone" class="drop-zone" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h4>Drag transactions here</h4>
+        </div>
 
-            $('.reconciled-column').droppable({
-                drop: function(event, ui) {
-                    $(this).html(ui.draggable.html());
-                }
-            });
+        <!-- Company 2 List -->
+        <div id="company2List" class="transaction-list">
+            <h4>Company 2</h4>
+        </div>
+    </div>
 
-            // Click event for transaction details
-            $('.transaction-row').click(function() {
-                var transactionId = $(this).attr('id'); // Get transaction ID
+    <!-- Expanded Transaction Table -->
+    <div id="expandedTransaction" class="expanded"></div>
 
-                // Fetch transaction details from API
-                $.ajax({
-                    url: 'your_api_endpoint/' + transactionId, // Replace with your actual API endpoint
-                    type: 'GET',
-                    success: function(data) {
-                        // Create transaction details popup
-                        var $transactionDetail = $('<div class="transaction-detail">');
-                        $transactionDetail.html(data.transaction_details);
+    <!-- Loading Spinner -->
+    <div id="loading" class="text-center">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+</div>
 
-                        // Position the popup
-                        $transactionDetail.css({
-                            top: event.clientY + 10,
-                            left: event.clientX + 10
-                        });
+<script>
+    $(document).ready(function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token') || localStorage.getItem('jwtToken');
 
-                        // Append the popup to the body
-                        $('body').append($transactionDetail);
-
-                        // Show the popup
-                        $transactionDetail.show();
-                    }
-                });
-            });
-
-            // Hide transaction details popup on click outside
-            $(document).click(function(event) {
-                if (!$(event.target).closest('.transaction-row').length) {
-                    $('.transaction-detail').hide();
-                }
-            });
+            if (!token) {
+                alert('You are not authorized to view this page.');
+                window.location.href = 'index.html'; // Redirect back to login if no token
+            } else {
+                // Optionally, verify token validity with an API request
+                console.log('Token:', token); // For debugging
+            }
         });
-    </script>
+
+     let currentPage = 1;
+    const token = localStorage.getItem('jwtToken');
+    if (!token) {
+    alert('You are not authorized to view this page.');
+    window.location.href = 'index.html'; // Redirect back to login if no token
+} else {
+    console.log('Token:', token); // Verify if the token is being retrieved properly
+}
+    // Fetch transactions for the current page
+    async function fetchTransactions(page) {
+    const url = `http://trainingsampleapi.satva.solutions/api/Reconciliation/GetTransaction?page=${page}`;
+
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch transactions');
+        }
+
+        const data = await response.json();
+        console.log('Fetched Data:', data); // Log the complete structure of the data
+
+        // Store the fetched data in localStorage
+        localStorage.setItem('transactionsData', JSON.stringify(data));
+
+        // Make sure the data has both fromCompanyTransaction and toCompanyTransaction
+        const fromCompanyTransaction = data.fromCompanyTransaction || [];
+        const toCompanyTransaction = data.toCompanyTransaction || [];
+        return { fromCompanyTransaction, toCompanyTransaction }; // Return both arrays
+    } catch (error) {
+        console.error(error);
+        return { fromCompanyTransaction: [], toCompanyTransaction: [] }; // Return empty arrays in case of error
+    }
+}
+
+
+
+    // Render transactions in the UI for both Company 1 and Company 2
+    function renderTransactions(data) {
+    const company1List = document.getElementById('company1List');
+    const company2List = document.getElementById('company2List');
+
+    // Check if company list elements exist
+    if (!company1List || !company2List) {
+        console.error('Company list elements not found');
+        return;
+    }
+
+    console.log('Rendering Transactions:', data);
+
+    // Destructure fromCompanyTransaction and toCompanyTransaction from the data
+    const { fromCompanyTransaction, toCompanyTransaction } = data;
+
+    console.log('fromCompanyTransaction:', fromCompanyTransaction);
+    console.log('toCompanyTransaction:', toCompanyTransaction);
+
+    // Check if the transactions are arrays
+    if (!Array.isArray(fromCompanyTransaction) || !Array.isArray(toCompanyTransaction)) {
+        console.error('Expected arrays for fromCompanyTransaction and toCompanyTransaction');
+        return;
+    }
+
+    // Function to render transactions for a specific company list
+    // Function to render transactions for a specific company list
+const renderTransactionList = (transactions, company, listElement) => {
+    transactions.forEach(transaction => {
+        if (!transaction.transactionId || !transaction.transactionType || !transaction.amount || !transaction.lines) {
+            console.error('Transaction is missing expected fields:', transaction);
+            return;
+        }
+
+        console.log(`Rendering ${company} transaction:`, transaction);
+
+        // Create a div for the transaction item
+        const transactionItem = document.createElement('div');
+        transactionItem.className = 'transaction-item';
+        transactionItem.draggable = true;
+        
+        // Create a wrapper div to hold text and the expand button (on the left)
+        const leftWrapper = document.createElement('div');
+        leftWrapper.className = 'left-wrapper';
+        leftWrapper.style.display = 'flex';
+        leftWrapper.style.justifyContent = 'space-between';
+        leftWrapper.style.alignItems = 'center';
+        leftWrapper.style.width = '100%';
+
+        // Set the transaction text content
+        const transactionText = document.createElement('div');
+        transactionText.innerHTML = `
+            <strong>${transaction.transactionType}</strong>: ${transaction.date} - $${transaction.amount}
+        `;
+        leftWrapper.appendChild(transactionText);
+
+        // Replace spaces with hyphens to ensure valid ID
+        const transactionId = transaction.transactionId;
+        const companyId = company.replace(/\s+/g, '-'); // Replace spaces in company name with hyphen
+
+        // Create an "Expand/Collapse" button for each transaction
+        const expandButton = document.createElement('button');
+        expandButton.className = 'btn btn-primary'; // Bootstrap button styling
+        expandButton.textContent = 'Expand';
+        
+        // Link this button to its specific transaction details
+        expandButton.setAttribute('data-bs-target', `#transaction-details-${companyId}-${transactionId}`);
+        expandButton.setAttribute('data-bs-toggle', 'collapse'); // Set the collapse attribute
+        
+        leftWrapper.appendChild(expandButton); // Add the button to the left wrapper
+
+        // Create a container for the expanded details with Bootstrap collapse
+        const expandedDetails = document.createElement('div');
+        expandedDetails.className = 'collapse'; // Use Bootstrap's collapse class for sliding effect
+        expandedDetails.id = `transaction-details-${companyId}-${transactionId}`; // Unique ID for each transaction
+
+        // Create the table structure
+        const tableWrapper = document.createElement('div');
+        tableWrapper.className = 'table-wrapper';
+        tableWrapper.style.display = 'flex';
+        tableWrapper.style.justifyContent = 'flex-end'; // Align the table to the right when expanded
+
+        const table = document.createElement('table');
+        table.className = 'transaction-table table table-bordered'; // Bootstrap table styling
+        const tableHeader = `
+            <thead>
+                <tr><th>Line ID</th><th>Account</th><th>Debit</th><th>Credit</th></tr>
+            </thead>
+        `;
+        table.innerHTML = tableHeader;
+
+        // Populate the table with transaction lines
+        transaction.lines.forEach(line => {
+            const row = table.insertRow();
+            row.insertCell(0).innerText = line.lineId;
+            row.insertCell(1).innerText = line.account;
+
+            // Check if the line is credit or debit
+            if (line.isCredit) {
+                row.insertCell(2).innerText = ''; // Debit cell will be empty
+                row.insertCell(3).innerText = `$${line.amount}`; // Credit amount
+            } else {
+                row.insertCell(2).innerText = `$${line.amount}`; // Debit amount
+                row.insertCell(3).innerText = ''; // Credit cell will be empty
+            }
+        });
+
+        tableWrapper.appendChild(table); // Add the table wrapper inside the expanded details
+        expandedDetails.appendChild(tableWrapper); // Add the table wrapper to the expanded details container
+
+        // Append everything to the transaction item
+        transactionItem.appendChild(leftWrapper); // Add the left wrapper first (text and button)
+        transactionItem.appendChild(expandedDetails); // Add the expanded details after
+
+        // Append the transaction item to the list element
+        listElement.appendChild(transactionItem);
+
+        console.log('Added Transaction:', transactionItem);
+    });
+};
+
+
+
+
+    // Render "From Company Transactions" for Company 1
+    renderTransactionList(fromCompanyTransaction, 'Company 1', company1List);
+
+    // Render "To Company Transactions" for Company 2
+    renderTransactionList(toCompanyTransaction, 'Company 2', company2List);
+}
+
+
+    // Load transactions for the current page
+    async function loadTransactions() {
+    document.getElementById('loading').style.display = 'block';
+
+    // Check if the data is already stored in localStorage
+    const storedData = localStorage.getItem('transactionsData');
+
+    let fromCompanyTransaction = [];
+    let toCompanyTransaction = [];
+
+    if (storedData) {
+        // Parse the data from localStorage if it exists
+        const data = JSON.parse(storedData);
+        fromCompanyTransaction = data.fromCompanyTransaction || [];
+        toCompanyTransaction = data.toCompanyTransaction || [];
+    } else {
+        // If no data in localStorage, fetch from the API
+        const result = await fetchTransactions(currentPage);
+        fromCompanyTransaction = result.fromCompanyTransaction;
+        toCompanyTransaction = result.toCompanyTransaction;
+    }
+
+    // Render the transactions from either localStorage or API
+    renderTransactions({ fromCompanyTransaction, toCompanyTransaction });
+
+    document.getElementById('loading').style.display = 'none';
+    currentPage++;
+}
+
+
+
+    // Handle scroll to load more transactions (infinite scroll)
+    window.addEventListener('scroll', () => {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+            loadTransactions();
+        }
+    });
+
+    // Start loading transactions when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        loadTransactions();
+    });
+
+    // Function to handle drag events
+    function drag(event) {
+        event.dataTransfer.setData("text", event.target.id);
+    }
+
+    // Allow drop on the center drop zone
+    function allowDrop(event) {
+        event.preventDefault();
+    }
+
+    // Handle drop event to expand transactions in the table
+    function drop(event) {
+        event.preventDefault();
+        var data = event.dataTransfer.getData("text");
+        var droppedTransaction = document.getElementById(data);
+
+        // Create a new table row for the dropped transaction
+        var transactionDetails = {
+            account: "Accounts Payable",
+            amount: droppedTransaction.innerText.includes('100') ? 100 : 200,
+            isCredit: true,
+            lineId: 1
+        };
+
+        // Add the dropped transaction to the expanded area
+        expandTransaction(transactionDetails);
+    }
+
+    // Expand the transaction into a table in the expanded area
+    function expandTransaction(transaction) {
+        var expandedArea = document.getElementById("expandedTransaction");
+
+        // Create the table if not created yet
+        if (!expandedArea.querySelector(".transaction-table")) {
+            var table = document.createElement("table");
+            table.className = "transaction-table";
+            var tableHeader = `<thead><tr><th>Account</th><th>Amount</th><th>Is Credit</th></tr></thead>`;
+            table.innerHTML = tableHeader;
+            expandedArea.appendChild(table);
+        }
+
+        // Append new row to the table
+        var table = expandedArea.querySelector(".transaction-table");
+        var row = table.insertRow();
+        row.insertCell(0).innerText = transaction.account;
+        row.insertCell(1).innerText = transaction.amount;
+        row.insertCell(2).innerText = transaction.isCredit ? 'Yes' : 'No';
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

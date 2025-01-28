@@ -29,16 +29,23 @@
         .transaction-item:hover {
             background-color: #e9ecef;
         }
-        .head{
+        .head {
             background-color: #2196f3;
+            color: #fff;
             text-align: center;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .filter-message {
+            font-size: 1.1rem;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
     <div class="container mt-4">
         <div class="head">
-            Intercompnay Transaction
+            Intercompany Transaction
         </div>
         <div class="row mb-3">
             <div class="col-md-6 text-start">
@@ -51,12 +58,12 @@
         <hr>
         <div class="row mb-4">
             <div class="col-md-4 text-start">
-                <a href="#" class="me-3">Unreconciled</a>
-                <a href="#" class="me-3">Reconciled</a>
-                <a href="#" class="me-3">Exclude</a>
+                <a href="#" class="filter-link me-3" data-filter="unreconciled">Unreconciled</a>
+                <a href="#" class="filter-link me-3" data-filter="reconciled">Reconciled</a>
+                <a href="#" class="filter-link me-3" data-filter="exclude">Exclude</a>
             </div>
             <div class="col-md-4 text-center">
-                <text>Debit: 1000  &nbsp; &nbsp;Credit:0</text>
+                <span>Debit: 1000 &nbsp;&nbsp; Credit: 0</span>
             </div>
             <div class="col-md-4 text-end">
                 <button class="btn btn-primary">Reconcile</button>
@@ -64,34 +71,90 @@
         </div>
         <div class="row">
             <div class="col-md-4">
-                <div class="transaction-column" id="company1Transactions">
-                    <div class="transaction-item" data-info="Transaction A1 Details">Transaction A1</div>
-                    <div class="transaction-item" data-info="Transaction A2 Details">Transaction A2</div>
-                    <div class="transaction-item" data-info="Transaction A3 Details">Transaction A3</div>
-                </div>
+                <div class="transaction-column" id="company1Transactions"></div>
             </div>
             <div class="col-md-4 text-center">
                 <div class="transaction-column" id="reconciliationArea"></div>
             </div>
             <div class="col-md-4">
-                <div class="transaction-column" id="company2Transactions">
-                    <div class="transaction-item" data-info="Transaction B1 Details">Transaction B1</div>
-                    <div class="transaction-item" data-info="Transaction B2 Details">Transaction B2</div>
-                    <div class="transaction-item" data-info="Transaction B3 Details">Transaction B3</div>
-                </div>
+                <div class="transaction-column" id="company2Transactions"></div>
             </div>
         </div>
+        <div class="mt-4 text-center filter-message" id="filterMessage"></div>
     </div>
 
     <script>
         $(document).ready(function () {
-            // Initialize drag and drop functionality
-            dragula([$('#company1Transactions')[0], $('#company2Transactions')[0], $('#reconciliationArea')[0]]);
+            // Fetch data from the API (replace with your actual API endpoint)
+            $.ajax({
+                url: 'http://trainingsampleapi.satva.solutions/api/Reconciliation/GetTransaction', // Replace with your API endpoint
+                method: 'GET',
+                success: function (data) {
+                    // Populate columns with fetched data
+                    const company1Transactions = $('#company1Transactions');
+                    const company2Transactions = $('#company2Transactions');
+
+                    // Assuming the response contains two arrays: company1 and company2 transactions
+                    data.company1.forEach(function(transaction) {
+                        const transactionElement = $('<div class="transaction-item"></div>');
+                        transactionElement.text(`Transaction ID: ${transaction.transactionId} - Amount: ${transaction.amount}`);
+                        transactionElement.data('info', JSON.stringify(transaction));
+                        transactionElement.data('status', 'unreconciled'); // Example status, modify as needed
+                        company1Transactions.append(transactionElement);
+                    });
+
+                    data.company2.forEach(function(transaction) {
+                        const transactionElement = $('<div class="transaction-item"></div>');
+                        transactionElement.text(`Transaction ID: ${transaction.transactionId} - Amount: ${transaction.amount}`);
+                        transactionElement.data('info', JSON.stringify(transaction));
+                        transactionElement.data('status', 'unreconciled'); // Example status, modify as needed
+                        company2Transactions.append(transactionElement);
+                    });
+
+                    // Initialize drag and drop functionality
+                    dragula([company1Transactions[0], company2Transactions[0], $('#reconciliationArea')[0]]);
+                },
+                error: function (err) {
+                    console.log('Error fetching data', err);
+                }
+            });
 
             // Show more info on transaction click
-            $('.transaction-item').on('click', function () {
+            $(document).on('click', '.transaction-item', function () {
                 const info = $(this).data('info');
                 alert(info);
+            });
+
+            // Handle filter clicks
+            $('.filter-link').on('click', function (e) {
+                e.preventDefault(); // Prevent page refresh
+
+                const filter = $(this).data('filter');
+                let message = '';
+
+                switch (filter) {
+                    case 'unreconciled':
+                        message = 'Showing all unreconciled transactions.';
+                        break;
+                    case 'reconciled':
+                        message = 'Showing all reconciled transactions.';
+                        break;
+                    case 'exclude':
+                        message = 'Showing all excluded transactions.';
+                        break;
+                }
+
+                $('#filterMessage').text(message);
+
+                // Show or hide transactions based on the filter
+                $('.transaction-item').each(function () {
+                    const status = $(this).data('status');
+                    if (status === filter) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
             });
         });
     </script>
