@@ -110,27 +110,57 @@
 </div>
 
 <script>
-    // Function to update the isChecked status for transactions
-    function updateIsChecked(transactionId, company, isChecked) {
-        let transactionsData = JSON.parse(localStorage.getItem('transactionsData'));
-        if (!transactionsData) return;
+    $(document).ready(function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token') || localStorage.getItem('jwtToken');
 
-        if (company === 'Company 1') {
-            transactionsData.fromCompanyTransaction.forEach(transaction => {
-                if (transaction.transactionId === transactionId) {
-                    transaction.isChecked = isChecked;
-                }
-            });
-        } else if (company === 'Company 2') {
-            transactionsData.toCompanyTransaction.forEach(transaction => {
-                if (transaction.transactionId === transactionId) {
-                    transaction.isChecked = isChecked;
-                }
-            });
+        if (!token) {
+            alert('You are not authorized to view this page.');
+            window.location.href = 'index.html'; // Redirect back to login if no token
+        } else {
+            console.log('Token:', token); // For debugging
         }
+    });
 
-        // Save the updated transactions data back to localStorage
-        localStorage.setItem('transactionsData', JSON.stringify(transactionsData));
+    let currentPage = 1;
+    const token = localStorage.getItem('jwtToken');
+    if (!token) {
+        alert('You are not authorized to view this page.');
+        window.location.href = 'index.html'; // Redirect back to login if no token
+    } else {
+        console.log('Token:', token); // Verify if the token is being retrieved properly
+    }
+
+    // Fetch transactions for the current page
+    async function fetchTransactions(page) {
+        const url = `http://trainingsampleapi.satva.solutions/api/Reconciliation/GetTransaction?page=${page}`;
+
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch transactions');
+            }
+
+            const data = await response.json();
+            console.log('Fetched Data:', data); // Log the complete structure of the data
+
+            // Store the fetched data in localStorage
+            localStorage.setItem('transactionsData', JSON.stringify(data));
+
+            // Make sure the data has both fromCompanyTransaction and toCompanyTransaction
+            const fromCompanyTransaction = data.fromCompanyTransaction || [];
+            const toCompanyTransaction = data.toCompanyTransaction || [];
+            return { fromCompanyTransaction, toCompanyTransaction }; // Return both arrays
+        } catch (error) {
+            console.error(error);
+            return { fromCompanyTransaction: [], toCompanyTransaction: [] }; // Return empty arrays in case of error
+        }
     }
 
     // Render transactions in the UI for both Company 1 and Company 2
@@ -138,6 +168,7 @@
         const company1List = document.getElementById('company1List');
         const company2List = document.getElementById('company2List');
 
+        // Check if company list elements exist
         if (!company1List || !company2List) {
             console.error('Company list elements not found');
             return;
@@ -145,10 +176,21 @@
 
         console.log('Rendering Transactions:', data);
 
+        // Destructure fromCompanyTransaction and toCompanyTransaction from the data
         const { fromCompanyTransaction, toCompanyTransaction } = data;
 
-        console.log('fromCompanyTransaction:', fromCompanyTransaction);
-        console.log('toCompanyTransaction:', toCompanyTransaction);
+        // Filter transactions with isChecked = false
+        const filteredFromCompanyTransactions = fromCompanyTransaction.filter(transaction => transaction.isChecked === false);
+        const filteredToCompanyTransactions = toCompanyTransaction.filter(transaction => transaction.isChecked === false);
+
+        console.log('Filtered fromCompanyTransaction:', filteredFromCompanyTransactions);
+        console.log('Filtered toCompanyTransaction:', filteredToCompanyTransactions);
+
+        // Check if the transactions are arrays
+        if (!Array.isArray(filteredFromCompanyTransactions) || !Array.isArray(filteredToCompanyTransactions)) {
+            console.error('Expected arrays for fromCompanyTransaction and toCompanyTransaction');
+            return;
+        }
 
         // Function to render transactions for a specific company list
         const renderTransactionList = (transactions, company, listElement) => {
@@ -160,16 +202,11 @@
 
                 console.log(`Rendering ${company} transaction:`, transaction);
 
-                // Initialize isChecked to false if not present
-                if (transaction.isChecked === undefined) {
-                    transaction.isChecked = false;
-                }
-
                 // Create a div for the transaction item
                 const transactionItem = document.createElement('div');
                 transactionItem.className = 'transaction-item';
                 transactionItem.draggable = true;
-                
+
                 // Create a wrapper div to hold text and the expand button (on the left)
                 const leftWrapper = document.createElement('div');
                 leftWrapper.className = 'left-wrapper';
@@ -177,21 +214,6 @@
                 leftWrapper.style.justifyContent = 'space-between';
                 leftWrapper.style.alignItems = 'center';
                 leftWrapper.style.width = '100%';
-
-                // Add checkbox to the left wrapper
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.className = 'transaction-checkbox';
-                checkbox.id = `checkbox-${company}-${transaction.transactionId}`; // Unique ID for each checkbox
-                checkbox.checked = transaction.isChecked; // Set the checkbox state based on isChecked
-
-                // Attach change event to update isChecked in localStorage
-                checkbox.addEventListener('change', (event) => {
-                    const isChecked = event.target.checked;
-                    updateIsChecked(transaction.transactionId, company, isChecked); // Update the status in localStorage
-                });
-
-                leftWrapper.appendChild(checkbox);
 
                 // Set the transaction text content
                 const transactionText = document.createElement('div');
@@ -208,11 +230,11 @@
                 const expandButton = document.createElement('button');
                 expandButton.className = 'btn btn-primary'; // Bootstrap button styling
                 expandButton.textContent = 'Expand';
-                
+
                 // Link this button to its specific transaction details
                 expandButton.setAttribute('data-bs-target', `#transaction-details-${companyId}-${transactionId}`);
                 expandButton.setAttribute('data-bs-toggle', 'collapse'); // Set the collapse attribute
-                
+
                 leftWrapper.appendChild(expandButton); // Add the button to the left wrapper
 
                 // Create a container for the expanded details with Bootstrap collapse
@@ -241,6 +263,7 @@
                     row.insertCell(0).innerText = line.lineId;
                     row.insertCell(1).innerText = line.account;
 
+                    // Check if the line is credit or debit
                     if (line.isCredit) {
                         row.insertCell(2).innerText = ''; // Debit cell will be empty
                         row.insertCell(3).innerText = `$${line.amount}`; // Credit amount
@@ -254,7 +277,7 @@
                 expandedDetails.appendChild(tableWrapper); // Add the table wrapper to the expanded details container
 
                 // Append everything to the transaction item
-                transactionItem.appendChild(leftWrapper); // Add the left wrapper first (checkbox, text, and button)
+                transactionItem.appendChild(leftWrapper); // Add the left wrapper first (text and button)
                 transactionItem.appendChild(expandedDetails); // Add the expanded details after
 
                 // Append the transaction item to the list element
@@ -265,47 +288,53 @@
         };
 
         // Render "From Company Transactions" for Company 1
-        renderTransactionList(fromCompanyTransaction, 'Company 1', company1List);
+        renderTransactionList(filteredFromCompanyTransactions, 'Company 1', company1List);
 
         // Render "To Company Transactions" for Company 2
-        renderTransactionList(toCompanyTransaction, 'Company 2', company2List);
+        renderTransactionList(filteredToCompanyTransactions, 'Company 2', company2List);
     }
 
     // Load transactions for the current page
     async function loadTransactions() {
         document.getElementById('loading').style.display = 'block';
 
+        // Check if the data is already stored in localStorage
         const storedData = localStorage.getItem('transactionsData');
 
         let fromCompanyTransaction = [];
         let toCompanyTransaction = [];
 
         if (storedData) {
+            // Parse the data from localStorage if it exists
             const data = JSON.parse(storedData);
             fromCompanyTransaction = data.fromCompanyTransaction || [];
             toCompanyTransaction = data.toCompanyTransaction || [];
         } else {
+            // If no data in localStorage, fetch from the API
             const result = await fetchTransactions(currentPage);
             fromCompanyTransaction = result.fromCompanyTransaction;
             toCompanyTransaction = result.toCompanyTransaction;
         }
 
-        // Assign isChecked = false for all transactions
-        fromCompanyTransaction.forEach(transaction => transaction.isChecked = false);
-        toCompanyTransaction.forEach(transaction => transaction.isChecked = false);
-
-        // Save the initial state to localStorage
-        localStorage.setItem('transactionsData', JSON.stringify({ fromCompanyTransaction, toCompanyTransaction }));
-
+        // Render the transactions from either localStorage or API
         renderTransactions({ fromCompanyTransaction, toCompanyTransaction });
 
         document.getElementById('loading').style.display = 'none';
         currentPage++;
     }
 
+    // Handle scroll to load more transactions (infinite scroll)
+    window.addEventListener('scroll', () => {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+            loadTransactions();
+        }
+    });
+
+    // Start loading transactions when the page loads
     document.addEventListener('DOMContentLoaded', () => {
         loadTransactions();
     });
+
 </script>
 
 
