@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Intercompany Transaction</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .container {
+            margin-top: 20px;
+        }
+
+        .table-bordered {
+            border: 1px solid #dee2e6;
+        }
+
+        .transaction-row {
+            cursor: move;
+        }
+
+        .reconciled-column {
+            background-color: #e9ecef;
+        }
+
+        .transaction-detail {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 10px;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Intercompany Transaction</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Company 1</th>
+                    <th>Reconciled</th>
+                    <th>Exclude</th>
+                    <th>Company 2</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="transaction-row" id="unreconciled-row-1"></td>
+                    <td class="reconciled-column" id="reconciled-column-1"></td>
+                    <td></td>
+                    <td class="transaction-row" id="unreconciled-row-2"></td>
+                </tr>
+                <tr>
+                    <td colspan="4"></td>
+                </tr>
+                <tr>
+                    <td class="transaction-row" id="unreconciled-row-3"></td>
+                    <td class="reconciled-column" id="reconciled-column-2"></td>
+                    <td></td>
+                    <td class="transaction-row" id="unreconciled-row-4"></td>
+                </tr>
+                <tr>
+                    <td colspan="4"></td>
+                </tr>
+                <tr>
+                    <td class="transaction-row" id="unreconciled-row-5"></td>
+                    <td class="reconciled-column" id="reconciled-column-3"></td>
+                    <td></td>
+                    <td class="transaction-row" id="unreconciled-row-6"></td>
+                </tr>
+                <tr>
+                    <td colspan="4"></td>
+                </tr>
+                <tr>
+                    <td class="transaction-row" id="unreconciled-row-7"></td>
+                    <td class="reconciled-column" id="reconciled-column-4"></td>
+                    <td></td>
+                    <td class="transaction-row" id="unreconciled-row-8"></td>
+                </tr>
+                <tr>
+                    <td colspan="4"></td>
+                </tr>
+                <tr>
+                    <td class="transaction-row" id="unreconciled-row-9"></td>
+                    <td class="reconciled-column" id="reconciled-column-5"></td>
+                    <td></td>
+                    <td class="transaction-row" id="unreconciled-row-10"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Fetch data from API for first and last rows
+            $.ajax({
+                url: 'your_api_endpoint', // Replace with your actual API endpoint
+                type: 'GET',
+                success: function(data) {
+                    $('#unreconciled-row-1').html(data.company1_row1);
+                    $('#unreconciled-row-2').html(data.company2_row1);
+                    $('#unreconciled-row-9').html(data.company1_row2);
+                    $('#unreconciled-row-10').html(data.company2_row2);
+                }
+            });
+
+            // Drag and drop functionality
+            $('.transaction-row').draggable({
+                connectToSortable: '.reconciled-column',
+                helper: 'clone'
+            });
+
+            $('.reconciled-column').droppable({
+                drop: function(event, ui) {
+                    $(this).html(ui.draggable.html());
+                }
+            });
+
+            // Click event for transaction details
+            $('.transaction-row').click(function() {
+                var transactionId = $(this).attr('id'); // Get transaction ID
+
+                // Fetch transaction details from API
+                $.ajax({
+                    url: 'your_api_endpoint/' + transactionId, // Replace with your actual API endpoint
+                    type: 'GET',
+                    success: function(data) {
+                        // Create transaction details popup
+                        var $transactionDetail = $('<div class="transaction-detail">');
+                        $transactionDetail.html(data.transaction_details);
+
+                        // Position the popup
+                        $transactionDetail.css({
+                            top: event.clientY + 10,
+                            left: event.clientX + 10
+                        });
+
+                        // Append the popup to the body
+                        $('body').append($transactionDetail);
+
+                        // Show the popup
+                        $transactionDetail.show();
+                    }
+                });
+            });
+
+            // Hide transaction details popup on click outside
+            $(document).click(function(event) {
+                if (!$(event.target).closest('.transaction-row').length) {
+                    $('.transaction-detail').hide();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
