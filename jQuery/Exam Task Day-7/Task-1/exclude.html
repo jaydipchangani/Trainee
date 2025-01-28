@@ -125,11 +125,21 @@
 
         const { fromCompanyTransaction, toCompanyTransaction } = data;
 
-        console.log('fromCompanyTransaction:', fromCompanyTransaction);
-        console.log('toCompanyTransaction:', toCompanyTransaction);
+        // Initialize isChecked as false if not present in the transaction data
+        fromCompanyTransaction.forEach(transaction => {
+            if (transaction.isChecked === undefined) {
+                transaction.isChecked = false; // Initialize to false
+            }
+        });
+
+        toCompanyTransaction.forEach(transaction => {
+            if (transaction.isChecked === undefined) {
+                transaction.isChecked = false; // Initialize to false
+            }
+        });
 
         // Function to render transactions for a specific company list
-        const renderTransactionList = (transactions, company, listElement) => {
+        const renderTransactionList = (transactions, company, listElement, isFromCompany) => {
             transactions.forEach(transaction => {
                 if (!transaction.transactionId || !transaction.transactionType || !transaction.amount || !transaction.lines) {
                     console.error('Transaction is missing expected fields:', transaction);
@@ -142,7 +152,7 @@
                 const transactionItem = document.createElement('div');
                 transactionItem.className = 'transaction-item';
                 transactionItem.draggable = true;
-
+                
                 // Create a wrapper div to hold text and the expand button (on the left)
                 const leftWrapper = document.createElement('div');
                 leftWrapper.className = 'left-wrapper';
@@ -156,15 +166,24 @@
                 checkbox.type = 'checkbox';
                 checkbox.className = 'transaction-checkbox';
                 checkbox.id = `checkbox-${company}-${transaction.transactionId}`; // Unique ID for each checkbox
+                checkbox.checked = transaction.isChecked; // Set the checkbox based on the isChecked value
+                
+                // Add event listener to update the isChecked state when checkbox is toggled
+                checkbox.addEventListener('change', () => {
+                    transaction.isChecked = checkbox.checked; // Update the transaction's isChecked property
 
-                // Set checkbox state based on transaction data (from localStorage if available)
-                const transactionData = JSON.parse(localStorage.getItem('transactionsData')) || {};
-                const isChecked = transactionData[transaction.transactionId]?.isChecked || false;
-                checkbox.checked = isChecked;
+                    // Update localStorage after the checkbox state changes
+                    if (isFromCompany) {
+                        const storedData = JSON.parse(localStorage.getItem('transactionsData')) || {};
+                        storedData.fromCompanyTransaction = fromCompanyTransaction;
+                        localStorage.setItem('transactionsData', JSON.stringify(storedData));
+                    } else {
+                        const storedData = JSON.parse(localStorage.getItem('transactionsData')) || {};
+                        storedData.toCompanyTransaction = toCompanyTransaction;
+                        localStorage.setItem('transactionsData', JSON.stringify(storedData));
+                    }
 
-                // Add event listener to update localStorage when checkbox state changes
-                checkbox.addEventListener('change', (event) => {
-                    updateTransactionData(transaction.transactionId, event.target.checked);
+                    console.log(`Updated isChecked for ${transaction.transactionId} to: ${transaction.isChecked}`);
                 });
 
                 leftWrapper.appendChild(checkbox);
@@ -241,23 +260,10 @@
         };
 
         // Render "From Company Transactions" for Company 1
-        renderTransactionList(fromCompanyTransaction, 'Company 1', company1List);
+        renderTransactionList(fromCompanyTransaction, 'Company 1', company1List, true);
 
         // Render "To Company Transactions" for Company 2
-        renderTransactionList(toCompanyTransaction, 'Company 2', company2List);
-    }
-
-    // Function to update the transaction data in localStorage
-    function updateTransactionData(transactionId, isChecked) {
-        const transactionData = JSON.parse(localStorage.getItem('transactionsData')) || {};
-
-        // Update the isChecked status of the specific transaction
-        transactionData[transactionId] = {
-            isChecked: isChecked
-        };
-
-        // Store the updated data back in localStorage
-        localStorage.setItem('transactionsData', JSON.stringify(transactionData));
+        renderTransactionList(toCompanyTransaction, 'Company 2', company2List, false);
     }
 
     // Load transactions for the current page
