@@ -78,7 +78,10 @@
             <li class="nav-item">
                 <a class="nav-link active" id="excludeTab" href="#">Exclude</a>
             </li>
-        </ul>
+            <button id="removeReconciledBtn" class="btn btn-danger ml-auto">Remove Reconciled Transactions</button> <!-- New Button -->
+        </ul> 
+        
+        
     </div>
 
     <div class="transaction-container">
@@ -111,6 +114,7 @@
 </div>
 
 <script>
+    
     // Render transactions in the UI for both Company 1 and Company 2
     function renderTransactions(data) {
         const company1List = document.getElementById('company1List');
@@ -290,10 +294,29 @@
         document.getElementById('loading').style.display = 'none';
         currentPage++;
     }
+ // Remove reconciled transactions when the button is clicked
+ document.getElementById('removeReconciledBtn').addEventListener('click', () => {
+        const storedData = JSON.parse(localStorage.getItem('transactionsData')) || {};
+        const fromCompanyTransaction = storedData.fromCompanyTransaction || [];
+        const toCompanyTransaction = storedData.toCompanyTransaction || [];
+
+        // Remove transactions where isChecked = true
+        const updatedFromCompany = fromCompanyTransaction.filter(transaction => !transaction.isChecked);
+        const updatedToCompany = toCompanyTransaction.filter(transaction => !transaction.isChecked);
+
+        // Save updated data to localStorage
+        storedData.fromCompanyTransaction = updatedFromCompany;
+        storedData.toCompanyTransaction = updatedToCompany;
+        localStorage.setItem('transactionsData', JSON.stringify(storedData));
+
+        // Re-render transactions after removal
+        renderTransactions({ fromCompanyTransaction: updatedFromCompany, toCompanyTransaction: updatedToCompany });
+    });
 
     document.addEventListener('DOMContentLoaded', () => {
         loadTransactions();
     });
+
 </script>
 
 
