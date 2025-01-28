@@ -89,13 +89,13 @@
                     return;
                 }
 
-                if (password !== '123') {
+                if (password !== 'Satva1213#') {
                     showAlert('Invalid password. Please try again.', 'danger');
                     return;
                 }
 
                 $.ajax({
-                    url: 'https://example.com/api/login', // Replace with your API endpoint
+                    url: 'http://trainingsampleapi.satva.solutions/api/auth/login', // Replace with your API endpoint
                     method: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({ email, password }),
