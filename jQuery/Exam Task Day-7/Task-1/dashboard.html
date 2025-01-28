@@ -110,285 +110,204 @@
 </div>
 
 <script>
-    $(document).ready(function () {
-            const urlParams = new URLSearchParams(window.location.search);
-            const token = urlParams.get('token') || localStorage.getItem('jwtToken');
+    // Function to update the isChecked status for transactions
+    function updateIsChecked(transactionId, company, isChecked) {
+        let transactionsData = JSON.parse(localStorage.getItem('transactionsData'));
+        if (!transactionsData) return;
 
-            if (!token) {
-                alert('You are not authorized to view this page.');
-                window.location.href = 'index.html'; // Redirect back to login if no token
-            } else {
-                // Optionally, verify token validity with an API request
-                console.log('Token:', token); // For debugging
-            }
-        });
-
-     let currentPage = 1;
-    const token = localStorage.getItem('jwtToken');
-    if (!token) {
-    alert('You are not authorized to view this page.');
-    window.location.href = 'index.html'; // Redirect back to login if no token
-} else {
-    console.log('Token:', token); // Verify if the token is being retrieved properly
-}
-    // Fetch transactions for the current page
-    async function fetchTransactions(page) {
-    const url = `http://trainingsampleapi.satva.solutions/api/Reconciliation/GetTransaction?page=${page}`;
-
-    try {
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to fetch transactions');
+        if (company === 'Company 1') {
+            transactionsData.fromCompanyTransaction.forEach(transaction => {
+                if (transaction.transactionId === transactionId) {
+                    transaction.isChecked = isChecked;
+                }
+            });
+        } else if (company === 'Company 2') {
+            transactionsData.toCompanyTransaction.forEach(transaction => {
+                if (transaction.transactionId === transactionId) {
+                    transaction.isChecked = isChecked;
+                }
+            });
         }
 
-        const data = await response.json();
-        console.log('Fetched Data:', data); // Log the complete structure of the data
-
-        // Store the fetched data in localStorage
-        localStorage.setItem('transactionsData', JSON.stringify(data));
-
-        // Make sure the data has both fromCompanyTransaction and toCompanyTransaction
-        const fromCompanyTransaction = data.fromCompanyTransaction || [];
-        const toCompanyTransaction = data.toCompanyTransaction || [];
-        return { fromCompanyTransaction, toCompanyTransaction }; // Return both arrays
-    } catch (error) {
-        console.error(error);
-        return { fromCompanyTransaction: [], toCompanyTransaction: [] }; // Return empty arrays in case of error
+        // Save the updated transactions data back to localStorage
+        localStorage.setItem('transactionsData', JSON.stringify(transactionsData));
     }
-}
-
-
 
     // Render transactions in the UI for both Company 1 and Company 2
     function renderTransactions(data) {
-    const company1List = document.getElementById('company1List');
-    const company2List = document.getElementById('company2List');
+        const company1List = document.getElementById('company1List');
+        const company2List = document.getElementById('company2List');
 
-    // Check if company list elements exist
-    if (!company1List || !company2List) {
-        console.error('Company list elements not found');
-        return;
-    }
-
-    console.log('Rendering Transactions:', data);
-
-    // Destructure fromCompanyTransaction and toCompanyTransaction from the data
-    const { fromCompanyTransaction, toCompanyTransaction } = data;
-
-    console.log('fromCompanyTransaction:', fromCompanyTransaction);
-    console.log('toCompanyTransaction:', toCompanyTransaction);
-
-    // Check if the transactions are arrays
-    if (!Array.isArray(fromCompanyTransaction) || !Array.isArray(toCompanyTransaction)) {
-        console.error('Expected arrays for fromCompanyTransaction and toCompanyTransaction');
-        return;
-    }
-
-    // Function to render transactions for a specific company list
-    // Function to render transactions for a specific company list
-const renderTransactionList = (transactions, company, listElement) => {
-    transactions.forEach(transaction => {
-        if (!transaction.transactionId || !transaction.transactionType || !transaction.amount || !transaction.lines) {
-            console.error('Transaction is missing expected fields:', transaction);
+        if (!company1List || !company2List) {
+            console.error('Company list elements not found');
             return;
         }
 
-        console.log(`Rendering ${company} transaction:`, transaction);
+        console.log('Rendering Transactions:', data);
 
-        // Create a div for the transaction item
-        const transactionItem = document.createElement('div');
-        transactionItem.className = 'transaction-item';
-        transactionItem.draggable = true;
-        
-        // Create a wrapper div to hold text and the expand button (on the left)
-        const leftWrapper = document.createElement('div');
-        leftWrapper.className = 'left-wrapper';
-        leftWrapper.style.display = 'flex';
-        leftWrapper.style.justifyContent = 'space-between';
-        leftWrapper.style.alignItems = 'center';
-        leftWrapper.style.width = '100%';
+        const { fromCompanyTransaction, toCompanyTransaction } = data;
 
-        // Set the transaction text content
-        const transactionText = document.createElement('div');
-        transactionText.innerHTML = `
-            <strong>${transaction.transactionType}</strong>: ${transaction.date} - $${transaction.amount}
-        `;
-        leftWrapper.appendChild(transactionText);
+        console.log('fromCompanyTransaction:', fromCompanyTransaction);
+        console.log('toCompanyTransaction:', toCompanyTransaction);
 
-        // Replace spaces with hyphens to ensure valid ID
-        const transactionId = transaction.transactionId;
-        const companyId = company.replace(/\s+/g, '-'); // Replace spaces in company name with hyphen
+        // Function to render transactions for a specific company list
+        const renderTransactionList = (transactions, company, listElement) => {
+            transactions.forEach(transaction => {
+                if (!transaction.transactionId || !transaction.transactionType || !transaction.amount || !transaction.lines) {
+                    console.error('Transaction is missing expected fields:', transaction);
+                    return;
+                }
 
-        // Create an "Expand/Collapse" button for each transaction
-        const expandButton = document.createElement('button');
-        expandButton.className = 'btn btn-primary'; // Bootstrap button styling
-        expandButton.textContent = 'Expand';
-        
-        // Link this button to its specific transaction details
-        expandButton.setAttribute('data-bs-target', `#transaction-details-${companyId}-${transactionId}`);
-        expandButton.setAttribute('data-bs-toggle', 'collapse'); // Set the collapse attribute
-        
-        leftWrapper.appendChild(expandButton); // Add the button to the left wrapper
+                console.log(`Rendering ${company} transaction:`, transaction);
 
-        // Create a container for the expanded details with Bootstrap collapse
-        const expandedDetails = document.createElement('div');
-        expandedDetails.className = 'collapse'; // Use Bootstrap's collapse class for sliding effect
-        expandedDetails.id = `transaction-details-${companyId}-${transactionId}`; // Unique ID for each transaction
+                // Initialize isChecked to false if not present
+                if (transaction.isChecked === undefined) {
+                    transaction.isChecked = false;
+                }
 
-        // Create the table structure
-        const tableWrapper = document.createElement('div');
-        tableWrapper.className = 'table-wrapper';
-        tableWrapper.style.display = 'flex';
-        tableWrapper.style.justifyContent = 'flex-end'; // Align the table to the right when expanded
+                // Create a div for the transaction item
+                const transactionItem = document.createElement('div');
+                transactionItem.className = 'transaction-item';
+                transactionItem.draggable = true;
+                
+                // Create a wrapper div to hold text and the expand button (on the left)
+                const leftWrapper = document.createElement('div');
+                leftWrapper.className = 'left-wrapper';
+                leftWrapper.style.display = 'flex';
+                leftWrapper.style.justifyContent = 'space-between';
+                leftWrapper.style.alignItems = 'center';
+                leftWrapper.style.width = '100%';
 
-        const table = document.createElement('table');
-        table.className = 'transaction-table table table-bordered'; // Bootstrap table styling
-        const tableHeader = `
-            <thead>
-                <tr><th>Line ID</th><th>Account</th><th>Debit</th><th>Credit</th></tr>
-            </thead>
-        `;
-        table.innerHTML = tableHeader;
+                // Add checkbox to the left wrapper
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'transaction-checkbox';
+                checkbox.id = `checkbox-${company}-${transaction.transactionId}`; // Unique ID for each checkbox
+                checkbox.checked = transaction.isChecked; // Set the checkbox state based on isChecked
 
-        // Populate the table with transaction lines
-        transaction.lines.forEach(line => {
-            const row = table.insertRow();
-            row.insertCell(0).innerText = line.lineId;
-            row.insertCell(1).innerText = line.account;
+                // Attach change event to update isChecked in localStorage
+                checkbox.addEventListener('change', (event) => {
+                    const isChecked = event.target.checked;
+                    updateIsChecked(transaction.transactionId, company, isChecked); // Update the status in localStorage
+                });
 
-            // Check if the line is credit or debit
-            if (line.isCredit) {
-                row.insertCell(2).innerText = ''; // Debit cell will be empty
-                row.insertCell(3).innerText = `$${line.amount}`; // Credit amount
-            } else {
-                row.insertCell(2).innerText = `$${line.amount}`; // Debit amount
-                row.insertCell(3).innerText = ''; // Credit cell will be empty
-            }
-        });
+                leftWrapper.appendChild(checkbox);
 
-        tableWrapper.appendChild(table); // Add the table wrapper inside the expanded details
-        expandedDetails.appendChild(tableWrapper); // Add the table wrapper to the expanded details container
+                // Set the transaction text content
+                const transactionText = document.createElement('div');
+                transactionText.innerHTML = `
+                    <strong>${transaction.transactionType}</strong>: ${transaction.date} - $${transaction.amount}
+                `;
+                leftWrapper.appendChild(transactionText);
 
-        // Append everything to the transaction item
-        transactionItem.appendChild(leftWrapper); // Add the left wrapper first (text and button)
-        transactionItem.appendChild(expandedDetails); // Add the expanded details after
+                // Replace spaces with hyphens to ensure valid ID
+                const transactionId = transaction.transactionId;
+                const companyId = company.replace(/\s+/g, '-'); // Replace spaces in company name with hyphen
 
-        // Append the transaction item to the list element
-        listElement.appendChild(transactionItem);
+                // Create an "Expand/Collapse" button for each transaction
+                const expandButton = document.createElement('button');
+                expandButton.className = 'btn btn-primary'; // Bootstrap button styling
+                expandButton.textContent = 'Expand';
+                
+                // Link this button to its specific transaction details
+                expandButton.setAttribute('data-bs-target', `#transaction-details-${companyId}-${transactionId}`);
+                expandButton.setAttribute('data-bs-toggle', 'collapse'); // Set the collapse attribute
+                
+                leftWrapper.appendChild(expandButton); // Add the button to the left wrapper
 
-        console.log('Added Transaction:', transactionItem);
-    });
-};
+                // Create a container for the expanded details with Bootstrap collapse
+                const expandedDetails = document.createElement('div');
+                expandedDetails.className = 'collapse'; // Use Bootstrap's collapse class for sliding effect
+                expandedDetails.id = `transaction-details-${companyId}-${transactionId}`; // Unique ID for each transaction
 
+                // Create the table structure
+                const tableWrapper = document.createElement('div');
+                tableWrapper.className = 'table-wrapper';
+                tableWrapper.style.display = 'flex';
+                tableWrapper.style.justifyContent = 'flex-end'; // Align the table to the right when expanded
 
+                const table = document.createElement('table');
+                table.className = 'transaction-table table table-bordered'; // Bootstrap table styling
+                const tableHeader = `
+                    <thead>
+                        <tr><th>Line ID</th><th>Account</th><th>Debit</th><th>Credit</th></tr>
+                    </thead>
+                `;
+                table.innerHTML = tableHeader;
 
+                // Populate the table with transaction lines
+                transaction.lines.forEach(line => {
+                    const row = table.insertRow();
+                    row.insertCell(0).innerText = line.lineId;
+                    row.insertCell(1).innerText = line.account;
 
-    // Render "From Company Transactions" for Company 1
-    renderTransactionList(fromCompanyTransaction, 'Company 1', company1List);
+                    if (line.isCredit) {
+                        row.insertCell(2).innerText = ''; // Debit cell will be empty
+                        row.insertCell(3).innerText = `$${line.amount}`; // Credit amount
+                    } else {
+                        row.insertCell(2).innerText = `$${line.amount}`; // Debit amount
+                        row.insertCell(3).innerText = ''; // Credit cell will be empty
+                    }
+                });
 
-    // Render "To Company Transactions" for Company 2
-    renderTransactionList(toCompanyTransaction, 'Company 2', company2List);
-}
+                tableWrapper.appendChild(table); // Add the table wrapper inside the expanded details
+                expandedDetails.appendChild(tableWrapper); // Add the table wrapper to the expanded details container
 
+                // Append everything to the transaction item
+                transactionItem.appendChild(leftWrapper); // Add the left wrapper first (checkbox, text, and button)
+                transactionItem.appendChild(expandedDetails); // Add the expanded details after
+
+                // Append the transaction item to the list element
+                listElement.appendChild(transactionItem);
+
+                console.log('Added Transaction:', transactionItem);
+            });
+        };
+
+        // Render "From Company Transactions" for Company 1
+        renderTransactionList(fromCompanyTransaction, 'Company 1', company1List);
+
+        // Render "To Company Transactions" for Company 2
+        renderTransactionList(toCompanyTransaction, 'Company 2', company2List);
+    }
 
     // Load transactions for the current page
     async function loadTransactions() {
-    document.getElementById('loading').style.display = 'block';
+        document.getElementById('loading').style.display = 'block';
 
-    // Check if the data is already stored in localStorage
-    const storedData = localStorage.getItem('transactionsData');
+        const storedData = localStorage.getItem('transactionsData');
 
-    let fromCompanyTransaction = [];
-    let toCompanyTransaction = [];
+        let fromCompanyTransaction = [];
+        let toCompanyTransaction = [];
 
-    if (storedData) {
-        // Parse the data from localStorage if it exists
-        const data = JSON.parse(storedData);
-        fromCompanyTransaction = data.fromCompanyTransaction || [];
-        toCompanyTransaction = data.toCompanyTransaction || [];
-    } else {
-        // If no data in localStorage, fetch from the API
-        const result = await fetchTransactions(currentPage);
-        fromCompanyTransaction = result.fromCompanyTransaction;
-        toCompanyTransaction = result.toCompanyTransaction;
+        if (storedData) {
+            const data = JSON.parse(storedData);
+            fromCompanyTransaction = data.fromCompanyTransaction || [];
+            toCompanyTransaction = data.toCompanyTransaction || [];
+        } else {
+            const result = await fetchTransactions(currentPage);
+            fromCompanyTransaction = result.fromCompanyTransaction;
+            toCompanyTransaction = result.toCompanyTransaction;
+        }
+
+        // Assign isChecked = false for all transactions
+        fromCompanyTransaction.forEach(transaction => transaction.isChecked = false);
+        toCompanyTransaction.forEach(transaction => transaction.isChecked = false);
+
+        // Save the initial state to localStorage
+        localStorage.setItem('transactionsData', JSON.stringify({ fromCompanyTransaction, toCompanyTransaction }));
+
+        renderTransactions({ fromCompanyTransaction, toCompanyTransaction });
+
+        document.getElementById('loading').style.display = 'none';
+        currentPage++;
     }
 
-    // Render the transactions from either localStorage or API
-    renderTransactions({ fromCompanyTransaction, toCompanyTransaction });
-
-    document.getElementById('loading').style.display = 'none';
-    currentPage++;
-}
-
-
-
-    // Handle scroll to load more transactions (infinite scroll)
-    window.addEventListener('scroll', () => {
-        if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-            loadTransactions();
-        }
-    });
-
-    // Start loading transactions when the page loads
     document.addEventListener('DOMContentLoaded', () => {
         loadTransactions();
     });
-
-    // Function to handle drag events
-    function drag(event) {
-        event.dataTransfer.setData("text", event.target.id);
-    }
-
-    // Allow drop on the center drop zone
-    function allowDrop(event) {
-        event.preventDefault();
-    }
-
-    // Handle drop event to expand transactions in the table
-    function drop(event) {
-        event.preventDefault();
-        var data = event.dataTransfer.getData("text");
-        var droppedTransaction = document.getElementById(data);
-
-        // Create a new table row for the dropped transaction
-        var transactionDetails = {
-            account: "Accounts Payable",
-            amount: droppedTransaction.innerText.includes('100') ? 100 : 200,
-            isCredit: true,
-            lineId: 1
-        };
-
-        // Add the dropped transaction to the expanded area
-        expandTransaction(transactionDetails);
-    }
-
-    // Expand the transaction into a table in the expanded area
-    function expandTransaction(transaction) {
-        var expandedArea = document.getElementById("expandedTransaction");
-
-        // Create the table if not created yet
-        if (!expandedArea.querySelector(".transaction-table")) {
-            var table = document.createElement("table");
-            table.className = "transaction-table";
-            var tableHeader = `<thead><tr><th>Account</th><th>Amount</th><th>Is Credit</th></tr></thead>`;
-            table.innerHTML = tableHeader;
-            expandedArea.appendChild(table);
-        }
-
-        // Append new row to the table
-        var table = expandedArea.querySelector(".transaction-table");
-        var row = table.insertRow();
-        row.insertCell(0).innerText = transaction.account;
-        row.insertCell(1).innerText = transaction.amount;
-        row.insertCell(2).innerText = transaction.isCredit ? 'Yes' : 'No';
-    }
 </script>
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
