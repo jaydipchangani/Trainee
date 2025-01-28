@@ -323,12 +323,12 @@
         currentPage++;
     }
 
-    // // Handle scroll to load more transactions (infinite scroll)
-    // window.addEventListener('scroll', () => {
-    //     if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-    //         loadTransactions();
-    //     }
-    // });
+    // Handle scroll to load more transactions (infinite scroll)
+    window.addEventListener('scroll', () => {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+            loadTransactions();
+        }
+    });
 
     // Start loading transactions when the page loads
     document.addEventListener('DOMContentLoaded', () => {
