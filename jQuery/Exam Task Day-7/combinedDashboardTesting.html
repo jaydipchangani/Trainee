@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="company1List"></div>
+    <div id="company2List"></div>
+    <div id="centreDropZone"></div>
+    <button id="reconcileButton">Reconcile</button>
+
+    <script>
+        let selectedCompany1Transaction = null;
+        let draggedCompany2Transactions = [];
+        let fromCompanyTransaction = [];
+        let toCompanyTransaction = [];
+
+        // Function to render transactions
+        function renderTransactions(data) {
+            const company1List = document.getElementById('company1List');
+            const company2List = document.getElementById('company2List');
+            const centreDropZone = document.getElementById('centreDropZone');
+            const reconcileButton = document.getElementById('reconcileButton');
+
+            if (!company1List || !company2List || !centreDropZone || !reconcileButton) {
+                console.error('Required elements not found');
+                return;
+            }
+
+            console.log('Rendering Transactions:', data);
+
+            company1List.innerHTML = '';
+            company2List.innerHTML = '';
+
+            const { fromCompanyTransaction, toCompanyTransaction } = data;
+
+            // Filter transactions to show only those that are not reconciled or do not have the isReconciled property
+            const filterUnreconciledTransactions = (transactions) => {
+                return transactions.filter(transaction => !transaction.isReconciled);
+            };
+
+            // Function to render transaction list for each company
+            const renderTransactionList = (transactions, company, listElement, isDraggable = false) => {
+                transactions.forEach(transaction => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${transaction.date} - ${transaction.amount}`;
+                    if (isDraggable) {
+                        listItem.draggable = true;
+                        listItem.addEventListener('dragstart', (event) => {
+                            event.dataTransfer.setData('text/plain', JSON.stringify(transaction));
+                        });
+                    }
+                    listElement.appendChild(listItem);
+                });
+            };
+
+            renderTransactionList(filterUnreconciledTransactions(fromCompanyTransaction), 'Company 1', company1List, true);
+            renderTransactionList(filterUnreconciledTransactions(toCompanyTransaction), 'Company 2', company2List, false);
+        }
+
+        // Additional functions from testing.html
+        function additionalFunction1() {
+            console.log('Additional Function 1 from testing.html');
+        }
+
+        function additionalFunction2() {
+            console.log('Additional Function 2 from testing.html');
+        }
+
+        // Call the renderTransactions function with sample data
+        renderTransactions({
+            fromCompanyTransaction: [
+                { date: '2023-01-01', amount: 100, isReconciled: false },
+                { date: '2023-01-02', amount: 200, isReconciled: true }
+            ],
+            toCompanyTransaction: [
+                { date: '2023-01-03', amount: 300, isReconciled: false },
+                { date: '2023-01-04', amount: 400, isReconciled: true }
+            ]
+        });
+    </script>
+</body>
+</html>
