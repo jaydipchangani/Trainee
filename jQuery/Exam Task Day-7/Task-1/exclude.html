@@ -295,6 +295,29 @@
         currentPage++;
     }
 
+    document.getElementById('removeReconciledBtn').addEventListener('click', () => {
+        const storedData = JSON.parse(localStorage.getItem('transactionsData')) || {};
+        
+        // Update the isChecked states in the transactions data based on the tracked checkbox states
+        storedData.fromCompanyTransaction.forEach(transaction => {
+            const state = checkboxStates.find(s => s.id === transaction.transactionId);
+            if (state) {
+                transaction.isChecked = state.isChecked;
+            }
+        });
+
+        storedData.toCompanyTransaction.forEach(transaction => {
+            const state = checkboxStates.find(s => s.id === transaction.transactionId);
+            if (state) {
+                transaction.isChecked = state.isChecked;
+            }
+        });
+
+        // Save the updated data back to localStorage
+        localStorage.setItem('transactionsData', JSON.stringify(storedData));
+
+        console.log('Reconciled transactions removed and states saved to localStorage.');
+    });
 
     document.addEventListener('DOMContentLoaded', () => {
         loadTransactions();
