@@ -108,7 +108,23 @@
 </div>
 
 <script>
-    
+    let checkboxStates = [];
+    function updateExcludeArray(transaction, isChecked) {
+    let excludeArray = JSON.parse(localStorage.getItem('excludeArray')) || [];
+
+    if (isChecked) {
+        // Add transaction to excludeArray if not already present
+        if (!excludeArray.some(item => item.transactionId === transaction.transactionId)) {
+            excludeArray.push(transaction);
+        }
+    } else {
+        // Remove transaction from excludeArray if unchecked
+        excludeArray = excludeArray.filter(item => item.transactionId !== transaction.transactionId);
+    }
+
+    localStorage.setItem('excludeArray', JSON.stringify(excludeArray));
+    console.log('Updated excludeArray:', excludeArray);
+}
     // Render transactions in the UI for both Company 1 and Company 2
     function renderTransactions(data) {
         const company1List = document.getElementById('company1List');
@@ -135,6 +151,8 @@
                 transaction.isChecked = false; // Initialize to false
             }
         });
+
+        
 
         // Function to render transactions for a specific company list
         const renderTransactionList = (transactions, company, listElement, isFromCompany) => {
@@ -182,6 +200,26 @@
                     }
 
                     console.log(`Updated isChecked for ${transaction.transactionId} to: ${transaction.isChecked}`);
+
+                    checkbox.addEventListener('change', () => {
+    transaction.isChecked = checkbox.checked;
+
+    // Update the excludeArray
+    updateExcludeArray(transaction, checkbox.checked);
+
+    // Update localStorage for the main transaction data
+    if (isFromCompany) {
+        const storedData = JSON.parse(localStorage.getItem('transactionsData')) || {};
+        storedData.fromCompanyTransaction = fromCompanyTransaction;
+        localStorage.setItem('transactionsData', JSON.stringify(storedData));
+    } else {
+        const storedData = JSON.parse(localStorage.getItem('transactionsData')) || {};
+        storedData.toCompanyTransaction = toCompanyTransaction;
+        localStorage.setItem('transactionsData', JSON.stringify(storedData));
+    }
+
+    console.log(`Updated isChecked for ${transaction.transactionId} to: ${transaction.isChecked}`);
+});
                 });
 
                 leftWrapper.appendChild(checkbox);
