@@ -433,8 +433,8 @@ function renderTransactions(data) {
     renderTransactionList(unreconciledCompany2, 'Company 2', company2List, true);
 
     // Save the updated transactions to local storage
-    // localStorage.setItem('fromCompanyTransaction', JSON.stringify(fromCompanyTransaction));
-    // localStorage.setItem('toCompanyTransaction', JSON.stringify(toCompanyTransaction));
+    localStorage.setItem('fromCompanyTransaction', JSON.stringify(fromCompanyTransaction));
+    localStorage.setItem('toCompanyTransaction', JSON.stringify(toCompanyTransaction));
 }
 
 
@@ -453,10 +453,6 @@ const renderTransactionList = (transactions, company, listElement, isDraggable =
                 console.error('Transaction is missing expected fields:', transaction);
                 return;
             }
-
-            
-
-            
 
             const transactionItem = document.createElement('div');
             transactionItem.className = 'transaction-item';
