@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,11 +21,13 @@
             margin: 0;
             overflow: hidden;
         }
+
         .card {
             border: none;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
+
         .card-header {
             background: #2196f3;
             color: #fff;
@@ -33,22 +36,27 @@
             font-size: 1.5rem;
             font-weight: bold;
         }
+
         .form-control {
             border-radius: 8px;
         }
+
         .btn {
             background-color: #2196f3;
             border: none;
             border-radius: 8px;
         }
+
         .btn:hover {
             background-color: #1976d2;
         }
+
         #alertContainer {
             margin-top: 1rem;
         }
     </style>
 </head>
+
 <body>
     <div class="container d-flex justify-content-center align-items-center h-100">
         <div class="col-md-4">
@@ -60,11 +68,13 @@
                     <form id="loginForm">
                         <div class="mb-4">
                             <label for="email" class="form-label">Email address</label>
-                            <input type="email" class="form-control" id="email" name="email" required placeholder="Enter your email">
+                            <input type="email" class="form-control" id="email" name="email" required
+                                placeholder="Enter your email"  title="Please enter a valid email address">
                         </div>
                         <div class="mb-4">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" required placeholder="Enter your password">
+                            <input type="password" class="form-control" id="password" name="password" required title="Please enter a valid email address"
+                                placeholder="Enter your password">
                         </div>
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary">Login</button>
@@ -129,4 +139,5 @@
         });
     </script>
 </body>
+
 </html>
