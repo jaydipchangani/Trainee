@@ -119,7 +119,7 @@
 
         <!-- Center Drop Zone -->
         <div id="centreDropZone" class="drop-zone" ondrop="drop(event)" ondragover="allowDrop(event)">
-            <h4 id="drophead">Drag transactions here</h4>
+            <h4 id="drophead">Select Transaction from Compnay 1 and then drag transcation from Compnay 2</h4>
         </div>
 
         <!-- Company 2 List -->
@@ -453,6 +453,8 @@ const renderTransactionList = (transactions, company, listElement, isDraggable =
                 console.error('Transaction is missing expected fields:', transaction);
                 return;
             }
+
+
 
             const transactionItem = document.createElement('div');
             transactionItem.className = 'transaction-item';
