@@ -68,9 +68,7 @@
                     <form id="loginForm">
                         <div class="mb-4">
                             <label for="email" class="form-label">Email address</label>
-                            <input type="email" class="form-control" id="email" name="email" required pattern="^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{4}$
-                            "
-                                placeholder="Enter your email"  title="Please enter a valid email address">
+                            <input type="email" class="form-control" id="email" name="email" required  pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{4}$"  placeholder="Enter your email"  title="Please enter a valid email address">
                         </div>
                         <div class="mb-4">
                             <label for="password" class="form-label">Password</label>
@@ -116,7 +114,7 @@
                             showAlert('Login successful! Redirecting...', 'success');
 
                             setTimeout(() => {
-                                window.location.href = 'testing.html?token=' + response.token; // Redirect to dashboard with token
+                                window.location.href = 'transaction-list.html?token=' + response.token; // Redirect to dashboard with token
                             }, 2000);
                         } else {
                             showAlert('Invalid credentials. Please try again.', 'danger');
