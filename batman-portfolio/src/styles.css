@@ -1,0 +1,28 @@
+/* src/styles.css */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: white;
+  }
+  
+  nav {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  nav button {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px;
+    margin: 5px 0;
+    cursor: pointer;
+  }
+  
+  nav button:hover {
+    background-color: #555;
+  }
