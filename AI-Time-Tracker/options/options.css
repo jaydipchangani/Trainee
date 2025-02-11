@@ -1,0 +1,16 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 15px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+:root {
+    --bg-color: #222;
+    --text-color: #fff;
+}
+
+.light-mode {
+    --bg-color: #fff;
+    --text-color: #000;
+}
