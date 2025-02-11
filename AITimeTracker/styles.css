@@ -1,0 +1,115 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  h1,
+  h2 {
+    color: #333;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  li {
+    margin-bottom: 10px;
+  }
+  
+  button {
+    background-color: #4caf50;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-border-radius: 4px;
+  }
+  
+  input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  /* Dark mode styles */
+  body.dark-mode {
+    background-color: #222;
+    color: #fff;
+  }
+  
+  body.dark-mode h1,
+  body.dark-mode h2 {
+    color: #fff;
+  }
+  
+  body.dark-mode button {
+    background-color: #555;
+  }
+  
+  body.dark-mode input[type="text"] {
+    background-color: #333;
+    color: #fff;
+    border-color: #555;
+  }
+  
+  #currentSession,
+  #todayUsage,
+  #totalToday,
+  #aiSites,
+  #weeklyUsage,
+  #theme {
+    background-color: #f5f5f5;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  body.dark-mode #currentSession,
+  body.dark-mode #todayUsage,
+  body.dark-mode #totalToday,
+  body.dark-mode #aiSites,
+  body.dark-mode #weeklyUsage,
+  body.dark-mode #theme {
+    background-color: #333;
+  }
+  
+  #usageList li,
+  #weeklyUsageList li {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+  }
+  
+  #siteList li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;    
+  }
+  
+  #siteList li button {
+    background-color: #f44336;
+    padding: 5px 10px;
+    font-size: 14px;
+  }
+  
+  body.dark-mode #siteList li button {
+    background-color: #d32f2f;
+  }
+  
+  

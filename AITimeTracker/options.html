@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Time Tracker Options</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div
+class="container">
+    <h1>AI Time Tracker Options</h1>
+    <div id="aiSites">
+      <h2>Tracked AI Sites</h2>
+      <ul id="siteList"></ul>
+      <input type="text" id="newSite" placeholder="Enter new AI site">
+      <input type="text" id="newCategory" placeholder="Enter category">
+      <button id="addSite">Add Site</button>
+    </div>
+    <div id="alerts">
+      <h2>Usage Alerts</h2>
+      <input type="number" id="dailyLimit" placeholder="Daily limit (minutes)">
+      <button id="setDailyLimit">Set Daily Limit</button>
+    </div>
+    <div id="privacy">
+      <h2>Privacy Settings</h2>
+      <label>
+        <input type="checkbox" id="cloudSync"> Enable Cloud Sync
+      </label>
+      <button id="deleteData">Delete All Stored Data</button>
+    </div>
+    <div id="theme">
+      <h2>Theme</h2>
+      <button id="toggleTheme">Toggle Dark/Light Mode</button>
+    </div>
+    <div id="dashboard">
+      <h2>Dashboard</h2>
+      <button id="openDashboard">Open Analytics Dashboard</button>
+    </div>
+  </div>
+  <script src="options.js"></script>
+</body>
+</html>

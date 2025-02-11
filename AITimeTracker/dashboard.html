@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Time Tracker Dashboard</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>AI Time Tracker Dashboard</h1>
+    <div id="dateRange">
+      <button id="dailyBtn">Daily</button>
+      <button id="weeklyBtn">Weekly</button>
+      <button id="monthlyBtn">Monthly</button>
+    </div>
+    <div id="charts">
+      <div class="chart-container">
+        <canvas id="timeChart"></canvas>
+      </div>
+      <div class="chart-container">
+        <canvas id="categoryChart"></canvas>
+      </div>
+    </div>
+    <div id="stats">
+      <h2>Usage Statistics</h2>
+      <ul id="statsList"></ul>
+    </div>
+    <div id="exportSection">
+      <h2>Export Data</h2>
+      <button id="exportCSV">Export as CSV</button>
+      <button id="exportJSON">Export as JSON</button>
+    </div>
+  </div>
+  <script src="dashboard.js"></script>
+</body>
+</html>
+
