@@ -3,22 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings</title>
-    <link rel="stylesheet" href="options.css">
+    <title>AI Time Tracker</title>
+    <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-    <div class="settings-container">
-        <h2>Settings</h2>
-        <label>
-            <input type="checkbox" id="theme-toggle">
-            Enable Dark Mode
-        </label>
-        <h3>Tracked AI Websites</h3>
-        <ul id="site-list"></ul>
-        <input type="text" id="new-site" placeholder="Add a site">
-        <button id="add-site">Add</button>
-        <button id="clear-data">Reset Data</button>
+    <div class="popup-container">
+        <h2>AI Time Tracker</h2>
+        <p id="total-time">Total AI Usage: 0 minutes</p>
+        <h3>AI Usage Breakdown:</h3>
+        <ul id="usage-list"></ul>
+        <button id="open-settings">Settings</button>
     </div>
-    <script src="options.js"></script>
+    <script src="popup.js"></script>
 </body>
 </html>
