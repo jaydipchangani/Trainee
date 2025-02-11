@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     const totalTimeEl = document.getElementById("total-time");
     const usageListEl = document.getElementById("usage-list");
-    const settingsBtn = document.getElementById("open-settings");
 
     function loadTotalTime() {
         chrome.storage.local.get(["ai_usage"], (data) => {
@@ -20,9 +19,5 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     setInterval(loadTotalTime, 1000);
-    settingsBtn.addEventListener("click", () => {
-        chrome.runtime.openOptionsPage();
-    });
-
     loadTotalTime();
 });

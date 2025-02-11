@@ -8,7 +8,7 @@ const AI_SITES = {
     "claude.ai": "Claude"
 };
 
-// Load stored AI usage time on startup
+// Load saved AI time on extension startup
 chrome.storage.local.get(["ai_usage"], (data) => {
     totalTime = data.ai_usage || {};
 });
@@ -16,18 +16,29 @@ chrome.storage.local.get(["ai_usage"], (data) => {
 // Listen for tab activation
 chrome.tabs.onActivated.addListener((activeInfo) => {
     chrome.tabs.get(activeInfo.tabId, (tab) => {
-        handleTabChange(tab);
+        if (tab && tab.url) {
+            handleTabChange(tab);
+        }
     });
 });
 
-// Listen for tab URL updates
+// Listen for tab URL updates (e.g., navigation inside a site)
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (changeInfo.url) {
         handleTabChange(tab);
     }
 });
 
-// Handle tab change logic
+// Detect when Chrome starts and restore tracking
+chrome.runtime.onStartup.addListener(() => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (tabs.length > 0) {
+            handleTabChange(tabs[0]);
+        }
+    });
+});
+
+// Handle tab change
 function handleTabChange(tab) {
     if (!tab || !tab.url) return;
     const url = new URL(tab.url);
@@ -41,50 +52,58 @@ function handleTabChange(tab) {
     }
 }
 
-// Start tracking time for an AI tool
+// Start tracking time
 function startTracking(tabId, aiName) {
     if (activeTabId !== tabId) {
         stopTracking();
         activeTabId = tabId;
         startTime = Date.now();
-        console.log(`Tracking started for ${aiName}`);
+        console.log(`Started tracking ${aiName}`);
     }
 }
 
-// Stop tracking and update storage
+// Stop tracking and save elapsed time
 function stopTracking() {
     if (activeTabId && startTime) {
         let elapsedTime = Math.floor((Date.now() - startTime) / 1000 / 60); // Convert to minutes
-        let url = new URL(chrome.tabs.get(activeTabId).url);
-        let aiName = AI_SITES[url.hostname];
+        chrome.tabs.get(activeTabId, (tab) => {
+            if (tab && tab.url) {
+                let url = new URL(tab.url);
+                let aiName = AI_SITES[url.hostname];
 
-        if (aiName) {
-            totalTime[aiName] = (totalTime[aiName] || 0) + elapsedTime;
+                if (aiName) {
+                    totalTime[aiName] = (totalTime[aiName] || 0) + elapsedTime;
 
-            // Save updated total time
-            chrome.storage.local.set({ "ai_usage": totalTime }, () => {
-                console.log("Total AI usage saved:", totalTime);
-            });
-        }
+                    // Save updated time
+                    chrome.storage.local.set({ "ai_usage": totalTime }, () => {
+                        console.log("AI time saved:", totalTime);
+                    });
+                }
+            }
+        });
     }
     activeTabId = null;
     startTime = null;
 }
 
-// Auto-save every minute
+// Auto-save time every minute
 setInterval(() => {
     if (activeTabId && startTime) {
         let elapsedTime = Math.floor((Date.now() - startTime) / 1000 / 60);
-        let url = new URL(chrome.tabs.get(activeTabId).url);
-        let aiName = AI_SITES[url.hostname];
+        chrome.tabs.get(activeTabId, (tab) => {
+            if (tab && tab.url) {
+                let url = new URL(tab.url);
+                let aiName = AI_SITES[url.hostname];
 
-        if (aiName) {
-            totalTime[aiName] = (totalTime[aiName] || 0) + elapsedTime;
-            startTime = Date.now(); // Reset start time
+                if (aiName) {
+                    totalTime[aiName] = (totalTime[aiName] || 0) + elapsedTime;
+                    startTime = Date.now(); // Reset start time
 
-            chrome.storage.local.set({ "ai_usage": totalTime }, () => {
-                console.log("Auto-saving AI time:", totalTime);
-            });
-        }
+                    chrome.storage.local.set({ "ai_usage": totalTime }, () => {
+                        console.log("Auto-saved AI time:", totalTime);
+                    });
+                }
+            }
+        });
     }
 }, 60000);
