@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Time Tracker</title>
+    <link rel="stylesheet" type="text/css" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        <h1>AI Time Tracker</h1>
+        
+        <div class="stats-container">
+            <div class="stat-box">
+                <h3>Total Time Tracked</h3>
+                <p id="totalTime" class="timer">00:00:00</p>
+            </div>
+            
+            <div class="stat-box">
+                <h3>AI Usage Time</h3>
+                <p id="aiTime" class="timer">00:00:00</p>
+            </div>
+        </div>
+
+        <div class="ai-usage-container">
+            <h3>AI Tools Used Today</h3>
+            <div id="aiUsageList"></div>
+            <div class="last-used">
+                <h4>Last Used AI:</h4>
+                <p id="lastUsedAI">None</p>
+            </div>
+        </div>
+        
+        <div class="tabs-container">
+            <h3>Tabs Activity</h3>
+            <div class="stat-box">
+                <p>Opened: <span id="tabsOpened">0</span></p>
+                <p>Closed: <span id="tabsClosed">0</span></p>
+            </div>
+        </div>
+
+        <button id="resetData">Reset Data</button>
+    </div>
+    
+    <script src="popup.js"></script>
+</body>
+</html>
