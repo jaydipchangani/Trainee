@@ -1,0 +1,19 @@
+.profile-card{
+    background-color: rgb(211, 211, 211);
+    width: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction:column;
+    padding: 50px;
+    margin: 40px;
+    text-align: center;
+    border-radius: 10px;
+}
+
+.mainComponent{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 20px;
+}
