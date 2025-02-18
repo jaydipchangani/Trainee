@@ -1,6 +1,8 @@
 import './component/ProfileCard.css';
 import React from 'react';
 import ProfileCard from './component/ProfileCard';
+import ClickExample from './component/ClickExample';
+import InputExample from './component/InputExample';
 
 function App() {
   return (
@@ -10,7 +12,10 @@ function App() {
       <ProfileCard />
       <ProfileCard />
       <ProfileCard />
-    </div>
+      <ClickExample/>
+      <InputExample />
+
+      </div>
     </>
   );
 }

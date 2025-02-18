@@ -13,7 +13,6 @@ const ProfileCard = () => {
                 <img src="profile.jpg" alt="Profile Pic" className='imageProfile' />
                 <h2>Jaydip Changani</h2>
                 <p>Software Developer Intern</p>
-
                 <button className='profile-btn' onClick={printLog}>View Profile</button>
             </div>
         
