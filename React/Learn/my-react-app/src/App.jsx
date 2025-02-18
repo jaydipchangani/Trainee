@@ -9,9 +9,8 @@ function App() {
 
   return (
     <div>
-      <h1>Hello, {username}!</h1>
-      <p>{isHero ? "Welcome to Gotham City!" : "Welcome to React!"}</p>
-      <button className="btn">Click Me</button>
+      hello
+
     </div>
   );
 }
