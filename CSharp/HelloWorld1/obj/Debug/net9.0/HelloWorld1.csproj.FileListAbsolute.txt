@@ -1,0 +1,15 @@
+C:\Trainee_new\CSharp\HelloWorld1\bin\Debug\net9.0\HelloWorld1.exe
+C:\Trainee_new\CSharp\HelloWorld1\bin\Debug\net9.0\HelloWorld1.deps.json
+C:\Trainee_new\CSharp\HelloWorld1\bin\Debug\net9.0\HelloWorld1.runtimeconfig.json
+C:\Trainee_new\CSharp\HelloWorld1\bin\Debug\net9.0\HelloWorld1.dll
+C:\Trainee_new\CSharp\HelloWorld1\bin\Debug\net9.0\HelloWorld1.pdb
+C:\Trainee_new\CSharp\HelloWorld1\obj\Debug\net9.0\HelloWorld1.GeneratedMSBuildEditorConfig.editorconfig
+C:\Trainee_new\CSharp\HelloWorld1\obj\Debug\net9.0\HelloWorld1.AssemblyInfoInputs.cache
+C:\Trainee_new\CSharp\HelloWorld1\obj\Debug\net9.0\HelloWorld1.AssemblyInfo.cs
+C:\Trainee_new\CSharp\HelloWorld1\obj\Debug\net9.0\HelloWorld1.csproj.CoreCompileInputs.cache
+C:\Trainee_new\CSharp\HelloWorld1\obj\Debug\net9.0\HelloWorld1.sourcelink.json
+C:\Trainee_new\CSharp\HelloWorld1\obj\Debug\net9.0\HelloWorld1.dll
+C:\Trainee_new\CSharp\HelloWorld1\obj\Debug\net9.0\refint\HelloWorld1.dll
+C:\Trainee_new\CSharp\HelloWorld1\obj\Debug\net9.0\HelloWorld1.pdb
+C:\Trainee_new\CSharp\HelloWorld1\obj\Debug\net9.0\HelloWorld1.genruntimeconfig.cache
+C:\Trainee_new\CSharp\HelloWorld1\obj\Debug\net9.0\ref\HelloWorld1.dll
