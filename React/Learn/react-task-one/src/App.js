@@ -9,7 +9,6 @@ function App() {
     <ProfileCard />
     <ProfileCard />
     <ProfileCard />
-    <ProfileCard />
     </div>
   );
 }
