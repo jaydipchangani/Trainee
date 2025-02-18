@@ -8,6 +8,7 @@ const ProfileCard = () => {
 
     return (
         <>
+        
             <div className="profile-card">
                 <img src="profile.jpg" alt="Profile Pic" className='imageProfile' />
                 <h2>Jaydip Changani</h2>

@@ -41,3 +41,7 @@ body {
     border-radius: 5px;
     cursor: pointer;
 }
+
+.heading{
+    text-align: center;
+}
