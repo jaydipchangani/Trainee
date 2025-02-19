@@ -2,8 +2,37 @@ import React, { useState } from "react";
 import { Navbar, Nav, Container, Button } from "react-bootstrap";
 import { Moon, Sun } from "react-feather";
 
-const HeaderGlobal: React.FC = () => {
-  const [darkMode, setDarkMode] = useState(false);
+//use this way
+        {/* 
+            <HeaderGlobal 
+        title="Task Manager" 
+        darkModeEnabled={true} 
+        links={[
+        { name: "Dashboard", href: "/dashboard" },
+        { name: "Tasks", href: "/tasks" },
+        { name: "Profile", href: "/profile" },
+        { name: "Logout", href: "/logout" }
+        ]}
+        /> 
+        
+        */}
+interface HeaderProps {
+  title?: string; // Optional title
+  links?: { name: string; href: string }[]; // Array of links
+  darkModeEnabled?: boolean; // Optional dark mode setting
+}
+
+const HeaderGlobal: React.FC<HeaderProps> = ({ 
+  title = "Header", 
+  links = [
+    { name: "Home", href: "#" }, 
+    { name: "About", href: "#" }, 
+    { name: "Tasks", href: "#" }, 
+    { name: "Contact", href: "#" }
+  ], 
+  darkModeEnabled = false 
+}) => {
+  const [darkMode, setDarkMode] = useState(darkModeEnabled);
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -14,14 +43,13 @@ const HeaderGlobal: React.FC = () => {
   return (
     <Navbar expand="lg" bg={darkMode ? "dark" : "light"} variant={darkMode ? "dark" : "light"} className="shadow">
       <Container>
-        <Navbar.Brand href="#" className="fw-bold fs-4">📝 To-Do App</Navbar.Brand>
+        <Navbar.Brand href="#" className="fw-bold fs-4">📝 {title}</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-            <Nav.Link href="#">Home</Nav.Link>
-            <Nav.Link href="#">About</Nav.Link>
-            <Nav.Link href="#">Tasks</Nav.Link>
-            <Nav.Link href="#">Contact</Nav.Link>
+            {links.map((link, index) => (
+              <Nav.Link key={index} href={link.href}>{link.name}</Nav.Link>
+            ))}
           </Nav>
           <Button variant={darkMode ? "light" : "dark"} className="ms-3" onClick={toggleDarkMode}>
             {darkMode ? <Sun /> : <Moon />}

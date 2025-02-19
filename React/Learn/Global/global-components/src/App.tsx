@@ -8,6 +8,9 @@ function App() {
   return (
     <>
     <HeaderGlobal/>
+    Hello
+   
+
     </>
   )
 }
