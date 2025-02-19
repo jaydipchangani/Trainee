@@ -1,25 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import { Navbar, Nav, Container, Button } from "react-bootstrap";
 import { Moon, Sun } from "react-feather";
+import { useTheme } from "./ThemeContext"; // Import theme context
 
-//use this way
-        {/* 
-            <HeaderGlobal 
-        title="Task Manager" 
-        darkModeEnabled={true} 
-        links={[
-        { name: "Dashboard", href: "/dashboard" },
-        { name: "Tasks", href: "/tasks" },
-        { name: "Profile", href: "/profile" },
-        { name: "Logout", href: "/logout" }
-        ]}
-        /> 
-        
-        */}
 interface HeaderProps {
-  title?: string; // Optional title
-  links?: { name: string; href: string }[]; // Array of links
-  darkModeEnabled?: boolean; // Optional dark mode setting
+  title?: string;
+  links?: { name: string; href: string }[];
 }
 
 const HeaderGlobal: React.FC<HeaderProps> = ({ 
@@ -29,16 +15,9 @@ const HeaderGlobal: React.FC<HeaderProps> = ({
     { name: "About", href: "#" }, 
     { name: "Tasks", href: "#" }, 
     { name: "Contact", href: "#" }
-  ], 
-  darkModeEnabled = false 
+  ] 
 }) => {
-  const [darkMode, setDarkMode] = useState(darkModeEnabled);
-
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-    document.body.classList.toggle("bg-dark");
-    document.body.classList.toggle("text-light");
-  };
+  const { darkMode, toggleDarkMode } = useTheme(); // Access dark mode state
 
   return (
     <Navbar expand="lg" bg={darkMode ? "dark" : "light"} variant={darkMode ? "dark" : "light"} className="shadow">

@@ -1,42 +1,22 @@
 import React, { useState } from "react";
 import { Nav, Button } from "react-bootstrap";
 import { List, X, Moon, Sun } from "react-feather";
-
-
-{/* <Sidebar 
-        links={[
-          { name: "Home", href: "/", icon: <Home/> },
-          { name: "Profile", href: "/profile", icon: <User/> },
-          { name: "Settings", href: "/settings", icon: <Settings/> },
-          { name: "Logout", href: "/logout", icon: <LogOut/> }
-        ]}
-      /> */}
+import { useTheme } from "./ThemeContext"; // Import theme context
 
 interface SidebarProps {
   links: { name: string; href: string; icon?: React.ReactNode }[];
-  darkModeEnabled?: boolean;
   defaultExpanded?: boolean;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ 
-  links, 
-  darkModeEnabled = false, 
-  defaultExpanded = true 
-}) => {
+const Sidebar: React.FC<SidebarProps> = ({ links, defaultExpanded = true }) => {
   const [expanded, setExpanded] = useState(defaultExpanded);
-  const [darkMode, setDarkMode] = useState(darkModeEnabled);
-
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-    document.body.classList.toggle("bg-dark");
-    document.body.classList.toggle("text-light");
-  };
+  const { darkMode, toggleDarkMode } = useTheme(); // Access dark mode state
 
   return (
-    <div 
-      className={`d-flex flex-column p-3 border-end shadow ${darkMode ? "bg-dark text-light" : "bg-light text-dark"}`} 
-      style={{ width: expanded ? "250px" : "80px", height: "100vh", transition: "width 0.3s ease-in-out" }}>
-      
+    <div
+      className={`d-flex flex-column p-3 border-end shadow ${darkMode ? "bg-dark text-light" : "bg-light text-dark"}`}
+      style={{ width: expanded ? "250px" : "80px", height: "100vh", transition: "width 0.3s ease-in-out" }}
+    >
       {/* Toggle Sidebar Button */}
       <Button variant={darkMode ? "light" : "dark"} className="mb-3" onClick={() => setExpanded(!expanded)}>
         {expanded ? <X /> : <List />}
