@@ -7,8 +7,17 @@ function App() {
 
   return (
     <>
-    <HeaderGlobal/>
-    Hello
+    <HeaderGlobal 
+        title="Task Manager" 
+        darkModeEnabled={true} 
+        links={[
+        { name: "Dashboard", href: "/dashboard" },
+        { name: "Tasks", href: "/tasks" },
+        { name: "Profile", href: "/profile" },
+        { name: "Logout", href: "/logout" }
+        ]}
+        /> 
+    
    
 
     </>
