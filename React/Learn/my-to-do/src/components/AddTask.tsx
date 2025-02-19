@@ -1,18 +1,19 @@
 import React, { useState } from "react";
 
 interface AddTaskProps {
-  addTask: (taskText: string, taskDesc: string) => void;
+  addTask: (text: string, description: string) => void;
 }
 
 const AddTask: React.FC<AddTaskProps> = ({ addTask }) => {
-  const [inputtask, setInputTask] = useState("");
-  const [inputdes, setInputDes] = useState("");
+  const [taskText, setTaskText] = useState("");
+  const [taskDescription, setTaskDescription] = useState("");
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    addTask(inputtask, inputdes);
-    setInputTask("");
-    setInputDes("");
+    
+    addTask(taskText, taskDescription);
+    setTaskText("");
+    setTaskDescription("");
   };
 
   return (
@@ -20,21 +21,21 @@ const AddTask: React.FC<AddTaskProps> = ({ addTask }) => {
       <div className="mb-3">
         <input 
           className="form-control" 
-          value={inputtask} 
+          value={taskText} 
           type="text" 
           required 
           placeholder="Enter Task" 
-          onChange={(e) => setInputTask(e.target.value)}
+          onChange={(e) => setTaskText(e.target.value)}
         />
       </div>
       <div className="mb-3">
         <input 
           className="form-control" 
-          value={inputdes} 
+          value={taskDescription} 
           type="text" 
           required 
           placeholder="Enter Task Description" 
-          onChange={(e) => setInputDes(e.target.value)}
+          onChange={(e) => setTaskDescription(e.target.value)}
         />
       </div>
       <button type="submit" className="btn btn-primary w-100">Add Task</button>
