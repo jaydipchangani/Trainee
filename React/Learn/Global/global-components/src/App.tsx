@@ -1,6 +1,7 @@
-
+import { Home, Settings, User, LogOut } from "react-feather";
 import './App.css';
 import HeaderGlobal from './components/HeaderGlobal';
+import Sidebar from './components/SidebarGlobal';
 
 function App() {
 
@@ -17,6 +18,16 @@ function App() {
         { name: "Logout", href: "/logout" }
         ]}
         /> 
+
+<Sidebar 
+        links={[
+          { name: "Home", href: "/", icon: <Home/> },
+          { name: "Profile", href: "/profile", icon: <User/> },
+          { name: "Settings", href: "/settings", icon: <Settings/> },
+          { name: "Logout", href: "/logout", icon: <LogOut/> }
+        ]}
+      />
+
     
    
 
