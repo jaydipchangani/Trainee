@@ -1,4 +1,4 @@
-import Compo from './component/Compo';
+import Compo from './component/compo';
 import './App.css';
 
 function App() {

@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 
-const AddTask: React.FC = () => {
+interface AddTaskProps {
+  addTask: (taskText: string, taskDesc: string) => void;
+}
+
+const AddTask: React.FC<AddTaskProps> = ({ addTask }) => {
   const [inputtask, setInputTask] = useState("");
   const [inputdes, setInputDes] = useState("");
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("Task added:", inputtask, "and Description:", inputdes);
+    addTask(inputtask, inputdes);
     setInputTask("");
     setInputDes("");
   };
@@ -18,7 +22,6 @@ const AddTask: React.FC = () => {
           className="form-control" 
           value={inputtask} 
           type="text" 
-          name="taskName" 
           required 
           placeholder="Enter Task" 
           onChange={(e) => setInputTask(e.target.value)}
@@ -29,7 +32,6 @@ const AddTask: React.FC = () => {
           className="form-control" 
           value={inputdes} 
           type="text" 
-          name="taskDes" 
           required 
           placeholder="Enter Task Description" 
           onChange={(e) => setInputDes(e.target.value)}
