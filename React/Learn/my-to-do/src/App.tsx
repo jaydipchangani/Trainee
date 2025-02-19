@@ -20,7 +20,7 @@ function App() {
 
   const addTask = (taskText: string, taskDesc: string) => {
     const newTask: Task = {
-      id: tasks.length + 1,
+      id: Date.now(),
       text: taskText,
       day: taskDesc,
       reminder: false
