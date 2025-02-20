@@ -47,15 +47,15 @@ const DataCard: React.FC<DataCardProps> = ({ data }) => {
                     <p className="card-text"><strong>Country:</strong> {data.country}</p>
                 </div>
                 <div className="mb-3">
-                    <h6 className="card-subtitle mb-2" style={{ color: '#6c757d' }}>Hobbies</h6>
+                    <h6 className="card-subtitle mb-2" ><strong>Hobbies</strong></h6>
                     <p className="card-text">{data.hobbies.join(', ')}</p>
                 </div>
                 <div className="mb-3">
-                    <h6 className="card-subtitle mb-2" style={{ color: '#6c757d' }}>Skills</h6>
+                    <h6 className="card-subtitle mb-2" ><strong>Skills</strong></h6>
                     <p className="card-text">{data.skills.join(', ')}</p>
                 </div>
                 <div className="mb-3">
-                    <h6 className="card-subtitle mb-2" style={{ color: '#6c757d' }}>Bio</h6>
+                    <h6 className="card-subtitle mb-2"><strong>Bio</strong></h6>
                     <p className="card-text">{data.bio}</p>
                 </div>
             </div>

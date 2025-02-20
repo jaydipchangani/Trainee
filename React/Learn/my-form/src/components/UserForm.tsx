@@ -170,16 +170,21 @@ const ProfileForm: React.FC = () => {
                     <label htmlFor="country" className="form-label">Country:</label>
                     <select id="country" name="country" className="form-select border-primary" required value={formData.country} onChange={handleChange}>
                         <option value="">Select Country</option>
-                        <option value="USA">USA</option>
-                        <option value="Canada">Canada</option>
                         <option value="India">India</option>
+                        <option value="Canada">Canada</option>
+                        <option value="USA">USA</option>
                         <option value="UK">UK</option>
+                        <option value="Dubai">Dubai</option>
+                        <option value="Australia">Australia</option>
+                        <option value="Nepal">Nepal</option>
                     </select>
                 </div>
 
                 <div className="mb-3">
                     <label htmlFor="hobbies" className="form-label">Hobbies:</label>
                     <select id="hobbies" name="hobbies" className="form-select border-primary" multiple required value={formData.hobbies} onChange={handleChange}>
+                        <option value="Coding">Coding</option>
+                        <option value="Hiking">Hiking</option>
                         <option value="Reading">Reading</option>
                         <option value="Traveling">Traveling</option>
                         <option value="Gaming">Gaming</option>
@@ -190,7 +195,7 @@ const ProfileForm: React.FC = () => {
                 <fieldset className="mb-3">
                     <legend className="form-label">Skills:</legend>
                     {/* Use map to render checkboxes dynamically if you have a skills array */}
-                    {["React", "Node.js", "JavaScript", "Python"].map((skill) => (
+                    {["React", "Node.js", "JavaScript", "Python","SQL","MongoDB",".NET"].map((skill) => (
                         <div className="form-check" key={skill}>
                             <input type="checkbox" name="skills" value={skill} id={skill} className="form-check-input" checked={formData.skills.includes(skill)} // Bind checked state
                                 onChange={handleChange} />
