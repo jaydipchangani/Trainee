@@ -61,6 +61,23 @@ const ProfileForm: React.FC = () => {
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         console.log(formData);
+
+        setFormData({  // Reset to initial state
+            firstName: '',
+            lastName: '',
+            email: '',
+            phone: '',
+            dob: '',
+            gender: '',
+            country: '',
+            hobbies: [],
+            skills: [],
+            bio: '',
+            profilePicture: null,
+            password: ''
+        });
+
+        alert("Form Submitted Successfully")
     };
 
     return (
@@ -160,7 +177,7 @@ const ProfileForm: React.FC = () => {
 
       <div className="mb-3">
         <label htmlFor="password" className="form-label">Password:</label>
-        <input type="password" id="password" name="password" className="form-control border-primary" required />
+        <input type="password" id="password" name="password" className="form-control border-primary" onChange={handleChange} value={formData.password} required />
       </div>
 
       <div className="mb-3 form-check">
