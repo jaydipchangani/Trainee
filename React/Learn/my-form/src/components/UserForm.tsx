@@ -2,7 +2,20 @@ import React, { ChangeEvent, useState, FormEvent } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DataCard from "./DataCard";
 
-const phoneRegex=/^\(\d{3}\) \d{3}-\d{4}$/;
+const userObj={
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    dob: '',
+    gender: '',
+    country: '',
+    hobbies: [],
+    skills: [],
+    bio: '',
+    profilePicture: null,
+    password: ''
+}
 interface FormData {
     firstName: string;
     lastName: string;
@@ -19,20 +32,7 @@ interface FormData {
 }
 
 const ProfileForm: React.FC = () => {
-    const [formData, setFormData] = useState<FormData>({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        dob: '',
-        gender: '',
-        country: '',
-        hobbies: [],
-        skills: [],
-        bio: '',
-        profilePicture: null,
-        password: ''
-    });
+    const [formData, setFormData] = useState<FormData>(userObj);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const target = e.target as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
@@ -65,6 +65,21 @@ const ProfileForm: React.FC = () => {
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
+
+        // Validate email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+            alert("Please enter a valid email address.");
+            return;
+        }
+
+        // Validate phone number (e.g., 10 digits for a US number)
+        const phoneRegex = /^\d{10}$/;
+        if (!phoneRegex.test(formData.phone)) {
+            alert("Please enter a valid 10-digit phone number.");
+            return;
+        }
+        
         console.log(formData);
 
         setFormData({  // Reset to initial state
