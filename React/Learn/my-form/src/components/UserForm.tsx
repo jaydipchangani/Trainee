@@ -1,95 +1,123 @@
-
-import React, {useState} from "react";
+import React, { ChangeEvent, useState, FormEvent } from "react";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import DataCard from "./DataCard";
 
+interface FormData {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    dob: string;
+    gender: string;
+    country: string;
+    hobbies: string[];
+    skills: string[];
+    bio: string;
+    profilePicture: File | null;
+    password: string;
+}
 
-const UserForm: React.FC = () => {
-
-    type FormData = {
-        firstName: string;
-        lastName: string;
-        email: string;
-        phone: string;
-        dob: string;
-        gender: string;
-        country: string;
-        hobbies: string[];
-        skills: string[];
-        bio: string;
-        profilePicture: File | null;
-        password: string;
-        terms: boolean;
-      };
-
-      const [formData, setFormData] = useState<FormData>({
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        dob: "",
-        gender: "",
-        country: "",
+const ProfileForm: React.FC = () => {
+    const [formData, setFormData] = useState<FormData>({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        dob: '',
+        gender: '',
+        country: '',
         hobbies: [],
         skills: [],
-        bio: "",
+        bio: '',
         profilePicture: null,
-        password: "",
-        terms: false,
-      });
+        password: ''
+    });
 
-  return (
-    <>
-      <form className="container p-4 border rounded shadow-lg bg-light mt-5" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}> {/* Full screen and flex column */}
-      <h2 className="mb-4 text-center text-primary">Profile Form</h2>
+    const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+        const target = e.target as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+        const { name, value, type } = target;
+        const checked = (target as HTMLInputElement).checked;
+        const files = (target as HTMLInputElement).files;
+
+        setFormData((prevData: FormData) => {
+            if (type === 'checkbox') {
+                const updatedSkills = checked
+                    ? [...prevData.skills, value as string]
+                    : prevData.skills.filter((skill) => skill !== value);
+                return { ...prevData, skills: updatedSkills };
+            } else if (type === 'radio') {
+                return { ...prevData, gender: value as string };
+            } else if (type === 'select-multiple') {
+                const selectedOptions = Array.from((e.target as HTMLSelectElement).selectedOptions, (option) => option.value);
+                return { ...prevData, hobbies: selectedOptions };
+            } else if (type === 'file') {
+                return { ...prevData, profilePicture: files ? files[0] : null };
+            } else {
+                return { ...prevData, [name]: value };
+            }
+        });
+    };
+
+    const handleSubmit = (e: FormEvent) => {
+        e.preventDefault();
+        console.log(formData);
+    };
+
+    return (
+        <>
+            <form onSubmit={handleSubmit}
+                className="container p-4 border rounded shadow-lg bg-light mt-5"
+                style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+                <h2 className="mb-4 text-center text-primary">Profile Form</h2>
 
       <div className="row mb-3"> {/* Use row for side-by-side inputs */}
         <div className="col-md-6"> {/* Half width on medium and larger screens */}
           <label htmlFor="firstName" className="form-label">First Name:</label>
-          <input type="text" id="firstName" name="firstName" className="form-control border-primary" required />
+          <input type="text" id="firstName" name="firstName" className="form-control border-primary" value={formData.firstName} onChange={handleChange} required />
         </div>
         <div className="col-md-6">
           <label htmlFor="lastName" className="form-label">Last Name:</label>
-          <input type="text" id="lastName" name="lastName" className="form-control border-primary" required />
+          <input type="text" id="lastName" name="lastName" className="form-control border-primary" value={formData.lastName} onChange={handleChange} required />
         </div>
       </div>
 
       <div className="mb-3">
         <label htmlFor="email" className="form-label">Email:</label>
-        <input type="email" id="email" name="email" className="form-control border-primary" required />
+        <input type="email" id="email" name="email" className="form-control border-primary" value={formData.email} onChange={handleChange} required />
       </div>
 
       <div className="row mb-3"> {/* Side-by-side for phone and dob */}
         <div className="col-md-6">
           <label htmlFor="phone" className="form-label">Phone Number:</label>
-          <input type="number" id="phone" name="phone" className="form-control border-primary" required />
+          <input type="number" id="phone" name="phone" className="form-control border-primary" value={formData.phone} onChange={handleChange} required />
         </div>
         <div className="col-md-6">
           <label htmlFor="dob" className="form-label">Date of Birth:</label>
-          <input type="date" id="dob" name="dob" className="form-control border-primary" required />
+          <input type="date" id="dob" name="dob" className="form-control border-primary" value={formData.dob} onChange={handleChange} required />
         </div>
       </div>
 
       <fieldset className="mb-3">
-        <legend className="form-label">Gender:</legend>
-        <div className="d-flex gap-3"> {/* Use flexbox for better layout */}
-          <div className="form-check">
-            <input type="radio" name="gender" value="Male" id="male" className="form-check-input" required />
-            <label className="form-check-label" htmlFor="male">Male</label>
-          </div>
-          <div className="form-check">
-            <input type="radio" name="gender" value="Female" id="female" className="form-check-input" required />
-            <label className="form-check-label" htmlFor="female">Female</label>
-          </div>
-          <div className="form-check">
-            <input type="radio" name="gender" value="Other" id="other" className="form-check-input" required />
-            <label className="form-check-label" htmlFor="other">Other</label>
-          </div>
-        </div>
-      </fieldset>
+                    <legend className="form-label">Gender:</legend>
+                    <div className="d-flex gap-3">
+                        <div className="form-check">
+                            <input type="radio" name="gender" value="Male" id="male" className="form-check-input" onChange={handleChange} checked={formData.gender === "Male"} /> {/* Added value and checked */}
+                            <label className="form-check-label" htmlFor="male">Male</label>
+                        </div>
+                        <div className="form-check">
+                            <input type="radio" name="gender" value="Female" id="female" className="form-check-input" onChange={handleChange} checked={formData.gender === "Female"} /> {/* Added value and checked */}
+                            <label className="form-check-label" htmlFor="female">Female</label>
+                        </div>
+                        <div className="form-check">
+                            <input type="radio" name="gender" value="Other" id="other" className="form-check-input" onChange={handleChange} checked={formData.gender === "Other"} /> {/* Added value and checked */}
+                            <label className="form-check-label" htmlFor="other">Other</label>
+                        </div>
+                    </div>
+                </fieldset>
 
       <div className="mb-3">
         <label htmlFor="country" className="form-label">Country:</label>
-        <select id="country" name="country" className="form-select border-primary" required>
+        <select id="country" name="country" className="form-select border-primary" required value={formData.country} onChange={handleChange}>
           <option value="">Select Country</option>
           <option value="USA">USA</option>
           <option value="Canada">Canada</option>
@@ -100,7 +128,7 @@ const UserForm: React.FC = () => {
 
       <div className="mb-3">
         <label htmlFor="hobbies" className="form-label">Hobbies:</label>
-        <select id="hobbies" name="hobbies" className="form-select border-primary" multiple required>
+        <select id="hobbies" name="hobbies" className="form-select border-primary" multiple required value={formData.hobbies} onChange={handleChange}>
           <option value="Reading">Reading</option>
           <option value="Traveling">Traveling</option>
           <option value="Gaming">Gaming</option>
@@ -113,7 +141,8 @@ const UserForm: React.FC = () => {
         {/* Use map to render checkboxes dynamically if you have a skills array */}
         {["React", "Node.js", "JavaScript", "Python"].map((skill) => (
           <div className="form-check" key={skill}>
-            <input type="checkbox" name="skills" value={skill} id={skill} className="form-check-input" required />
+            <input type="checkbox" name="skills" value={skill} id={skill} className="form-check-input" checked={formData.skills.includes(skill)} // Bind checked state
+              onChange={handleChange}  />
             <label className="form-check-label" htmlFor={skill}>{skill}</label>
           </div>
         ))}
@@ -121,12 +150,12 @@ const UserForm: React.FC = () => {
 
       <div className="mb-3">
         <label htmlFor="bio" className="form-label">Bio:</label>
-        <textarea id="bio" name="bio" className="form-control border-primary" required></textarea>
+        <textarea id="bio" name="bio" className="form-control border-primary" required value={formData.bio} onChange={handleChange}></textarea>
       </div>
 
       <div className="mb-3">
         <label htmlFor="profilePicture" className="form-label">Profile Picture:</label>
-        <input type="file" id="profilePicture" name="profilePicture" className="form-control border-primary" accept="image/*" required />
+        <input type="file" id="profilePicture" name="profilePicture" className="form-control border-primary" accept="image/*" required onChange={handleChange} />
       </div>
 
       <div className="mb-3">
@@ -147,4 +176,4 @@ const UserForm: React.FC = () => {
   );
 };
 
-export default UserForm;
+export default ProfileForm;
