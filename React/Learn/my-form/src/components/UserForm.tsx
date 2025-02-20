@@ -123,7 +123,7 @@ const ProfileForm: React.FC = () => {
             <form onSubmit={handleSubmit}
                 className={`container p-4 border rounded shadow-lg bg-light mt-5 d-flex flex-column min-vh-100 ${validated ? 'was-validated' : ''}`}
                 noValidate>
-                <h2 className="mb-4 text-center text-primary">Profile Form</h2>
+                <h2 className="mb-4 text-center text-primary"> User Profile Form</h2>
 
                 <div className="row mb-3"> 
                     <div className="col-md-6"> 
@@ -144,7 +144,7 @@ const ProfileForm: React.FC = () => {
                     <div className="invalid-feedback">Please enter a valid email address.</div>
                 </div>
 
-                <div className="row mb-3"> {/* Side-by-side for phone and dob */}
+                <div className="row mb-3"> 
                     <div className="col-md-6">
                         <label htmlFor="phone" className="form-label">Phone Number:</label>
                         <input type="text" id="phone" name="phone" className="form-control border-primary" value={formData.phone} onChange={handleChange} required pattern="\d{10}" />
