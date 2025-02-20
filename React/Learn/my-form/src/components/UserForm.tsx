@@ -37,6 +37,7 @@ const ProfileForm: React.FC = () => {
     const [formData, setFormData] = useState<FormData>(userObj);
     const [submittedData, setSubmittedData] = useState<FormData | null>(null);
     const [validated, setValidated] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const calculateAge = (dob: string): number => {
         const birthDate = new Date(dob);
@@ -59,7 +60,7 @@ const ProfileForm: React.FC = () => {
             if (type === 'checkbox') {
                 const updatedSkills = checked
                     ? [...prevData.skills, value as string]
-                    : prevData.skills.filter((skill) => skill !== value);  //checkbox check hoy to value add baki value remove from array
+                    : prevData.skills.filter((skill) => skill !== value);
                 return { ...prevData, skills: updatedSkills };
             } else if (type === 'radio') {
                 return { ...prevData, gender: value as string };
@@ -81,7 +82,7 @@ const ProfileForm: React.FC = () => {
         e.preventDefault();
         const form = e.currentTarget as HTMLFormElement;
         if (form.checkValidity() === false) {
-            e.stopPropagation();   // can not add new items or bubblie in DOM tree inshort form aagal nai vdhe 
+            e.stopPropagation();
         } else {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(formData.email)) {
@@ -90,14 +91,19 @@ const ProfileForm: React.FC = () => {
             }
 
             const phoneRegex = /^\d{3}[-.\s]?\d{3}[-.\s]?\d{4}$/;
-            if (!phoneRegex.test(formData.phone)) {                     //test- i/p as str and o/p boolean
+            if (!phoneRegex.test(formData.phone)) {
                 alert("Please enter a valid 10-digit phone number.");
+                return;
+            }
+
+            if (formData.age < 0) {
+                alert("Age cannot be negative.");
                 return;
             }
 
             setSubmittedData(formData);
 
-            setFormData({  // form khali krva
+            setFormData({
                 firstName: '',
                 lastName: '',
                 email: '',
@@ -116,6 +122,10 @@ const ProfileForm: React.FC = () => {
             alert("Form Submitted Successfully")
         }
         setValidated(true);
+    };
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
     };
 
     return (
@@ -233,7 +243,12 @@ const ProfileForm: React.FC = () => {
 
                 <div className="mb-3">
                     <label htmlFor="password" className="form-label">Password:</label>
-                    <input type="password" id="password" name="password" className="form-control border-primary" onChange={handleChange} value={formData.password} required />
+                    <div className="input-group">
+                        <input type={showPassword ? "text" : "password"} id="password" name="password" className="form-control border-primary" onChange={handleChange} value={formData.password} required />
+                        <button type="button" className="btn btn-outline-secondary" onClick={togglePasswordVisibility}>
+                            {showPassword ? "Hide" : "Show"}
+                        </button>
+                    </div>
                     <div className="invalid-feedback">Please enter your password.</div>
                 </div>
 
