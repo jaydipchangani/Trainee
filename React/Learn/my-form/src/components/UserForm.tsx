@@ -36,6 +36,7 @@ interface FormData {
 const ProfileForm: React.FC = () => {
     const [formData, setFormData] = useState<FormData>(userObj);
     const [submittedData, setSubmittedData] = useState<FormData | null>(null);
+    const [validated, setValidated] = useState(false);
 
     const calculateAge = (dob: string): number => {
         const birthDate = new Date(dob);
@@ -58,7 +59,7 @@ const ProfileForm: React.FC = () => {
             if (type === 'checkbox') {
                 const updatedSkills = checked
                     ? [...prevData.skills, value as string]
-                    : prevData.skills.filter((skill) => skill !== value);
+                    : prevData.skills.filter((skill) => skill !== value);  //checkbox check hoy to value add baki value remove from array
                 return { ...prevData, skills: updatedSkills };
             } else if (type === 'radio') {
                 return { ...prevData, gender: value as string };
@@ -78,73 +79,81 @@ const ProfileForm: React.FC = () => {
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
+        const form = e.currentTarget as HTMLFormElement;
+        if (form.checkValidity() === false) {
+            e.stopPropagation();   // can not add new items or bubblie in DOM tree inshort form aagal nai vdhe 
+        } else {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(formData.email)) {
+                alert("Please enter a valid email address.");
+                return;
+            }
 
-        // Validate email
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(formData.email)) {
-            alert("Please enter a valid email address.");
-            return;
+            const phoneRegex = /^\d{3}[-.\s]?\d{3}[-.\s]?\d{4}$/;
+            if (!phoneRegex.test(formData.phone)) {                     //test- i/p as str and o/p boolean
+                alert("Please enter a valid 10-digit phone number.");
+                return;
+            }
+
+            setSubmittedData(formData);
+
+            setFormData({  // form khali krva
+                firstName: '',
+                lastName: '',
+                email: '',
+                phone: '',
+                dob: '',
+                gender: '',
+                country: '',
+                hobbies: [],
+                skills: [],
+                bio: '',
+                profilePicture: null,
+                password: '',
+                age: 0
+            });
+
+            alert("Form Submitted Successfully")
         }
-
-        // Validate phone number (e.g., 10 digits for a US number)
-        const phoneRegex = /^\d{10}$/;
-        if (!phoneRegex.test(formData.phone)) {
-            alert("Please enter a valid 10-digit phone number.");
-            return;
-        }
-
-        setSubmittedData(formData);
-
-        setFormData({  // Reset to initial state
-            firstName: '',
-            lastName: '',
-            email: '',
-            phone: '',
-            dob: '',
-            gender: '',
-            country: '',
-            hobbies: [],
-            skills: [],
-            bio: '',
-            profilePicture: null,
-            password: '',
-            age: 0
-        });
-
-        alert("Form Submitted Successfully")
+        setValidated(true);
     };
 
     return (
         <>
             <form onSubmit={handleSubmit}
-                className="container p-4 border rounded shadow-lg bg-light mt-5"
-                style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+                className={`container p-4 border rounded shadow-lg bg-light mt-5 d-flex flex-column min-vh-100 ${validated ? 'was-validated' : ''}`}
+                noValidate>
                 <h2 className="mb-4 text-center text-primary">Profile Form</h2>
 
-                <div className="row mb-3"> {/* Use row for side-by-side inputs */}
-                    <div className="col-md-6"> {/* Half width on medium and larger screens */}
+                <div className="row mb-3"> 
+                    <div className="col-md-6"> 
                         <label htmlFor="firstName" className="form-label">First Name:</label>
                         <input type="text" id="firstName" name="firstName" className="form-control border-primary" value={formData.firstName} onChange={handleChange} required />
+                        <div className="invalid-feedback">Please enter your first name.</div>
                     </div>
                     <div className="col-md-6">
                         <label htmlFor="lastName" className="form-label">Last Name:</label>
                         <input type="text" id="lastName" name="lastName" className="form-control border-primary" value={formData.lastName} onChange={handleChange} required />
+                        <div className="invalid-feedback">Please enter your last name.</div>
                     </div>
                 </div>
 
                 <div className="mb-3">
                     <label htmlFor="email" className="form-label">Email:</label>
                     <input type="email" id="email" name="email" className="form-control border-primary" value={formData.email} onChange={handleChange} required />
+                    <div className="invalid-feedback">Please enter a valid email address.</div>
                 </div>
 
                 <div className="row mb-3"> {/* Side-by-side for phone and dob */}
                     <div className="col-md-6">
                         <label htmlFor="phone" className="form-label">Phone Number:</label>
-                        <input type="number" id="phone" name="phone" className="form-control border-primary" value={formData.phone} onChange={handleChange} required />
+                        <input type="text" id="phone" name="phone" className="form-control border-primary" value={formData.phone} onChange={handleChange} required pattern="\d{10}" />
+                        <div className="invalid-feedback">Please enter a valid 10-digit phone number.</div>
                     </div>
                     <div className="col-md-6">
                         <label htmlFor="dob" className="form-label">Date of Birth:</label>
                         <input type="date" id="dob" name="dob" className="form-control border-primary" value={formData.dob} onChange={handleChange} required />
+                        <div className="invalid-feedback">Please enter your date of birth.</div>
                     </div>
                 </div>
 
@@ -152,16 +161,19 @@ const ProfileForm: React.FC = () => {
                     <legend className="form-label">Gender:</legend>
                     <div className="d-flex gap-3">
                         <div className="form-check">
-                            <input type="radio" name="gender" value="Male" id="male" className="form-check-input" onChange={handleChange} checked={formData.gender === "Male"} /> {/* Added value and checked */}
+                            <input type="radio" name="gender" value="Male" id="male" className="form-check-input" onChange={handleChange} checked={formData.gender === "Male"} required />
                             <label className="form-check-label" htmlFor="male">Male</label>
+                            <div className="invalid-feedback">Please select your gender.</div>
                         </div>
                         <div className="form-check">
-                            <input type="radio" name="gender" value="Female" id="female" className="form-check-input" onChange={handleChange} checked={formData.gender === "Female"} /> {/* Added value and checked */}
+                            <input type="radio" name="gender" value="Female" id="female" className="form-check-input" onChange={handleChange} checked={formData.gender === "Female"} required />
                             <label className="form-check-label" htmlFor="female">Female</label>
+                            <div className="invalid-feedback">Please select your gender.</div>
                         </div>
                         <div className="form-check">
-                            <input type="radio" name="gender" value="Other" id="other" className="form-check-input" onChange={handleChange} checked={formData.gender === "Other"} /> {/* Added value and checked */}
+                            <input type="radio" name="gender" value="Other" id="other" className="form-check-input" onChange={handleChange} checked={formData.gender === "Other"} required /> 
                             <label className="form-check-label" htmlFor="other">Other</label>
+                            <div className="invalid-feedback">Please select your gender.</div>
                         </div>
                     </div>
                 </fieldset>
@@ -178,6 +190,7 @@ const ProfileForm: React.FC = () => {
                         <option value="Australia">Australia</option>
                         <option value="Nepal">Nepal</option>
                     </select>
+                    <div className="invalid-feedback">Please select your country.</div>
                 </div>
 
                 <div className="mb-3">
@@ -190,38 +203,44 @@ const ProfileForm: React.FC = () => {
                         <option value="Gaming">Gaming</option>
                         <option value="Cooking">Cooking</option>
                     </select>
+                    <div className="invalid-feedback">Please select at least one hobby.</div>
                 </div>
 
                 <fieldset className="mb-3">
                     <legend className="form-label">Skills:</legend>
-                    {/* Use map to render checkboxes dynamically if you have a skills array */}
-                    {["React", "Node.js", "JavaScript", "Python","SQL","MongoDB",".NET"].map((skill) => (
+                    
+                    {["React", "Node.js", "JavaScript", "Python", "SQL", "MongoDB", ".NET"].map((skill) => (
                         <div className="form-check" key={skill}>
-                            <input type="checkbox" name="skills" value={skill} id={skill} className="form-check-input" checked={formData.skills.includes(skill)} // Bind checked state
+                            <input type="checkbox" name="skills" value={skill} id={skill} className="form-check-input" checked={formData.skills.includes(skill)} 
                                 onChange={handleChange} />
                             <label className="form-check-label" htmlFor={skill}>{skill}</label>
                         </div>
                     ))}
+                    <div className="invalid-feedback">Please select at least one skill.</div>
                 </fieldset>
 
                 <div className="mb-3">
                     <label htmlFor="bio" className="form-label">Bio:</label>
                     <textarea id="bio" name="bio" className="form-control border-primary" required value={formData.bio} onChange={handleChange}></textarea>
+                    <div className="invalid-feedback">Please enter your bio.</div>
                 </div>
 
                 <div className="mb-3">
                     <label htmlFor="profilePicture" className="form-label">Profile Picture:</label>
                     <input type="file" id="profilePicture" name="profilePicture" className="form-control border-primary" accept="image/*" required onChange={handleChange} />
+                    <div className="invalid-feedback">Please upload your profile picture.</div>
                 </div>
 
                 <div className="mb-3">
                     <label htmlFor="password" className="form-label">Password:</label>
                     <input type="password" id="password" name="password" className="form-control border-primary" onChange={handleChange} value={formData.password} required />
+                    <div className="invalid-feedback">Please enter your password.</div>
                 </div>
 
                 <div className="mb-3 form-check">
                     <input type="checkbox" name="terms" id="terms" className="form-check-input" required />
                     <label className="form-check-label" htmlFor="terms">I agree to the Terms & Conditions</label>
+                    <div className="invalid-feedback">You must agree to the terms and conditions.</div>
                 </div>
 
                 <button type="submit" className="btn btn-primary w-100 mt-auto">Submit</button>
