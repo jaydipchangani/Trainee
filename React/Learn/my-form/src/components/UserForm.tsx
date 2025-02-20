@@ -2,6 +2,7 @@ import React, { ChangeEvent, useState, FormEvent } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DataCard from "./DataCard";
 
+const phoneRegex=/^\(\d{3}\) \d{3}-\d{4}$/;
 interface FormData {
     firstName: string;
     lastName: string;
@@ -39,6 +40,8 @@ const ProfileForm: React.FC = () => {
         const checked = (target as HTMLInputElement).checked;
         const files = (target as HTMLInputElement).files;
 
+        
+
         setFormData((prevData: FormData) => {
             if (type === 'checkbox') {
                 const updatedSkills = checked
@@ -55,6 +58,8 @@ const ProfileForm: React.FC = () => {
             } else {
                 return { ...prevData, [name]: value };
             }
+
+            
         });
     };
 
