@@ -15,6 +15,7 @@ const App: React.FC = () => {
       <MainLayout>
         <Container className="mt-4">
           <Routes>
+            <Route path="/" element={<h1>Home Page</h1>} />
             <Route path="/products" element={<Products />} />
             <Route path="/add-product" element={<AddProduct />} />
             <Route path="/view-product/:id" element={<ViewProduct />} />

@@ -18,7 +18,7 @@ const EditProduct: React.FC = () => {
     );
     localStorage.setItem("products", JSON.stringify(updatedProducts));
     navigate("/products");
-  }, [id, name, quantity, price, products, navigate]);
+  }, [id, name, quantity, price, products]);
 
 
   return (
