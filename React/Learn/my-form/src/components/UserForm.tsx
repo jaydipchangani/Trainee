@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useState, FormEvent } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Swal from "sweetalert2";
 import DataCard from "./DataCard";
 
 const userObj = {
@@ -16,7 +17,8 @@ const userObj = {
     profilePicture: null,
     password: '',
     age: 0
-}
+};
+
 interface FormData {
     firstName: string;
     lastName: string;
@@ -86,18 +88,30 @@ const ProfileForm: React.FC = () => {
         } else {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(formData.email)) {
-                alert("Please enter a valid email address.");
+                Swal.fire({
+                    icon: "error",
+                    title: "Invalid Email",
+                    text: "Please enter a valid email address."
+                });
                 return;
             }
 
             const phoneRegex = /^\d{3}[-.\s]?\d{3}[-.\s]?\d{4}$/;
             if (!phoneRegex.test(formData.phone)) {
-                alert("Please enter a valid 10-digit phone number.");
+                Swal.fire({
+                    icon: "error",
+                    title: "Invalid Phone Number",
+                    text: "Please enter a valid 10-digit phone number."
+                });
                 return;
             }
 
             if (formData.age < 0) {
-                alert("Age cannot be negative.");
+                Swal.fire({
+                    icon: "error",
+                    title: "Invalid Age",
+                    text: "Age cannot be negative."
+                });
                 return;
             }
 
@@ -119,7 +133,13 @@ const ProfileForm: React.FC = () => {
                 age: 0
             });
 
-            alert("Form Submitted Successfully")
+            Swal.fire({
+                icon: "success",
+                title: "Success!",
+                text: "Form Submitted Successfully",
+                timer: 2000,
+                showConfirmButton: false
+            });
         }
         setValidated(true);
     };
@@ -128,31 +148,32 @@ const ProfileForm: React.FC = () => {
         setShowPassword(!showPassword);
     };
 
+
     return (
         <>
             <form onSubmit={handleSubmit}
-                className={`container p-4 border rounded shadow-lg bg-light mt-5 d-flex flex-column min-vh-100 ${validated ? 'was-validated' : ''}`}
-                noValidate>
-                <h2 className="mb-4 text-center text-primary"> User Profile Form</h2>
+             className={`container p-4 border rounded shadow-lg bg-light mt-5 d-flex flex-column min-vh-100 ${validated ? 'was-validated' : ''}`}
+             noValidate>
+             <h2 className="mb-4 text-center text-primary"> User Profile Form</h2>
 
-                <div className="row mb-3"> 
-                    <div className="col-md-6"> 
-                        <label htmlFor="firstName" className="form-label">First Name:</label>
-                        <input type="text" id="firstName" name="firstName" className="form-control border-primary" value={formData.firstName} onChange={handleChange} required />
-                        <div className="invalid-feedback">Please enter your first name.</div>
-                    </div>
-                    <div className="col-md-6">
-                        <label htmlFor="lastName" className="form-label">Last Name:</label>
-                        <input type="text" id="lastName" name="lastName" className="form-control border-primary" value={formData.lastName} onChange={handleChange} required />
-                        <div className="invalid-feedback">Please enter your last name.</div>
-                    </div>
-                </div>
+             <div className="row mb-3"> 
+                 <div className="col-md-6"> 
+                     <label htmlFor="firstName" className="form-label">First Name:</label>
+                     <input type="text" id="firstName" name="firstName" className="form-control border-primary" value={formData.firstName} onChange={handleChange} required />
+                     <div className="invalid-feedback">Please enter your first name.</div>
+                 </div>
+                 <div className="col-md-6">
+                     <label htmlFor="lastName" className="form-label">Last Name:</label>
+                     <input type="text" id="lastName" name="lastName" className="form-control border-primary" value={formData.lastName} onChange={handleChange} required />
+                     <div className="invalid-feedback">Please enter your last name.</div>
+                 </div>
+             </div>
 
-                <div className="mb-3">
-                    <label htmlFor="email" className="form-label">Email:</label>
-                    <input type="email" id="email" name="email" className="form-control border-primary" value={formData.email} onChange={handleChange} required />
-                    <div className="invalid-feedback">Please enter a valid email address.</div>
-                </div>
+             <div className="mb-3">
+                 <label htmlFor="email" className="form-label">Email:</label>
+                 <input type="email" id="email" name="email" className="form-control border-primary" value={formData.email} onChange={handleChange} required />
+                 <div className="invalid-feedback">Please enter a valid email address.</div>
+             </div>
 
                 <div className="row mb-3"> 
                     <div className="col-md-6">
