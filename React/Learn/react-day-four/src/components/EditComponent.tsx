@@ -1,26 +1,37 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useState, useEffect } from "react"
+import { useParams, useNavigate } from "react-router-dom"
 import useProducts from "../hooks/useProducts"
 
-const AddProduct: React.FC = () => {
+const EditProduct: React.FC = () => {
+  const { id } = useParams<{ id: string }>()
+  const { getProduct, updateProduct } = useProducts()
+  const navigate = useNavigate()
+
   const [name, setName] = useState("")
   const [price, setPrice] = useState("")
   const [description, setDescription] = useState("")
-  const { addProduct } = useProducts()
-  const navigate = useNavigate()
+
+  useEffect(() => {
+    const product = getProduct(id!)
+    if (product) {
+      setName(product.name)
+      setPrice(product.price.toString())
+      setDescription(product.description)
+    }
+  }, [id, getProduct])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    addProduct({ name, price: Number.parseFloat(price), description })
+    updateProduct(id!, { name, price: Number.parseFloat(price), description })
     navigate("/products")
   }
 
   return (
     <div className="container">
-      <h2 className="mb-4">Add Product</h2>
+      <h2 className="mb-4">Edit Product</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="name" className="form-label">
@@ -63,12 +74,12 @@ const AddProduct: React.FC = () => {
           />
         </div>
         <button type="submit" className="btn btn-primary">
-          Add Product
+          Update Product
         </button>
       </form>
     </div>
   )
 }
 
-export default AddProduct
+export default EditProduct
 
