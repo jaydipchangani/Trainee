@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Button, Table, Modal, Form, Input, message } from "antd";
+import { Button, Table } from "antd";
+import { Link } from "react-router-dom";
 import AppLayout from "../components/Layout";
 
 interface Product {
@@ -12,37 +13,41 @@ interface Product {
 
 const Products: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [form] = Form.useForm();
 
   useEffect(() => {
     const storedProducts = JSON.parse(localStorage.getItem("products") || "[]");
     setProducts(storedProducts);
   }, []);
 
-  const handleAddOrUpdate = (values: Product) => {
-    const updatedProducts = editingProduct
-      ? products.map(p => (p.id === editingProduct.id ? { ...values, id: editingProduct.id } : p))
-      : [...products, { ...values, id: Date.now() }];
-
-    localStorage.setItem("products", JSON.stringify(updatedProducts));
-    setProducts(updatedProducts);
-    message.success(editingProduct ? "Product updated!" : "Product added!");
-    setModalVisible(false);
-    setEditingProduct(null);
-  };
-
   return (
     <AppLayout>
-      <Button type="primary" onClick={() => setModalVisible(true)}>Add Product</Button>
-      <Table dataSource={products} rowKey="id" columns={[
-        { title: "Name", dataIndex: "name" },
-        { title: "Price", dataIndex: "price" },
-        { title: "Category", dataIndex: "category" },
-        { title: "Description", dataIndex: "description" },
-        { title: "Actions", render: (_, record) => <Button onClick={() => setEditingProduct(record)}>Edit</Button> },
-      ]} />
+      <Link to="/products/add">
+        <Button type="primary" style={{ marginBottom: 16 }}>Add Product</Button>
+      </Link>
+
+      <Table
+        dataSource={products}
+        rowKey="id"
+        columns={[
+          { title: "Name", dataIndex: "name" },
+          { title: "Price", dataIndex: "price" },
+          { title: "Category", dataIndex: "category" },
+          { title: "Description", dataIndex: "description" },
+          {
+            title: "Actions",
+            render: (_, record) => (
+              <>
+                <Link to={`/products/update/${record.id}`}>
+                  <Button type="link">Edit</Button>
+                </Link>
+                <Link to={`/products/delete/${record.id}`}>
+                  <Button type="link" danger>Delete</Button>
+                </Link>
+              </>
+            ),
+          },
+        ]}
+      />
     </AppLayout>
   );
 };

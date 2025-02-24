@@ -3,6 +3,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Products from "./pages/Products";
+import UpdateProduct from "./pages/UpdateProduct";
+import DeleteProduct from "./pages/DeleteProduct";
 import Users from "./pages/Users";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -12,6 +14,14 @@ const router = createBrowserRouter([
   {
     path: "/products",
     element: <ProtectedRoute><Products /></ProtectedRoute>,
+  },
+  {
+    path: "/products/update/:id",
+    element: <ProtectedRoute><UpdateProduct /></ProtectedRoute>,
+  },
+  {
+    path: "/products/delete/:id",
+    element: <ProtectedRoute><DeleteProduct /></ProtectedRoute>,
   },
   {
     path: "/users",
