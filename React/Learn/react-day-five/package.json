@@ -12,6 +12,7 @@
   "dependencies": {
     "antd": "^5.24.1",
     "bcryptjs": "^3.0.2",
+    "jose": "^6.0.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.2.0"
