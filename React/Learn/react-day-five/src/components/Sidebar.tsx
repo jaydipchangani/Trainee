@@ -10,7 +10,7 @@ const Sidebar: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <Sider collapsible style={{ height: "100vh", background: "#001529" }}>
+    <Sider collapsible style={{ height: "auto", background: "#001529" }}>
       <Menu theme="dark" mode="vertical" defaultSelectedKeys={["1"]}>
         <Menu.Item key="1" icon={<ShopOutlined />} onClick={() => navigate("/products")}>
           Products

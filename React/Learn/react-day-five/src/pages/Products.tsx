@@ -22,8 +22,8 @@ const Products: React.FC = () => {
   return (
     <AppLayout>
       <Link to="/products/add">
-        <Button type="primary" style={{ marginBottom: 16 }}>Add Product</Button>
-      </Link>
+  <Button type="primary" style={{ marginBottom: 16 }}>Add Product</Button>
+</Link>
 
       <Table
         dataSource={products}

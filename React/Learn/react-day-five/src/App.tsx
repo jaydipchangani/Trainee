@@ -7,6 +7,7 @@ import UpdateProduct from "./pages/UpdateProduct";
 import DeleteProduct from "./pages/DeleteProduct";
 import Users from "./pages/Users";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AddProduct from "./pages/AddProduct";
 
 const router = createBrowserRouter([
   { path: "/", element: <Login /> },
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
     path: "/users",
     element: <ProtectedRoute><Users /></ProtectedRoute>,
   },
+  {
+    path: "/products/add",
+    element: <ProtectedRoute><AddProduct /></ProtectedRoute>,
+  }
 ]);
 
 const App: React.FC = () => {
