@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Form, Input, Button, Card, Typography, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import bcrypt from "bcryptjs";
-import { jwtVerify } from "jose";
 import "../styles/auth.css";
+import { SignJWT } from "jose";
 
 const { Title, Text } = Typography;
 
@@ -12,43 +12,39 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async (values: { email: string; password: string }) => {
-    setLoading(true);
-  
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-    const user = users.find((u: any) => u.email === values.email);
-  
-    if (!user) {
-      message.error("User not found!");
-      setLoading(false);
-      return;
-    }
-  
-    const isPasswordValid = await bcrypt.compare(values.password, user.password);
-    if (isPasswordValid) {
-      const jwt = localStorage.getItem("jwtToken");
-      if (jwt) {
-        try {
-          const { payload } = await jwtVerify(jwt, new TextEncoder().encode("your-secret-key"));
-          if (payload.email === user.email) {
-            localStorage.setItem("loggedInUser", JSON.stringify(user));
-            message.success("Login successful!");
-            navigate("/products", { replace: true });
-          } else {
-            message.error("Invalid token!");
-          }
-        } catch (error) {
-          message.error("Token verification failed!");
-        }
-      } else {
-        message.error("Token not found!");
-      }
-    } else {
-      message.error("Invalid email or password!");
-    }
-  
-    setLoading(false);
+    setLoading(true); // Set loading when the login button is clicked
 
-    
+    try {
+      const users = JSON.parse(localStorage.getItem("users") || "[]");
+      const user = users.find((u: any) => u.email === values.email);
+
+      if (!user) {
+        message.error("User not found!");
+        return;
+      }
+
+      const isPasswordValid = await bcrypt.compare(values.password, user.password);
+      if (isPasswordValid) {
+        const jwt = await new SignJWT({ id: user.id, email: user.email })
+          .setProtectedHeader({ alg: "HS256" })
+          .setIssuedAt()
+          .setExpirationTime("2h")
+          .sign(new TextEncoder().encode("your-secret-key"));
+
+        localStorage.setItem("jwtToken", jwt);
+        localStorage.setItem("loggedInUser", JSON.stringify(user));
+
+        message.success("Login successful!");
+        navigate("/products", { replace: true });
+      } else {
+        message.error("Invalid email or password!");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      message.error("Something went wrong!");
+    } finally {
+      setLoading(false); // Always reset loading, whether success or failure
+    }
   };
 
   return (
@@ -64,7 +60,7 @@ const Login: React.FC = () => {
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit" loading={loading} block>
-              Login
+              {loading ? "Logging in..." : "Login"}
             </Button>
           </Form.Item>
         </Form>
