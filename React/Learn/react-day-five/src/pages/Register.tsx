@@ -46,7 +46,7 @@ const Register: React.FC = () => {
   .setProtectedHeader({ alg: "HS256" })
   .setIssuedAt()
   .setExpirationTime("2h")
-  .sign(new TextEncoder().encode("your-secret-key"));
+  .sign(new TextEncoder().encode("fkJ6tdycF0MMUOyYnenS6x6B4cXF5sN9"));
 
 localStorage.setItem("jwtToken", jwt);
   };
