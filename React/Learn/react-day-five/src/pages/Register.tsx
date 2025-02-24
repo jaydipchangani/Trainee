@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Form, Input, Button, Card, Typography, message } from "antd";
 import { useNavigate } from "react-router-dom";
-import "../styles/auth.css";
+import "../styles/auth.css"
 
 const { Title, Text } = Typography;
 
@@ -14,16 +14,13 @@ const Register: React.FC = () => {
     setTimeout(() => {
       const users = JSON.parse(localStorage.getItem("users") || "[]");
 
-      if (users.some((u: any) => u.email === values.email)) {
+      if (users.find((u: any) => u.email === values.email)) {
         message.error("Email already registered!");
       } else {
         const newUser = { ...values, createdAt: new Date().toISOString() };
         localStorage.setItem("users", JSON.stringify([...users, newUser]));
-        message.success("Registration successful! Redirecting to login...");
-        
-        setTimeout(() => {
-          navigate("/", { replace: true }); // ✅ Ensure proper redirection
-        }, 1000);
+        message.success("Registration successful! Please login.");
+        navigate("/");
       }
 
       setLoading(false);
@@ -45,10 +42,7 @@ const Register: React.FC = () => {
           <Form.Item
             label="Email"
             name="email"
-            rules={[
-              { required: true, message: "Please enter your email" },
-              { type: "email", message: "Please enter a valid email" }
-            ]}
+            rules={[{ required: true, message: "Please enter your email" }]}
           >
             <Input placeholder="Enter your email" />
           </Form.Item>
@@ -65,7 +59,7 @@ const Register: React.FC = () => {
             </Button>
           </Form.Item>
         </Form>
-        <Text>Already have an account? <a href="/">Login</a></Text>
+        <Text>Already have an account? <a href="/login">Login</a></Text>
       </Card>
     </div>
   );
