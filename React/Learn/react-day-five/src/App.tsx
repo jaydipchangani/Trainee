@@ -36,6 +36,10 @@ const router = createBrowserRouter([
   {
     path: "/api-data",
     element: <ApiData />
+  },
+  {
+    path: "*",
+    element: <h1>404 Page Not Found</h1>
   }
 ]);
 
