@@ -9,7 +9,8 @@ const AppHeader: React.FC = () => {
   const navigate = useNavigate();
 
   const handleSignOut = () => {
-    localStorage.removeItem("loggedInUser"); // ✅ Clear logged-in user
+    localStorage.removeItem("loggedInUser");
+    localStorage.removeItem("jwtToken") // ✅ Clear logged-in user
     navigate("/", { replace: true }); // ✅ Redirect to login page
   };
 

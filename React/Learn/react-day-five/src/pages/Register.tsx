@@ -3,6 +3,9 @@ import { Form, Input, Button, Card, Typography, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import bcrypt from "bcryptjs";
 import "../styles/auth.css";
+import { SignJWT } from "jose";
+import { nanoid } from "nanoid";
+
 
 const { Title, Text } = Typography;
 
@@ -26,6 +29,7 @@ const Register: React.FC = () => {
     const hashedPassword = await bcrypt.hash(values.password, salt);
 
     const newUser = {
+      id: nanoid(),
       name: values.name,
       email: values.email,
       password: hashedPassword, // ✅ Store hashed password
@@ -36,6 +40,15 @@ const Register: React.FC = () => {
     message.success("Registration successful! Please login.");
     setLoading(false);
     navigate("/");
+
+    // Generate JWT token
+  const jwt = await new SignJWT({ id: newUser.id, email: newUser.email })
+  .setProtectedHeader({ alg: "HS256" })
+  .setIssuedAt()
+  .setExpirationTime("2h")
+  .sign(new TextEncoder().encode("your-secret-key"));
+
+localStorage.setItem("jwtToken", jwt);
   };
 
   return (

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Form, Input, Button, Card, Typography, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import bcrypt from "bcryptjs";
+import { jwtVerify } from "jose";
 import "../styles/auth.css";
 
 const { Title, Text } = Typography;
@@ -12,26 +13,39 @@ const Login: React.FC = () => {
 
   const handleLogin = async (values: { email: string; password: string }) => {
     setLoading(true);
-
+  
     const users = JSON.parse(localStorage.getItem("users") || "[]");
     const user = users.find((u: any) => u.email === values.email);
-
+  
     if (!user) {
       message.error("User not found!");
       setLoading(false);
       return;
     }
-
-    // ✅ Compare entered password with hashed password
+  
     const isPasswordValid = await bcrypt.compare(values.password, user.password);
     if (isPasswordValid) {
-      localStorage.setItem("loggedInUser", JSON.stringify(user));
-      message.success("Login successful!");
-      navigate("/products", { replace: true });
+      const jwt = localStorage.getItem("jwtToken");
+      if (jwt) {
+        try {
+          const { payload } = await jwtVerify(jwt, new TextEncoder().encode("your-secret-key"));
+          if (payload.email === user.email) {
+            localStorage.setItem("loggedInUser", JSON.stringify(user));
+            message.success("Login successful!");
+            navigate("/products", { replace: true });
+          } else {
+            message.error("Invalid token!");
+          }
+        } catch (error) {
+          message.error("Token verification failed!");
+        }
+      } else {
+        message.error("Token not found!");
+      }
     } else {
       message.error("Invalid email or password!");
     }
-
+  
     setLoading(false);
   };
 
