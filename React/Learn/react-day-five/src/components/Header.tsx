@@ -10,8 +10,8 @@ const AppHeader: React.FC = () => {
 
   const handleSignOut = () => {
     localStorage.removeItem("loggedInUser");
-    localStorage.removeItem("jwtToken") // ✅ Clear logged-in user
-    navigate("/", { replace: true }); // ✅ Redirect to login page
+    localStorage.removeItem("jwtToken") 
+    navigate("/", { replace: true }); 
   };
 
   return (

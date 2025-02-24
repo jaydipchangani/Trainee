@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Input, Button, Card, Typography, message } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 import bcrypt from "bcryptjs";
 import "../styles/auth.css";
 import { SignJWT } from "jose";
@@ -29,7 +29,7 @@ const Login: React.FC = () => {
           .setProtectedHeader({ alg: "HS256" })
           .setIssuedAt()
           .setExpirationTime("2h")
-          .sign(new TextEncoder().encode("your-secret-key"));
+          .sign(new TextEncoder().encode("fkJ6tdycF0MMUOyYnenS6x6B4cXF5sN9"));
 
         localStorage.setItem("jwtToken", jwt);
         localStorage.setItem("loggedInUser", JSON.stringify(user));
@@ -64,7 +64,8 @@ const Login: React.FC = () => {
             </Button>
           </Form.Item>
         </Form>
-        <Text>Don't have an account? <a href="/register">Register</a></Text>
+        <Text>Don't have account yet? 
+         <Link to="/register"> Register</Link></Text>
       </Card>
     </div>
   );

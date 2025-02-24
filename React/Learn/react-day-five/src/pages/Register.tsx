@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Input, Button, Card, Typography, message } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 import bcrypt from "bcryptjs";
 import "../styles/auth.css";
 import { nanoid } from "nanoid";
@@ -61,7 +61,9 @@ const Register: React.FC = () => {
             </Button>
           </Form.Item>
         </Form>
-        <Text>Already have an account? <a href="/">Login</a></Text>
+        <Text>Already Have Account !! 
+         <Link to="/"> Login </Link>
+         </Text>
       </Card>
     </div>
   );

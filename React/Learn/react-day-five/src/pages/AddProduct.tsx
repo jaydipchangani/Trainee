@@ -29,7 +29,7 @@ const AddProduct: React.FC = () => {
   };
 
   return (
-    <AppLayout> {/* Wrap inside AppLayout */}
+    <AppLayout>
       <Card title="Add New Product">
         <Form form={form} layout="vertical" onFinish={handleAdd}>
           <Form.Item name="name" label="Product Name" rules={[{ required: true, message: "Enter product name" }]}>

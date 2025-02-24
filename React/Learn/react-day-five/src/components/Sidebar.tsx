@@ -11,14 +11,13 @@ const Sidebar: React.FC = () => {
   const location = useLocation();
 
   return (
-    <Sider collapsible style={{ height: "100vh", background: "#001529", paddingTop: "50px" }}>
+    <Sider collapsible style={{ height: "110vh", background: "#001529", paddingTop: "50px" }}>
       <Menu 
         theme="dark" 
         mode="vertical" 
         selectedKeys={[location.pathname]} 
         defaultSelectedKeys={["/products"]}
       >
-        {/* Products Sub-Menu */}
         <SubMenu key="products" icon={<ShopOutlined />} title="Products">
           <Menu.Item key="/products" onClick={() => navigate("/products")}>
             View Products
@@ -28,7 +27,6 @@ const Sidebar: React.FC = () => {
           </Menu.Item>
         </SubMenu>
 
-        {/* Users Menu */}
         <Menu.Item key="/users" icon={<UserOutlined />} onClick={() => navigate("/users")}>
           Users
         </Menu.Item>
