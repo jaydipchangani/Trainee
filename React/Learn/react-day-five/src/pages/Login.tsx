@@ -12,7 +12,7 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async (values: { email: string; password: string }) => {
-    setLoading(true); // Set loading when the login button is clicked
+    setLoading(true);
 
     try {
       const users = JSON.parse(localStorage.getItem("users") || "[]");
@@ -43,7 +43,7 @@ const Login: React.FC = () => {
       console.error("Login error:", error);
       message.error("Something went wrong!");
     } finally {
-      setLoading(false); // Always reset loading, whether success or failure
+      setLoading(false);
     }
   };
 

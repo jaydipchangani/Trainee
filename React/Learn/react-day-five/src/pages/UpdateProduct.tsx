@@ -1,45 +1,41 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Form, Input, Button, Card, message } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
-import AppLayout from "../components/Layout";
-import axios from "axios";
+import AppLayout from "../components/Layout"; 
 
-const API_URL = "https://fakestoreapi.com/products"; // Replace with your API
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  category: string;
+  description: string;
+}
 
 const UpdateProduct: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
-
+  const storedProducts: Product[] = JSON.parse(localStorage.getItem("products") || "[]");
+  
   useEffect(() => {
-    loadProduct();
-  }, []);
-
-  const loadProduct = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/${id}`);
-      form.setFieldsValue(response.data);
-    } catch (error) {
-      message.error("Failed to load product!");
-      navigate("/products");
+    const product = storedProducts.find((p) => p.id === Number(id));
+    if (product) {
+      form.setFieldsValue(product);
     }
-  };
+  }, [id]);
 
-  const handleUpdate = async (values: any) => {
-    setLoading(true);
-    try {
-      await axios.put(`${API_URL}/${id}`, values);
-      message.success("Product updated successfully!");
-      navigate("/products");
-    } catch (error) {
-      message.error("Failed to update product!");
-    }
-    setLoading(false);
+  const handleUpdate = (values: Omit<Product, "id">) => {   //omit means removed and stay unchanged
+    const updatedProducts = storedProducts.map((p) => 
+      p.id === Number(id) ? { ...p, ...values } : p        // update changed value 
+    );
+
+    localStorage.setItem("products", JSON.stringify(updatedProducts));
+    message.success("Product updated successfully!");
+    navigate("/products");
   };
 
   return (
-    <AppLayout>
+    <AppLayout> 
       <Card title="Edit Product">
         <Form form={form} layout="vertical" onFinish={handleUpdate}>
           <Form.Item name="name" label="Product Name" rules={[{ required: true, message: "Enter product name" }]}>
@@ -54,7 +50,7 @@ const UpdateProduct: React.FC = () => {
           <Form.Item name="description" label="Description">
             <Input.TextArea />
           </Form.Item>
-          <Button type="primary" htmlType="submit" loading={loading}>Update Product</Button>
+          <Button type="primary" htmlType="submit">Update Product</Button>
         </Form>
       </Card>
     </AppLayout>

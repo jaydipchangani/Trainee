@@ -35,7 +35,7 @@ const Products: React.FC = () => {
           { title: "Description", dataIndex: "description" },
           {
             title: "Actions",
-            render: (_, record) => (
+            render: (_, record) => (   // _ means it is ignored bcz the column is not needed here
               <>
                 <Link to={`/products/update/${record.id}`}>
                   <Button type="link">Edit</Button>

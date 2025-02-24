@@ -23,7 +23,6 @@ const Register: React.FC = () => {
       return;
     }
 
-    // ✅ Hash password before storing
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(values.password, salt);
 
@@ -31,7 +30,7 @@ const Register: React.FC = () => {
       id: nanoid(),
       name: values.name,
       email: values.email,
-      password: hashedPassword, // ✅ Store hashed password
+      password: hashedPassword, 
       createdAt: new Date().toISOString(),
     };
 

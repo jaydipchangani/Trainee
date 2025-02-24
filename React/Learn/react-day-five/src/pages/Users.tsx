@@ -31,7 +31,7 @@ const Users: React.FC = () => {
       title: "Registered Date",
       dataIndex: "createdAt",
       key: "createdAt",
-      render: (date: string) => new Date(date).toLocaleDateString(),
+      render: (date: string) => new Date(date).toLocaleDateString(),   // convert data into humna readble form
     },
   ];
 

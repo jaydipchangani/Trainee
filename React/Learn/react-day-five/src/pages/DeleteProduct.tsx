@@ -30,7 +30,7 @@ const DeleteProduct: React.FC = () => {
   };
 
   return (
-    <AppLayout> {/* Wrap inside AppLayout */}
+    <AppLayout>
       <Card title="Delete Product">
         {product ? (
           <>
