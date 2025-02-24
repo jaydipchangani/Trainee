@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Form, Input, Button, Card, Typography, message } from "antd";
 import { useNavigate } from "react-router-dom";
+import bcrypt from "bcryptjs";
 import "../styles/auth.css";
 
 const { Title, Text } = Typography;
@@ -9,23 +10,29 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = (values: { email: string; password: string }) => {
+  const handleLogin = async (values: { email: string; password: string }) => {
     setLoading(true);
-    setTimeout(() => {
-      const users = JSON.parse(localStorage.getItem("users") || "[]");
-      const user = users.find(
-        (u: any) => u.email === values.email && u.password === values.password
-      );
 
-      if (user) {
-        localStorage.setItem("loggedInUser", JSON.stringify(user));
-        message.success("Login successful!");
-        navigate("/products", { replace: true }); // ✅ Correct navigation
-      } else {
-        message.error("Invalid email or password!");
-      }
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
+    const user = users.find((u: any) => u.email === values.email);
+
+    if (!user) {
+      message.error("User not found!");
       setLoading(false);
-    }, 1000);
+      return;
+    }
+
+    // ✅ Compare entered password with hashed password
+    const isPasswordValid = await bcrypt.compare(values.password, user.password);
+    if (isPasswordValid) {
+      localStorage.setItem("loggedInUser", JSON.stringify(user));
+      message.success("Login successful!");
+      navigate("/products", { replace: true });
+    } else {
+      message.error("Invalid email or password!");
+    }
+
+    setLoading(false);
   };
 
   return (
@@ -33,18 +40,10 @@ const Login: React.FC = () => {
       <Card className="auth-card">
         <Title level={2} className="auth-title">Login</Title>
         <Form layout="vertical" onFinish={handleLogin}>
-          <Form.Item
-            label="Email"
-            name="email"
-            rules={[{ required: true, message: "Please enter your email" }]}
-          >
+          <Form.Item label="Email" name="email" rules={[{ required: true, message: "Please enter your email" }]}>
             <Input placeholder="Enter your email" />
           </Form.Item>
-          <Form.Item
-            label="Password"
-            name="password"
-            rules={[{ required: true, message: "Please enter your password" }]}
-          >
+          <Form.Item label="Password" name="password" rules={[{ required: true, message: "Please enter your password" }]}>
             <Input.Password placeholder="Enter your password" />
           </Form.Item>
           <Form.Item>
