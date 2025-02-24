@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, Table, Modal, Form, Input, message } from "antd";
+import AppLayout from "../components/Layout";
 
 interface Product {
   id: number;
@@ -33,7 +34,7 @@ const Products: React.FC = () => {
   };
 
   return (
-    <div>
+    <AppLayout>
       <Button type="primary" onClick={() => setModalVisible(true)}>Add Product</Button>
       <Table dataSource={products} rowKey="id" columns={[
         { title: "Name", dataIndex: "name" },
@@ -42,7 +43,7 @@ const Products: React.FC = () => {
         { title: "Description", dataIndex: "description" },
         { title: "Actions", render: (_, record) => <Button onClick={() => setEditingProduct(record)}>Edit</Button> },
       ]} />
-    </div>
+    </AppLayout>
   );
 };
 

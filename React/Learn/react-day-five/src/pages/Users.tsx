@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Table } from "antd";
+import AppLayout from "../components/Layout";
 
 interface User {
   name: string;
@@ -10,13 +11,11 @@ interface User {
 const Users: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
 
-  // Load users from localStorage when the component mounts
   useEffect(() => {
     const storedUsers = JSON.parse(localStorage.getItem("users") || "[]");
     setUsers(storedUsers);
   }, []);
 
-  // Define table columns
   const columns = [
     {
       title: "Name",
@@ -37,10 +36,10 @@ const Users: React.FC = () => {
   ];
 
   return (
-    <div>
+    <AppLayout>
       <h2>Registered Users</h2>
       <Table dataSource={users} columns={columns} rowKey="email" />
-    </div>
+    </AppLayout>
   );
 };
 

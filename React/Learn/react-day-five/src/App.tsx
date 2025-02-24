@@ -6,7 +6,6 @@ import Products from "./pages/Products";
 import Users from "./pages/Users";
 import ProtectedRoute from "./components/ProtectedRoute";
 
-// Routes Setup
 const router = createBrowserRouter([
   { path: "/", element: <Login /> },
   { path: "/register", element: <Register /> },
