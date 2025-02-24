@@ -8,6 +8,7 @@ import DeleteProduct from "./pages/DeleteProduct";
 import Users from "./pages/Users";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AddProduct from "./pages/AddProduct";
+import ApiData from "./pages/ApiData";
 
 const router = createBrowserRouter([
   { path: "/", element: <Login /> },
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
   {
     path: "/products/add",
     element: <ProtectedRoute><AddProduct /></ProtectedRoute>,
+  },
+  {
+    path: "/api-data",
+    element: <ApiData />
   }
 ]);
 
