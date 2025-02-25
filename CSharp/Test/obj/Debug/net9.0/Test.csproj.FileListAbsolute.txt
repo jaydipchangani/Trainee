@@ -1,0 +1,15 @@
+C:\Trainee_new\CSharp\Test\bin\Debug\net9.0\Test.exe
+C:\Trainee_new\CSharp\Test\bin\Debug\net9.0\Test.deps.json
+C:\Trainee_new\CSharp\Test\bin\Debug\net9.0\Test.runtimeconfig.json
+C:\Trainee_new\CSharp\Test\bin\Debug\net9.0\Test.dll
+C:\Trainee_new\CSharp\Test\bin\Debug\net9.0\Test.pdb
+C:\Trainee_new\CSharp\Test\obj\Debug\net9.0\Test.GeneratedMSBuildEditorConfig.editorconfig
+C:\Trainee_new\CSharp\Test\obj\Debug\net9.0\Test.AssemblyInfoInputs.cache
+C:\Trainee_new\CSharp\Test\obj\Debug\net9.0\Test.AssemblyInfo.cs
+C:\Trainee_new\CSharp\Test\obj\Debug\net9.0\Test.csproj.CoreCompileInputs.cache
+C:\Trainee_new\CSharp\Test\obj\Debug\net9.0\Test.sourcelink.json
+C:\Trainee_new\CSharp\Test\obj\Debug\net9.0\Test.dll
+C:\Trainee_new\CSharp\Test\obj\Debug\net9.0\refint\Test.dll
+C:\Trainee_new\CSharp\Test\obj\Debug\net9.0\Test.pdb
+C:\Trainee_new\CSharp\Test\obj\Debug\net9.0\Test.genruntimeconfig.cache
+C:\Trainee_new\CSharp\Test\obj\Debug\net9.0\ref\Test.dll
