@@ -41,7 +41,7 @@ const Inventory: React.FC = () => {
         <Table.Column title="Name" dataIndex="name" />
         <Table.Column title="Quantity" dataIndex="quantity" />
         <Table.Column title="Price ($)" dataIndex="price" />
-        <Table.Column title="Actions" render={(text, record) => (
+        <Table.Column title="Actions" render={(_, record) => (
           <>
             <Button type="link" onClick={() => showModal(record)}>Edit</Button>
             <Button type="link" danger onClick={() => dispatch({ type: "DELETE_PRODUCT", payload: record.id })}>
