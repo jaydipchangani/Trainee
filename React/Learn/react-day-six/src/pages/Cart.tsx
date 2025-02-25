@@ -77,6 +77,16 @@ const Cart: React.FC = () => {
             pagination={{ pageSize: 5 }}
           />
           <h3 style={{ marginTop: "20px" }}>Total Price: ${totalCartPrice.toFixed(2)}</h3>
+          
+          {/* Payment Button */}
+          <Button 
+            type="primary" 
+            size="large" 
+            style={{ marginTop: "10px" }}
+            onClick={() => alert("Proceeding to Payment...")}
+          >
+            Proceed to Payment
+          </Button>
         </>
       )}
     </div>
