@@ -78,7 +78,6 @@ const Cart: React.FC = () => {
           />
           <h3 style={{ marginTop: "20px" }}>Total Price: ${totalCartPrice.toFixed(2)}</h3>
           
-          {/* Payment Button */}
           <Button 
             type="primary" 
             size="large" 

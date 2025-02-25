@@ -18,7 +18,7 @@ const App: React.FC = () => {
           <AppHeader />
           <Layout>
             <Sidebar />
-            <Content style={{ padding: "20px", background: "#ffffff", marginLeft: "200px" }}>
+            <Content style={{ padding: "20px", background: "#ffffff", marginLeft: "100px" }}>
               <Routes>
                 <Route path="/inventory" element={<Inventory />} />
                 <Route path="/products" element={<Products />} />

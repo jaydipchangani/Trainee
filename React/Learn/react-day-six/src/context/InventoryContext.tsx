@@ -1,7 +1,6 @@
 import React, { createContext, useReducer, useContext } from "react";
 import { notification } from "antd";
 
-// Product Type
 interface Product {
   id: number;
   name: string;
@@ -11,14 +10,13 @@ interface Product {
   image: string;
 }
 
-// State Type
 interface State {
   inventory: Product[];
   cart: Product[];
 }
 
-// Action Types
-type Action =
+
+type Action =            
   | { type: "ADD_PRODUCT"; payload: Product }
   | { type: "EDIT_PRODUCT"; payload: Product }
   | { type: "DELETE_PRODUCT"; payload: number }
@@ -27,13 +25,11 @@ type Action =
   | { type: "INCREASE_QUANTITY"; payload: number }
   | { type: "DECREASE_QUANTITY"; payload: number };
 
-// Initial State
 const initialState: State = {
   inventory: [],
   cart: [],
 };
 
-// Helper function to show notifications
 const showNotification = (type: "success" | "error" | "warning", message: string) => {
   notification.destroy();
   notification[type]({
@@ -42,7 +38,6 @@ const showNotification = (type: "success" | "error" | "warning", message: string
   });
 };
 
-// Reducer Function
 const reducer = (state: State, action: Action): State => {
   let updatedInventory, updatedCart;
   switch (action.type) {
@@ -107,13 +102,12 @@ const reducer = (state: State, action: Action): State => {
   }
 };
 
-// Create Context
+
 const InventoryContext = createContext<{
   state: State;
-  dispatch: React.Dispatch<Action>;
+  dispatch: React.Dispatch<Action>;   //state update krva, provide by useReduser
 } | null>(null);
 
-// Provider Component
 export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
@@ -126,7 +120,7 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-// Custom Hook to Use Inventory Context
+
 export const useInventory = () => {
   const context = useContext(InventoryContext);
   if (!context) {
