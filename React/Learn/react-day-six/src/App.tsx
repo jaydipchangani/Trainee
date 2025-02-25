@@ -1,27 +1,26 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Layout } from "antd";
+import Sidebar from "./components/Sidebar";
+import AppHeader from "./components/Header";
 import Inventory from "./pages/Inventory";
 import Products from "./pages/Products";
 import Cart from "./pages/Cart";
-import Header from "./components/Header";
-import Sidebar from "./components/Sidebar";
-import { AppProvider } from "./context/AppContext";
-import "./styles/global.css";
+import { InventoryProvider } from "./context/InventoryContext";
 
 const { Content } = Layout;
 
 const App: React.FC = () => {
   return (
-    <AppProvider>
+    <InventoryProvider>
       <Router>
-        <Layout className="app-layout">
-          <Sidebar />
-          <Layout className="main-layout">
-            <Header />
-            <Content className="content">
+        <Layout style={{ minHeight: "100vh" }}>
+          <AppHeader />
+          <Layout>
+            <Sidebar />
+            <Content style={{ padding: "20px", background: "#ffffff", marginLeft: "200px" }}>
               <Routes>
-                <Route path="/" element={<Inventory />} />
+                <Route path="/inventory" element={<Inventory />} />
                 <Route path="/products" element={<Products />} />
                 <Route path="/cart" element={<Cart />} />
               </Routes>
@@ -29,7 +28,7 @@ const App: React.FC = () => {
           </Layout>
         </Layout>
       </Router>
-    </AppProvider>
+    </InventoryProvider>
   );
 };
 
