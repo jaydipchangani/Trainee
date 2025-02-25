@@ -1,4 +1,5 @@
 import React, { createContext, useReducer, useContext, useEffect } from "react";
+import { notification } from "antd";
 
 // Product Type
 interface Product {
@@ -6,6 +7,7 @@ interface Product {
   name: string;
   quantity: number;
   description: string;
+  image: string;
 }
 
 // State Type
@@ -30,37 +32,62 @@ const getInitialState = (): State => ({
   cart: JSON.parse(localStorage.getItem("cart") || "[]"),
 });
 
-// Reducer Function
+// Notification Helper (Ensures notifications show only once)
+const showNotification = (type: "success" | "error", message: string) => {
+  notification.destroy(); // Clear any existing notifications
+  notification[type]({
+    message,
+    placement: "topRight",
+  });
+};
+
+// Reducer Function (Handles state changes and storage)
 const reducer = (state: State, action: Action): State => {
-  let updatedCart;
+  let updatedInventory, updatedCart;
   switch (action.type) {
     case "ADD_PRODUCT":
-      const newInventory = [...state.inventory, action.payload];
-      localStorage.setItem("inventory", JSON.stringify(newInventory));
-      return { ...state, inventory: newInventory };
+      updatedInventory = [...state.inventory, action.payload];
+      localStorage.setItem("inventory", JSON.stringify(updatedInventory));
+      showNotification("success", "Product added successfully!");
+      return { ...state, inventory: updatedInventory };
 
     case "EDIT_PRODUCT":
-      const editedInventory = state.inventory.map((product) =>
+      updatedInventory = state.inventory.map((product) =>
         product.id === action.payload.id ? action.payload : product
       );
-      localStorage.setItem("inventory", JSON.stringify(editedInventory));
-      return { ...state, inventory: editedInventory };
+      localStorage.setItem("inventory", JSON.stringify(updatedInventory));
+      showNotification("success", "Product updated successfully!");
+      return { ...state, inventory: updatedInventory };
 
     case "DELETE_PRODUCT":
-      const filteredInventory = state.inventory.filter(
+      updatedInventory = state.inventory.filter(
         (product) => product.id !== action.payload
       );
-      localStorage.setItem("inventory", JSON.stringify(filteredInventory));
-      return { ...state, inventory: filteredInventory };
+      updatedCart = state.cart.filter((product) => product.id !== action.payload); // 🔥 Remove from cart too
+
+      localStorage.setItem("inventory", JSON.stringify(updatedInventory));
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      showNotification("error", "Product deleted successfully!");
+      return { ...state, inventory: updatedInventory, cart: updatedCart };
 
     case "ADD_TO_CART":
+      // 🔥 Check if the product exists in inventory
       const product = state.inventory.find((p) => p.id === action.payload);
-      if (product) {
-        updatedCart = [...state.cart, { ...product, quantity: 1 }];
-        localStorage.setItem("cart", JSON.stringify(updatedCart));
-        return { ...state, cart: updatedCart };
+      if (!product) {
+        showNotification("error", "Product is no longer available!");
+        return state;
       }
-      return state;
+
+      // 🔥 Check if the product is already in the cart
+      if (state.cart.some((p) => p.id === action.payload)) {
+        showNotification("warning", "Product is already in the cart!");
+        return state;
+      }
+
+      updatedCart = [...state.cart, { ...product, quantity: 1 }];
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      showNotification("success", "Product added to cart!");
+      return { ...state, cart: updatedCart };
 
     case "REMOVE_FROM_CART":
       updatedCart = state.cart.filter((p) => p.id !== action.payload);
@@ -103,9 +130,17 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({
   const [state, dispatch] = useReducer(reducer, {}, getInitialState);
 
   useEffect(() => {
+    // 🔥 Ensure only available inventory products remain in cart
+    const filteredCart = state.cart.filter((cartItem) =>
+      state.inventory.some((invItem) => invItem.id === cartItem.id)
+    );
+
+    if (JSON.stringify(state.cart) !== JSON.stringify(filteredCart)) {
+      localStorage.setItem("cart", JSON.stringify(filteredCart));
+    }
+
     localStorage.setItem("inventory", JSON.stringify(state.inventory));
-    localStorage.setItem("cart", JSON.stringify(state.cart));
-  }, [state]);
+  }, [state.inventory, state.cart]); // ✅ Triggers only when inventory/cart changes
 
   return (
     <InventoryContext.Provider value={{ state, dispatch }}>
