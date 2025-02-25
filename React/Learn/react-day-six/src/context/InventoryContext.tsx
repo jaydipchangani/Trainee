@@ -50,8 +50,14 @@ const reducer = (state: State, action: Action): State => {
       updatedInventory = state.inventory.map((product) =>
         product.id === action.payload.id ? action.payload : product
       );
+
+
+        updatedCart = state.cart.map((product) =>    
+          product.id === action.payload.id ? { ...product, ...action.payload } : product
+        );
+        
       showNotification("success", "Product updated successfully!");
-      return { ...state, inventory: updatedInventory };
+      return { ...state, inventory: updatedInventory, cart: updatedCart };
 
     case "DELETE_PRODUCT":
       updatedInventory = state.inventory.filter(

@@ -69,16 +69,17 @@ const Inventory: React.FC = () => {
             <Input />
           </Form.Item>
 
-          <Form.Item
+            <Form.Item
             name="quantity"
             label="Quantity"
             rules={[
               { required: true, message: "Please enter a quantity" },
-              { type: "number", min: 1, message: "Quantity must be a positive number" }
+              { type: "number", min: 1, message: "Quantity must be a positive number" },
+              { type: "integer", message: "Quantity must be an integer" }
             ]}
-          >
+            >
             <InputNumber min={1} style={{ width: "100%" }} />
-          </Form.Item>
+            </Form.Item>
 
           <Form.Item
             name="price"
