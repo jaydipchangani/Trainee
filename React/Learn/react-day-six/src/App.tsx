@@ -1,35 +1,36 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Layout } from "antd";
+import Inventory from "./pages/Inventory";
+import Products from "./pages/Products";
+import Cart from "./pages/Cart";
+import Header from "./components/Header";
+import Sidebar from "./components/Sidebar";
+import { AppProvider } from "./context/AppContext";
+import "./styles/global.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+const { Content } = Layout;
 
+const App: React.FC = () => {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <AppProvider>
+      <Router>
+        <Layout className="app-layout">
+          <Sidebar />
+          <Layout className="main-layout">
+            <Header />
+            <Content className="content">
+              <Routes>
+                <Route path="/" element={<Inventory />} />
+                <Route path="/products" element={<Products />} />
+                <Route path="/cart" element={<Cart />} />
+              </Routes>
+            </Content>
+          </Layout>
+        </Layout>
+      </Router>
+    </AppProvider>
+  );
+};
 
-export default App
+export default App;

@@ -6,11 +6,11 @@ const Cart: React.FC = () => {
   const { state, dispatch } = useContext(AppContext);
 
   return (
-    <div>
-      <h2>Cart</h2>
+    <div className="cart-page">
+      <h2>Shopping Cart</h2>
       {state.cart.map((p) => (
-        <div key={p.id} style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px" }}>
-          <img src={p.image} alt={p.name} style={{ width: "80px", height: "80px", objectFit: "cover" }} />
+        <div key={p.id} className="cart-item">
+          <img src={p.image} alt={p.name} className="cart-image" />
           <p>{p.name} - ${p.price} - Quantity: {p.quantity}</p>
           <Button onClick={() => dispatch({ type: "INCREMENT_CART", id: p.id })}>+</Button>
           <Button onClick={() => dispatch({ type: "DECREMENT_CART", id: p.id })}>-</Button>

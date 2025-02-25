@@ -10,8 +10,9 @@ interface Props {
 }
 
 const ProductCard: React.FC<Props> = ({ name, price, image, quantity, onAddToCart }) => (
-  <Card title={name} bordered={true} style={{ width: 300, margin: 10 }}>
-    <img src={image} alt={name} style={{ width: "100%", height: "150px", objectFit: "cover" }} />
+  <Card className="product-card" hoverable>
+    <img src={image} alt={name} className="product-image" />
+    <h3>{name}</h3>
     <p>Price: ${price}</p>
     {quantity !== undefined && <p>Stock: {quantity}</p>}
     {onAddToCart && <Button type="primary" onClick={onAddToCart}>Add to Cart</Button>}

@@ -1,0 +1,47 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+  }
+  
+  .app-layout {
+    min-height: 100vh;
+  }
+  
+  .main-layout {
+    margin-left: 220px;
+    background-color: white;
+  }
+  
+  .content {
+    padding: 20px;
+  }
+
+  .product-card {
+    width: 250px;
+    text-align: center;
+    margin: 10px;
+  }
+  
+  .product-image {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+  .inventory-page {
+    max-width: 600px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .inventory-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+    
