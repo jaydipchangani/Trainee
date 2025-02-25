@@ -46,22 +46,52 @@ const Inventory: React.FC = () => {
         )} />
       </Table>
 
-      <Modal title="Product Form" open={isModalVisible} onOk={handleOk} onCancel={() => setIsModalVisible(false)}>
-        <Form form={form} layout="vertical">
-          <Form.Item name="name" label="Product Name" rules={[{ required: true, message: "Please enter a product name" }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item name="quantity" label="Quantity" rules={[{ required: true, message: "Please enter a quantity" }]}>
-            <InputNumber min={1} style={{ width: "100%" }} />
-          </Form.Item>
-          <Form.Item name="description" label="Description">
-            <Input.TextArea />
-          </Form.Item>
-          <Form.Item name="image" label="Image URL" rules={[{ required: true, message: "Please enter an image URL" }]}>
-            <Input />
-          </Form.Item>
-        </Form>
-      </Modal>
+      <Modal
+  title="Product Form"
+  open={isModalVisible}
+  onOk={handleOk}
+  onCancel={() => setIsModalVisible(false)}
+>
+  <Form form={form} layout="vertical">
+    <Form.Item
+      name="name"
+      label="Product Name"
+      rules={[
+        { required: true, message: "Please enter a product name" },
+        { pattern: /^[A-Za-z\s]+$/, message: "Only letters and spaces are allowed" }
+      ]}
+    >
+      <Input />
+    </Form.Item>
+
+    <Form.Item
+      name="quantity"
+      label="Quantity"
+      rules={[
+        { required: true, message: "Please enter a quantity" },
+        { type: 'number', min: 1, message: "Quantity must be a positive number" }
+      ]}
+    >
+      <InputNumber min={1} style={{ width: "100%" }} />
+    </Form.Item>
+
+    <Form.Item name="description" label="Description">
+      <Input.TextArea />
+    </Form.Item>
+
+    <Form.Item
+      name="image"
+      label="Image URL"
+      rules={[
+        { required: true, message: "Please enter an image URL" },
+        { pattern: /\.(jpg|jpeg|png|gif)$/i, message: "Please enter a valid image URL (e.g., .jpg, .png)" }
+      ]}
+    >
+      <Input />
+    </Form.Item>
+  </Form>
+</Modal>
+
     </>
   );
 };
