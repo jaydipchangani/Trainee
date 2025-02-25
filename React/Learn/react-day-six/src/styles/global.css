@@ -46,30 +46,4 @@ html, body, #root {
     gap: 10px;
   }
     
-  .main-content {
-    flex-grow: 1;
-    margin-left: 250px; /* Adjust based on sidebar width */
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-  }
   
-  .header {
-    height: 60px;
-    background: #1890ff;
-    display: flex;
-    align-items: center;
-    padding: 0 20px;    
-    position: fixed;
-    top: 0;
-    left: 250px;
-    right: 0;
-    z-index: 10;
-  }
-  
-  .page-content {
-    flex-grow: 1;
-    padding: 20px;
-    overflow-y: auto; /* Enable scroll only inside content */
-    margin-top: 60px; /* Prevent content from going under header */
-  }

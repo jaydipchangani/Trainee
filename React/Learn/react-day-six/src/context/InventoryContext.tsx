@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useContext, useEffect } from "react";
+import React, { createContext, useReducer, useContext } from "react";
 import { notification } from "antd";
 
 // Product Type
@@ -6,6 +6,7 @@ interface Product {
   id: number;
   name: string;
   quantity: number;
+  price: number;
   description: string;
   image: string;
 }
@@ -32,9 +33,9 @@ const initialState: State = {
   cart: [],
 };
 
-// Notification Helper
+// Helper function to show notifications
 const showNotification = (type: "success" | "error" | "warning", message: string) => {
-  notification.destroy(); // Clear any existing notifications
+  notification.destroy();
   notification[type]({
     message,
     placement: "topRight",
@@ -61,7 +62,7 @@ const reducer = (state: State, action: Action): State => {
       updatedInventory = state.inventory.filter(
         (product) => product.id !== action.payload
       );
-      updatedCart = state.cart.filter((product) => product.id !== action.payload); // 🔥 Remove from cart too
+      updatedCart = state.cart.filter((product) => product.id !== action.payload);
       showNotification("error", "Product deleted successfully!");
       return { ...state, inventory: updatedInventory, cart: updatedCart };
 
@@ -117,17 +118,6 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-
-  // Ensure cart only contains items still in inventory
-  useEffect(() => {
-    const filteredCart = state.cart.filter((cartItem) =>
-      state.inventory.some((invItem) => invItem.id === cartItem.id)
-    );
-
-    if (JSON.stringify(state.cart) !== JSON.stringify(filteredCart)) {
-      dispatch({ type: "REMOVE_FROM_CART", payload: -1 }); // Dummy action to trigger re-render
-    }
-  }, [state.inventory, state.cart]);
 
   return (
     <InventoryContext.Provider value={{ state, dispatch }}>

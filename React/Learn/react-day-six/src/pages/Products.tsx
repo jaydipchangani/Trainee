@@ -11,11 +11,11 @@ const Products: React.FC = () => {
         <Card
           key={product.id}
           title={product.name}
-
           style={{ width: 300, background: "#f0f2f5" }}
           cover={<img alt={product.name} src={product.image} style={{ height: 200, objectFit: "cover" }} />}
         >
           <p>{product.description}</p>
+          <p><strong>Price: ${product.price.toFixed(2)}</strong></p>
           <p>Quantity: {product.quantity}</p>
           <Button type="primary" onClick={() => dispatch({ type: "ADD_TO_CART", payload: product.id })}>
             Add to Cart

@@ -7,7 +7,12 @@ const { Header } = Layout;
 
 const AppHeader: React.FC = () => {
   return (
-    <Header className="header" style={{ background: "#fff", padding: "0 20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+    <Header className="header" style={{ background: "#1778ff", padding: "0 20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      
+      <div className="logo" style={{ color: "white", textAlign: "center", padding: "20px", fontSize: "18px", fontWeight: "bold" }}>
+        Inventory App
+      </div>
+
       <Input
         prefix={<SearchOutlined />}
         placeholder="Search inventory..."
