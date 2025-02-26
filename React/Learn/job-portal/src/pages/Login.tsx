@@ -1,6 +1,7 @@
 import { Layout, Form, Input, Button, Card, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import bcrypt from "bcryptjs";
 
 const { Content } = Layout;
 
@@ -9,44 +10,46 @@ const Login = () => {
 
   const handleLogin = async (values: { email: string; password: string }) => {
     try {
-      // Fetch users from JSON Server
       const { data: users } = await axios.get("http://localhost:5000/users");
 
-      // Check if the user exists with matching email & password
-      const validUser = users.find((user: any) => user.email === values.email && user.password === values.password);
+      const validUser = users.find((user: any) => user.email === values.email);
 
       if (validUser) {
-        // Store user in localStorage and navigate to Dashboard
-        localStorage.setItem("user", JSON.stringify(validUser));
-        message.success("Login successful! Redirecting...");
-        navigate("/dashboard");
+        const passwordMatch = await bcrypt.compare(values.password, validUser.password);
+        
+        if (passwordMatch) {
+          localStorage.setItem("user", JSON.stringify(validUser));
+          message.success("Login successful! Redirecting...");
+          navigate("/dashboard");
+        } else {
+          message.error("Invalid email or password.");
+        }
       } else {
-        message.error("Invalid email or password. Please try again.");
+        message.error("Invalid email or password.");
       }
-
     } catch (error) {
-      message.error("Login failed. Please check your connection.");
+      message.error("Login failed. Please try again.");
     }
   };
 
   return (
-    <Layout style={{ minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center", background: "#f0f2f5" }}>
-      <Content style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
-        <Card title="Login" style={{ width: 400, borderRadius: 10, boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
+    <Layout style={{ minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
+      <Content>
+        <Card title="Login" style={{ width: 400, borderRadius: 10 }}>
           <Form layout="vertical" onFinish={handleLogin}>
-            <Form.Item label="Email" name="email" rules={[{ required: true, message: "Enter your email!" }, { type: "email", message: "Enter a valid email!" }]}>
+            <Form.Item label="Email" name="email" rules={[{ required: true, type: "email", message: "Enter a valid email!" }]}>
               <Input placeholder="Enter your email" />
             </Form.Item>
             <Form.Item label="Password" name="password" rules={[{ required: true, message: "Enter your password!" }]}>
               <Input.Password placeholder="Enter your password" />
             </Form.Item>
             <Form.Item>
-              <Button type="primary" htmlType="submit" block style={{ background: "#1890ff", borderColor: "#1890ff" }}>
+              <Button type="primary" htmlType="submit" block>
                 Login
               </Button>
             </Form.Item>
             <Form.Item>
-              <Button type="link" onClick={() => navigate("/register")} block>
+              <Button type="link" onClick={() => navigate("/register")}>
                 Don't have an account? Register
               </Button>
             </Form.Item>

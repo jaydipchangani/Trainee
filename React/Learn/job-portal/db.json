@@ -1,48 +1,51 @@
 {
   "users": [
     {
-      "id": "b242",
-      "name": "Jaydip nunu 2",
-      "email": "jaydipnunu@gmail.com",
-      "password": "12345678"
+      "id": "fdd0",
+      "name": "Lillian Sampson",
+      "email": "jahamy@mailinator.com",
+      "password": "$2b$10$DJDaDmSSJgTvRsBidtmtfeGDOz03cXAZarLKjmpzPV3jtX5/1BmMW"
     },
     {
-      "id": "90f6",
-      "name": "RJ1",
-      "email": "nanu@mailinator.com",
-      "password": "123456"
+      "id": "50b2",
+      "name": "JD man",
+      "email": "nanua@mailinator.com",
+      "password": "U2FsdGVkX18Y2lTPUbKywcif7znrMRaTh2Dg2uzjgpY="
     },
     {
-      "id": "a2ea",
-      "name": "KK",
-      "email": "asdasdsa@asdada.asds",
-      "password": "123456"
-    },
-    {
-      "id": "3ee3",
-      "name": "Harper Alexander",
-      "email": "xikazud@mailinator.com",
-      "password": "123"
+      "id": "a5a2",
+      "name": "jd1",
+      "email": "d@gmail.com",
+      "password": "$2b$10$EAryw0gct3JrLFSMq7zG/e/MaFmoL13hFOZh8BbcD/juyjLQq4FHO"
     }
   ],
   "jobs": [
     {
-      "id": "cf1c",
-      "title": "Est veritatis quae v",
-      "description": "Enim obcaecati autem",
-      "salary": "221312",
-      "location": "Eu dicta quibusdam e",
+      "id": "8caf",
+      "title": "Duis autem pariatur",
+      "description": "Consequatur voluptat",
+      "salary": "12354",
+      "location": "Et dolor id consequa",
       "type": "Part-time",
-      "postedBy": "jaydipnunu@gmail.com"
+      "postedBy": "jahamy@mailinator.com"
     },
     {
-      "title": "Amet voluptas ullam",
-      "description": "asas",
-      "salary": "12313",
-      "location": "Et aute sint est in",
+      "id": "2fec",
+      "title": "Quis fugit voluptat",
+      "description": "Ab doloremque sunt v",
+      "salary": "20000",
+      "location": "Magna eos amet mol",
       "type": "Remote",
-      "postedBy": "nanu@mailinator.com",
-      "id": "8783"
+      "postedBy": "jahamy@mailinator.com"
+    },
+    {
+      "id": "b7be",
+      "title": "Dolore laborum Est ",
+      "description": "Iusto iure rerum dol",
+      "salary": "40000",
+      "location": "Est voluptas reprehe",
+      "type": "Part-time",
+      "postedBy": "nanu@mailinator.com"
     }
   ]
 }
