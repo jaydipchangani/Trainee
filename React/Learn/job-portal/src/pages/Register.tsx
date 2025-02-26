@@ -50,8 +50,8 @@ const Register = () => {
     <Layout
       style={{ minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center", background: "#f0f2f5" }}
     >
-      <Content>
-        <Card title="Register" style={{ width: 400, borderRadius: 10 }}>
+      <Content style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
+        <Card title="Register" style={{ width: 400, borderRadius: 10, boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
           <Form layout="vertical" onFinish={handleRegister}>
             <Form.Item label="Name" name="name" rules={[{ required: true, message: "Enter your name!" }]}>
               <Input placeholder="Enter your name" />
@@ -71,7 +71,7 @@ const Register = () => {
               <Input.Password placeholder="Enter your password" />
             </Form.Item>
             <Form.Item>
-              <Button type="primary" htmlType="submit" block>
+              <Button type="primary" htmlType="submit" block style={{ background: "#1890ff", borderColor: "#1890ff" }}>
                 Register
               </Button>
             </Form.Item>

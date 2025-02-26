@@ -17,6 +17,12 @@
       "name": "jd1",
       "email": "d@gmail.com",
       "password": "$2b$10$EAryw0gct3JrLFSMq7zG/e/MaFmoL13hFOZh8BbcD/juyjLQq4FHO"
+    },
+    {
+      "id": "abc2",
+      "name": "rajdeep1",
+      "email": "jaydip@gmail.com",
+      "password": "$2b$10$CkIK2koyNp8OUKzdzmrcyO.FP9LFMwEqGZNm9emGc3CR1FMZ1SmSy"
     }
   ],
   "jobs": [
@@ -46,6 +52,24 @@
       "location": "Est voluptas reprehe",
       "type": "Part-time",
       "postedBy": "nanu@mailinator.com"
+    },
+    {
+      "title": "jkbghjhj",
+      "description": "Laborum proident su",
+      "salary": "99",
+      "location": "Tenetur corporis dol",
+      "type": "Remote",
+      "postedBy": "jaydip@gmail.com",
+      "id": "a3ca"
+    },
+    {
+      "id": "cb9b",
+      "title": "Iure molestiae optio",
+      "description": "Maiores tenetur perf",
+      "salary": "12",
+      "location": "Molestias amet impe",
+      "type": "Full-time",
+      "postedBy": "jaydip@gmail.com"
     }
   ]
 }

@@ -13,18 +13,7 @@ const Profile = () => {
   const [form] = Form.useForm();
   const [user, setUser] = useState<any>(null);
 
-  const passwordValidator = (_: any, value: string) => {
-    if (!value) return Promise.reject("Enter your password!");
-    const strongPasswordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-    if (!strongPasswordRegex.test(value)) {
-      return Promise.reject(
-        "Password must be at least 8 characters long, with uppercase, lowercase, number, and special character."
-      );
-    }
-    return Promise.resolve();
-  };
 
   useEffect(() => {
     // Get logged-in user from localStorage
@@ -91,17 +80,22 @@ const Profile = () => {
         <Content style={{ padding: "20px", display: "flex", justifyContent: "center", alignItems: "center" }}>
           <Card title="Edit Profile" style={{ width: 400 }}>
             <Form form={form} layout="vertical" onFinish={handleUpdateProfile}>
-              <Form.Item label="Name" name="name" rules={[{ required: true, message: "Enter your name!" }]}>
+              <Form.Item label="Name" name="name" >
                 <Input />
               </Form.Item>
-              <Form.Item label="Email" name="email" rules={[{ required: true, message: "Enter your email!" }, { type: "email", message: "Enter a valid email!" }]}>
+              <Form.Item label="Email" name="email" rules={[{ type: "email", message: "Enter a valid email!" }]}>
                 <Input />
               </Form.Item>
               <Form.Item
                 label="New Password"
                 name="password"
                 tooltip="Leave empty if you don't want to change the password."
-                rules={[{ validator: passwordValidator }]}
+                rules={[
+                  {
+                    pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                    message: "Password must be at least 8 characters, include uppercase, lowercase, number, and special character!",
+                  },
+                ]}
               >
                 <Input.Password />
               </Form.Item>
