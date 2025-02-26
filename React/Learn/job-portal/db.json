@@ -20,9 +20,15 @@
     },
     {
       "id": "abc2",
-      "name": "rajdeep1",
+      "name": "rajdeep12",
       "email": "jaydip@gmail.com",
       "password": "$2b$10$CkIK2koyNp8OUKzdzmrcyO.FP9LFMwEqGZNm9emGc3CR1FMZ1SmSy"
+    },
+    {
+      "id": "6b3e",
+      "name": "dsfdsf",
+      "email": "asdasdsa@asdada.asds",
+      "password": "$2b$10$3gD2uUQKsiTl6zvg5SV63eVQu24ALQ0Mz2.bkpM3azUZPNJg8k31u"
     }
   ],
   "jobs": [
@@ -54,22 +60,31 @@
       "postedBy": "nanu@mailinator.com"
     },
     {
-      "title": "jkbghjhj",
-      "description": "Laborum proident su",
-      "salary": "99",
-      "location": "Tenetur corporis dol",
-      "type": "Remote",
+      "title": "Laboriosam aut ipsa",
+      "description": "Impedit odit quo dojhghjgjg",
+      "salary": "10000",
+      "location": "Ex quam incididunt s",
+      "type": "Part-time",
       "postedBy": "jaydip@gmail.com",
-      "id": "a3ca"
+      "id": "b730"
     },
     {
-      "id": "cb9b",
-      "title": "Iure molestiae optio",
-      "description": "Maiores tenetur perf",
-      "salary": "12",
-      "location": "Molestias amet impe",
-      "type": "Full-time",
-      "postedBy": "jaydip@gmail.com"
+      "title": "vhublji",
+      "description": "Doloribus libero ani",
+      "salary": "50000",
+      "location": "Et odit ullam ad nul",
+      "type": "Part-time",
+      "postedBy": "asdasdsa@asdada.asds",
+      "id": "7758"
+    },
+    {
+      "title": "Consequatur Aliquid",
+      "description": "Itaque laboris nihil",
+      "salary": "120320",
+      "location": "Tempore facere volu",
+      "type": "Remote",
+      "postedBy": "asdasdsa@asdada.asds",
+      "id": "8cba"
     }
   ]
 }
