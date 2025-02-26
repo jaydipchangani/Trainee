@@ -1,0 +1,29 @@
+{
+  "users": [
+    {
+      "id": "f6f1",
+      "username": "jaydip",
+      "password": "123456"
+    }
+  ],
+  "jobs": [
+    {
+      "id": "b179",
+      "title": "jaydip",
+      "description": "asdaasd",
+      "salary": "445646",
+      "location": "asasasas",
+      "type": "full time",
+      "postedBy": "jaydip"
+    },
+    {
+      "id": "2159",
+      "title": "jaydip",
+      "description": "asdaasd",
+      "salary": "445646",
+      "location": "asasasas",
+      "type": "full time",
+      "postedBy": "jaydip"
+    }
+  ]
+}
