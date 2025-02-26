@@ -30,18 +30,18 @@ const Login = () => {
   };
 
   return (
-    <Layout style={{ minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
-      <Content>
-        <Card title="Login" style={{ width: 400 }}>
+    <Layout style={{ minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center", background: "#f0f2f5" }}>
+      <Content style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
+        <Card title="Login" style={{ width: 400, borderRadius: 10, boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
           <Form layout="vertical" onFinish={handleLogin}>
             <Form.Item label="Email" name="email" rules={[{ required: true, message: "Enter your email!" }, { type: "email", message: "Enter a valid email!" }]}>
-              <Input />
+              <Input placeholder="Enter your email" />
             </Form.Item>
             <Form.Item label="Password" name="password" rules={[{ required: true, message: "Enter your password!" }]}>
-              <Input.Password />
+              <Input.Password placeholder="Enter your password" />
             </Form.Item>
             <Form.Item>
-              <Button type="primary" htmlType="submit" block>
+              <Button type="primary" htmlType="submit" block style={{ background: "#1890ff", borderColor: "#1890ff" }}>
                 Login
               </Button>
             </Form.Item>

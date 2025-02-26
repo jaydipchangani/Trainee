@@ -8,7 +8,7 @@
     },
     {
       "id": "90f6",
-      "name": "RJ",
+      "name": "RJ1",
       "email": "nanu@mailinator.com",
       "password": "123456"
     },
@@ -36,13 +36,13 @@
       "postedBy": "jaydipnunu@gmail.com"
     },
     {
-      "id": "d477",
-      "title": "aaasasasasa",
-      "description": "Velit non dolores si",
-      "salary": "12111111",
-      "location": "Deleniti suscipit nu",
+      "title": "Amet voluptas ullam",
+      "description": "asas",
+      "salary": "12313",
+      "location": "Et aute sint est in",
       "type": "Remote",
-      "postedBy": "nanu@mailinator.com"
+      "postedBy": "nanu@mailinator.com",
+      "id": "8783"
     }
   ]
 }
