@@ -13,7 +13,6 @@
     "@reduxjs/toolkit": "^2.6.0",
     "antd": "^5.24.2",
     "axios": "^1.8.0",
-    "json-server": "^1.0.0-beta.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-redux": "^9.2.0",

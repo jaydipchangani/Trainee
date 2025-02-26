@@ -1,29 +1,51 @@
 {
   "users": [
     {
-      "id": "f6f1",
-      "username": "jaydip",
+      "id": "b242",
+      "name": "Jaydip",
+      "email": "jaydip@gmail.com",
+      "password": "123456"
+    },
+    {
+      "id": "90f6",
+      "name": "RJ",
+      "email": "nanu@mailinator.com",
+      "password": "123456"
+    },
+    {
+      "id": "a2ea",
+      "name": "KK",
+      "email": "asdasdsa@asdada.asds",
       "password": "123456"
     }
   ],
   "jobs": [
     {
-      "id": "b179",
-      "title": "jaydip",
-      "description": "asdaasd",
-      "salary": "445646",
-      "location": "asasasas",
-      "type": "full time",
-      "postedBy": "jaydip"
+      "id": "77d2",
+      "title": "Intern",
+      "description": "Software intern",
+      "salary": "10000000",
+      "location": "Google",
+      "type": "Full-time",
+      "postedBy": "Jaydip"
     },
     {
-      "id": "2159",
-      "title": "jaydip",
-      "description": "asdaasd",
-      "salary": "445646",
-      "location": "asasasas",
-      "type": "full time",
-      "postedBy": "jaydip"
+      "id": "5121",
+      "title": "Laboriosam deserunt",
+      "description": "Dicta nihil eiusmod ",
+      "salary": "Magna esse do nisi a",
+      "location": "Fugit eum ipsam num",
+      "type": "Remote",
+      "postedBy": "Jaydip"
+    },
+    {
+      "id": "0372",
+      "title": "Deleniti illum aper",
+      "description": "Quis esse tempora du",
+      "salary": "123456",
+      "location": "Unde quasi sequi quo",
+      "type": "Full-time",
+      "postedBy": "RJ"
     }
   ]
 }

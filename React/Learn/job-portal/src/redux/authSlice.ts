@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getUserFromLocalStorage, saveUserToLocalStorage, removeUserFromLocalStorage } from "../../utils/localStorage";
 
 interface User {
   id: number;
-  username: string;
+  name: string;
+  email: string;
+  password: string;
 }
 
 interface AuthState {
@@ -11,7 +12,7 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-  user: getUserFromLocalStorage()
+  user: JSON.parse(localStorage.getItem("user") as string) || null,
 };
 
 const authSlice = createSlice({
@@ -20,13 +21,13 @@ const authSlice = createSlice({
   reducers: {
     login: (state, action: PayloadAction<User>) => {
       state.user = action.payload;
-      saveUserToLocalStorage(action.payload);
+      localStorage.setItem("user", JSON.stringify(action.payload));
     },
     logout: (state) => {
       state.user = null;
-      removeUserFromLocalStorage();
-    }
-  }
+      localStorage.removeItem("user");
+    },
+  },
 });
 
 export const { login, logout } = authSlice.actions;

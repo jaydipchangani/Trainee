@@ -1,27 +1,38 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { login } from "../redux/slices/authSlice";
-import { loginUser } from "../api/authApi";
+import { Form, Input, Button, Card } from "antd";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const dispatch = useDispatch();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handleLogin = async () => {
-    const user = await loginUser(username, password);
-    if (user) {
-      dispatch(login(user));
+  const handleLogin = (values: any) => {
+    const storedUser = JSON.parse(localStorage.getItem("user") || "null");
+    if (storedUser && storedUser.email === values.email && storedUser.password === values.password) {
+      navigate("/dashboard");
     } else {
       alert("Invalid credentials");
     }
   };
 
   return (
-    <div>
-      <input placeholder="Username" onChange={(e) => setUsername(e.target.value)} />
-      <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
-      <button onClick={handleLogin}>Login</button>
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+      <Card title="Login" style={{ width: 350 }}>
+        <Form layout="vertical" onFinish={handleLogin}>
+          <Form.Item label="Email" name="email" rules={[{ required: true, message: "Enter your email!" }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item label="Password" name="password" rules={[{ required: true, message: "Enter your password!" }]}>
+            <Input.Password />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" block>
+              Login
+            </Button>
+          </Form.Item>
+        </Form>
+        <p style={{ textAlign: "center" }}>
+          Don't have an account? <Link to="/register">Register</Link>
+        </p>
+      </Card>
     </div>
   );
 };
