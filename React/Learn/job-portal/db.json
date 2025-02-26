@@ -2,9 +2,9 @@
   "users": [
     {
       "id": "b242",
-      "name": "Jaydip",
-      "email": "jaydip@gmail.com",
-      "password": "123456"
+      "name": "Jaydip nunu 2",
+      "email": "jaydipnunu@gmail.com",
+      "password": "12345678"
     },
     {
       "id": "90f6",
@@ -17,35 +17,32 @@
       "name": "KK",
       "email": "asdasdsa@asdada.asds",
       "password": "123456"
+    },
+    {
+      "id": "3ee3",
+      "name": "Harper Alexander",
+      "email": "xikazud@mailinator.com",
+      "password": "123"
     }
   ],
   "jobs": [
     {
-      "id": "77d2",
-      "title": "Intern",
-      "description": "Software intern",
-      "salary": "10000000",
-      "location": "Google",
+      "id": "a9d6",
+      "title": "Sint rem autem saepe",
+      "description": "Officiis omnis labor",
+      "salary": "Molestiae blanditiis",
+      "location": "Omnis temporibus sol",
       "type": "Full-time",
-      "postedBy": "Jaydip"
+      "postedBy": "Jaydip nunu 2"
     },
     {
-      "id": "5121",
-      "title": "Laboriosam deserunt",
-      "description": "Dicta nihil eiusmod ",
-      "salary": "Magna esse do nisi a",
-      "location": "Fugit eum ipsam num",
-      "type": "Remote",
-      "postedBy": "Jaydip"
-    },
-    {
-      "id": "0372",
-      "title": "Deleniti illum aper",
-      "description": "Quis esse tempora du",
-      "salary": "123456",
-      "location": "Unde quasi sequi quo",
-      "type": "Full-time",
-      "postedBy": "RJ"
+      "id": "f430",
+      "title": "Deserunt nesciunt a",
+      "description": "Ipsum tempore et q",
+      "salary": "Irure earum sed ut s",
+      "location": "Quis voluptate omnis",
+      "type": "Part-time",
+      "postedBy": "Jaydip nunu 2"
     }
   ]
 }

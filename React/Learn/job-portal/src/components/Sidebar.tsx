@@ -1,30 +1,64 @@
 import { Layout, Menu } from "antd";
-import { useNavigate } from "react-router-dom";
-import { UserOutlined, AppstoreOutlined, PlusOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import {
+  DashboardOutlined,
+  PlusOutlined,
+  UserOutlined,
+  OrderedListOutlined,
+  LogoutOutlined,
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
+} from "@ant-design/icons";
 
 const { Sider } = Layout;
 
 const Sidebar = () => {
+  const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
-  const navigate = useNavigate();
 
-  const toggleCollapse = () => {
-    setCollapsed(!collapsed);
-  };
-
-  const menuItems = [
-    { key: "dashboard", icon: <AppstoreOutlined />, label: "Dashboard", onClick: () => navigate("/dashboard") },
-    { key: "postJob", icon: <PlusOutlined />, label: "Post Job", onClick: () => navigate("/post-job") },
-    { key: "profile", icon: <UserOutlined />, label: "Profile", onClick: () => navigate("/profile") }
-  ];
+  const toggleSidebar = () => setCollapsed(!collapsed);
 
   return (
-    <Sider collapsible collapsed={collapsed} onCollapse={toggleCollapse} width={200} style={{ background: "#fff" }}>
-        <div onClick={toggleCollapse} style={{ padding: "10px", cursor: "pointer" }}>
-        {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-      <Menu mode="vertical" defaultSelectedKeys={["dashboard"]} items={menuItems} />
-      
+    <Sider collapsible collapsed={collapsed} trigger={null} style={{ minHeight: "100vh" }}>
+      <div className="logo" style={{ padding: "10px", textAlign: "center", color: "#fff" }}>
+        <h3 style={{ display: collapsed ? "none" : "block" }}>Job Portal</h3>
+      </div>
+
+      <Menu theme="dark" mode="inline" selectedKeys={[location.pathname]}>
+        <Menu.Item key="/dashboard" icon={<DashboardOutlined />}>
+          <Link to="/dashboard">Dashboard</Link>
+        </Menu.Item>
+
+        <Menu.Item key="/post-job" icon={<PlusOutlined />}>
+          <Link to="/post-job">Post Job</Link>
+        </Menu.Item>
+
+        <Menu.Item key="/my-jobs" icon={<OrderedListOutlined />}> 
+          <Link to="/my-jobs">My Jobs</Link>  {/* 👈 New My Jobs Link */}
+        </Menu.Item>
+
+        <Menu.Item key="/profile" icon={<UserOutlined />}>
+          <Link to="/profile">Profile</Link>
+        </Menu.Item>
+
+        <Menu.Item
+          key="logout"
+          icon={<LogoutOutlined />}
+          onClick={() => {
+            localStorage.removeItem("user");
+            window.location.href = "/";
+          }}
+        >
+          Logout
+        </Menu.Item>
+      </Menu>
+
+      {/* Sidebar Toggle Button */}
+      <div style={{ textAlign: "center", padding: "10px" }}>
+        <span onClick={toggleSidebar} style={{ cursor: "pointer", color: "white" }}>
+          {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+        </span>
       </div>
     </Sider>
   );
