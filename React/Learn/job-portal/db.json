@@ -1,90 +1,54 @@
 {
   "users": [
     {
-      "id": "fdd0",
-      "name": "Lillian Sampson",
-      "email": "jahamy@mailinator.com",
-      "password": "$2b$10$DJDaDmSSJgTvRsBidtmtfeGDOz03cXAZarLKjmpzPV3jtX5/1BmMW"
-    },
-    {
-      "id": "50b2",
-      "name": "JD man",
-      "email": "nanua@mailinator.com",
-      "password": "U2FsdGVkX18Y2lTPUbKywcif7znrMRaTh2Dg2uzjgpY="
-    },
-    {
-      "id": "a5a2",
-      "name": "jd1",
-      "email": "d@gmail.com",
-      "password": "$2b$10$EAryw0gct3JrLFSMq7zG/e/MaFmoL13hFOZh8BbcD/juyjLQq4FHO"
-    },
-    {
-      "id": "abc2",
-      "name": "rajdeep12",
+      "id": "e738",
+      "name": "Jaydip",
       "email": "jaydip@gmail.com",
-      "password": "$2b$10$CkIK2koyNp8OUKzdzmrcyO.FP9LFMwEqGZNm9emGc3CR1FMZ1SmSy"
+      "password": "$2b$10$BDY3PdTTqfoLBspExd8hOuSVufQLBp9qmhnfjBh5cofZNrZwx8sRK"
     },
     {
-      "id": "6b3e",
-      "name": "dsfdsf",
-      "email": "asdasdsa@asdada.asds",
-      "password": "$2b$10$3gD2uUQKsiTl6zvg5SV63eVQu24ALQ0Mz2.bkpM3azUZPNJg8k31u"
+      "id": "0ef3",
+      "name": "HR",
+      "email": "pjaydip956@gmail.com",
+      "password": "$2b$10$L3TfNq3eQj6VICDFcSuoBOfMWTxm/cRQexQgTnVTpQxRxpyfUGJfO"
     }
   ],
   "jobs": [
     {
-      "id": "8caf",
-      "title": "Duis autem pariatur",
-      "description": "Consequatur voluptat",
-      "salary": "12354",
-      "location": "Et dolor id consequa",
-      "type": "Part-time",
-      "postedBy": "jahamy@mailinator.com"
-    },
-    {
-      "id": "2fec",
-      "title": "Quis fugit voluptat",
-      "description": "Ab doloremque sunt v",
+      "id": "4305",
+      "title": "Software Intern",
+      "description": "React, .net, JAVA, Chatgpt",
       "salary": "20000",
-      "location": "Magna eos amet mol",
+      "location": "Ahemdabad",
       "type": "Remote",
-      "postedBy": "jahamy@mailinator.com"
+      "postedBy": "jaydip@gmail.com"
     },
     {
-      "id": "b7be",
-      "title": "Dolore laborum Est ",
-      "description": "Iusto iure rerum dol",
-      "salary": "40000",
-      "location": "Est voluptas reprehe",
-      "type": "Part-time",
-      "postedBy": "nanu@mailinator.com"
-    },
-    {
-      "title": "Laboriosam aut ipsa",
-      "description": "Impedit odit quo dojhghjgjg",
-      "salary": "10000",
-      "location": "Ex quam incididunt s",
+      "title": "Et amet rem natus e",
+      "description": "Sit sit at voluptataa",
+      "salary": "50000",
+      "location": "Surat",
       "type": "Part-time",
       "postedBy": "jaydip@gmail.com",
-      "id": "b730"
+      "id": "7968"
     },
     {
-      "title": "vhublji",
-      "description": "Doloribus libero ani",
-      "salary": "50000",
-      "location": "Et odit ullam ad nul",
+      "id": "97f1",
+      "title": "Ut rem atque quos et",
+      "description": "Sint ullamco sit coasasa",
+      "salary": "30000",
+      "location": "Surat",
       "type": "Part-time",
-      "postedBy": "asdasdsa@asdada.asds",
-      "id": "7758"
+      "postedBy": "pjaydip956@gmail.com"
     },
     {
-      "title": "Consequatur Aliquid",
-      "description": "Itaque laboris nihil",
-      "salary": "120320",
-      "location": "Tempore facere volu",
-      "type": "Remote",
-      "postedBy": "asdasdsa@asdada.asds",
-      "id": "8cba"
+      "id": "4c32",
+      "title": "Cum voluptatem Quas",
+      "description": "ass ewews sdasdas asdasdas addas",
+      "salary": "6000",
+      "location": "Doloremque perferend",
+      "type": "Full-time",
+      "postedBy": "pjaydip956@gmail.com"
     }
   ]
 }

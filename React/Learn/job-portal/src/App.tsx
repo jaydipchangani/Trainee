@@ -13,7 +13,7 @@ const router = createBrowserRouter([
   { path: "/dashboard", element: <ProtectedRoute><Dashboard /></ProtectedRoute> },
   { path: "/post-job", element: <ProtectedRoute><PostJob /></ProtectedRoute> },
   { path: "/profile", element: <ProtectedRoute><Profile /></ProtectedRoute> },
-  { path: "/my-jobs", element: <ProtectedRoute><MyJobs /></ProtectedRoute> }, // 👈 New route for MyJobs
+  { path: "/my-jobs", element: <ProtectedRoute><MyJobs /></ProtectedRoute> },
 ]);
 
 function App() {

@@ -2,9 +2,9 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./authSlice";
 import jobReducer from "./jobSlice";
 
-const store = configureStore({
+const store = configureStore({  //store make
   reducer: {
-    auth: authReducer,
+    auth: authReducer,   ///reducer 
     jobs: jobReducer,
   },
 });
