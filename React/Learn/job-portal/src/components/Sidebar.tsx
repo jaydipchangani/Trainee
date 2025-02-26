@@ -21,9 +21,7 @@ const Sidebar = () => {
 
   return (
     <Sider collapsible collapsed={collapsed} trigger={null} style={{ minHeight: "100vh" }}>
-      <div className="logo" style={{ padding: "10px", textAlign: "center", color: "#fff" }}>
-        <h3 style={{ display: collapsed ? "none" : "block" }}>Job Portal</h3>
-      </div>
+      
 
       <Menu theme="dark" mode="inline" selectedKeys={[location.pathname]}>
         <Menu.Item key="/dashboard" icon={<DashboardOutlined />}>

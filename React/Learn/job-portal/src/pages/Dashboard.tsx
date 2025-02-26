@@ -1,33 +1,44 @@
-import { Layout, Card, List } from "antd";
-import { useSelector } from "react-redux";
+import { Layout, Table } from "antd";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
-import AppHeader from "../components/Header";
 
 const { Content } = Layout;
 
 const Dashboard = () => {
-  const jobs = useSelector((state: any) => state.jobs.jobs || []); // ✅ Ensure it's always an array
+  const [jobs, setJobs] = useState([]);
+
+  useEffect(() => {
+    fetchJobs();
+  }, []);
+
+  const fetchJobs = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/jobs");
+      setJobs(response.data); // Fetch all jobs
+    } catch (error) {
+      console.error("Error fetching jobs:", error);
+    }
+  };
+
+  const columns = [
+    { title: "Title", dataIndex: "title", key: "title" },
+    { title: "Description", dataIndex: "description", key: "description" },
+    { title: "Salary", dataIndex: "salary", key: "salary" },
+    { title: "Location", dataIndex: "location", key: "location" },
+    { title: "Type", dataIndex: "type", key: "type" },
+    { title: "Posted By", dataIndex: "postedBy", key: "postedBy" }, // 👈 Show who posted the job
+  ];
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sidebar />
+      <Header />
       <Layout>
-        <AppHeader />
+        <Sidebar />
         <Content style={{ padding: "20px" }}>
-          <h2>Job Listings</h2>
-          <List
-            grid={{ gutter: 16, column: 2 }}
-            dataSource={jobs}
-            renderItem={(job) => (
-              <List.Item>
-                <Card title={job.title}>
-                  <p><strong>Salary:</strong> {job.salary}</p>
-                  <p><strong>Location:</strong> {job.location}</p>
-                  <p><strong>Type:</strong> {job.type}</p>
-                </Card>
-              </List.Item>
-            )}
-          />
+          <h2>All Job Listings</h2>
+          <Table dataSource={jobs} columns={columns} rowKey="id" />
         </Content>
       </Layout>
     </Layout>

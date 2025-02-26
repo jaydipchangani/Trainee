@@ -13,7 +13,10 @@ const AppHeader = () => {
   };
 
   return (
-    <Header style={{ background: "#001529", padding: "0 20px", display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
+    <Header style={{ background: "#001529", padding: "0 20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div style={{ flex: 1, textAlign: "center", color: "#fff" }}>
+        <h1 style={{ margin: 0 }}>Job Portal</h1>
+      </div>
       <Button type="primary" icon={<LogoutOutlined />} onClick={handleLogout}>
         Logout
       </Button>
