@@ -16,22 +16,19 @@ const Profile = () => {
 
 
   useEffect(() => {
-    // Get logged-in user from localStorage
+
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       
-      // Ensure user ID is present (important for db.json updates)
       if (!parsedUser.id) {
         message.error("User ID is missing. Please log in again.");
         localStorage.removeItem("user");
         navigate("/login");
         return;
       }
-
       setUser(parsedUser);
 
-      // Fill form fields (password field remains empty for security)
       form.setFieldsValue({
         name: parsedUser.name,
         email: parsedUser.email,
@@ -49,20 +46,16 @@ const Profile = () => {
     try {
       let updatedUser = { ...user, name: values.name, email: values.email };
 
-      // If a new password is provided, hash it before saving
       if (values.password) {
         const hashedPassword = await bcrypt.hash(values.password, 10);
         updatedUser.password = hashedPassword;
       }
 
-      // Update user in db.json (JSON Server)
       await axios.patch(`http://localhost:5000/users/${user.id}`, updatedUser);
 
-      // Update localStorage with new user data
       localStorage.setItem("user", JSON.stringify(updatedUser));
       setUser(updatedUser);
 
-      // Clear form fields after successful update
       form.resetFields();
 
       message.success("Profile updated successfully!");
@@ -73,7 +66,6 @@ const Profile = () => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      {/* Header & Sidebar */}
       <Header />
       <Layout>
         <Sidebar />

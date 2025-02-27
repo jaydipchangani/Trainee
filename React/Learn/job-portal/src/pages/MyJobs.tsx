@@ -13,7 +13,7 @@ const MyJobs = () => {
   const [selectedJob, setSelectedJob] = useState<any>(null);
   const [form] = Form.useForm();
 
-  const user = JSON.parse(localStorage.getItem("user") || "{}"); // Get logged-in user
+  const user = JSON.parse(localStorage.getItem("user") || "{}"); 
 
   useEffect(() => {
     fetchJobs();
@@ -29,7 +29,7 @@ const MyJobs = () => {
     }
   };
 
-  // DELETE JOB
+
   const handleDeleteJob = async (jobId: number) => {
     try {
       await axios.delete(`http://localhost:5000/jobs/${jobId}`);
@@ -40,24 +40,22 @@ const MyJobs = () => {
     }
   };
 
-  // SHOW EDIT MODAL
   const showEditModal = (job: any) => {
     setSelectedJob(job);
     form.setFieldsValue(job);
     setIsModalVisible(true);
   };
 
-  // UPDATE JOB
   const handleUpdateJob = async (values: any) => {
     try {
       await axios.put(`http://localhost:5000/jobs/${selectedJob.id}`, {
         ...values,
-        postedBy: selectedJob.postedBy, // Keep original postedBy
+        postedBy: selectedJob.postedBy, 
       });
 
       message.success("Job updated successfully!");
       setIsModalVisible(false);
-      fetchJobs(); // Refresh jobs
+      fetchJobs(); 
     } catch (error) {
       message.error("Failed to update job.");
     }
@@ -94,7 +92,6 @@ const MyJobs = () => {
           <h2>My Job Listings</h2>
           <Table dataSource={jobs} columns={columns} rowKey="id" />
 
-          {/* Edit Job Modal */}
           <Modal title="Edit Job" visible={isModalVisible} onCancel={() => setIsModalVisible(false)} footer={null}>
             <Form form={form} layout="vertical" onFinish={handleUpdateJob}>
               <Form.Item label="Title" name="title" rules={[{ required: true, message: "Enter job title" }]}>

@@ -8,8 +8,8 @@ const AppHeader = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem("user"); // ✅ Remove user session
-    navigate("/"); // ✅ Redirect to login page
+    localStorage.removeItem("user");
+    navigate("/"); 
   };
 
   return (

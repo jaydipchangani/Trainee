@@ -4,7 +4,7 @@ import jobReducer from "./jobSlice";
 
 const store = configureStore({  //store make
   reducer: {
-    auth: authReducer,   ///reducer 
+    auth: authReducer,   //reducer 
     jobs: jobReducer,
   },
 });

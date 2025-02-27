@@ -10,15 +10,14 @@ const { Option } = Select;
 const PostJob = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  
-  // Get logged-in user
+
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   const handlePostJob = async (values: any) => {
     try {
       await axios.post("http://localhost:5000/jobs", {
         ...values,
-        postedBy: user.email, // Store user ID (email)
+        postedBy: user.email, 
       });
 
       message.success("Job posted successfully!");
@@ -38,7 +37,6 @@ const PostJob = () => {
           <h2>Post a Job</h2>
           <Form form={form} layout="vertical" onFinish={handlePostJob}>
             
-            {/* Job Title */}
             <Form.Item 
               label="Title" 
               name="title" 
@@ -50,7 +48,6 @@ const PostJob = () => {
               <Input />
             </Form.Item>
 
-            {/* Job Description */}
             <Form.Item 
               label="Description" 
               name="description" 
@@ -62,7 +59,6 @@ const PostJob = () => {
               <Input.TextArea rows={4} />
             </Form.Item>
 
-            {/* Salary */}
             <Form.Item 
               label="Salary" 
               name="salary" 
@@ -74,7 +70,6 @@ const PostJob = () => {
               <Input />
             </Form.Item>
 
-            {/* Location */}
             <Form.Item 
               label="Location" 
               name="location" 
@@ -86,7 +81,6 @@ const PostJob = () => {
               <Input />
             </Form.Item>
 
-            {/* Job Type */}
             <Form.Item 
               label="Job Type" 
               name="type" 
@@ -99,7 +93,6 @@ const PostJob = () => {
               </Select>
             </Form.Item>
 
-            {/* Submit Button */}
             <Form.Item>
               <Button type="primary" htmlType="submit" block>
                 Post Job

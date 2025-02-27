@@ -22,13 +22,12 @@ const Dashboard = () => {
     try {
       const response = await axios.get("http://localhost:5000/jobs");
       setJobs(response.data);
-      setFilteredJobs(response.data); // Initial display
+      setFilteredJobs(response.data); // initial badho data show krva
     } catch (error) {
       console.error("Error fetching jobs:", error);
     }
   };
 
-  // Filtering Logic
   useEffect(() => {
     let filtered = jobs;
 
@@ -68,7 +67,6 @@ const Dashboard = () => {
         <Content style={{ padding: "20px" }}>
           <h2>All Job Listings</h2>
 
-          {/* Filters Section */}
           <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
             <Input
               placeholder="Search by Title"
@@ -97,7 +95,6 @@ const Dashboard = () => {
             />
           </div>
 
-          {/* Jobs Table */}
           <Table dataSource={filteredJobs} columns={columns} rowKey="id" />
         </Content>
       </Layout>

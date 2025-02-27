@@ -11,6 +11,12 @@
       "name": "HR",
       "email": "pjaydip956@gmail.com",
       "password": "$2b$10$L3TfNq3eQj6VICDFcSuoBOfMWTxm/cRQexQgTnVTpQxRxpyfUGJfO"
+    },
+    {
+      "id": "4efc",
+      "name": "Test",
+      "email": "test@gmail.com",
+      "password": "$2b$10$xQWBRblGQTctjMenrglOi.trwMN2WSpEJ64YkSHnBs.sAFz0vDywy"
     }
   ],
   "jobs": [
@@ -24,7 +30,7 @@
       "postedBy": "jaydip@gmail.com"
     },
     {
-      "title": "Et amet rem natus e",
+      "title": "Team Lead",
       "description": "Sit sit at voluptataa",
       "salary": "50000",
       "location": "Surat",
@@ -49,6 +55,24 @@
       "location": "Doloremque perferend",
       "type": "Full-time",
       "postedBy": "pjaydip956@gmail.com"
+    },
+    {
+      "title": "React Developer",
+      "description": "Reprehenderit amet asdasa",
+      "salary": "25000",
+      "location": "Ahemdabad",
+      "type": "Full-time",
+      "postedBy": "jaydip@gmail.com",
+      "id": "a5b7"
+    },
+    {
+      "id": "d04e",
+      "title": "Tester",
+      "description": "Sed sunt odit eligen",
+      "salary": "1000",
+      "location": "Ahemdabad",
+      "type": "Full-time",
+      "postedBy": "test@gmail.com"
     }
   ]
 }
