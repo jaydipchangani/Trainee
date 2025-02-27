@@ -14,10 +14,10 @@ export const addJob = createAsyncThunk("jobs/addJob", async (jobData) => {
 });
 
 const jobSlice = createSlice({
-  name: "jobs",
+  name: "jobs", 
   initialState: { jobs: [], status: "idle" },
   reducers: {},
-  extraReducers: (builder) => {
+  extraReducers: (builder) => {  
     builder
       .addCase(fetchJobs.fulfilled, (state, action) => {
         state.jobs = action.payload;

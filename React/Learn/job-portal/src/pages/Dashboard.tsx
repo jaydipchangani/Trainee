@@ -22,7 +22,7 @@ const Dashboard = () => {
     try {
       const response = await axios.get("http://localhost:5000/jobs");
       setJobs(response.data);
-      setFilteredJobs(response.data); // initial badho data show krva
+      setFilteredJobs(response.data); // initial whole data show krva
     } catch (error) {
       console.error("Error fetching jobs:", error);
     }

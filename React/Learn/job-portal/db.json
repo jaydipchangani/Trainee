@@ -73,6 +73,15 @@
       "location": "Ahemdabad",
       "type": "Full-time",
       "postedBy": "test@gmail.com"
+    },
+    {
+      "id": "c561",
+      "title": "Senior BDE ",
+      "description": "Est at incidunt eob u ",
+      "salary": "2000",
+      "location": "Ex cillum delectus ",
+      "type": "Remote",
+      "postedBy": "pjaydip956@gmail.com"
     }
   ]
 }
