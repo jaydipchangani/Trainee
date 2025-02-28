@@ -1,0 +1,21 @@
+{
+    "users": [
+      {
+        "id": 1,
+        "name": "Admin",
+        "email": "admin@example.com",
+        "password": "$2b$10$abcdefg123456", // Encrypted using bcrypt
+        "role": "Admin",
+        "permissions": ["manage_users", "manage_employees", "manage_projects", "manage_permissions"]
+      }
+    ],
+    "permissions": {
+      "Admin": ["manage_users", "manage_employees", "manage_projects", "manage_permissions"],
+      "HR": ["manage_employees"],
+      "Supervisor": ["view_employees", "edit_employees"],
+      "Manager": ["manage_projects"]
+    },
+    "employees": [],
+    "projects": []
+  }
+  

@@ -1,7 +1,31 @@
 export const rolePermissions = {
-    Admin: ["manage_users", "manage_permissions", "manage_employees", "manage_projects"],
-    HR: ["manage_employees"],
-    Supervisor: ["view_employees", "edit_employees"],
-    Manager: ["manage_projects"],
+    Admin: {
+      manageUsers: true,
+      managePermissions: true,
+      manageEmployees: true,
+      manageProjects: true,
+    },
+    HR: {
+      manageUsers: false,
+      managePermissions: false,
+      manageEmployees: true,
+      manageProjects: false,
+    },
+    Supervisor: {
+      manageUsers: false,
+      managePermissions: false,
+      manageEmployees: true, // Only view/edit
+      manageProjects: false,
+    },
+    Manager: {
+      manageUsers: false,
+      managePermissions: false,
+      manageEmployees: false,
+      manageProjects: true,
+    },
+  };
+  
+  export const hasPermission = (role: string, action: keyof typeof rolePermissions["Admin"]) => {
+    return rolePermissions[role]?.[action] || false;
   };
   
