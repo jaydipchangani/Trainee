@@ -1,41 +1,38 @@
 import React, { useState } from "react";
+import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
-import { Form, Input, Button, Card, message } from "antd";
-import { login } from "../api/auth";
+import { Form, Input, Button } from "antd";
 
 const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = async (values: { email: string; password: string }) => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const userData = await login(values.email, values.password);
-      localStorage.setItem("user", JSON.stringify(userData));
-      message.success("Login successful!");
-      navigate("/");
+      await login(values.email, values.password);
+      navigate("/dashboard"); // Redirect after successful login
     } catch (error) {
-      message.error("Invalid credentials, try again.");
+      console.error("Login failed:", error);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{ display: "flex", justifyContent: "center", height: "100vh", alignItems: "center" }}>
-      <Card title="Login" style={{ width: 350 }}>
-        <Form layout="vertical" onFinish={handleLogin}>
-          <Form.Item label="Email" name="email" rules={[{ required: true, message: "Enter your email!" }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item label="Password" name="password" rules={[{ required: true, message: "Enter your password!" }]}>
-            <Input.Password />
-          </Form.Item>
-          <Button type="primary" htmlType="submit" loading={loading} block>
-            Login
-          </Button>
-        </Form>
-      </Card>
+    <div className="login-container">
+      <Form onFinish={handleLogin}>
+        <Form.Item name="email" rules={[{ required: true, message: "Enter email" }]}>
+          <Input placeholder="Email" />
+        </Form.Item>
+        <Form.Item name="password" rules={[{ required: true, message: "Enter password" }]}>
+          <Input.Password placeholder="Password" />
+        </Form.Item>
+        <Button type="primary" htmlType="submit" loading={loading} block>
+          Login
+        </Button>
+      </Form>
     </div>
   );
 };

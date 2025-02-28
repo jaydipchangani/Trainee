@@ -1,21 +1,92 @@
 {
-    "users": [
-      {
-        "id": 1,
-        "name": "Admin",
-        "email": "admin@example.com",
-        "password": "$2b$10$abcdefg123456", 
-        "role": "Admin",
-        "permissions": ["manage_users", "manage_employees", "manage_projects", "manage_permissions"]
-      }
-    ],
-    "permissions": {
-      "Admin": ["manage_users", "manage_employees", "manage_projects", "manage_permissions"],
-      "HR": ["manage_employees"],
-      "Supervisor": ["view_employees", "edit_employees"],
-      "Manager": ["manage_projects"]
+  "users": [
+    {
+      "id": "1",
+      "name": "Admin",
+      "email": "admin@example.com",
+      "password": "$2b$10$W8L4qA3A.BlbrdmL0CcQ9uECiYg6ZjsHpcyLk2XKZymt9awy6M41.",
+      "role": "Admin",
+      "permissions": [
+        "manage_users",
+        "manage_employees",
+        "manage_projects",
+        "manage_permissions"
+      ]
     },
-    "employees": [],
-    "projects": []
-  }
-  
+    {
+      "id": "e264",
+      "email": "admin@example.com",
+      "password": "Admin@123"
+    },
+    {
+      "id": "d0f6",
+      "email": "admin@example.com",
+      "password": "Admin@123"
+    },
+    {
+      "id": "c0ed",
+      "email": "admin@example.com",
+      "password": "Admin@123"
+    },
+    {
+      "id": "5f30",
+      "email": "admin@example.com",
+      "password": "Admin@123"
+    },
+    {
+      "id": "7cc6",
+      "email": "admin@example.com",
+      "password": "Admin@123"
+    },
+    {
+      "id": "36b2",
+      "email": "admin@example.com",
+      "password": "Admin@123"
+    },
+    {
+      "id": "d68d",
+      "email": "admin@example.com",
+      "password": "Admin@123"
+    },
+    {
+      "id": "c739",
+      "email": "admin@example.com",
+      "password": "ADmin@123"
+    },
+    {
+      "id": "3d94",
+      "email": "admin@example.com",
+      "password": "Admin@123"
+    },
+    {
+      "id": "461e",
+      "email": "admin@example.com",
+      "password": "Asasasas"
+    },
+    {
+      "id": "d625",
+      "email": "admin@example.com",
+      "password": "Admin@123"
+    }
+  ],
+  "permissions": {
+    "Admin": [
+      "manage_users",
+      "manage_employees",
+      "manage_projects",
+      "manage_permissions"
+    ],
+    "HR": [
+      "manage_employees"
+    ],
+    "Supervisor": [
+      "view_employees",
+      "edit_employees"
+    ],
+    "Manager": [
+      "manage_projects"
+    ]
+  },
+  "employees": [],
+  "projects": []
+}
