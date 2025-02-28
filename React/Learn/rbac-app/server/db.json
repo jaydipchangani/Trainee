@@ -1,62 +1,20 @@
 {
   "users": [
     {
-      "id": "1",
+      "id": 1,
       "name": "Admin",
       "email": "admin@example.com",
-      "password": "$2b$10$W8L4qA3A.BlbrdmL0CcQ9uECiYg6ZjsHpcyLk2XKZymt9awy6M41.",
-      "role": "Admin",
+      "password": "$2b$10$y8MD/P9U5gcreLfGIXth8eMXJNfR0QqcWkMHbN.IlXT7Vp9iJP3yu",
+      "role": "admin"
+    }
+  ],
       "permissions": [
-        "manage_users",
-        "manage_employees",
-        "manage_projects",
-        "manage_permissions"
-      ]
-    },
     {
-      "id": "e264",
-      "email": "admin@example.com",
-      "password": "Admin@123"
-    },
-    {
-      "id": "d0f6",
-      "email": "admin@example.com",
-      "password": "Admin@123"
-    },
-    {
-      "id": "c0ed",
-      "email": "admin@example.com",
-      "password": "Admin@123"
-    },
-    {
-      "id": "5f30",
-      "email": "admin@example.com",
-      "password": "Admin@123"
-    },
-    {
-      "id": "7cc6",
-      "email": "admin@example.com",
-      "password": "Admin@123"
-    },
-    {
-      "id": "36b2",
-      "email": "admin@example.com",
-      "password": "Admin@123"
-    },
-    {
-      "id": "d68d",
-      "email": "admin@example.com",
-      "password": "Admin@123"
-    },
-    {
-      "id": "c739",
-      "email": "admin@example.com",
-      "password": "ADmin@123"
-    },
-    {
-      "id": "3d94",
-      "email": "admin@example.com",
-      "password": "Admin@123"
+      "role": "admin",
+      "canManageUsers": true,
+      "canManagePermissions": true,
+      "canManageEmployees": true,
+      "canManageProjects": true
     },
     {
       "id": "461e",
