@@ -31,7 +31,7 @@ server.post("/login", async (req, res) => {
   // ✅ Generate JWT Token
   const token = jwt.sign({ id: user.id, role: user.role }, SECRET_KEY, {
     expiresIn: "1h",
-  });
+});
 
   // ✅ Send user & token in response
   res.json({
