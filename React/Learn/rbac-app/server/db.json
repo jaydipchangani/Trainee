@@ -4,7 +4,7 @@
         "id": 1,
         "name": "Admin",
         "email": "admin@example.com",
-        "password": "$2b$10$abcdefg123456", // Encrypted using bcrypt
+        "password": "$2b$10$abcdefg123456", 
         "role": "Admin",
         "permissions": ["manage_users", "manage_employees", "manage_projects", "manage_permissions"]
       }
