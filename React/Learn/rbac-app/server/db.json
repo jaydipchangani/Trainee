@@ -6,23 +6,9 @@
       "email": "admin@example.com",
       "password": "$2b$10$y8MD/P9U5gcreLfGIXth8eMXJNfR0QqcWkMHbN.IlXT7Vp9iJP3yu",
       "role": "admin"
-    }
-  ],
-      "permissions": [
-    {
-      "role": "admin",
-      "canManageUsers": true,
-      "canManagePermissions": true,
-      "canManageEmployees": true,
-      "canManageProjects": true
     },
     {
-      "id": "461e",
-      "email": "admin@example.com",
-      "password": "Asasasas"
-    },
-    {
-      "id": "d625",
+      "id": "a69e",
       "email": "admin@example.com",
       "password": "Admin@123"
     }

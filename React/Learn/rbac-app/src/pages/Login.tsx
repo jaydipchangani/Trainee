@@ -1,38 +1,21 @@
-import React, { useState } from "react";
-import { useAuth } from "../context/authContext";
-import { useNavigate } from "react-router-dom";
-import { Form, Input, Button } from "antd";
+import React, { useState, useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+import { Button, Input } from "antd";
 
 const Login: React.FC = () => {
-  const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
-  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const authContext = useContext(AuthContext);
 
-  const handleLogin = async (values: { email: string; password: string }) => {
-    setLoading(true);
-    try {
-      await login(values.email, values.password);
-      navigate("/dashboard"); // Redirect after successful login
-    } catch (error) {
-      console.error("Login failed:", error);
-    } finally {
-      setLoading(false);
-    }
+  const handleLogin = () => {
+    authContext?.loginUser(email, password);
   };
 
   return (
-    <div className="login-container">
-      <Form onFinish={handleLogin}>
-        <Form.Item name="email" rules={[{ required: true, message: "Enter email" }]}>
-          <Input placeholder="Email" />
-        </Form.Item>
-        <Form.Item name="password" rules={[{ required: true, message: "Enter password" }]}>
-          <Input.Password placeholder="Password" />
-        </Form.Item>
-        <Button type="primary" htmlType="submit" loading={loading} block>
-          Login
-        </Button>
-      </Form>
+    <div style={{ maxWidth: 300, margin: "auto", padding: "50px" }}>
+      <Input placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
+      <Input.Password placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
+      <Button type="primary" onClick={handleLogin}>Login</Button>
     </div>
   );
 };
