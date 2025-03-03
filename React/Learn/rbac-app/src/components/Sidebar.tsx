@@ -42,7 +42,7 @@ const Sidebar: React.FC = () => {
       icon: <SettingOutlined />,
       path: "/permissions",
     },
-  ].filter(Boolean); // Remove `undefined` entries
+  ].filter((item) => item !== false); // Remove `false` entries
 
   return (
     <Sider
@@ -65,7 +65,7 @@ const Sidebar: React.FC = () => {
           borderBottom: "1px solid rgba(255,255,255,0.2)",
         }}
       >
-        RBAC System
+        OM
       </div>
       <Menu
         theme="dark"

@@ -8,8 +8,18 @@ const { Content } = Layout;
 const { Option } = Select;
 
 const Dashboard = () => {
-  const [jobs, setJobs] = useState([]);
-  const [filteredJobs, setFilteredJobs] = useState([]);
+  interface Job {
+    id: number;
+    title: string;
+    description: string;
+    salary: string;
+    location: string;
+    type: string;
+    postedBy: string;
+  }
+  
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [filteredJobs, setFilteredJobs] = useState<Job[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [jobType, setJobType] = useState("");
   const [location, setLocation] = useState("");
@@ -33,7 +43,7 @@ const Dashboard = () => {
 
     if (searchTerm) {
       filtered = filtered.filter((job) =>
-        job.title.toLowerCase().includes(searchTerm.toLowerCase())
+        job.title.toLowerCase().includes(searchTerm.toLowerCase()) 
       );
     }
 

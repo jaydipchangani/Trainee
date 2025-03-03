@@ -1,0 +1,239 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Admin User",
+      "email": "jaydip@gmail.com",
+      "password": "Admin@123",
+      "roleId": 1
+    },
+    {
+      "id": "ce46",
+      "name": "Rajdeep",
+      "email": "rj@gmail.com",
+      "password": "Admin@123",
+      "roleId": 4
+    },
+    {
+      "id": "02d4",
+      "name": "Harsh",
+      "email": "harsh@gmail.com",
+      "password": "Admin@123",
+      "roleId": 3
+    },
+    {
+      "id": "9099",
+      "name": "Chhoti",
+      "email": "chhoti@gmail.com",
+      "password": "Admin@123",
+      "roleId": 2
+    }
+  ],
+  "roles": [
+    {
+      "id": 1,
+      "name": "Admin",
+      "description": "Full control; can manage users and permissions"
+    },
+    {
+      "id": 2,
+      "name": "HR",
+      "description": "Can manage employees but not users"
+    },
+    {
+      "id": 3,
+      "name": "Supervisor",
+      "description": "Can only view and edit limited modules"
+    },
+    {
+      "id": 4,
+      "name": "Manager",
+      "description": "Can manage projects but not permissions"
+    }
+  ],
+  "permissions": [
+    {
+      "id": 1,
+      "roleId": 1,
+      "module": "users",
+      "actions": [
+        "view",
+        "add",
+        "edit",
+        "delete"
+      ]
+    },
+    {
+      "id": 2,
+      "roleId": 1,
+      "module": "roles",
+      "actions": [
+        "view",
+        "add",
+        "edit",
+        "delete"
+      ]
+    },
+    {
+      "id": 3,
+      "roleId": 1,
+      "module": "employees",
+      "actions": [
+        "view",
+        "add",
+        "edit",
+        "delete"
+      ]
+    },
+    {
+      "id": 4,
+      "roleId": 1,
+      "module": "projects",
+      "actions": [
+        "view",
+        "add",
+        "edit",
+        "delete"
+      ]
+    },
+    {
+      "id": 5,
+      "roleId": 2,
+      "module": "users",
+      "actions": [
+        "view"
+      ]
+    },
+    {
+      "id": 6,
+      "roleId": 2,
+      "module": "roles",
+      "actions": [
+        "view"
+      ]
+    },
+    {
+      "id": 7,
+      "roleId": 2,
+      "module": "employees",
+      "actions": [
+        "view",
+        "add",
+        "edit",
+        "delete"
+      ]
+    },
+    {
+      "id": 8,
+      "roleId": 2,
+      "module": "projects",
+      "actions": [
+        "view"
+      ]
+    },
+    {
+      "id": 9,
+      "roleId": 3,
+      "module": "users",
+      "actions": [
+        "view"
+      ]
+    },
+    {
+      "id": 10,
+      "roleId": 3,
+      "module": "roles",
+      "actions": [
+        "view"
+      ]
+    },
+    {
+      "id": 11,
+      "roleId": 3,
+      "module": "employees",
+      "actions": [
+        "view",
+        "edit"
+      ]
+    },
+    {
+      "id": 12,
+      "roleId": 3,
+      "module": "projects",
+      "actions": [
+        "view"
+      ]
+    },
+    {
+      "id": 13,
+      "roleId": 4,
+      "module": "users",
+      "actions": [
+        "view"
+      ]
+    },
+    {
+      "id": 14,
+      "roleId": 4,
+      "module": "roles",
+      "actions": [
+        "view"
+      ]
+    },
+    {
+      "id": 15,
+      "roleId": 4,
+      "module": "employees",
+      "actions": [
+        "view"
+      ]
+    },
+    {
+      "id": 16,
+      "roleId": 4,
+      "module": "projects",
+      "actions": [
+        "view",
+        "add",
+        "edit",
+        "delete"
+      ]
+    }
+  ],
+  "employees": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john@example.com",
+      "position": "Developer",
+      "department": "Engineering",
+      "joinDate": "2023-01-15"
+    },
+    {
+      "id": 2,
+      "name": "Jane Smith",
+      "email": "jane@example.com",
+      "position": "Designer",
+      "department": "Design",
+      "joinDate": "2023-02-20"
+    }
+  ],
+  "projects": [
+    {
+      "id": 1,
+      "name": "Website Redesign",
+      "description": "Redesign company website",
+      "startDate": "2023-03-01",
+      "endDate": "2023-06-30",
+      "status": "In Progress"
+    },
+    {
+      "id": 2,
+      "name": "Mobile App Development",
+      "description": "Develop a new mobile application",
+      "startDate": "2023-04-15",
+      "endDate": "2023-09-30",
+      "status": "Planning"
+    }
+  ]
+}
