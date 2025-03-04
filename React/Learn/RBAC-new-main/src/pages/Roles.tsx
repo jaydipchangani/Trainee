@@ -44,7 +44,12 @@ const Roles: React.FC = () => {
       } else if (!checked && newActions.includes(action)) {
         newActions = newActions.filter(a => a !== action);
       }
-      
+
+      // Automatically check "view" if "edit", "add", or "delete" is checked
+      if (['edit', 'add', 'delete'].includes(action) && checked && !newActions.includes('view')) {
+        newActions.push('view');
+      }
+
       await updatePermission(permission.id, newActions);
       message.success('Permission updated successfully');
     } catch (error) {
@@ -99,6 +104,7 @@ const Roles: React.FC = () => {
           key="add"
           render={(module: string) => {
             const permission = rolePermissions.find(p => p.module === module);
+            const viewChecked = permission?.actions.includes('view');
             return (
               <Checkbox
                 checked={permission?.actions.includes('add')}
@@ -107,7 +113,7 @@ const Roles: React.FC = () => {
                     handlePermissionChange(permission, 'add', e.target.checked);
                   }
                 }}
-                disabled={!currentUserIsAdmin || (isAdmin && currentUserIsAdmin)}
+                disabled={!viewChecked || !currentUserIsAdmin || (isAdmin && currentUserIsAdmin)}
               >
                 {module} - Add
               </Checkbox>
@@ -119,6 +125,7 @@ const Roles: React.FC = () => {
           key="edit"
           render={(module: string) => {
             const permission = rolePermissions.find(p => p.module === module);
+            const viewChecked = permission?.actions.includes('view');
             return (
               <Checkbox
                 checked={permission?.actions.includes('edit')}
@@ -127,7 +134,7 @@ const Roles: React.FC = () => {
                     handlePermissionChange(permission, 'edit', e.target.checked);
                   }
                 }}
-                disabled={!currentUserIsAdmin || (isAdmin && currentUserIsAdmin)}
+                disabled={!viewChecked || !currentUserIsAdmin || (isAdmin && currentUserIsAdmin)}
               >
                 {module} - Edit
               </Checkbox>
@@ -139,6 +146,7 @@ const Roles: React.FC = () => {
           key="delete"
           render={(module: string) => {
             const permission = rolePermissions.find(p => p.module === module);
+            const viewChecked = permission?.actions.includes('view');
             return (
               <Checkbox
                 checked={permission?.actions.includes('delete')}
@@ -147,7 +155,7 @@ const Roles: React.FC = () => {
                     handlePermissionChange(permission, 'delete', e.target.checked);
                   }
                 }}
-                disabled={!currentUserIsAdmin || (isAdmin && currentUserIsAdmin)}
+                disabled={!viewChecked || !currentUserIsAdmin || (isAdmin && currentUserIsAdmin)}
               >
                 {module} - Delete
               </Checkbox>

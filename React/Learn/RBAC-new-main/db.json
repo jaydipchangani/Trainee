@@ -100,9 +100,7 @@
       "module": "employees",
       "actions": [
         "view",
-        "add",
-        "edit",
-        "delete"
+        "edit"
       ]
     },
     {
@@ -110,7 +108,9 @@
       "roleId": 2,
       "module": "projects",
       "actions": [
-        "view"
+        "add",
+        "delete",
+        "edit"
       ]
     },
     {
@@ -135,10 +135,10 @@
       "roleId": "4",
       "module": "projects",
       "actions": [
-        "view",
         "add",
         "edit",
-        "delete"
+        "delete",
+        "view"
       ]
     },
     {
@@ -183,7 +183,7 @@
       "description": "Redesign the company website",
       "startDate": "2023-01-01",
       "endDate": "2023-03-31",
-      "status": "In Progress"
+      "status": "On Hold"
     },
     {
       "id": "2",
@@ -197,9 +197,25 @@
       "id": "5aaf",
       "name": "sdfsdfderer",
       "description": "sdfsfd",
-      "startDate": "2025-03-27",
-      "endDate": "2025-04-16",
+      "startDate": "2024-03-27",
+      "endDate": "2025-03-01",
       "status": "Completed"
+    },
+    {
+      "id": "592f",
+      "name": "Lysandra Simpson",
+      "description": "Dolore labore libero",
+      "startDate": "2025-03-01",
+      "endDate": "2025-04-01",
+      "status": "In Progress"
+    },
+    {
+      "id": "0935",
+      "name": "Kyra Walter",
+      "description": "Aut est sequi aut la",
+      "startDate": "2023-12-07",
+      "endDate": "2024-03-14",
+      "status": "On Hold"
     }
   ]
 }
