@@ -51,7 +51,7 @@ body {
   margin-bottom: 32px;
 }
 
-// Animations
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -65,7 +65,7 @@ body {
   animation: fadeIn 0.5s ease-in-out;
 }
 
-// Responsive adjustments
+
 @media (max-width: 768px) {
   .content-container {
     padding: 16px;
@@ -75,3 +75,4 @@ body {
     padding: 16px;
   }
 }
+
