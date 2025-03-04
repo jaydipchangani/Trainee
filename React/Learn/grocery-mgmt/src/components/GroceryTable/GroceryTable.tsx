@@ -83,8 +83,9 @@ const GroceryTable: React.FC<GroceryTableProps> = ({ items, onEdit, onDelete }) 
     <Table 
       dataSource={items} 
       columns={columns} 
-      rowKey="id"
+      rowKey="id" 
       pagination={{ pageSize: 10 }}
+      scroll={{ y: 400 }}
     />
   );
 };

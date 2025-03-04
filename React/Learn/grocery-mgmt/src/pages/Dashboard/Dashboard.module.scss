@@ -24,7 +24,7 @@
 
 .tableContainer {
   flex: 1;
-  overflow-y: auto;
+
   background-color: var(--card-background);
   border-radius: 8px;
   box-shadow: var(--box-shadow);
@@ -38,6 +38,9 @@
   :global(.ant-table-thead > tr > th) {
     background-color: var(--background-color);
     color: var(--text-color);
+    position: sticky;
+    top: 0;
+    z-index: 1;
   }
   
   :global(.ant-table-tbody > tr > td) {
