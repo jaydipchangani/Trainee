@@ -1,0 +1,194 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Admin User",
+      "email": "admin@example.com",
+      "password": "$2a$06$mCvtx85Iq38xGfJ1O0i3UegkTMpfISJiiiPKWbIMI91RICsBsDEHC",
+      "role": "Admin"
+    },
+    {
+      "id": "2",
+      "name": "HR User",
+      "email": "hr@example.com",
+      "password": "$2a$06$mCvtx85Iq38xGfJ1O0i3UegkTMpfISJiiiPKWbIMI91RICsBsDEHC",
+      "role": "HR"
+    },
+    {
+      "id": "3",
+      "name": "Manager User",
+      "email": "manager@example.com",
+      "password": "$2a$06$mCvtx85Iq38xGfJ1O0i3UegkTMpfISJiiiPKWbIMI91RICsBsDEHC",
+      "role": "Manager"
+    },
+    {
+      "id": "4",
+      "name": "Supervisor User",
+      "email": "supervisor@example.com",
+      "password": "$2a$06$mCvtx85Iq38xGfJ1O0i3UegkTMpfISJiiiPKWbIMI91RICsBsDEHC",
+      "role": "Supervisor"
+    }
+  ],
+  "roles": [
+    {
+      "id": "1",
+      "name": "Admin",
+      "description": "Full control; can manage users and permissions"
+    },
+    {
+      "id": "2",
+      "name": "HR",
+      "description": "Can manage employees but not users"
+    },
+    {
+      "id": "3",
+      "name": "Supervisor",
+      "description": "Can only view and edit limited modules"
+    },
+    {
+      "id": "4",
+      "name": "Manager",
+      "description": "Can manage projects but not permissions"
+    }
+  ],
+  "permissions": [
+    {
+      "id": "1",
+      "roleId": "1",
+      "module": "users",
+      "actions": [
+        "view",
+        "add",
+        "edit",
+        "delete"
+      ]
+    },
+    {
+      "id": "2",
+      "roleId": "1",
+      "module": "employees",
+      "actions": [
+        "view",
+        "add",
+        "edit",
+        "delete"
+      ]
+    },
+    {
+      "id": "3",
+      "roleId": "1",
+      "module": "projects",
+      "actions": [
+        "view",
+        "add",
+        "edit",
+        "delete"
+      ]
+    },
+    {
+      "id": "4",
+      "roleId": "1",
+      "module": "roles",
+      "actions": [
+        "view",
+        "edit"
+      ]
+    },
+    {
+      "id": "5",
+      "roleId": "2",
+      "module": "employees",
+      "actions": [
+        "view"
+      ]
+    },
+    {
+      "id": "6",
+      "roleId": 2,
+      "module": "projects",
+      "actions": [
+        "view"
+      ]
+    },
+    {
+      "id": "7",
+      "roleId": "3",
+      "module": "employees",
+      "actions": [
+        "view",
+        "edit"
+      ]
+    },
+    {
+      "id": "8",
+      "roleId": "3",
+      "module": "projects",
+      "actions": [
+        "view"
+      ]
+    },
+    {
+      "id": "9",
+      "roleId": "4",
+      "module": "projects",
+      "actions": [
+        "view",
+        "add",
+        "edit",
+        "delete"
+      ]
+    },
+    {
+      "id": "10",
+      "roleId": "4",
+      "module": "employees",
+      "actions": [
+        "view"
+      ]
+    }
+  ],
+  "employees": [
+    {
+      "id": "1",
+      "name": "John Doe",
+      "position": "Software Developer",
+      "department": "Engineering",
+      "email": "john.doe@example.com",
+      "phone": "123-456-7890"
+    },
+    {
+      "id": "2",
+      "name": "Jane Smith",
+      "position": "UX Designer",
+      "department": "Design",
+      "email": "jane.smith@example.com",
+      "phone": "123-456-7891"
+    }
+  ],
+  "projects": [
+    {
+      "id": "1",
+      "name": "Website Redesign",
+      "description": "Redesign the company website",
+      "startDate": "2023-01-01",
+      "endDate": "2023-03-31",
+      "status": "In Progress"
+    },
+    {
+      "id": "2",
+      "name": "Mobile App Development",
+      "description": "Develop a mobile app for customers",
+      "startDate": "2023-02-01",
+      "endDate": "2023-06-30",
+      "status": "Planning"
+    },
+    {
+      "id": "5aaf",
+      "name": "sdfsdfderer",
+      "description": "sdfsfd",
+      "startDate": "2025-03-27",
+      "endDate": "2025-04-16",
+      "status": "Completed"
+    }
+  ]
+}
