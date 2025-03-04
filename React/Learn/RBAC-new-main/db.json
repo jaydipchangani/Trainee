@@ -3,29 +3,29 @@
     {
       "id": "1",
       "name": "Admin User",
-      "email": "admin@example.com",
-      "password": "$2a$06$mCvtx85Iq38xGfJ1O0i3UegkTMpfISJiiiPKWbIMI91RICsBsDEHC",
+      "email": "jaydip@gmail.com",
+      "password": "$2a$10$lFvdebZ.Nml5oVqvdvYJDuLnLHDJDigREjiSeS/eOn2S4QaTZJXmm",
       "role": "Admin"
     },
     {
       "id": "2",
-      "name": "HR User",
-      "email": "hr@example.com",
-      "password": "$2a$06$mCvtx85Iq38xGfJ1O0i3UegkTMpfISJiiiPKWbIMI91RICsBsDEHC",
+      "name": "Krupa",
+      "email": "krupa@gmail.com",
+      "password": "$2a$10$zHArvon9I4D6eSm.OSG44u7lAhKdPYYvCakgFt040vq5v1y8vNJ5O",
       "role": "HR"
     },
     {
       "id": "3",
-      "name": "Manager User",
-      "email": "manager@example.com",
-      "password": "$2a$06$mCvtx85Iq38xGfJ1O0i3UegkTMpfISJiiiPKWbIMI91RICsBsDEHC",
+      "name": "Rajdeep",
+      "email": "rajdeep@gmail.com",
+      "password": "$2a$10$FWfsqooI85gUl9Xtw775Bu7SAg7yaS/N5vA2x0nSsgxmiOmylrqc.",
       "role": "Manager"
     },
     {
       "id": "4",
-      "name": "Supervisor User",
-      "email": "supervisor@example.com",
-      "password": "$2a$06$mCvtx85Iq38xGfJ1O0i3UegkTMpfISJiiiPKWbIMI91RICsBsDEHC",
+      "name": "Priyanshu",
+      "email": "priyanshu@gmail.com",
+      "password": "$2a$10$YV/So.DQBGaiAOO38LRU4OaOLizlhsKzZ.HFZHE1MKh/lORSzbq7i",
       "role": "Supervisor"
     }
   ],
@@ -99,7 +99,10 @@
       "roleId": "2",
       "module": "employees",
       "actions": [
-        "view"
+        "view",
+        "add",
+        "edit",
+        "delete"
       ]
     },
     {
@@ -163,12 +166,20 @@
       "department": "Design",
       "email": "jane.smith@example.com",
       "phone": "123-456-7891"
+    },
+    {
+      "id": "00de",
+      "name": "Lucy Rutledge",
+      "position": "Molestiae ipsum ten",
+      "department": "Facilis animi volup",
+      "email": "jisicuwoc@mailinator.com",
+      "phone": "987-654-1235"
     }
   ],
   "projects": [
     {
       "id": "1",
-      "name": "Website Redesign",
+      "name": "Website Redesignn",
       "description": "Redesign the company website",
       "startDate": "2023-01-01",
       "endDate": "2023-03-31",

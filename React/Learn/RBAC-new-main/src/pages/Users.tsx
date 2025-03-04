@@ -184,7 +184,12 @@ const Users: React.FC = () => {
           <Form.Item
             name="name"
             label="Name"
-            rules={[{ required: true, message: 'Please enter name' }]}
+            rules={[{ required: true, message: 'Please enter name' },
+              {
+              pattern: /^[A-Za-z]+$/,
+              message: "Only letters are allowed (No numbers or special characters)"
+            }
+            ]}
           >
             <Input />
           </Form.Item>
@@ -203,7 +208,11 @@ const Users: React.FC = () => {
             label="Password"
             rules={[
               { required: !editingId, message: 'Please enter password' },
-              { min: 6, message: 'Password must be at least 6 characters' }
+              {
+                pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                message: 'Password must be at least 8 characters, include an uppercase letter, a lowercase letter, a number, and a special character'
+              }
+              
             ]}
           >
             <Input.Password placeholder={editingId ? 'Leave blank to keep current password' : ''} />
