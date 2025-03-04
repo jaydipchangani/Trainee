@@ -1,0 +1,19 @@
+.searchBar {
+  max-width: 400px;
+  width: 100%;
+  
+  :global(.ant-input-search) {
+    width: 100%;
+  }
+  
+  :global(.ant-input-search .ant-input) {
+    background-color: var(--background-color);
+    border-color: var(--border-color);
+    color: var(--text-color);
+  }
+  
+  :global(.ant-input-search .ant-input-search-button) {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+  }
+}

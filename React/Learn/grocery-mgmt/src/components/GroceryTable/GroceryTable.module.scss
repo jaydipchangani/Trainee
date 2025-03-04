@@ -1,0 +1,10 @@
+.actionColumn {
+  display: flex;
+  gap: 8px;
+  
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

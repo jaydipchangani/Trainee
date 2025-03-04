@@ -110,7 +110,8 @@
       "actions": [
         "add",
         "delete",
-        "edit"
+        "edit",
+        "view"
       ]
     },
     {
@@ -118,7 +119,6 @@
       "roleId": "3",
       "module": "employees",
       "actions": [
-        "view",
         "edit"
       ]
     },

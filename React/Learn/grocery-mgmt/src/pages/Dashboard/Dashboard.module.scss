@@ -1,0 +1,157 @@
+.dashboard {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  
+  h1 {
+    margin: 0;
+    color: var(--text-color);
+  }
+}
+
+.tableContainer {
+  background-color: var(--card-background);
+  border-radius: 8px;
+  box-shadow: var(--box-shadow);
+  padding: 24px;
+  margin-bottom: 24px;
+  
+  :global(.ant-table) {
+    background-color: transparent;
+  }
+  
+  :global(.ant-table-thead > tr > th) {
+    background-color: var(--background-color);
+    color: var(--text-color);
+  }
+  
+  :global(.ant-table-tbody > tr > td) {
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-color);
+  }
+  
+  :global(.ant-table-tbody > tr.ant-table-row:hover > td) {
+    background-color: rgba(24, 144, 255, 0.1);
+  }
+  
+  :global(.ant-empty-description) {
+    color: var(--text-secondary);
+  }
+}
+
+.formContainer {
+  background-color: var(--card-background);
+  border-radius: 8px;
+  box-shadow: var(--box-shadow);
+  padding: 24px;
+  
+  h2 {
+    margin-top: 0;
+    margin-bottom: 24px;
+    color: var(--text-color);
+  }
+  
+  :global(.ant-form-item-label > label) {
+    color: var(--text-color);
+  }
+  
+  :global(.ant-input), 
+  :global(.ant-input-number-input),
+  :global(.ant-select-selector),
+  :global(.ant-picker) {
+    background-color: var(--background-color);
+    border-color: var(--border-color);
+    color: var(--text-color);
+  }
+  
+  :global(.ant-form-item-explain-error) {
+    color: var(--error-color);
+  }
+}
+
+.actionColumn {
+  display: flex;
+  gap: 8px;
+  
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.searchContainer {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  
+  :global(.ant-input-search) {
+    max-width: 400px;
+  }
+}
+
+.statsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.statCard {
+  background-color: var(--card-background);
+  border-radius: 8px;
+  box-shadow: var(--box-shadow);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  
+  .statTitle {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+  }
+  
+  .statValue {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--primary-color);
+  }
+  
+  .statIcon {
+    align-self: flex-end;
+    margin-top: -30px;
+    color: var(--primary-color);
+    opacity: 0.2;
+    
+    svg {
+      width: 40px;
+      height: 40px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .tableContainer {
+    padding: 16px;
+    overflow-x: auto;
+  }
+  
+  .formContainer {
+    padding: 16px;
+  }
+  
+  .searchContainer {
+    flex-direction: column;
+  }
+}
