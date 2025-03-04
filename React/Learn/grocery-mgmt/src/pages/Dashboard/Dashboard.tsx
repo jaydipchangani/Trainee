@@ -1,13 +1,6 @@
 import React, { useState } from 'react';
-import { 
-  Table, Button, Modal, Form, Input, InputNumber, 
-  Select, DatePicker, Space, Popconfirm, message, 
-  Typography
-} from 'antd';
-import { 
-  PlusCircle, Edit, Trash2, Search, 
-  Package, DollarSign, ShoppingCart, Calendar 
-} from 'lucide-react';
+import { Button, Modal, Form, message, Typography } from 'antd';
+import { PlusCircle, Package, DollarSign, ShoppingCart, Calendar } from 'lucide-react';
 import dayjs from 'dayjs';
 import { useGrocery } from '../../context/GroceryContext';
 import { GroceryItem } from '../../types';
@@ -20,12 +13,7 @@ import styles from './Dashboard.module.scss';
 const { Title } = Typography;
 
 const Dashboard: React.FC = () => {
-  const { 
-    groceryItems, 
-    addGroceryItem, 
-    updateGroceryItem, 
-    deleteGroceryItem 
-  } = useGrocery();
+  const { groceryItems, addGroceryItem, updateGroceryItem, deleteGroceryItem } = useGrocery();
   
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingItem, setEditingItem] = useState<GroceryItem | null>(null);

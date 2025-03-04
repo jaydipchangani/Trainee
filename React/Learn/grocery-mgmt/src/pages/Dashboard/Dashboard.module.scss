@@ -1,20 +1,30 @@
 .dashboard {
-  animation: fadeIn 0.5s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 20px;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
-  
-  h1 {
-    margin: 0;
-    color: var(--text-color);
-  }
+  margin-bottom: 20px;
+}
+
+.statsContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.searchContainer {
+  margin-bottom: 20px;
 }
 
 .tableContainer {
+  flex: 1;
+  overflow-y: auto;
   background-color: var(--card-background);
   border-radius: 8px;
   box-shadow: var(--box-shadow);

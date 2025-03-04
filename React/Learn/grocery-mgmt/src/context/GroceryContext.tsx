@@ -4,7 +4,7 @@ import { GroceryItem } from '../types';
 
 interface GroceryContextType {
   groceryItems: GroceryItem[];
-  addGroceryItem: (item: Omit<GroceryItem, 'id'>) => void;
+  addGroceryItem: (item: Omit<GroceryItem, 'id'>) => void;  //id is removed from GroceryItem
   updateGroceryItem: (item: GroceryItem) => void;
   deleteGroceryItem: (id: string) => void;
   getGroceryItem: (id: string) => GroceryItem | undefined;
@@ -20,7 +20,7 @@ const initialGroceryItems: GroceryItem[] = [
     price: 2.99,
     quantity: 5,
     unit: 'kg',
-    expiryDate: '2023-12-31'
+    expiryDate: '2024-12-31'
   },
   {
     id: uuidv4(),
@@ -29,7 +29,7 @@ const initialGroceryItems: GroceryItem[] = [
     price: 1.99,
     quantity: 2,
     unit: 'liter',
-    expiryDate: '2023-11-15'
+    expiryDate: '2024-11-15'
   },
   {
     id: uuidv4(),
@@ -38,7 +38,7 @@ const initialGroceryItems: GroceryItem[] = [
     price: 3.49,
     quantity: 1,
     unit: 'loaf',
-    expiryDate: '2023-11-10'
+    expiryDate: '2025-03-05'
   },
   {
     id: uuidv4(),
@@ -47,7 +47,7 @@ const initialGroceryItems: GroceryItem[] = [
     price: 7.99,
     quantity: 1,
     unit: 'kg',
-    expiryDate: '2023-11-12'
+    expiryDate: '2025-03-26'
   },
   {
     id: uuidv4(),
@@ -56,7 +56,7 @@ const initialGroceryItems: GroceryItem[] = [
     price: 4.99,
     quantity: 5,
     unit: 'kg',
-    expiryDate: '2024-05-20'
+    expiryDate: '2025-05-20'
   }
 ];
 
