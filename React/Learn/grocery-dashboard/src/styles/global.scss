@@ -1,0 +1,13 @@
+@import "variables";
+
+body {
+  font-family: "Arial", sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.ant-layout {
+  min-height: 100vh;
+  background: var(--background-color);
+}

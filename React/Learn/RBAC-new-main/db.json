@@ -2,7 +2,7 @@
   "users": [
     {
       "id": "1",
-      "name": "Admin User",
+      "name": "Jaydip",
       "email": "jaydip@gmail.com",
       "password": "$2a$10$lFvdebZ.Nml5oVqvdvYJDuLnLHDJDigREjiSeS/eOn2S4QaTZJXmm",
       "role": "Admin"
