@@ -1,0 +1,7 @@
+C:\Trainee_new\CSharp\ConsoleApp3\ConsoleApp3\bin\Debug\ConsoleApp3.exe.config
+C:\Trainee_new\CSharp\ConsoleApp3\ConsoleApp3\bin\Debug\ConsoleApp3.exe
+C:\Trainee_new\CSharp\ConsoleApp3\ConsoleApp3\bin\Debug\ConsoleApp3.pdb
+C:\Trainee_new\CSharp\ConsoleApp3\ConsoleApp3\obj\Debug\ConsoleApp3.csproj.AssemblyReference.cache
+C:\Trainee_new\CSharp\ConsoleApp3\ConsoleApp3\obj\Debug\ConsoleApp3.csproj.CoreCompileInputs.cache
+C:\Trainee_new\CSharp\ConsoleApp3\ConsoleApp3\obj\Debug\ConsoleApp3.exe
+C:\Trainee_new\CSharp\ConsoleApp3\ConsoleApp3\obj\Debug\ConsoleApp3.pdb
