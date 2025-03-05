@@ -10,7 +10,7 @@ namespace ConsoleApp4
     {
         static int evenOdd(int n)
         {
-            if ((n%2==0))
+            if ((n % 2 == 0))
             {
                 Console.WriteLine("Even");
                 return 1;
@@ -31,10 +31,31 @@ namespace ConsoleApp4
         {
             for (int i = 1; i < a; i++)
             {
-                if(i%2==0)
+                if (i % 2 == 0)
                 {
                     Console.WriteLine(i);
                 }
+            }
+        }
+
+        abstract class Vehicle
+        {
+            public abstract void start();
+        }
+
+        class Car : Vehicle
+        {
+            public override void start()
+            {
+                Console.WriteLine("Car is starting");
+            }
+        }
+
+        class Bike : Vehicle
+        {
+            public override void start()
+            {
+                Console.WriteLine("Bike is starting");
             }
         }
 
@@ -45,6 +66,9 @@ namespace ConsoleApp4
             print("John");
 
             forLoop(50);
+
+            Car c = new Car();
+            c.start();
         }
     }
 }
