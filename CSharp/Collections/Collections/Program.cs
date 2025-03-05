@@ -42,16 +42,33 @@ namespace Collections
             Console.WriteLine("Enter the limit: ");
             int limit = Convert.ToInt32(Console.ReadLine());
 
-            for (int i=1; i <=limit; i++)
+            for (int i = 1; i <= limit; i++)
             {
                 Console.WriteLine($"Enter {i} Number: ");
-                int n =Convert.ToInt32(Console.ReadLine());
+                int n = Convert.ToInt32(Console.ReadLine());
                 nums.Add(n);
             }
 
             foreach (var item in nums)
             {
                 Console.WriteLine(item);
+            }
+
+            Dictionary<int, string> emp = new Dictionary<int, string>();
+
+            Console.WriteLine("Enter the limit: ");
+            int l = Convert.ToInt32(Console.ReadLine());
+
+            for (int i = 1; i <= l; i++)
+            {
+                Console.WriteLine($"Enter {i} Employee Name: ");
+                string name = Console.ReadLine();
+                emp.Add(i, name);
+            }
+
+            foreach (var item in emp)
+            {
+                Console.WriteLine(item.Key + " " + item.Value);
             }
 
 
