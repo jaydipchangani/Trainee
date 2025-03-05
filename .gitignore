@@ -2,4 +2,10 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
+.vs/
+*.user
+*.suo
+
 /CSharp/ConsoleApp3/.vs/ConsoleApp3
+
+
