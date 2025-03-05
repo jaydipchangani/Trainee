@@ -22,11 +22,11 @@ namespace ConsoleApp3
                 {
                     Console.WriteLine(Marks.Best);
                 }
-                else if (marks > 80)
+                else if (marks > 70)
                 {
                     Console.WriteLine(Marks.Good);
                 }
-                else if (marks > 70)
+                else if (marks > 50)
                 {
                     Console.WriteLine(Marks.Avg);
                 }
