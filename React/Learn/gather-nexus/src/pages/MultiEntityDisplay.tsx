@@ -55,7 +55,7 @@ const MultiEntityDisplay: React.FC = () => {
       setError(null);
       const token = getToken();
       try {
-        const response = await fetch(url, {
+        const response = await fetch(url,{
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`

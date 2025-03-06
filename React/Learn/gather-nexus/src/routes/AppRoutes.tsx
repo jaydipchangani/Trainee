@@ -11,8 +11,9 @@ import MultiEntityDisplay from "../pages/MultiEntityDisplay";
 const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
+      
       <Route path="/register" element={<Register />} />
+      <Route path="/login" element={<Login />} />
       <Route path="/" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
       <Route path="/multi" element={<PrivateRoute><MultiEntityDisplay /></PrivateRoute>} />
       <Route path="*" element={<h1>404 Not Found</h1>} />
