@@ -6,6 +6,7 @@ import { getToken } from "../utils/storage";
 import GroupTable from '../components/GroupTable';
 import GroupClassTable from '../components/GroupClassTable';
 import './MultiEntityDisplay.css';
+import AppHeader from '../components/Header';
 
 import AddGroupDrawer from './AddGroupDrawer';
 
@@ -25,14 +26,12 @@ const MultiEntityDisplay: React.FC = () => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const userName = user?.name || "Guest";
 
-
-  
   const handleAddGroup = async (newGroup: any) => {
     setLoading(true);
     try {
       // API call to add group
       // Replace this with your API URL
-      await fetch("https://api.example.com/addGroup", {
+      await fetch("https://sandboxgathernexusapi.azurewebsites.net/api/Group/GetGroups", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -98,25 +97,14 @@ const MultiEntityDisplay: React.FC = () => {
           transferOwnership: item.groupTranferStatus === 0 ? 'No' : 'Yes',
         }))
       );
+      
+
     }
   }, [activeTab]);
 
   return (
     <Layout className="entity-display-layout">
-      <Header className="header">
-        <div className="logo">
-          <ArrowLeftOutlined /> Multi- Entity & Display
-        </div>
-        <div className="user-info">
-          <span>{userName}</span>
-          <Tooltip title="Logout">
-            <LogoutOutlined 
-              onClick={auth?.logout} 
-              style={{ fontSize: "18px", color: "#000000", cursor: "pointer" }} 
-            />
-          </Tooltip>
-        </div>
-      </Header>
+      <AppHeader/>
 
       <Content className="content">
         <div className="page-header">
@@ -146,26 +134,7 @@ const MultiEntityDisplay: React.FC = () => {
               <Button type="primary" icon={<PlusOutlined />} className="add-button">Add Class</Button>
             )}
             {activeTab === 'group' && (
-            
-
-            <Layout className="entity-display-layout">
-      <div className="actions-container">
-        <Button type="primary" onClick={() => setDrawerVisible(true)}>
-          Add Group
-        </Button>
-      </div>
-
-      {loading ? (
-        <Spin size="large" />
-      ) : error ? (
-        <Alert message={error} type="error" showIcon />
-      ) : (
-        <Table dataSource={groupClassData} columns={[]} pagination={false} />
-      )}
-
-      {/* Drawer Component */}
-      <AddGroupDrawer visible={drawerVisible} onClose={() => setDrawerVisible(false)} onAddGroup={handleAddGroup} />
-    </Layout>
+              <Button type="primary" icon={<PlusOutlined />} className="add-button" onClick={() => setDrawerVisible(true)}>Add Group</Button>
 
               
             )}
