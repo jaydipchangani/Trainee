@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Input, Button, Checkbox, Typography, Row, Col } from "antd";
+import { Form, Input, Button, Checkbox, Typography, Row, Col,message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { registerUser } from "../api/auth";
 import "../styles/Register.css";
@@ -20,30 +20,30 @@ const Register: React.FC = () => {
         password: values.password,
         phoneNumber: values.phone, 
         isAcceptTerms: values.terms,
-      
-        // ✅ Set default tenant details (hidden from UI)
+        isVerified: false, // ✅ User must verify their email first
         tenant: {
-          id: "65f47a9b12c34d56789abcd1", // ✅ Valid 24-character ObjectId
-          name: "Default Tenant",
-          currency: {
-            name: "US Dollar",
-            symbol: "$",
-            code: "USD",
-            price_precision: 2
-          }
+          id: "666c0babed5e6722a23c4aba",
+          name: "Satva",
+          currency: null
         }
       };
+    
 
     console.log("Register Payload:", payload); // Debugging
 
     try {
-      await registerUser(payload);
-      navigate("/login"); // Redirect to login after successful registration
-    } catch (error: any) {
-      console.error("Registration Failed:", error.response?.data || error.message);
-    } finally {
-      setLoading(false);
-    }
+        const response = await registerUser(payload);
+    
+        if (response.data.success) {
+          message.success("Registration successful! Please check your email for verification.");
+          navigate("/verify-email"); // Redirect user to verify email page
+        }
+      } catch (error: any) {
+        console.error("Registration Failed:", error.response?.data || error.message);
+        message.error("Registration failed! Try again later.");
+      } finally {
+        setLoading(false);
+      }
   };
 
   return (
