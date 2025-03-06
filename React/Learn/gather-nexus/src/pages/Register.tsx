@@ -1,7 +1,11 @@
 import React, { useState } from "react";
-import { Form, Input, Button, Checkbox, message } from "antd";
+import { Form, Input, Button, Checkbox, Typography, Row, Col } from "antd";
+import { Link, useNavigate } from "react-router-dom";
 import { registerUser } from "../api/auth";
-import { useNavigate } from "react-router-dom";
+import "../styles/Register.css";
+
+
+const { Title, Text } = Typography;
 
 const Register: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -9,47 +13,108 @@ const Register: React.FC = () => {
 
   const onFinish = async (values: any) => {
     setLoading(true);
+
+    const payload = {
+        name: values.name,
+        email: values.email,
+        password: values.password,
+        phoneNumber: values.phone, 
+        isAcceptTerms: values.terms,
+      
+        // ✅ Set default tenant details (hidden from UI)
+        tenant: {
+          id: "65f47a9b12c34d56789abcd1", // ✅ Valid 24-character ObjectId
+          name: "Default Tenant",
+          currency: {
+            name: "US Dollar",
+            symbol: "$",
+            code: "USD",
+            price_precision: 2
+          }
+        }
+      };
+
+    console.log("Register Payload:", payload); // Debugging
+
     try {
-      await registerUser(values);
-      message.success("Registration successful!");
-      navigate("/login");
-    } catch (error) {
-      message.error("Registration failed");
+      await registerUser(payload);
+      navigate("/login"); // Redirect to login after successful registration
+    } catch (error: any) {
+      console.error("Registration Failed:", error.response?.data || error.message);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
-      <div style={{ flex: 1, background: "url('/register-image.jpg') center/cover" }} />
-      <div style={{ flex: 1, padding: "50px" }}>
-        <Form onFinish={onFinish}>
-          <Form.Item name="name" rules={[{ required: true, message: "Enter your name" }]}>
-            <Input placeholder="Full Name" />
-          </Form.Item>
-          <Form.Item name="company">
-            <Input placeholder="Company (Optional)" />
-          </Form.Item>
-          <Form.Item name="email" rules={[{ required: true, message: "Enter your email" }]}>
-            <Input placeholder="Email" />
-          </Form.Item>
-          <Form.Item name="password" rules={[{ required: true, message: "Enter password" }]}>
-            <Input.Password placeholder="Password" />
-          </Form.Item>
-          <Form.Item name="confirmPassword" dependencies={["password"]} rules={[{ required: true, message: "Confirm password" }]}>
-            <Input.Password placeholder="Confirm Password" />
-          </Form.Item>
-          <Form.Item name="agreement" valuePropName="checked" rules={[{ required: true }]}>
-            <Checkbox>I agree to the terms</Checkbox>
-          </Form.Item>
-          <Button type="primary" htmlType="submit" loading={loading}>
-            Register
-          </Button>
-        </Form>
-        <p>Already have an account? <a href="/login">Login</a></p>
-      </div>
-    </div>
+    <Row className="register-container">
+      <Col xs={24} md={12} className="register-image-container">
+        <img src={"https://sandboxgathernexus.azurewebsites.net/assets/images/Log-in-Vector.svg"} alt="Register Illustration" className="register-image" />
+      </Col>
+      <Col xs={24} md={12} className="register-form-container">
+        <div className="register-form-box">
+          <Title level={2} className="register-title">
+            GATHER<span className="highlight">.nexus</span>
+          </Title>
+          <Text className="register-subtitle">
+            Welcome to <strong>GATHER.nexus!</strong> Please Enter your Details.
+          </Text>
+
+          <Form layout="vertical" onFinish={onFinish} className="register-form">
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item label="Name" name="name" rules={[{ required: true, message: "Please enter your name" }]}>
+                  <Input placeholder="Enter your Name" />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item label="Email Address" name="email" rules={[
+                  { required: true, message: "Please enter your email" },
+                  { type: "email", message: "Invalid email format" }
+                ]}>
+                  <Input placeholder="Enter your Email Address" />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item label="Phone Number" name="phone" rules={[
+                  { required: true, message: "Please enter your phone number" },
+                  { pattern: /^[0-9]{10}$/, message: "Phone number must be 10 digits" }
+                ]}>
+                  <Input placeholder="Enter Phone Number" />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item label="Password" name="password" rules={[
+                  { required: true, message: "Please enter a password" },
+                  { min: 8, message: "Password must be at least 8 characters" }
+                ]}>
+                  <Input.Password placeholder="Type your password" />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Form.Item name="terms" valuePropName="checked" rules={[{ required: true, message: "You must agree to the terms" }]}>
+              <Checkbox>
+                I am authorized to enter into this Contract on behalf of the Company and agree to the <Link to="/terms">Terms of Service</Link>.
+              </Checkbox>
+            </Form.Item>
+
+            <Form.Item>
+              <Button type="primary" htmlType="submit" className="register-btn" loading={loading} block>
+                Register Now!
+              </Button>
+            </Form.Item>
+          </Form>
+
+          <Text className="register-footer">
+            Already have an account? <Link to="/login">Sign in Now!</Link>
+          </Text>
+        </div>
+      </Col>
+    </Row>
   );
 };
 
