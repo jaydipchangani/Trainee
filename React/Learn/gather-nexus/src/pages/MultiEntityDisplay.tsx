@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Layout, Menu, Input, Button, Spin, Alert,Tooltip } from 'antd';
+import { Layout, Menu, Input, Button, Spin, Alert,Tooltip,Table } from 'antd';
 import { SearchOutlined, FilterOutlined, PlusOutlined, ArrowLeftOutlined, LogoutOutlined } from '@ant-design/icons';
 import { AuthContext } from "../context/AuthContext";
 import { getToken } from "../utils/storage";
 import GroupTable from '../components/GroupTable';
 import GroupClassTable from '../components/GroupClassTable';
 import './MultiEntityDisplay.css';
+
+import AddGroupDrawer from './AddGroupDrawer';
 
 const { Header, Content } = Layout;
 
@@ -17,11 +19,35 @@ const MultiEntityDisplay: React.FC = () => {
   const [groupClassData, setGroupClassData] = useState<any[]>([]);
   const [groupData, setGroupData] = useState<any[]>([]);
   const auth = useContext(AuthContext);
+  const [drawerVisible, setDrawerVisible] = useState(false);
 
   // Fetch user data from localStorage
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const userName = user?.name || "Guest";
 
+
+  
+  const handleAddGroup = async (newGroup: any) => {
+    setLoading(true);
+    try {
+      // API call to add group
+      // Replace this with your API URL
+      await fetch("https://api.example.com/addGroup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getToken()}`,
+        },
+        body: JSON.stringify(newGroup),
+      });
+
+      setGroupClassData([...groupClassData, newGroup]); // Update UI
+    } catch (error) {
+      console.error("Failed to add group", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   // Fetch data from API
   useEffect(() => {
     const fetchData = async (url: string, setData: React.Dispatch<React.SetStateAction<any[]>>, mapData: (data: any) => any[]) => {
@@ -120,7 +146,28 @@ const MultiEntityDisplay: React.FC = () => {
               <Button type="primary" icon={<PlusOutlined />} className="add-button">Add Class</Button>
             )}
             {activeTab === 'group' && (
-              <Button type="primary" icon={<PlusOutlined />} className="add-button">Add Group</Button>
+            
+
+            <Layout className="entity-display-layout">
+      <div className="actions-container">
+        <Button type="primary" onClick={() => setDrawerVisible(true)}>
+          Add Group
+        </Button>
+      </div>
+
+      {loading ? (
+        <Spin size="large" />
+      ) : error ? (
+        <Alert message={error} type="error" showIcon />
+      ) : (
+        <Table dataSource={groupClassData} columns={[]} pagination={false} />
+      )}
+
+      {/* Drawer Component */}
+      <AddGroupDrawer visible={drawerVisible} onClose={() => setDrawerVisible(false)} onAddGroup={handleAddGroup} />
+    </Layout>
+
+              
             )}
           </div>
         </div>

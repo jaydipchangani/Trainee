@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Drawer, Button, Form, Input, Select, Checkbox, Space, message } from "antd";
+import axios from "axios";
 import { getToken } from "../utils/storage";
 
 const { Option } = Select;
@@ -30,44 +31,42 @@ const AddGroupDrawer: React.FC<Props> = ({ visible, onClose }) => {
   const fetchCurrencies = async () => {
     try {
       const token = getToken();
-      const response = await fetch("/api/Configuration/AddOrUpdateConfiguration", {
-        method: "GET",
+      const response = await axios.get("/api/Configuration/AddOrUpdateConfiguration", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      const data = await response.json();
-      if (data && Array.isArray(data.currencies)) {
-        setCurrencies(data.currencies);
+      if (response.data && Array.isArray(response.data.currencies)) {
+        setCurrencies(response.data.currencies);
       } else {
         setCurrencies([]);
       }
     } catch (error) {
       console.error("Failed to fetch currencies:", error);
       setCurrencies([]);
-    } finally {
-      console.log("Currencies:", currencies);
+    }
+    finally{
+        console.log("Currencies:", currencies);
     }
   };
 
   const fetchCompanies = async () => {
     try {
       const token = getToken();
-      const response = await fetch("https://sandboxgathernexusapi.azurewebsites.net/api/Configuration/GetCurrencyDropdown", {
-        method: "GET",
+      const response = await axios.get("https://sandboxgathernexusapi.azurewebsites.net/api/Configuration/GetCurrencyDropdown", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      const data = await response.json();
-      if (data && Array.isArray(data.companies)) {
-        setCompanies(data.companies);
+      if (response.data && Array.isArray(response.data.companies)) {
+        setCompanies(response.data.companies);
       } else {
         setCompanies([]);
       }
     } catch (error) {
       console.error("Failed to fetch companies:", error);
       setCompanies([]);
-    } finally {
-      console.log("Companies:", companies);
+    }
+    finally{
+        console.log("Companies:", companies);
     }
   };
 
@@ -75,27 +74,20 @@ const AddGroupDrawer: React.FC<Props> = ({ visible, onClose }) => {
     setLoading(true);
     try {
       const token = getToken();
-      const response = await fetch("/api/Configuration/AddOrUpdateConfiguration", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
+      await axios.post(
+        "/api/Configuration/AddOrUpdateConfiguration",
+        {
           groupName: values.groupName,
           currency: values.currency,
           fyPeriod: values.fyPeriod,
           companies: values.companies,
-        }),
-      });
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
-      if (response.ok) {
-        message.success("Group added successfully!");
-        form.resetFields();
-        onClose();
-      } else {
-        message.error("Failed to add group.");
-      }
+      message.success("Group added successfully!");
+      form.resetFields();
+      onClose();
     } catch (error) {
       message.error("Failed to add group.");
     } finally {
@@ -109,7 +101,7 @@ const AddGroupDrawer: React.FC<Props> = ({ visible, onClose }) => {
       placement="right"
       closable
       onClose={onClose}
-      open={visible}
+      visible={visible}
       width={500}
       style={{ backdropFilter: "blur(5px)" }}
     >
