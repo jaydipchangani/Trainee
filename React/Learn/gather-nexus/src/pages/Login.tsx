@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { Form, Input, Button, Typography, Card } from "antd";
+import { Form, Input, Button, Typography, Card, message as antdMessage } from "antd";
 import { loginUser } from "../api/auth";
 import { AuthContext } from "../context/AuthContext";
 import { Link } from "react-router-dom";
@@ -15,9 +15,27 @@ const Login: React.FC = () => {
     setLoading(true);
     try {
       const response = await loginUser(values.email, values.password);
-      auth?.login(response.data.token, response.data.userId);
+      
+      console.log("Login Response:", response.data); // Debugging
+
+      // Extract response details
+      const { responseStatus, message, result } = response.data;
+
+      if (responseStatus === 3 && result?.access_token) {
+        // Save token & user details to localStorage
+        localStorage.setItem("access_token", result.access_token);
+        localStorage.setItem("user", JSON.stringify(result.userDetails));
+
+        // Login user in context
+        auth?.login(result.access_token, result.userDetails.id);
+        
+        antdMessage.success(message); // Show success notification
+      } else {
+        antdMessage.error("Login failed! Please check your credentials.");
+      }
     } catch (error) {
-      console.error(error);
+      console.error("Login Error:", error);
+      antdMessage.error("Something went wrong! Try again later.");
     } finally {
       setLoading(false);
     }
