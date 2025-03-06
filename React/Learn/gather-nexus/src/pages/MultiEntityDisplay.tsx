@@ -1,49 +1,21 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Layout, Menu, Input, Button, Table, Space, Tooltip, Spin, Alert } from 'antd';
-import { 
-  SearchOutlined, 
-  FilterOutlined, 
-  PlusOutlined, 
-  EditOutlined, 
-  CopyOutlined, 
-  DeleteOutlined,
-  ArrowLeftOutlined,
-  LogoutOutlined
-} from '@ant-design/icons';
-import axios from 'axios';
+import { Layout, Menu, Input, Button, Spin, Alert,Tooltip } from 'antd';
+import { SearchOutlined, FilterOutlined, PlusOutlined, ArrowLeftOutlined, LogoutOutlined } from '@ant-design/icons';
 import { AuthContext } from "../context/AuthContext";
 import { getToken } from "../utils/storage";
+import GroupTable from '../components/GroupTable';
+import GroupClassTable from '../components/GroupClassTable';
 import './MultiEntityDisplay.css';
 
 const { Header, Content } = Layout;
-
-interface GroupClassData {
-  key: string;
-  groupName: string;
-  className: string;
-  setupOrMapping: {
-    mapped: number;
-    unmapped: number;
-  };
-}
-
-interface GroupData {
-  key: string;
-  groupName: string;
-  companies: string;
-  groupClass: string;
-  financialYear: string;
-  currency: string;
-  transferOwnership: string;
-}
 
 const MultiEntityDisplay: React.FC = () => {
   const [activeTab, setActiveTab] = useState('groupClass');
   const [searchText, setSearchText] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [groupClassData, setGroupClassData] = useState<GroupClassData[]>([]);
-  const [groupData, setGroupData] = useState<GroupData[]>([]);
+  const [groupClassData, setGroupClassData] = useState<any[]>([]);
+  const [groupData, setGroupData] = useState<any[]>([]);
   const auth = useContext(AuthContext);
 
   // Fetch user data from localStorage
@@ -103,106 +75,6 @@ const MultiEntityDisplay: React.FC = () => {
     }
   }, [activeTab]);
 
-  // Table columns for groupClass
-  const groupClassColumns = [
-    {
-      title: 'Group Name',
-      dataIndex: 'groupName',
-      key: 'groupName',
-      sorter: (a: GroupClassData, b: GroupClassData) => a.groupName.localeCompare(b.groupName),
-    },
-    {
-      title: 'Class Name',
-      dataIndex: 'className',
-      key: 'className',
-      sorter: (a: GroupClassData, b: GroupClassData) => a.className.localeCompare(b.className),
-    },
-    {
-      title: 'Setup or Mapping',
-      dataIndex: 'setupOrMapping',
-      key: 'setupOrMapping',
-      render: (setupOrMapping: { mapped: number; unmapped: number }) => (
-        <a href="#" style={{ color: '#1890ff' }}>
-          {setupOrMapping.mapped} Mapped {setupOrMapping.unmapped > 0 ? `& ${setupOrMapping.unmapped} Unmapped` : ''}
-        </a>
-      ),
-    },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (_: any, record: GroupClassData) => (
-        <Space size="middle">
-          <Tooltip title="Edit">
-            <EditOutlined className="action-icon" />
-          </Tooltip>
-          <Tooltip title="Copy">
-            <CopyOutlined className="action-icon" />
-          </Tooltip>
-          <Tooltip title="Delete">
-            <DeleteOutlined className="action-icon" />
-          </Tooltip>
-        </Space>
-      ),
-    },
-  ];
-
-  // Table columns for group
-  const groupColumns = [
-    {
-      title: '#',
-      dataIndex: 'key',
-      key: 'key',
-    },
-    {
-      title: 'Group Name',
-      dataIndex: 'groupName',
-      key: 'groupName',
-      sorter: (a: GroupData, b: GroupData) => a.groupName.localeCompare(b.groupName),
-    },
-    {
-      title: 'Companies',
-      dataIndex: 'companies',
-      key: 'companies',
-    },
-    {
-      title: 'Group Class',
-      dataIndex: 'groupClass',
-      key: 'groupClass',
-    },
-    {
-      title: 'Financial Year',
-      dataIndex: 'financialYear',
-      key: 'financialYear',
-    },
-    {
-      title: 'Currency',
-      dataIndex: 'currency',
-      key: 'currency',
-    },
-    {
-      title: 'Transfer Ownership',
-      dataIndex: 'transferOwnership',
-      key: 'transferOwnership',
-    },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (_: any, record: GroupData) => (
-        <Space size="middle">
-          <Tooltip title="Edit">
-            <EditOutlined className="action-icon" />
-          </Tooltip>
-          <Tooltip title="Copy">
-            <CopyOutlined className="action-icon" />
-          </Tooltip>
-          <Tooltip title="Delete">
-            <DeleteOutlined className="action-icon" />
-          </Tooltip>
-        </Space>
-      ),
-    },
-  ];
-
   return (
     <Layout className="entity-display-layout">
       <Header className="header">
@@ -255,10 +127,10 @@ const MultiEntityDisplay: React.FC = () => {
 
         <div className="table-container">
           {activeTab === 'groupClass' && (
-            loading ? <Spin size="large" /> : error ? <Alert message={error} type="error" showIcon /> : <Table dataSource={groupClassData} columns={groupClassColumns} pagination={false} className="entity-table" />
+            loading ? <Spin size="large" /> : error ? <Alert message={error} type="error" showIcon /> : <GroupClassTable data={groupClassData} />
           )}
           {activeTab === 'group' && (
-            loading ? <Spin size="large" /> : error ? <Alert message={error} type="error" showIcon /> : <Table dataSource={groupData} columns={groupColumns} pagination={false} className="entity-table" />
+            loading ? <Spin size="large" /> : error ? <Alert message={error} type="error" showIcon /> : <GroupTable data={groupData} />
           )}
           {activeTab === 'company' && <div className="placeholder-content"><p>Company content would appear here</p></div>}
           {activeTab === 'configurationDisplay' && <div className="placeholder-content"><p>Configuration Display content would appear here</p></div>}
