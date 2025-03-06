@@ -9,7 +9,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #f5f5f5;
+    background-color: #FEFFFE;
     padding: 20px;
   }
   
@@ -28,6 +28,9 @@
   .register-form-box {
     width: 100%;
     max-width: 450px;
+    border-radius: 10px;
+    background: #FEFFFE;
+    padding: 20px;
   }
   
   .register-title {
