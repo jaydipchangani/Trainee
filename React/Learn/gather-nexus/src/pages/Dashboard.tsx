@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Layout, Card, Menu, Avatar, Typography, Row, Col, Space, Tag, Button, Divider } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
-import './Dashboard.css'; // We'll define some custom styles
+import { Layout, Card, Menu, Avatar, Typography, Row, Col, Space, Tag, Divider } from 'antd';
+import { Link } from 'react-router-dom';
+import './Dashboard.css';
 
 const { Header, Content } = Layout;
 const { Title, Text } = Typography;
@@ -16,18 +16,17 @@ interface MenuItem {
   title: string;
   items: {
     name: string;
+    link?: string;
     comingSoon?: boolean;
   }[];
 }
 
 const Dashboard: React.FC = () => {
-  // User information would come from your authentication system
-  const [user, setUser] = useState<User>({
+  const [user] = useState<User>({
     name: 'shailesh',
     daysRemaining: 31
   });
 
-  // Menu data for the dashboard
   const menuItems: MenuItem[] = [
     {
       title: 'Group Financial Reporting',
@@ -56,8 +55,8 @@ const Dashboard: React.FC = () => {
       title: 'Multi-Entity & Display',
       items: [
         { name: 'Company' },
-        { name: 'Group' },
-        { name: 'Group Class' },
+        { name: 'Group', link: '/multi' },
+        { name: 'Group Class', link: '/multi' },
         { name: 'Configuration Display' }
       ]
     },
@@ -82,9 +81,6 @@ const Dashboard: React.FC = () => {
         <div className="user-info">
           <Space>
             <Text>Trial expires in {user.daysRemaining} days</Text>
-            <div className="trial-status-bar">
-              <div className="trial-progress"></div>
-            </div>
             <Avatar size="large" style={{ backgroundColor: '#333' }}>
               {user.profilePicture ? (
                 <img src={user.profilePicture} alt={user.name} />
@@ -105,7 +101,7 @@ const Dashboard: React.FC = () => {
       
       <Content className="content">
         <Row gutter={[24, 24]}>
-          {menuItems.slice(0, 3).map((section, index) => (
+          {menuItems.map((section, index) => (
             <Col key={index} xs={24} md={8}>
               <Card className="menu-card">
                 <Title level={5}>{section.title}</Title>
@@ -113,37 +109,18 @@ const Dashboard: React.FC = () => {
                 <Menu mode="vertical" className="section-menu">
                   {section.items.map((item, itemIndex) => (
                     <Menu.Item key={`${index}-${itemIndex}`} className="menu-item">
-                      <div className="menu-item-content">
-                        <Text className={item.comingSoon ? 'coming-soon-text' : ''}>
-                          {item.name}
-                        </Text>
-                        {item.comingSoon && (
-                          <Tag color="green">Coming Soon</Tag>
-                        )}
-                      </div>
-                    </Menu.Item>
-                  ))}
-                </Menu>
-              </Card>
-            </Col>
-          ))}
-        </Row>
-        
-        <Row gutter={[24, 24]} style={{ marginTop: '24px' }}>
-          {menuItems.slice(3).map((section, index) => (
-            <Col key={index + 3} xs={24} md={12}>
-              <Card className="menu-card">
-                <Title level={5}>{section.title}</Title>
-                <Divider className="green-divider" />
-                <Menu mode="vertical" className="section-menu">
-                  {section.items.map((item, itemIndex) => (
-                    <Menu.Item key={`${index + 3}-${itemIndex}`} className="menu-item">
-                      <div className="menu-item-content">
-                        <Text>{item.name}</Text>
-                        {item.comingSoon && (
-                          <Tag color="green">Coming Soon</Tag>
-                        )}
-                      </div>
+                      {item.link ? (
+                        <Link to={item.link} className="menu-item-content">
+                          <Text>{item.name}</Text>
+                        </Link>
+                      ) : (
+                        <div className="menu-item-content">
+                          <Text className={item.comingSoon ? 'coming-soon-text' : ''}>
+                            {item.name}
+                          </Text>
+                        </div>
+                      )}
+                      {item.comingSoon && <Tag color="green">Coming Soon</Tag>}
                     </Menu.Item>
                   ))}
                 </Menu>
