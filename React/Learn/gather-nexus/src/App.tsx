@@ -5,7 +5,7 @@ import { AuthProvider } from "./context/AuthContext";
 
 const App: React.FC = () => {
   return (
-    <BrowserRouter> {/* ✅ Wrap Routes Here */}
+    <BrowserRouter> {/* ✅ Keep BrowserRouter here */}
       <AuthProvider>
         <AppRoutes />
       </AuthProvider>
