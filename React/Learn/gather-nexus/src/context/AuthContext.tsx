@@ -17,7 +17,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = (token: string, userId: string) => {
     setToken(token, userId);
     setIsAuthenticated(true);
-    navigate("/dashboard");
+    navigate("/");
   };
 
   const logout = () => {
