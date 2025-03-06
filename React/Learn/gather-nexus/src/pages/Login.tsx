@@ -22,8 +22,13 @@ const Login: React.FC = () => {
       const { responseStatus, message, result } = response.data;
 
       if (responseStatus === 3 && result?.access_token) {
-        // Save token & login
+        // Save token & user details to localStorage
+        localStorage.setItem("access_token", result.access_token);
+        localStorage.setItem("user", JSON.stringify(result.userDetails));
+
+        // Login user in context
         auth?.login(result.access_token, result.userDetails.id);
+        
         antdMessage.success(message); // Show success notification
       } else {
         antdMessage.error("Login failed! Please check your credentials.");

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Layout, Card, Menu, Avatar, Typography, Row, Col, Space, Tag, Divider } from 'antd';
+import { Layout, Card, Menu, Typography, Row, Col, Space, Tag, Divider } from 'antd';
 import { Link } from 'react-router-dom';
+import AppHeader from '../components/Header'; // Import the Header component
 import './Dashboard.css';
 
-const { Header, Content } = Layout;
+const { Content } = Layout;
 const { Title, Text } = Typography;
 
 interface User {
@@ -22,10 +23,6 @@ interface MenuItem {
 }
 
 const Dashboard: React.FC = () => {
-  const [user] = useState<User>({
-    name: 'shailesh',
-    daysRemaining: 31
-  });
 
   const menuItems: MenuItem[] = [
     {
@@ -71,33 +68,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <Layout className="dashboard-layout">
-      <Header className="header">
-        <div className="logo">
-          <Title level={3} style={{ color: '#2E8B57', margin: 0 }}>
-            GATHER<span style={{ fontSize: '16px', fontWeight: 'normal' }}>.nexus</span>
-          </Title>
-        </div>
-        
-        <div className="user-info">
-          <Space>
-            <Text>Trial expires in {user.daysRemaining} days</Text>
-            <Avatar size="large" style={{ backgroundColor: '#333' }}>
-              {user.profilePicture ? (
-                <img src={user.profilePicture} alt={user.name} />
-              ) : (
-                <Text style={{ color: 'white' }}>
-                  {user.name.charAt(0).toUpperCase()}
-                </Text>
-              )}
-            </Avatar>
-            <div>
-              <Text strong>{user.name}</Text>
-              <br />
-              <Text type="secondary">My Profile</Text>
-            </div>
-          </Space>
-        </div>
-      </Header>
+      <AppHeader/> {/* Use the Header component */}
       
       <Content className="content">
         <Row gutter={[24, 24]}>

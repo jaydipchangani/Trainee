@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Layout, Menu, Avatar, Typography, Input, Button, Table, Space, Tabs, Tooltip } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Layout, Menu, Avatar, Typography, Input, Button, Table, Space, Tooltip, Spin, Alert } from 'antd';
 import { 
   SearchOutlined, 
   FilterOutlined, 
@@ -9,12 +9,11 @@ import {
   DeleteOutlined,
   ArrowLeftOutlined
 } from '@ant-design/icons';
-import type { TabsProps } from 'antd';
+import axios from 'axios'; // Import axios for API calls
 import './MultiEntityDisplay.css';
 
 const { Header, Content } = Layout;
 const { Title, Text } = Typography;
-const { TabPane } = Tabs;
 
 interface GroupClassData {
   key: string;
@@ -29,37 +28,61 @@ interface GroupClassData {
 const MultiEntityDisplay: React.FC = () => {
   const [activeTab, setActiveTab] = useState('groupClass');
   const [searchText, setSearchText] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [groupClassData, setGroupClassData] = useState<GroupClassData[]>([]);
+  const [groupData, setGroupData] = useState<GroupClassData[]>([]);
 
-  // Mock data for the table
-  const groupClassData: GroupClassData[] = [
-    {
-      key: '1',
-      groupName: 'Group',
-      className: 'Class1',
-      setupOrMapping: {
-        mapped: 4,
-        unmapped: 1
+  // Fetch data from API
+  useEffect(() => {
+    const fetchGroupClassData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await axios.get('/api/GRC/GetGRCrecords'); // Replace with your actual API
+        console.log("Group Data:", response.data);
+        setGroupClassData(response.data.map((item: any, index: number) => ({
+          key: String(index + 1),
+          groupName: item.groupName,
+          className: item.className,
+          setupOrMapping: {
+            mapped: item.mapped || 0,
+            unmapped: item.unmapped || 0,
+          },
+        })));
+      } catch (err) {
+        setError('Failed to fetch group class data. Please try again.');
       }
-    },
-    {
-      key: '2',
-      groupName: 'Training GR',
-      className: 'Department',
-      setupOrMapping: {
-        mapped: 5,
-        unmapped: 0
+      setLoading(false);
+    };
+
+    const fetchGroupData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await axios.get('/api/Group/GetGroups'); // Replace with your actual API
+        console.log("Group Data:", response.data); // Debugging
+        setGroupData(response.data.map((item: any, index: number) => ({
+          key: String(index + 1),
+          groupName: item.groupName,
+          className: item.className,
+          setupOrMapping: {
+            mapped: item.mapped || 0,
+            unmapped: item.unmapped || 0,
+          },
+        })));
+      } catch (err) {
+        setError('Failed to fetch group data. Please try again.');
       }
-    },
-    {
-      key: '3',
-      groupName: 'demo1',
-      className: 'demo',
-      setupOrMapping: {
-        mapped: 3,
-        unmapped: 2
-      }
+      setLoading(false);
+    };
+
+    if (activeTab === 'groupClass') {
+      fetchGroupClassData();
+    } else if (activeTab === 'group') {
+      fetchGroupData();
     }
-  ];
+  }, [activeTab]);
 
   // Table columns definition
   const columns = [
@@ -79,21 +102,11 @@ const MultiEntityDisplay: React.FC = () => {
       title: 'Setup or Mapping',
       dataIndex: 'setupOrMapping',
       key: 'setupOrMapping',
-      render: (setupOrMapping: { mapped: number; unmapped: number }) => {
-        if (setupOrMapping.unmapped > 0) {
-          return (
-            <a href="#" style={{ color: '#1890ff' }}>
-              {setupOrMapping.mapped} Mapped & {setupOrMapping.unmapped} Unmapped
-            </a>
-          );
-        } else {
-          return (
-            <a href="#" style={{ color: '#1890ff' }}>
-              {setupOrMapping.mapped} Mapped
-            </a>
-          );
-        }
-      }
+      render: (setupOrMapping: { mapped: number; unmapped: number }) => (
+        <a href="#" style={{ color: '#1890ff' }}>
+          {setupOrMapping.mapped} Mapped {setupOrMapping.unmapped > 0 ? `& ${setupOrMapping.unmapped} Unmapped` : ''}
+        </a>
+      ),
     },
     {
       title: 'Action',
@@ -187,17 +200,36 @@ const MultiEntityDisplay: React.FC = () => {
 
         <div className="table-container">
           {activeTab === 'groupClass' && (
-            <Table 
-              dataSource={groupClassData}
-              columns={columns}
-              pagination={false}
-              className="entity-table"
-            />
+            <>
+              {loading ? (
+                <Spin size="large" />
+              ) : error ? (
+                <Alert message={error} type="error" showIcon />
+              ) : (
+                <Table 
+                  dataSource={groupClassData}
+                  columns={columns}
+                  pagination={false}
+                  className="entity-table"
+                />
+              )}
+            </>
           )}
           {activeTab === 'group' && (
-            <div className="placeholder-content">
-              <p>Group content would appear here</p>
-            </div>
+            <>
+              {loading ? (
+                <Spin size="large" />
+              ) : error ? (
+                <Alert message={error} type="error" showIcon />
+              ) : (
+                <Table 
+                  dataSource={groupData}
+                  columns={columns}
+                  pagination={false}
+                  className="entity-table"
+                />
+              )}
+            </>
           )}
           {activeTab === 'company' && (
             <div className="placeholder-content">
