@@ -1,0 +1,53 @@
+.login-container {
+  display: flex;
+  height: 100vh;
+  background-color: #f4f6f8;
+}
+
+/* Left Side - Image */
+.login-left {
+  flex: 1;
+  background: url('https://cdn.pixabay.com/photo/2024/11/18/10/20/businessman-9205819_1280.png') center/cover no-repeat;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+}
+
+/* Right Side - Form */
+.login-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-card {
+  width: 500px;
+  padding: 30px;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.login-title {
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: larger;
+}
+
+.login-links {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 15px;
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 15px;
+}

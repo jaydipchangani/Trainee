@@ -7,5 +7,5 @@ export const loginUser = async (email: string, password: string) => {
 };
 
 export const registerUser = async (data: any) => {
-  return axios.post(`${API_URL}/register`, data);
+  return axios.post(`${API_URL}/Register`, data);
 };
