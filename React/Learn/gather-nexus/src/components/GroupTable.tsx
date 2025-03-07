@@ -164,7 +164,7 @@ const GroupTable: React.FC = () => {
 
   return (
     <>
-      <Table dataSource={data} columns={columns} loading={loading} pagination={false} />
+      <Table dataSource={data} columns={columns} loading={loading}  pagination={{ pageSize: 5 }}  />
       <Drawer title="Edit Group" placement="right" onClose={handleDrawerClose} visible={drawerVisible}>
         {editingRecord && (
           <>
