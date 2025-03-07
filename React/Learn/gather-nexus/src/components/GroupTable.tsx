@@ -19,27 +19,20 @@ const GroupTable: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:3000/groups'); // Adjust if your JSON server runs on a different port
+        const response = await fetch('http://localhost:3000/groups');
+        if (!response.ok) throw new Error('Failed to fetch data');
         const result = await response.json();
-        const formattedData = result.map((item: any, index: number) => ({
-          key: String(index + 1),
-          groupName: item.groupName,
-          companies: item.companies,
-          groupClass: item.groupClass,
-          financialYear: item.financialYear,
-          currency: item.currency,
-          transferOwnership: item.transferOwnership,
-        }));
-        setData(formattedData);
+        setData(result.map((item:any, index:any) => ({ key: String(index + 1), ...item })));
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchData();
   }, []);
+  
 
   const columns = [
     {

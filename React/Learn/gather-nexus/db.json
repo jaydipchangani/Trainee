@@ -1,13 +1,53 @@
 {
-    "groups": [
-      {
-        "groupName": "Finance Group",
-        "companies": "Company A, Company B",
-        "groupClass": "Class A",
-        "financialYear": "2024",
-        "currency": "USD",
-        "transferOwnership": "Yes"
-      }
-    ]
-  }
+  "groups": [
+    {
+      "groupName": "Finance Group",
+      "companies": "Company A, Company B",
+      "groupClass": "Class A",
+      "financialYear": "2024",
+      "currency": "USD",
+      "transferOwnership": "Yes"
+    },
+    {
+      "groupName": "Technology Group",
+      "companies": "Company C, Company D",
+      "groupClass": "Class B",
+      "financialYear": "2024",
+      "currency": "EUR",
+      "transferOwnership": "No"
+    },
+    {
+      "groupName": "Healthcare Group",
+      "companies": "Company E, Company F",
+      "groupClass": "Class C",
+      "financialYear": "2023",
+      "currency": "GBP",
+      "transferOwnership": "Yes"
+    },
+    {
+      "groupName": "Retail Group",
+      "companies": "Company G, Company H",
+      "groupClass": "Class A",
+      "financialYear": "2024",
+      "currency": "USD",
+      "transferOwnership": "No"
+    },
+    {
+      "groupName": "Manufacturing Group",
+      "companies": "Company I, Company J",
+      "groupClass": "Class B",
+      "financialYear": "2023",
+      "currency": "JPY",
+      "transferOwnership": "Yes"
+    }
+  ],
+
+  "companies": [
+    { "companyId": "C1", "companyName": "Tech Corp", "industry": "Software", "location": "USA" },
+    { "companyId": "C2", "companyName": "Finance Inc.", "industry": "Banking", "location": "UK" }
+  ],
   
+  "currencies": ["USD", "EUR", "INR"]
+}
+
+

@@ -4,8 +4,10 @@ import { SearchOutlined, FilterOutlined, PlusOutlined } from '@ant-design/icons'
 import { AuthContext } from "../context/AuthContext";
 import { getToken } from "../utils/storage";
 import GroupClassTable from '../components/GroupClassTable';
+import GroupTable from '../components/GroupTable'; // Assuming a GroupTable component exists
 import AppHeader from '../components/Header';
 import AddClassDrawer from '../components/AddClassDrawer';
+import AddGroupDrawer from '../components/AddGroupDrawer'; // Import the new drawer component
 import './MultiEntityDisplay.css';
 
 const { Content } = Layout;
@@ -18,8 +20,10 @@ const MultiEntityDisplay: React.FC = () => {
   const [groupClassData, setGroupClassData] = useState<any[]>([]);
   const [groupData, setGroupData] = useState<any[]>([]);
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const [groupDrawerVisible, setGroupDrawerVisible] = useState(false); // State for group drawer visibility
   const auth = useContext(AuthContext);
 
+  // Fetch Group Class Data from API
   const fetchGroupClassData = async () => {
     setLoading(true);
     setError(null);
@@ -38,22 +42,36 @@ const MultiEntityDisplay: React.FC = () => {
         setupOrMapping: { mapped: item.mappedAccountsCount, unmapped: item.unMappedAccountsCount },
       })));
     } catch {
-      setError('Failed to fetch data. Please try again.');
+      setError('Failed to fetch Group Class data. Please try again.');
+    }
+    setLoading(false);
+  };
+
+  // Fetch Group Data from db.json (JSON Server)
+  const fetchGroupData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch('http://localhost:3000/groups');
+      if (!response.ok) throw new Error('Failed to fetch Group data.');
+      const data = await response.json();
+      setGroupData(data.map((item: any, index: number) => ({
+        key: String(index + 1),
+        ...item
+      })));
+    } catch (error: any) {
+      setError(error.message);
     }
     setLoading(false);
   };
 
   useEffect(() => {
-    if (activeTab === 'groupClass') fetchGroupClassData();
+    if (activeTab === 'groupClass') {
+      fetchGroupClassData();
+    } else if (activeTab === 'group') {
+      fetchGroupData();
+    }
   }, [activeTab]);
-
-  useEffect(() => {
-    const fetchGroups = async () => {
-      const data = await getGroupDropdown("YourGroupType");
-      if (data) setGroupData(data.result);
-    };
-    fetchGroups();
-  }, []);
 
   const handleAddClass = async (newClass: any) => {
     setLoading(true);
@@ -84,7 +102,28 @@ const MultiEntityDisplay: React.FC = () => {
     }
     setLoading(false);
   };
-  
+
+  const handleAddGroup = async (newGroup: any) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(
+        "http://localhost:3000/groups",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newGroup),
+        }
+      );
+      if (!response.ok) throw new Error('Failed to add group');
+      await fetchGroupData();
+      setGroupDrawerVisible(false);
+    } catch (error: any) {
+      setError(error.message);
+    }
+    setLoading(false);
+  };
+
   return (
     <Layout className="entity-display-layout">
       <AppHeader />
@@ -116,16 +155,24 @@ const MultiEntityDisplay: React.FC = () => {
                 Add Class
               </Button>
             )}
+            {activeTab === 'group' && (
+              <Button type="primary" icon={<PlusOutlined />} className="add-button" onClick={() => setGroupDrawerVisible(true)}>
+                Add Group
+              </Button>
+            )}
           </div>
         </div>
 
         <div className="table-container">
-          {activeTab === 'groupClass' && (
+          {activeTab === 'groupClass' ? (
             loading ? <Spin size="large" /> : error ? <Alert message={error} type="error" showIcon /> : <GroupClassTable data={groupClassData} setData={setGroupClassData} />
-          )}
+          ) : activeTab === 'group' ? (
+            loading ? <Spin size="large" /> : error ? <Alert message={error} type="error" showIcon /> : <GroupTable data={groupData} setData={setGroupData} />
+          ) : null}
         </div>
       </Content>
-      <AddClassDrawer visible={drawerVisible} onClose={() => setDrawerVisible(false)} onAdd={handleAddClass} groupOptions={groupData} />
+      <AddClassDrawer visible={drawerVisible} onClose={() => setDrawerVisible(false)} onAdd={handleAddClass} />
+      <AddGroupDrawer visible={groupDrawerVisible} onClose={() => setGroupDrawerVisible(false)} onAdd={handleAddGroup} />
     </Layout>
   );
 };
