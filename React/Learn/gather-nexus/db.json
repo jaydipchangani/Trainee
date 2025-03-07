@@ -87,5 +87,41 @@
     "USD",
     "EUR",
     "INR"
+  ],
+  "classValues": [
+    {
+      "id": "1",
+      "name": "tony1"
+    },
+    {
+      "id": "2",
+      "name": "tony2"
+    },
+    {
+      "id": "3",
+      "name": "tony3"
+    }
+  ],
+  "regions": [
+    {
+      "id": "1",
+      "name": "North"
+    },
+    {
+      "id": "2",
+      "name": "Administrative"
+    },
+    {
+      "id": "3",
+      "name": "South"
+    },
+    {
+      "id": "4",
+      "name": "East"
+    },
+    {
+      "id": "5",
+      "name": "West"
+    }
   ]
 }
