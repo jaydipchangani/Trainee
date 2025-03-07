@@ -51,30 +51,47 @@ const GroupClassTable: React.FC<GroupClassTableProps> = ({ data, setData }) => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            "Authorization": `Bearer ${localStorage.getItem("token")}`
           },
         }
       );
-
+  
       if (!response.ok) throw new Error('Failed to clone the record');
-
+  
       const clonedData = await response.json();
-      const newClassName = `${record.className}_Copy_1`;
-
+      
+      // Generate a unique ID for the copied row
+      const newId = Date.now(); 
+  
+      // Ensure the copied row gets a unique class name
+      const existingCopies = data.filter(item =>
+        item.className.startsWith(`${record.className}_Copy`)
+      );
+  
+      const copyNumber = existingCopies.length + 1;
+      const newClassName = `${record.className}_Copy_${copyNumber}`;
+  
       const newRecord: GroupClassData = {
         ...clonedData.result,
-        key: clonedData.result.groupClassId,
+        id: newId, // Assign unique ID
         className: newClassName,
       };
-
+  
+      const updatedData = [...data, newRecord];
       message.success('Class copied successfully');
-      setData([...data, newRecord]);
-      localStorage.setItem('groupClassData', JSON.stringify([...data, newRecord]));
+      
+      // Update state and local storage
+      setData(updatedData);
+      localStorage.setItem('groupClassData', JSON.stringify(updatedData));
     } catch (error) {
       message.error('Copy failed');
     } finally {
       setLoading(false);
     }
   };
+  
+  
+  
 
   const handleEdit = (record: GroupClassData) => {
     setEditingRecord(record);
@@ -128,7 +145,7 @@ const GroupClassTable: React.FC<GroupClassTableProps> = ({ data, setData }) => {
     {
       title: 'Setup or Mapping',
       dataIndex: 'mappedAccountsCount',
-      key: 'mappedAccountsCount',
+      key: 'mappedAccountsCount', 
     },
     {
       title: 'Action',
