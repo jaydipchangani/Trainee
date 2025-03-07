@@ -1,14 +1,27 @@
-import React, { useState } from 'react';
-import { Table, Space, Tooltip, message } from 'antd';
-import { EditOutlined, CopyOutlined, DeleteOutlined } from '@ant-design/icons';
+import React, { useState, useEffect } from 'react';
+import { Table, Space, Tooltip, message, Drawer, Form, Input, Button } from 'antd';
+import { EditOutlined, CopyOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+
+interface MappedAccount {
+  mappedClassId: number;
+  companyAccountId: string;
+  classId: string;
+  className: string;
+  trackingCategoryId: string;
+}
+
+interface ClassValue {
+  classValueId: number;
+  classValue: string;
+  mappedAccounts: MappedAccount[];
+}
 
 interface GroupClassData {
   key: string;
-  groupclassId: number;
-  groupName: string;
+  groupClassId: number;
+  groupId: number;
   className: string;
-  mappedAccountsCount: number;
-  unMappedAccountsCount: number;
+  classValues: ClassValue[];
 }
 
 interface GroupClassTableProps {
@@ -18,85 +31,87 @@ interface GroupClassTableProps {
 
 const GroupClassTable: React.FC<GroupClassTableProps> = ({ data, setData }) => {
   const [loading, setLoading] = useState(false);
+  const [editDrawerVisible, setEditDrawerVisible] = useState(false);
+  const [editingRecord, setEditingRecord] = useState<GroupClassData | null>(null);
+  const [form] = Form.useForm();
 
-  // Function to get auth token from localStorage
-  const getAuthToken = () => {
-    return localStorage.getItem('token'); // Ensure authToken is stored in localStorage
-  };
-
-  // Fetch latest data from API with authentication
-  const fetchGroupClassById = async (groupclassId: number) => {
-    const token = getAuthToken();
-    if (!token) {
-      message.error('Authentication failed: No token found.');
-      return null;
+  useEffect(() => {
+    const storedData = localStorage.getItem('groupClassData');
+    if (storedData) {
+      setData(JSON.parse(storedData));
     }
+  }, [setData]);
 
-    try {
-      const response = await fetch(
-        'https://sandboxgathernexusapi.azurewebsites.net/api/GRC/GetAllGroupClasses',
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`, // Send token in headers
-          },
-        }
-      );
-
-      if (!response.ok) throw new Error('Failed to fetch group classes');
-
-      const responseData = await response.json();
-      const records = responseData?.result?.records || [];
-
-      return records.find((record: GroupClassData) => record.groupclassId === groupclassId);
-    } catch (error) {
-      console.error('Error fetching group class:', error);
-      message.error('Failed to fetch data.');
-      return null;
-    }
-  };
-
-  // Handle copying a record
   const handleCopy = async (record: GroupClassData) => {
     setLoading(true);
-    const token = getAuthToken();
-
-    if (!token) {
-      message.error('Authentication failed: No token found.');
-      setLoading(false);
-      return;
-    }
-
     try {
-      // Fetch the latest data before copying
-      const latestRecord = await fetchGroupClassById(record.groupclassId);
-      if (!latestRecord) {
-        message.error('Failed to fetch the latest data before copying.');
-        return;
-      }
-
-      // Call API to clone the record
       const response = await fetch(
-        `https://sandboxgathernexusapi.azurewebsites.net/api/GRC/CloneGRC?groupclassId=${latestRecord.groupclassId}`,
+        `https://sandboxgathernexusapi.azurewebsites.net/api/GRC/CloneGRC?groupclassId=${record.groupClassId}`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`, // Send token in headers
           },
         }
       );
 
       if (!response.ok) throw new Error('Failed to clone the record');
 
+      const clonedData = await response.json();
+      const newClassName = `${record.className}_Copy_1`;
+
+      const newRecord: GroupClassData = {
+        ...clonedData.result,
+        key: clonedData.result.groupClassId,
+        className: newClassName,
+      };
+
       message.success('Class copied successfully');
+      setData([...data, newRecord]);
+      localStorage.setItem('groupClassData', JSON.stringify([...data, newRecord]));
     } catch (error) {
-      console.error('Copy failed:', error);
       message.error('Copy failed');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleEdit = (record: GroupClassData) => {
+    setEditingRecord(record);
+    form.setFieldsValue(record);
+    setEditDrawerVisible(true);
+  };
+
+  const handleUpdate = async () => {
+    try {
+      const updatedValues = await form.validateFields();
+      const updatedData = data.map(item => item.key === editingRecord?.key ? { ...item, ...updatedValues } : item);
+      setData(updatedData);
+      localStorage.setItem('groupClassData', JSON.stringify(updatedData));
+
+      await fetch("https://sandboxgathernexusapi.azurewebsites.net/api/GRC/InsertUpdateGRCDetail", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("token")}`
+        },
+        body: JSON.stringify(updatedValues),
+      });
+
+      message.success("Record updated successfully");
+      setEditDrawerVisible(false);
+      setEditingRecord(null);
+    } catch (error) {
+      message.error("Record not updated");
+      setEditDrawerVisible(false);
+      setEditingRecord(null);
+    }
+  };
+
+  const addClassValue = () => {
+    form.setFieldsValue({
+      classValues: [...form.getFieldValue('classValues'), { classValueId: Date.now(), classValue: '', mappedAccounts: [] }],
+    });
   };
 
   const columns = [
@@ -104,22 +119,16 @@ const GroupClassTable: React.FC<GroupClassTableProps> = ({ data, setData }) => {
       title: 'Group Name',
       dataIndex: 'groupName',
       key: 'groupName',
-      sorter: (a: GroupClassData, b: GroupClassData) => a.groupName.localeCompare(b.groupName),
     },
     {
       title: 'Class Name',
       dataIndex: 'className',
       key: 'className',
-      sorter: (a: GroupClassData, b: GroupClassData) => a.className.localeCompare(b.className),
     },
     {
       title: 'Setup or Mapping',
-      key: 'setupOrMapping',
-      render: (_: any, record: GroupClassData) => (
-        <a href="#" style={{ color: '#1890ff' }}>
-          {record.mappedAccountsCount} Mapped {record.unMappedAccountsCount > 0 ? `& ${record.unMappedAccountsCount} Unmapped` : ''}
-        </a>
-      ),
+      dataIndex: 'mappedAccountsCount',
+      key: 'mappedAccountsCount',
     },
     {
       title: 'Action',
@@ -127,7 +136,7 @@ const GroupClassTable: React.FC<GroupClassTableProps> = ({ data, setData }) => {
       render: (_: any, record: GroupClassData) => (
         <Space size="middle">
           <Tooltip title="Edit">
-            <EditOutlined className="action-icon" />
+            <EditOutlined className="action-icon" onClick={() => handleEdit(record)} style={{ cursor: 'pointer' }} />
           </Tooltip>
           <Tooltip title="Copy">
             <CopyOutlined className="action-icon" onClick={() => handleCopy(record)} style={{ cursor: 'pointer' }} />
@@ -140,7 +149,37 @@ const GroupClassTable: React.FC<GroupClassTableProps> = ({ data, setData }) => {
     },
   ];
 
-  return <Table dataSource={data} columns={columns} pagination={false} className="entity-table" loading={loading} />;
+  return (
+    <>
+      <Table dataSource={data} columns={columns} pagination={false} className="entity-table" loading={loading} />
+      <Drawer title="Edit Record" visible={editDrawerVisible} onClose={() => setEditDrawerVisible(false)} width={400}>
+        <Form form={form} layout="vertical">
+          <Form.Item name="groupName" label="Group Name" rules={[{ required: true, message: "Please enter the group Name" }]}> 
+            <Input />
+          </Form.Item>
+          <Form.Item name="className" label="Class Name" rules={[{ required: true, message: "Please enter the class name" }]}> 
+            <Input />
+          </Form.Item>
+          <Form.List name="classValues">
+            {(fields, { add, remove }) => (
+              <>
+                {fields.map(({ key, name }) => (
+                  <div key={key} style={{ marginBottom: 8 }}>
+                    <Form.Item name={[name, 'classValue']} label="Class Value" rules={[{ required: true, message: "Enter class value" }]}> 
+                      <Input />
+                    </Form.Item>
+                    <Button type="link" onClick={() => remove(name)}>Remove</Button>
+                  </div>
+                ))}
+                <Button type="dashed" onClick={add} icon={<PlusOutlined />}>Add Class Value</Button>
+              </>
+            )}
+          </Form.List>
+          <Button type="primary" onClick={handleUpdate} style={{ marginTop: 16 }}>Update</Button>
+        </Form>
+      </Drawer>
+    </>
+  );
 };
 
 export default GroupClassTable;
