@@ -1,0 +1,13 @@
+{
+    "groups": [
+      {
+        "groupName": "Finance Group",
+        "companies": "Company A, Company B",
+        "groupClass": "Class A",
+        "financialYear": "2024",
+        "currency": "USD",
+        "transferOwnership": "Yes"
+      }
+    ]
+  }
+  

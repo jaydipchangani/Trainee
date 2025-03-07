@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table, Space, Tooltip } from 'antd';
 import { EditOutlined, CopyOutlined, DeleteOutlined } from '@ant-design/icons';
 
@@ -12,11 +12,35 @@ interface GroupData {
   transferOwnership: string;
 }
 
-interface GroupTableProps {
-  data: GroupData[];
-}
+const GroupTable: React.FC = () => {
+  const [data, setData] = useState<GroupData[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
-const GroupTable: React.FC<GroupTableProps> = ({ data }) => {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/groups'); // Adjust if your JSON server runs on a different port
+        const result = await response.json();
+        const formattedData = result.map((item: any, index: number) => ({
+          key: String(index + 1),
+          groupName: item.groupName,
+          companies: item.companies,
+          groupClass: item.groupClass,
+          financialYear: item.financialYear,
+          currency: item.currency,
+          transferOwnership: item.transferOwnership,
+        }));
+        setData(formattedData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const columns = [
     {
       title: '#',
@@ -73,7 +97,7 @@ const GroupTable: React.FC<GroupTableProps> = ({ data }) => {
     },
   ];
 
-  return <Table dataSource={data} columns={columns} pagination={false} className="entity-table" />;
+  return <Table dataSource={data} columns={columns} loading={loading} pagination={false} className="entity-table" />;
 };
 
 export default GroupTable;

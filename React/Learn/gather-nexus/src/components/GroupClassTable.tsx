@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Space, Tooltip, message, Drawer, Form, Input, Button } from 'antd';
+import { Table, Space, Tooltip, message, Drawer, Form, Input, Button, Select } from 'antd';
 import { EditOutlined, CopyOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 
 interface MappedAccount {
@@ -34,16 +34,25 @@ const GroupClassTable: React.FC<GroupClassTableProps> = ({ data, setData }) => {
   const [editDrawerVisible, setEditDrawerVisible] = useState(false);
   const [editingRecord, setEditingRecord] = useState<GroupClassData | null>(null);
   const [form] = Form.useForm();
+  const [groups, setGroups] = useState<{ groupId: number; groupName: string }[]>([]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const pageSize = 5;
 
   useEffect(() => {
-    const storedData = localStorage.getItem('groupClassData');
-    if (storedData) {
-      setData(JSON.parse(storedData));
-    }
-  }, [setData]);
+    const fetchGroups = async () => {
+      try {
+        const response = await fetch('/path/to/db.json'); // Replace with the actual path to db.json
+        if (!response.ok) throw new Error('Failed to fetch groups');
+        const data = await response.json();
+        setGroups(data.groups);
+      } catch (error) {
+        message.error('Failed to load groups');
+      }
+    };
+
+    fetchGroups();
+  }, []);
 
   const handleCopy = async (record: GroupClassData) => {
     setLoading(true);
@@ -58,31 +67,31 @@ const GroupClassTable: React.FC<GroupClassTableProps> = ({ data, setData }) => {
           },
         }
       );
-  
+
       if (!response.ok) throw new Error('Failed to clone the record');
-  
+
       const clonedData = await response.json();
-      
+
       // Generate a unique ID for the copied row
-      const newId = Date.now(); 
-  
+      const newId = Date.now();
+
       // Ensure the copied row gets a unique class name
       const existingCopies = data.filter(item =>
         item.className.startsWith(`${record.className}_Copy`)
       );
-  
+
       const copyNumber = existingCopies.length + 1;
       const newClassName = `${record.className}_Copy_${copyNumber}`;
-  
+
       const newRecord: GroupClassData = {
         ...clonedData.result,
         id: newId, // Assign unique ID
         className: newClassName,
       };
-  
+
       const updatedData = [...data, newRecord];
       message.success('Class copied successfully');
-      
+
       // Update state and local storage
       setData(updatedData);
       localStorage.setItem('groupClassData', JSON.stringify(updatedData));
@@ -92,9 +101,6 @@ const GroupClassTable: React.FC<GroupClassTableProps> = ({ data, setData }) => {
       setLoading(false);
     }
   };
-  
-  
-  
 
   const handleEdit = (record: GroupClassData) => {
     setEditingRecord(record);
@@ -146,9 +152,14 @@ const GroupClassTable: React.FC<GroupClassTableProps> = ({ data, setData }) => {
       key: 'className',
     },
     {
-      title: 'Setup or Mapping',
-      dataIndex: 'mappedAccountsCount',
-      key: 'mappedAccountsCount', 
+      title: "Setup/Mapping",
+      dataIndex: "setupOrMapping",
+      key: "setupOrMapping",
+      render: (setupOrMapping: any) => (
+        <span>
+          Mapped: {setupOrMapping.mapped}, Unmapped: {setupOrMapping.unmapped}
+        </span>
+      ),
     },
     {
       title: 'Action',
@@ -167,33 +178,31 @@ const GroupClassTable: React.FC<GroupClassTableProps> = ({ data, setData }) => {
         </Space>
       ),
     },
-    {
-      title: "Setup/Mapping",
-      dataIndex: "setupOrMapping",
-      key: "setupOrMapping",
-      render: (setupOrMapping: any) => (
-        <span>
-          Mapped: {setupOrMapping.mapped}, Unmapped: {setupOrMapping.unmapped}
-        </span>
-      ),},
   ];
 
   return (
     <>
       <Table dataSource={data} columns={columns}
-      pagination={{
-        current: currentPage,
-        pageSize: pageSize,
-        total: data.length,
-        onChange: (page) => setCurrentPage(page),
-        showSizeChanger: false, // Keep only 5 records per page
-      }} className="entity-table" loading={loading} />
+        pagination={{
+          current: currentPage,
+          pageSize: pageSize,
+          total: data.length,
+          onChange: (page) => setCurrentPage(page),
+          showSizeChanger: false, // Keep only 5 records per page
+        }} className="entity-table" loading={loading} />
       <Drawer title="Edit Record" visible={editDrawerVisible} onClose={() => setEditDrawerVisible(false)} width={400}>
         <Form form={form} layout="vertical">
-          <Form.Item name="groupName" label="Group Name" rules={[{ required: true, message: "Please enter the group Name" }]}> 
-            <Input />
+          <Form.Item name="groupId" label="Group Name" rules={[{ required: true, message: "Please select a group" }]}>
+            <Select placeholder="Select Group">
+              {groups.map(group => (
+                <Select.Option key={group.groupId} value={group.groupId}>
+                  {group.groupName}
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
-          <Form.Item name="className" label="Class Name" rules={[{ required: true, message: "Please enter the class name" }]}> 
+
+          <Form.Item name="className" label="Class Name" rules={[{ required: true, message: "Please enter class name" }]}>
             <Input />
           </Form.Item>
           <Form.List name="classValues">
@@ -201,7 +210,7 @@ const GroupClassTable: React.FC<GroupClassTableProps> = ({ data, setData }) => {
               <>
                 {fields.map(({ key, name }) => (
                   <div key={key} style={{ marginBottom: 8 }}>
-                    <Form.Item name={[name, 'classValue']} label="Class Value" rules={[{ required: true, message: "Enter class value" }]}> 
+                    <Form.Item name={[name, 'classValue']} label="Class Value" rules={[{ required: true, message: "Enter class value" }]}>
                       <Input />
                     </Form.Item>
                     <Button type="link" onClick={() => remove(name)}>Remove</Button>
