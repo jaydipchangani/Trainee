@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Layout, Menu, Input, Button, Spin, Alert,Tooltip,Table } from 'antd';
+import { Layout, Menu, Input, Button, Spin, Alert, Tooltip, Table } from 'antd';
 import { SearchOutlined, FilterOutlined, PlusOutlined, ArrowLeftOutlined, LogoutOutlined } from '@ant-design/icons';
 import { AuthContext } from "../context/AuthContext";
 import { getToken } from "../utils/storage";
@@ -7,7 +7,6 @@ import GroupTable from '../components/GroupTable';
 import GroupClassTable from '../components/GroupClassTable';
 import './MultiEntityDisplay.css';
 import AppHeader from '../components/Header';
-
 import AddGroupDrawer from './AddGroupDrawer';
 
 const { Header, Content } = Layout;
@@ -30,7 +29,6 @@ const MultiEntityDisplay: React.FC = () => {
     setLoading(true);
     try {
       // API call to add group
-      // Replace this with your API URL
       await fetch("https://sandboxgathernexusapi.azurewebsites.net/api/Group/GetGroups", {
         method: "POST",
         headers: {
@@ -47,14 +45,15 @@ const MultiEntityDisplay: React.FC = () => {
       setLoading(false);
     }
   };
+
   // Fetch data from API
   useEffect(() => {
-    const fetchData = async (url: string, setData: React.Dispatch<React.SetStateAction<any[]>>, mapData: (data: any) => any[]) => {
+    const fetchData = async (url: string, setData: React.Dispatch<React.SetStateAction<any[]>>, mapData: (data: any) => any[], storageKey: string) => {
       setLoading(true);
       setError(null);
       const token = getToken();
       try {
-        const response = await fetch(url,{
+        const response = await fetch(url, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`
@@ -62,7 +61,11 @@ const MultiEntityDisplay: React.FC = () => {
         });
         const data = await response.json();
         console.log(data);
-        setData(mapData(data.result.records));
+        const mappedData = mapData(data.result.records);
+        setData(mappedData);
+        
+        // Store fetched data into localStorage
+        localStorage.setItem(storageKey, JSON.stringify(mappedData));
       } catch {
         setError('Failed to fetch data. Please try again.');
       }
@@ -81,7 +84,8 @@ const MultiEntityDisplay: React.FC = () => {
             mapped: item.mappedAccountsCount,
             unmapped: item.unMappedAccountsCount,
           },
-        }))
+        })),
+        'groupClassData' // Store group class data in localStorage
       );
     } else if (activeTab === 'group') {
       fetchData(
@@ -91,14 +95,13 @@ const MultiEntityDisplay: React.FC = () => {
           key: String(index + 1),
           groupName: item.groupName,
           companies: item.erpCompanyData.map((company: any) => company.erpCompanyName).join(', '),
-          groupClass: 'N/A', // Assuming groupClass is not available in the response
+          groupClass: 'N/A',
           financialYear: item.financialYear,
           currency: item.currencyName,
           transferOwnership: item.groupTranferStatus === 0 ? 'No' : 'Yes',
-        }))
+        })),
+        'groupData' // Store group data in localStorage
       );
-      
-
     }
   }, [activeTab]);
 
@@ -135,15 +138,13 @@ const MultiEntityDisplay: React.FC = () => {
             )}
             {activeTab === 'group' && (
               <Button type="primary" icon={<PlusOutlined />} className="add-button" onClick={() => setDrawerVisible(true)}>Add Group</Button>
-
-              
             )}
           </div>
         </div>
 
         <div className="table-container">
           {activeTab === 'groupClass' && (
-            loading ? <Spin size="large" /> : error ? <Alert message={error} type="error" showIcon /> : <GroupClassTable data={groupClassData} />
+            loading ? <Spin size="large" /> : error ? <Alert message={error} type="error" showIcon /> : <GroupClassTable data={groupClassData} setData={setGroupClassData} />
           )}
           {activeTab === 'group' && (
             loading ? <Spin size="large" /> : error ? <Alert message={error} type="error" showIcon /> : <GroupTable data={groupData} />

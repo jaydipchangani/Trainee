@@ -4,7 +4,7 @@ import { EditOutlined, CopyOutlined, DeleteOutlined } from '@ant-design/icons';
 
 interface GroupClassData {
   key: string;
-  groupclassId: number; // Unique ID for cloning
+  groupclassId: number;
   groupName: string;
   className: string;
   mappedAccountsCount: number;
@@ -13,53 +13,89 @@ interface GroupClassData {
 
 interface GroupClassTableProps {
   data: GroupClassData[];
-  setData: (updatedData: GroupClassData[]) => void; // Function to update table data
+  setData: (updatedData: GroupClassData[]) => void;
 }
 
 const GroupClassTable: React.FC<GroupClassTableProps> = ({ data, setData }) => {
   const [loading, setLoading] = useState(false);
 
-  // Function to handle copying a record
-  const handleCopy = async (record: GroupClassData) => {
-    setLoading(true);
+  // Function to get auth token from localStorage
+  const getAuthToken = () => {
+    return localStorage.getItem('token'); // Ensure authToken is stored in localStorage
+  };
+
+  // Fetch latest data from API with authentication
+  const fetchGroupClassById = async (groupclassId: number) => {
+    const token = getAuthToken();
+    if (!token) {
+      message.error('Authentication failed: No token found.');
+      return null;
+    }
 
     try {
-      // Call API to clone the record using groupclassId
       const response = await fetch(
-        `https://sandboxgathernexusapi.azurewebsites.net/api/GRC/CloneGRC?groupclassId=${record.groupclassId}`,
+        'https://sandboxgathernexusapi.azurewebsites.net/api/GRC/GetAllGroupClasses',
         {
-          method: 'POST',
+          method: 'GET',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`, // Send token in headers
           },
         }
       );
 
-      // Debugging
+      if (!response.ok) throw new Error('Failed to fetch group classes');
+
+      const responseData = await response.json();
+      const records = responseData?.result?.records || [];
+
+      return records.find((record: GroupClassData) => record.groupclassId === groupclassId);
+    } catch (error) {
+      console.error('Error fetching group class:', error);
+      message.error('Failed to fetch data.');
+      return null;
+    }
+  };
+
+  // Handle copying a record
+  const handleCopy = async (record: GroupClassData) => {
+    setLoading(true);
+    const token = getAuthToken();
+
+    if (!token) {
+      message.error('Authentication failed: No token found.');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      // Fetch the latest data before copying
+      const latestRecord = await fetchGroupClassById(record.groupclassId);
+      if (!latestRecord) {
+        message.error('Failed to fetch the latest data before copying.');
+        return;
+      }
+
+      // Call API to clone the record
+      const response = await fetch(
+        `https://sandboxgathernexusapi.azurewebsites.net/api/GRC/CloneGRC?groupclassId=${latestRecord.groupclassId}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`, // Send token in headers
+          },
+        }
+      );
 
       if (!response.ok) throw new Error('Failed to clone the record');
 
-      const clonedData = await response.json(); // Assuming API returns new cloned record with groupclassId
-
-      // Generate a new unique class name
-      const newClassName = `${record.className}_Copy_1`;
-
-      // Create the new record
-      const newRecord: GroupClassData = {
-        ...clonedData.result, // Assuming API response contains cloned data inside 'result'
-        key: clonedData.result.groupclassId, // Use new groupclassId from API response
-        className: newClassName, // Updated class name
-      };
-
       message.success('Class copied successfully');
-
-      // Add copied record to the table UI
-      setData([...data, newRecord]);
     } catch (error) {
+      console.error('Copy failed:', error);
       message.error('Copy failed');
     } finally {
       setLoading(false);
-
     }
   };
 
