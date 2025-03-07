@@ -9,7 +9,7 @@ import AppHeader from '../components/Header';
 import AddClassDrawer from '../components/AddClassDrawer';
 import AddGroupDrawer from '../components/AddGroupDrawer'; // Import the new drawer component
 import './MultiEntityDisplay.css';
-
+import {Link} from 'react-router-dom';
 const { Content } = Layout;
 
 const MultiEntityDisplay: React.FC = () => {
@@ -39,7 +39,11 @@ const MultiEntityDisplay: React.FC = () => {
         groupName: item.groupName,
         className: item.className,
         classValues: item.classValues,
-        setupOrMapping: { mapped: item.mappedAccountsCount, unmapped: item.unMappedAccountsCount },
+        setupOrMapping: (
+          <Link to={`/configurationDisplay?groupclassId=${item.groupclassId}`}>
+            Mapped: {item.mappedAccountsCount}, Unmapped: {item.unMappedAccountsCount}
+          </Link>
+        ),
       })));
     } catch {
       setError('Failed to fetch Group Class data. Please try again.');
