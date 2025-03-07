@@ -7,9 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
-    ,"proxy": "http://localhost:5000"
-
+    "preview": "vite preview",
+    "proxy": "http://localhost:5000"
   },
   "dependencies": {
     "antd": "^5.24.3",

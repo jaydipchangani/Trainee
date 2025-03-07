@@ -1,22 +1,68 @@
-import React from 'react';
-import { Table, Space, Tooltip } from 'antd';
+import React, { useState } from 'react';
+import { Table, Space, Tooltip, message } from 'antd';
 import { EditOutlined, CopyOutlined, DeleteOutlined } from '@ant-design/icons';
 
 interface GroupClassData {
   key: string;
+  groupclassId: number; // Unique ID for cloning
   groupName: string;
   className: string;
-  setupOrMapping: {
-    mapped: number;
-    unmapped: number;
-  };
+  mappedAccountsCount: number;
+  unMappedAccountsCount: number;
 }
 
 interface GroupClassTableProps {
   data: GroupClassData[];
+  setData: (updatedData: GroupClassData[]) => void; // Function to update table data
 }
 
-const GroupClassTable: React.FC<GroupClassTableProps> = ({ data }) => {
+const GroupClassTable: React.FC<GroupClassTableProps> = ({ data, setData }) => {
+  const [loading, setLoading] = useState(false);
+
+  // Function to handle copying a record
+  const handleCopy = async (record: GroupClassData) => {
+    setLoading(true);
+
+    try {
+      // Call API to clone the record using groupclassId
+      const response = await fetch(
+        `https://sandboxgathernexusapi.azurewebsites.net/api/GRC/CloneGRC?groupclassId=${record.groupclassId}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      // Debugging
+
+      if (!response.ok) throw new Error('Failed to clone the record');
+
+      const clonedData = await response.json(); // Assuming API returns new cloned record with groupclassId
+
+      // Generate a new unique class name
+      const newClassName = `${record.className}_Copy_1`;
+
+      // Create the new record
+      const newRecord: GroupClassData = {
+        ...clonedData.result, // Assuming API response contains cloned data inside 'result'
+        key: clonedData.result.groupclassId, // Use new groupclassId from API response
+        className: newClassName, // Updated class name
+      };
+
+      message.success('Class copied successfully');
+
+      // Add copied record to the table UI
+      setData([...data, newRecord]);
+    } catch (error) {
+      message.error('Copy failed');
+    } finally {
+      setLoading(false);
+
+    }
+  };
+
   const columns = [
     {
       title: 'Group Name',
@@ -32,11 +78,10 @@ const GroupClassTable: React.FC<GroupClassTableProps> = ({ data }) => {
     },
     {
       title: 'Setup or Mapping',
-      dataIndex: 'setupOrMapping',
       key: 'setupOrMapping',
-      render: (setupOrMapping: { mapped: number; unmapped: number }) => (
+      render: (_: any, record: GroupClassData) => (
         <a href="#" style={{ color: '#1890ff' }}>
-          {setupOrMapping.mapped} Mapped {setupOrMapping.unmapped > 0 ? `& ${setupOrMapping.unmapped} Unmapped` : ''}
+          {record.mappedAccountsCount} Mapped {record.unMappedAccountsCount > 0 ? `& ${record.unMappedAccountsCount} Unmapped` : ''}
         </a>
       ),
     },
@@ -49,7 +94,7 @@ const GroupClassTable: React.FC<GroupClassTableProps> = ({ data }) => {
             <EditOutlined className="action-icon" />
           </Tooltip>
           <Tooltip title="Copy">
-            <CopyOutlined className="action-icon" />
+            <CopyOutlined className="action-icon" onClick={() => handleCopy(record)} style={{ cursor: 'pointer' }} />
           </Tooltip>
           <Tooltip title="Delete">
             <DeleteOutlined className="action-icon" />
@@ -59,7 +104,7 @@ const GroupClassTable: React.FC<GroupClassTableProps> = ({ data }) => {
     },
   ];
 
-  return <Table dataSource={data} columns={columns} pagination={false} className="entity-table" />;
+  return <Table dataSource={data} columns={columns} pagination={false} className="entity-table" loading={loading} />;
 };
 
 export default GroupClassTable;

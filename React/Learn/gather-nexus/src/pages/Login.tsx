@@ -1,166 +1,84 @@
-import React, { useState, useEffect } from "react";
-import { Drawer, Button, Form, Input, Select, Checkbox, Space, message } from "antd";
-import { getToken } from "../utils/storage";
+import React, { useState, useContext } from "react";
+import { Form, Input, Button, Typography, Card, message as antdMessage } from "antd";
+import { loginUser } from "../api/auth";
+import { AuthContext } from "../context/AuthContext";
+import { Link } from "react-router-dom";
+import "./Login.css"; // Add CSS file for styling
 
-const { Option } = Select;
+const { Title, Text } = Typography;
 
-interface Company {
-  id: number;
-  name: string;
-}
-
-interface Props {
-  visible: boolean;
-  onClose: () => void;
-}
-
-const AddGroupDrawer: React.FC<Props> = ({ visible, onClose }) => {
-  const [form] = Form.useForm();
-  const [currencies, setCurrencies] = useState<string[]>([]);
-  const [companies, setCompanies] = useState<Company[]>([]);
+const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
+  const auth = useContext(AuthContext);
 
-  useEffect(() => {
-    if (visible) {
-      fetchCurrencies();
-      fetchCompanies();
-    }
-  }, [visible]);
-
-  const fetchCurrencies = async () => {
-    try {
-      const token = getToken();
-      const response = await fetch("/api/Configuration/AddOrUpdateConfiguration", {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      const data = await response.json();
-      if (data && Array.isArray(data.currencies)) {
-        setCurrencies(data.currencies);
-      } else {
-        setCurrencies([]);
-      }
-    } catch (error) {
-      console.error("Failed to fetch currencies:", error);
-      setCurrencies([]);
-    } finally {
-      console.log("Currencies:", currencies);
-    }
-  };
-
-  const fetchCompanies = async () => {
-    try {
-      const token = getToken();
-      const response = await fetch("https://sandboxgathernexusapi.azurewebsites.net/api/Configuration/GetCurrencyDropdown", {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      const data = await response.json();
-      if (data && Array.isArray(data.companies)) {
-        setCompanies(data.companies);
-      } else {
-        setCompanies([]);
-      }
-    } catch (error) {
-      console.error("Failed to fetch companies:", error);
-      setCompanies([]);
-    } finally {
-      console.log("Companies:", companies);
-    }
-  };
-
-  const handleSubmit = async (values: any) => {
+  const onFinish = async (values: any) => {
     setLoading(true);
     try {
-      const token = getToken();
-      const response = await fetch("/api/Configuration/AddOrUpdateConfiguration", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          groupName: values.groupName,
-          currency: values.currency,
-          fyPeriod: values.fyPeriod,
-          companies: values.companies,
-        }),
-      });
+      const response = await loginUser(values.email, values.password);
+      
+      console.log("Login Response:", response.data); // Debugging
 
-      if (response.ok) {
-        message.success("Group added successfully!");
-        form.resetFields();
-        onClose();
+      // Extract response details
+      const { responseStatus, message, result } = response.data;
+
+      if (responseStatus === 3 && result?.access_token) {
+        // Save token & user details to localStorage
+        localStorage.setItem("access_token", result.access_token);
+        localStorage.setItem("user", JSON.stringify(result.userDetails));
+
+        // Login user in context
+        auth?.login(result.access_token, result.userDetails.id);
+        
+        antdMessage.success(message); // Show success notification
       } else {
-        message.error("Failed to add group.");
+        antdMessage.error("Login failed! Please check your credentials.");
       }
     } catch (error) {
-      message.error("Failed to add group.");
+      console.error("Login Error:", error);
+      antdMessage.error("Something went wrong! Try again later.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Drawer
-      title="Add New Group"
-      placement="right"
-      closable
-      onClose={onClose}
-      open={visible}
-      width={500}
-      style={{ backdropFilter: "blur(5px)" }}
-    >
-      <Form form={form} layout="vertical" onFinish={handleSubmit}>
-        <Form.Item name="groupName" label="Group Name" rules={[{ required: true, message: "Please enter group name" }]}>
-          <Input placeholder="Enter group name" />
-        </Form.Item>
+    <div className="login-container">
+      {/* Left Side - Image */}
+      <div className="login-left">
+        <div className="overlay"></div>
+      </div>
 
-        <Form.Item name="currency" label="Currency" rules={[{ required: true, message: "Please select a currency" }]}>
-          <Select placeholder="Select currency">
-            {currencies.length > 0 ? (
-              currencies.map((currency) => (
-                <Option key={currency} value={currency}>
-                  {currency}
-                </Option>
-              ))
-            ) : (
-              <Option value="" disabled>
-                No currencies available
-              </Option>
-            )}
-          </Select>
-        </Form.Item>
+      {/* Right Side - Form */}
+      <div className="login-right">
+        <Card className="login-card">
+          <Title level={3} className="login-title">Welcome Back</Title>
+          <Text type="secondary">Enter your credentials to access your account</Text>
 
-        <Form.Item name="fyPeriod" label="Choose FY Period" rules={[{ required: true, message: "Please select FY period" }]}>
-          <Select placeholder="Select financial year">
-            <Option value="2023-2024">2023-2024</Option>
-            <Option value="2024-2025">2024-2025</Option>
-          </Select>
-        </Form.Item>
+          <Form layout="vertical" onFinish={onFinish} className="login-form">
+            <Form.Item name="email" label="Email" rules={[{ required: true, message: "Please enter your email" }]}>
+              <Input placeholder="Enter your email" />
+            </Form.Item>
 
-        <Form.Item name="companies" label="Companies" rules={[{ required: true, message: "Please select at least one company" }]}>
-          <Checkbox.Group>
-            <Space direction="vertical">
-              {companies.map((company) => (
-                <Checkbox key={company.id} value={company.id}>
-                  {company.name}
-                </Checkbox>
-              ))}
-            </Space>
-          </Checkbox.Group>
-        </Form.Item>
+            <Form.Item name="password" label="Password" rules={[{ required: true, message: "Please enter your password" }]}>
+              <Input.Password placeholder="Enter your password" />
+            </Form.Item>
 
-        <Form.Item>
-          <Button type="primary" htmlType="submit" loading={loading} block>
-            Add Group
-          </Button>
-        </Form.Item>
-      </Form>
-    </Drawer>
+            <div className="login-links">
+              <Link to="/forgot-password">Forgot Password?</Link>
+            </div>
+
+            <Button type="primary" htmlType="submit" block loading={loading}>
+              Sign In
+            </Button>
+          </Form>
+
+          <div className="register-link">
+            <Text>Don't have an account? <Link to="/register">Register</Link></Text>
+          </div>
+        </Card>
+      </div>
+    </div>
   );
 };
 
-export default AddGroupDrawer;
+export default Login;

@@ -1,16 +1,17 @@
 .login-container {
   display: flex;
   height: 100vh;
-  background-color: #f4f6f8;
+  background-color: #FEFFFE;
 }
 
 /* Left Side - Image */
 .login-left {
   flex: 1;
-  background: url('https://cdn.pixabay.com/photo/2024/11/18/10/20/businessman-9205819_1280.png') center/cover no-repeat;
+  background: url('https://sandboxgathernexus.azurewebsites.net/assets/images/Log-in-Vector.svg') center/cover no-repeat;
   position: relative;
   width: 100%;
   height: 100%;
+  background-size: 70%;
 }
 
 .overlay {
