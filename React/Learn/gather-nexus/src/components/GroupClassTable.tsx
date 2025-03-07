@@ -35,6 +35,9 @@ const GroupClassTable: React.FC<GroupClassTableProps> = ({ data, setData }) => {
   const [editingRecord, setEditingRecord] = useState<GroupClassData | null>(null);
   const [form] = Form.useForm();
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 5;
+
   useEffect(() => {
     const storedData = localStorage.getItem('groupClassData');
     if (storedData) {
@@ -164,11 +167,27 @@ const GroupClassTable: React.FC<GroupClassTableProps> = ({ data, setData }) => {
         </Space>
       ),
     },
+    {
+      title: "Setup/Mapping",
+      dataIndex: "setupOrMapping",
+      key: "setupOrMapping",
+      render: (setupOrMapping: any) => (
+        <span>
+          Mapped: {setupOrMapping.mapped}, Unmapped: {setupOrMapping.unmapped}
+        </span>
+      ),},
   ];
 
   return (
     <>
-      <Table dataSource={data} columns={columns} pagination={false} className="entity-table" loading={loading} />
+      <Table dataSource={data} columns={columns}
+      pagination={{
+        current: currentPage,
+        pageSize: pageSize,
+        total: data.length,
+        onChange: (page) => setCurrentPage(page),
+        showSizeChanger: false, // Keep only 5 records per page
+      }} className="entity-table" loading={loading} />
       <Drawer title="Edit Record" visible={editDrawerVisible} onClose={() => setEditDrawerVisible(false)} width={400}>
         <Form form={form} layout="vertical">
           <Form.Item name="groupName" label="Group Name" rules={[{ required: true, message: "Please enter the group Name" }]}> 
