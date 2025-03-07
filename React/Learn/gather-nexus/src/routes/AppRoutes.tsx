@@ -17,7 +17,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
       <Route path="/multi" element={<PrivateRoute><MultiEntityDisplay /></PrivateRoute>} />
-     <Route path="/ " element={<MapGroup title="tony US" />} /> 
+     <Route path="/mapping" element={<MapGroup title="tony US" />} /> 
       <Route path="*" element={<h1>404 Not Found</h1>} />
   
 
