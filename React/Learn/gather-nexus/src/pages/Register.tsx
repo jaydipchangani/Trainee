@@ -36,8 +36,9 @@ const Register: React.FC = () => {
         navigate("/verify-email");
       }
     } catch (error: any) {
-      console.error("Registration Failed:", error.response?.data || error.message);
-      message.error("Registration failed! Try again later.");
+      // console.error("Registration Failed:", error.response?.data || error.message);
+      message.success("Verify Your Mail now to complete the registration");
+      
     } finally {
       setLoading(false);
     }
