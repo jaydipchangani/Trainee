@@ -1,53 +1,91 @@
 {
   "groups": [
     {
-      "groupName": "Finance Group",
-      "companies": "Company A, Company B",
-      "groupClass": "Class A",
-      "financialYear": "2024",
+      "id": 1,
+      "groupName": "Tech Giants",
+      "companies": [
+        "Tech Corp"
+      ],
+      "groupClass": "Enterprise",
+      "financialYear": "Jan-Dec",
       "currency": "USD",
-      "transferOwnership": "Yes"
+      "transferOwnership": "-"
     },
     {
-      "groupName": "Technology Group",
-      "companies": "Company C, Company D",
-      "groupClass": "Class B",
-      "financialYear": "2024",
+      "id": 2,
+      "groupName": "Finance Leaders",
+      "companies": [
+        "Finance Inc.",
+        "Tech Corp"
+      ],
+      "groupClass": "Corporate",
+      "financialYear": "Apr-Mar",
       "currency": "EUR",
-      "transferOwnership": "No"
+      "transferOwnership": "-"
     },
     {
-      "groupName": "Healthcare Group",
-      "companies": "Company E, Company F",
-      "groupClass": "Class C",
-      "financialYear": "2023",
-      "currency": "GBP",
-      "transferOwnership": "Yes"
+      "id": 3,
+      "groupName": "Healthcare Innovators",
+      "companies": [
+        "Tech Corp"
+      ],
+      "groupClass": "Enterprise",
+      "financialYear": "Jan-Dec",
+      "currency": "INR",
+      "transferOwnership": "-"
     },
     {
-      "groupName": "Retail Group",
-      "companies": "Company G, Company H",
-      "groupClass": "Class A",
-      "financialYear": "2024",
+      "id": 4,
+      "groupName": "Retail Giants",
+      "companies": [
+        "Finance Inc."
+      ],
+      "groupClass": "Corporate",
+      "financialYear": "Apr-Mar",
       "currency": "USD",
-      "transferOwnership": "No"
+      "transferOwnership": "-"
     },
     {
-      "groupName": "Manufacturing Group",
-      "companies": "Company I, Company J",
-      "groupClass": "Class B",
-      "financialYear": "2023",
-      "currency": "JPY",
-      "transferOwnership": "Yes"
+      "id": 1741346394535,
+      "groupName": "Tech Giants 1 (Copy)",
+      "companies": [
+        "Tech Corp"
+      ],
+      "groupClass": "Enterprise",
+      "financialYear": "Jan-Dec",
+      "currency": "USD",
+      "transferOwnership": "-"
+    },
+    {
+      "id": 1,
+      "key": "1741349181372",
+      "groupName": "Tech Giants Copy",
+      "companies": [
+        "Tech Corp"
+      ],
+      "groupClass": "Enterprise",
+      "financialYear": "Jan-Dec",
+      "currency": "USD",
+      "transferOwnership": "-"
     }
   ],
-
   "companies": [
-    { "companyId": "C1", "companyName": "Tech Corp", "industry": "Software", "location": "USA" },
-    { "companyId": "C2", "companyName": "Finance Inc.", "industry": "Banking", "location": "UK" }
+    {
+      "companyId": "C1",
+      "companyName": "Tech Corp",
+      "industry": "Software",
+      "location": "USA"
+    },
+    {
+      "companyId": "C2",
+      "companyName": "Finance Inc.",
+      "industry": "Banking",
+      "location": "UK"
+    }
   ],
-  
-  "currencies": ["USD", "EUR", "INR"]
+  "currencies": [
+    "USD",
+    "EUR",
+    "INR"
+  ]
 }
-
-
