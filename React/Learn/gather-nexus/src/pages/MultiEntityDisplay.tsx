@@ -1,15 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Layout, Menu, Input, Button, Spin, Alert, Tooltip, Table } from 'antd';
-import { SearchOutlined, FilterOutlined, PlusOutlined, ArrowLeftOutlined, LogoutOutlined } from '@ant-design/icons';
+import { Layout, Menu, Input, Button, Spin, Alert } from 'antd';
+import { SearchOutlined, FilterOutlined, PlusOutlined } from '@ant-design/icons';
 import { AuthContext } from "../context/AuthContext";
 import { getToken } from "../utils/storage";
-import GroupTable from '../components/GroupTable';
 import GroupClassTable from '../components/GroupClassTable';
 import './MultiEntityDisplay.css';
 import AppHeader from '../components/Header';
-import AddGroupDrawer from './AddGroupDrawer';
+import AddClassDrawer from '../components/AddClassDrawer'; // Import the new drawer component
 
-const { Header, Content } = Layout;
+const { Content } = Layout;
 
 const MultiEntityDisplay: React.FC = () => {
   const [activeTab, setActiveTab] = useState('groupClass');
@@ -18,96 +17,72 @@ const MultiEntityDisplay: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [groupClassData, setGroupClassData] = useState<any[]>([]);
   const [groupData, setGroupData] = useState<any[]>([]);
-  const auth = useContext(AuthContext);
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const auth = useContext(AuthContext);
 
-  // Fetch user data from localStorage
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
-  const userName = user?.name || "Guest";
+  const fetchGroupClassData = async () => {
+    setLoading(true);
+    setError(null);
+    const token = getToken();
+    try {
+      const response = await fetch('https://sandboxgathernexusapi.azurewebsites.net/api/GRC/GetGRCrecords', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const data = await response.json();
+      const mappedData = data.result.records.map((item: any, index: number) => ({
+        key: String(index + 1),
+        groupclassId: item.groupclassId,
+        groupName: item.groupName,
+        className: item.className,
+        classValues: item.classValues,
+        setupOrMapping: {
+          mapped: item.mappedAccountsCount,
+          unmapped: item.unMappedAccountsCount,
+        },
+      }));
+      setGroupClassData(mappedData);
+      localStorage.setItem('groupClassData', JSON.stringify(mappedData));
+    } catch {
+      setError('Failed to fetch data. Please try again.');
+    }
+    setLoading(false);
+  };
 
-  const handleAddGroup = async (newGroup: any) => {
+  useEffect(() => {
+    if (activeTab === 'groupClass') {
+      fetchGroupClassData();
+    }
+  }, [activeTab]);
+
+  const handleAddClass = async (newClass: any) => {
     setLoading(true);
     try {
-      // API call to add group
-      await fetch("https://sandboxgathernexusapi.azurewebsites.net/api/Group/GetGroups", {
+      const response = await fetch("https://sandboxgathernexusapi.azurewebsites.net/api/GRC/AddClass", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${getToken()}`,
         },
-        body: JSON.stringify(newGroup),
+        body: JSON.stringify(newClass),
       });
 
-      setGroupClassData([...groupClassData, newGroup]); // Update UI
+      if (response.ok) {
+        await fetchGroupClassData(); // Refresh data
+      }
     } catch (error) {
-      console.error("Failed to add group", error);
+      console.error("Failed to add class", error);
     } finally {
       setLoading(false);
+      setDrawerVisible(false);
     }
   };
 
-  // Fetch data from API
-  useEffect(() => {
-    const fetchData = async (url: string, setData: React.Dispatch<React.SetStateAction<any[]>>, mapData: (data: any) => any[], storageKey: string) => {
-      setLoading(true);
-      setError(null);
-      const token = getToken();
-      try {
-        const response = await fetch(url, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        const data = await response.json();
-        console.log(data);
-        const mappedData = mapData(data.result.records);
-        setData(mappedData);
-        
-        // Store fetched data into localStorage
-        localStorage.setItem(storageKey, JSON.stringify(mappedData));
-      } catch {
-        setError('Failed to fetch data. Please try again.');
-      }
-      setLoading(false);
-    };
-
-    if (activeTab === 'groupClass') {
-      fetchData(
-        'https://sandboxgathernexusapi.azurewebsites.net/api/GRC/GetGRCrecords',
-        setGroupClassData,
-        (records) => records.map((item: any, index: number) => ({
-          key: String(index + 1),
-          groupName: item.groupName,
-          className: item.className,
-          setupOrMapping: {
-            mapped: item.mappedAccountsCount,
-            unmapped: item.unMappedAccountsCount,
-          },
-        })),
-        'groupClassData' // Store group class data in localStorage
-      );
-    } else if (activeTab === 'group') {
-      fetchData(
-        'https://sandboxgathernexusapi.azurewebsites.net/api/Group/GetGroups',
-        setGroupData,
-        (records) => records.map((item: any, index: number) => ({
-          key: String(index + 1),
-          groupName: item.groupName,
-          companies: item.erpCompanyData.map((company: any) => company.erpCompanyName).join(', '),
-          groupClass: 'N/A',
-          financialYear: item.financialYear,
-          currency: item.currencyName,
-          transferOwnership: item.groupTranferStatus === 0 ? 'No' : 'Yes',
-        })),
-        'groupData' // Store group data in localStorage
-      );
-    }
-  }, [activeTab]);
-
   return (
     <Layout className="entity-display-layout">
-      <AppHeader/>
+      <AppHeader />
 
       <Content className="content">
         <div className="page-header">
@@ -134,10 +109,9 @@ const MultiEntityDisplay: React.FC = () => {
             />
             <Button icon={<FilterOutlined />} className="filter-button">Filter</Button>
             {activeTab === 'groupClass' && (
-              <Button type="primary" icon={<PlusOutlined />} className="add-button">Add Class</Button>
-            )}
-            {activeTab === 'group' && (
-              <Button type="primary" icon={<PlusOutlined />} className="add-button" onClick={() => setDrawerVisible(true)}>Add Group</Button>
+              <Button type="primary" icon={<PlusOutlined />} className="add-button" onClick={() => setDrawerVisible(true)}>
+                Add Class
+              </Button>
             )}
           </div>
         </div>
@@ -146,13 +120,10 @@ const MultiEntityDisplay: React.FC = () => {
           {activeTab === 'groupClass' && (
             loading ? <Spin size="large" /> : error ? <Alert message={error} type="error" showIcon /> : <GroupClassTable data={groupClassData} setData={setGroupClassData} />
           )}
-          {activeTab === 'group' && (
-            loading ? <Spin size="large" /> : error ? <Alert message={error} type="error" showIcon /> : <GroupTable data={groupData} />
-          )}
-          {activeTab === 'company' && <div className="placeholder-content"><p>Company content would appear here</p></div>}
-          {activeTab === 'configurationDisplay' && <div className="placeholder-content"><p>Configuration Display content would appear here</p></div>}
         </div>
       </Content>
+
+      <AddClassDrawer visible={drawerVisible} onClose={() => setDrawerVisible(false)} onAdd={handleAddClass} />
     </Layout>
   );
 };
