@@ -59,26 +59,53 @@ const MultiEntityDisplay: React.FC = () => {
 
   const handleAddClass = async (newClass: any) => {
     setLoading(true);
+    setError(null);
+  
+    const requestData = {
+      id: newClass.id || 0,
+      groupId: newClass.groupId ?? 0,
+      className: newClass.className || "",
+      gRCValuesDetails: newClass.gRCValuesDetails?.length
+        ? newClass.gRCValuesDetails.map((item: any) => ({
+            id: item.id || 0,
+            classValue: item.classValue || "",
+          }))
+        : [],
+    };
+  
     try {
-      const response = await fetch("https://sandboxgathernexusapi.azurewebsites.net/api/GRC/AddClass", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getToken()}`,
-        },
-        body: JSON.stringify(newClass),
-      });
-
-      if (response.ok) {
-        await fetchGroupClassData(); // Refresh data
+      const response = await fetch(
+        "https://sandboxgathernexusapi.azurewebsites.net/api/GRC/InsertUpdateGRCDetail",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getToken()}`,
+          },
+          body: JSON.stringify(requestData),
+        }
+      );
+  
+      const responseData = await response.json();
+      console.log("API Response:", responseData);
+  
+      if (responseData.responseStatus !== 3) {
+        throw new Error(responseData.message || "Failed to add class");
       }
-    } catch (error) {
-      console.error("Failed to add class", error);
+  
+      // Wait for API update before fetching the latest data
+      await new Promise((resolve) => setTimeout(resolve, 1000)); 
+      await fetchGroupClassData(); // Refresh the table with the latest data
+  
+      setDrawerVisible(false); // Close drawer
+    } catch (error: any) {
+      console.error("Failed to add class:", error);
+      setError(error.message);
     } finally {
       setLoading(false);
-      setDrawerVisible(false);
     }
   };
+  
 
   return (
     <Layout className="entity-display-layout">
