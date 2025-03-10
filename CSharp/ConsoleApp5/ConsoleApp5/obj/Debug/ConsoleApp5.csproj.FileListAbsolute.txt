@@ -1,0 +1,7 @@
+C:\Trainee_new\CSharp\ConsoleApp5\ConsoleApp5\bin\Debug\ConsoleApp5.exe.config
+C:\Trainee_new\CSharp\ConsoleApp5\ConsoleApp5\bin\Debug\ConsoleApp5.exe
+C:\Trainee_new\CSharp\ConsoleApp5\ConsoleApp5\bin\Debug\ConsoleApp5.pdb
+C:\Trainee_new\CSharp\ConsoleApp5\ConsoleApp5\obj\Debug\ConsoleApp5.csproj.AssemblyReference.cache
+C:\Trainee_new\CSharp\ConsoleApp5\ConsoleApp5\obj\Debug\ConsoleApp5.csproj.CoreCompileInputs.cache
+C:\Trainee_new\CSharp\ConsoleApp5\ConsoleApp5\obj\Debug\ConsoleApp5.exe
+C:\Trainee_new\CSharp\ConsoleApp5\ConsoleApp5\obj\Debug\ConsoleApp5.pdb
