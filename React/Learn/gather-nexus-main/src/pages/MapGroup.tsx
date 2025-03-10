@@ -474,8 +474,8 @@ const MapGroup: React.FC<MapGroupProps> = ({ title }) => {
       console.log("An error occurred while updating mappings.");
     }
 
-    setIsModalOpen(false); // Close modal
-    navigate(-1);
+    // setIsModalOpen(false); // Close modal
+    // navigate(-1);
   };
 
   const PreviewModal: React.FC<{
