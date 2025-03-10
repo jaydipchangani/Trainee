@@ -64,24 +64,6 @@ const MultiEntityDisplay: React.FC = () => {
   };
 
   // Fetch Group Data from db.json (JSON Server)
-  const fetchGroupData = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch("http://localhost:3001/groups");
-      if (!response.ok) throw new Error("Failed to fetch Group data.");
-      const data = await response.json();
-      setGroupData(
-        data.map((item: any, index: number) => ({
-          key: String(index + 1),
-          ...item,
-        }))
-      );
-    } catch (error: any) {
-      setError(error.message);
-    }
-    setLoading(false);
-  };
 
   useEffect(() => {
     if (activeTab === "groupClass") {
@@ -126,9 +108,6 @@ const MultiEntityDisplay: React.FC = () => {
     setLoading(false);
   };
 
-  const handleSearch = (value: string) => {
-    setSearchText(value);
-  };
 
   const filteredGroupClassData = groupClassData.filter(
     (item) =>
@@ -139,6 +118,35 @@ const MultiEntityDisplay: React.FC = () => {
   const filteredGroupData = groupData.filter(
     (item) => item.name?.toLowerCase().includes(searchText.toLowerCase()) // Ensure `name` exists
   );
+
+  const fetchGroupData = async (searchText = "") => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`http://localhost:3001/groups?search=${searchText}`);
+      if (!response.ok) throw new Error("Failed to fetch Group data.");
+      const data = await response.json();
+      setGroupData(
+        data.map((item: any, index: number) => ({
+          key: String(index + 1),
+          ...item,
+        }))
+      );
+    } catch (error: any) {
+      setError(error.message);
+    }
+    setLoading(false);
+  };
+  
+  const handleSearch = (value: string) => {
+    setSearchText(value);
+    if (activeTab === "group") {
+      fetchGroupData(value); // Fetch data from API instead of filtering locally
+    }
+  };
+  
+
+  
   const handleAddGroup = async (newGroup: any) => {
     setLoading(true);
     setError(null);
@@ -244,7 +252,7 @@ const MultiEntityDisplay: React.FC = () => {
             ) : error ? (
               <Alert message={error} type="error" showIcon />
             ) : (
-              <GroupTable data={filteredGroupData} setData={setGroupData} />
+              <GroupTable data={fetchGroupData} setData={setGroupData} />
             )
           ) : null}
         </div>
