@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
-import { Layout, Tooltip, Typography } from "antd";
+import { Layout, Tooltip, Typography, Dropdown, Menu } from "antd";
 import { AuthContext } from "../context/AuthContext";
 import { getToken } from "../utils/storage";
-import { LogoutOutlined } from "@ant-design/icons";
+import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
 
 const { Header } = Layout;
 const { Title } = Typography;
@@ -20,6 +20,15 @@ const AppHeader: React.FC = () => {
     auth?.logout(); // Call the logout function from context
   };
 
+  // Dropdown menu for user options
+  const menu = (
+    <Menu>
+      <Menu.Item key="logout" onClick={handleLogout} icon={<LogoutOutlined />}>
+        Logout
+      </Menu.Item>
+    </Menu>
+  );
+
   return (
     <Header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "white", color: "#fff", padding: "0 20px" }}>
       <div className="logo">
@@ -28,15 +37,11 @@ const AppHeader: React.FC = () => {
         </Title>
       </div>
       <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-        <span style={{ color: "#000000", fontWeight: "bold" }}> {userName}</span>
-        {getToken() && (
-          <Tooltip title="Logout">
-            <LogoutOutlined 
-              onClick={handleLogout} 
-              style={{ fontSize: "18px", color: "#000000", cursor: "pointer" }} 
-            />
-          </Tooltip>
-        )}
+        <Dropdown overlay={menu} trigger={["click"]}>
+          <span style={{ color: "#000000", fontWeight: "bold", cursor: "pointer", display: "flex", alignItems: "center", gap: "5px" }}>
+            <UserOutlined style={{ fontSize: "16px" }} /> {userName}
+          </span>
+        </Dropdown>
       </div>
     </Header>
   );
