@@ -133,6 +133,38 @@
         "Sandbox Company_US_10",
         "Sandbox Company_US_9"
       ]
+    },
+    {
+      "id": "877e",
+      "groupName": "demo1 demo",
+      "currency": "CAD",
+      "financialYear": "Jan-Dec",
+      "companies": [
+        "Sandbox Company_AU_9",
+        "Sandbox Company_US_10",
+        "Sandbox Company_US_9"
+      ]
+    },
+    {
+      "id": "540e",
+      "groupName": "rajDeeepSeek",
+      "currency": "EUR",
+      "financialYear": "Apr-Mar",
+      "companies": [
+        "Sandbox Company_US_10",
+        "Sandbox Company_US_9"
+      ]
+    },
+    {
+      "id": "843c",
+      "groupName": "jd",
+      "currency": "EUR",
+      "financialYear": "Apr-Mar",
+      "companies": [
+        "Sandbox Company_AU_9",
+        "Sandbox Company_US_10",
+        "Sandbox Company_US_9"
+      ]
     }
   ],
   "companies": [

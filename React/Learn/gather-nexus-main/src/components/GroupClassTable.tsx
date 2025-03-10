@@ -108,26 +108,37 @@ const GroupClassTable: React.FC<GroupClassTableProps> = ({ data, setData }) => {
         try {
           const token = localStorage.getItem("token");
           if (!token) {
-            throw new Error('No token found in local storage');
+            message.error('Authentication token is missing. Please log in again.');
+            return;
           }
-
-          await fetch(`https://sandboxgathernexusapi.azurewebsites.net/api/Company/DeleteCompanyRecord/${groupclassId}`, {
-            method: 'DELETE',
-            headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json'
+  
+          const response = await fetch(
+            `https://sandboxgathernexusapi.azurewebsites.net/api/Company/DeleteCompanyRecord/${groupclassId}`,
+            {
+              method: 'DELETE',
+              headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+              }
             }
-          });
-
+          );
+  
+          if (!response.ok) {
+            const errorData = await response.json();
+            console.error("Server Response:", errorData);
+            throw new Error(`Error ${response.status}: ${errorData.message || 'Failed to delete record'}`);
+          }
+  
           setData((prevData) => prevData.filter((item) => item.groupclassId !== groupclassId));
           message.success('Group class deleted successfully!');
         } catch (error) {
           console.error('Error deleting data:', error);
-          message.error('Failed to delete group class.');
+          message.error(`Failed to delete group class. ${error.message}`);
         }
       },
     });
   };
+  
 
   useEffect(() => {
     console.log("GroupClassTable data:", data);

@@ -53,7 +53,7 @@ const AddClassDrawer: React.FC<AddClassDrawerProps> = ({ visible, onClose, onAdd
         );
   
         const responseText = await response.text();
-        console.log("Raw API Response:", responseText);
+        // console.log("Raw API Response:", responseText);
   
         if (!response.ok) {
           console.error("Server Error Response:", response.status, responseText);
