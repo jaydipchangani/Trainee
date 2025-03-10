@@ -103,6 +103,36 @@
       "financialYear": "Jan-Dec",
       "currency": "USD",
       "transferOwnership": "-"
+    },
+    {
+      "id": "e451",
+      "groupName": "chana",
+      "currency": "GBP",
+      "financialYear": "Jul-Jun",
+      "companies": [
+        "Sandbox Company_US_10",
+        "Sandbox Company_AU_10"
+      ]
+    },
+    {
+      "id": "6bc0",
+      "groupName": "Lane Ortega",
+      "currency": "CAD",
+      "financialYear": "Apr-Mar",
+      "companies": [
+        "Sandbox Company_AU_9"
+      ]
+    },
+    {
+      "id": "e2c4",
+      "groupName": "asas",
+      "currency": "CAD",
+      "financialYear": "Apr-Mar",
+      "companies": [
+        "Sandbox Company_AU_9",
+        "Sandbox Company_US_10",
+        "Sandbox Company_US_9"
+      ]
     }
   ],
   "companies": [

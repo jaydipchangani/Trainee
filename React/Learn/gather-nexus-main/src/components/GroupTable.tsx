@@ -81,29 +81,31 @@ const GroupTable: React.FC = () => {
         if (!token) {
           throw new Error('No token found in local storage');
         }
-
-        const response = await fetch('https://sandboxgathernexusapi.azurewebsites.net/api/Company/GetCompanyDropdown', {
+    
+        const response = await fetch('https://sandboxgathernexusapi.azurewebsites.net/api/Group/GetGroupDropdown?groupType=all&reportType=0', {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
           }
         });
-
+    
         if (!response.ok) {
-          throw new Error('Failed to fetch companies from API');
+          const errorText = await response.text();
+          throw new Error(`Failed to fetch companies from API: ${errorText}`);
         }
-
+    
         const result = await response.json();
-        if (result.responseStatus !== 3) {
-          throw new Error('Failed to fetch companies from API');
+        if (!result || result.responseStatus !== 3 || !Array.isArray(result.result)) {
+          throw new Error('Unexpected response format from API');
         }
-
+    
         setCompanies(result.result);
       } catch (error) {
         console.error('Error fetching companies from API:', error);
-        message.error('Failed to load companies');
+        message.error('Failed to load companies. Please try again later.');
       }
     };
+    
 
     const fetchCurrencies = async () => {
       try {

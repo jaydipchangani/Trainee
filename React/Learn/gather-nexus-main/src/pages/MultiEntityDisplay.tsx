@@ -112,7 +112,7 @@ const MultiEntityDisplay: React.FC = () => {
     setError(null);
     try {
       const response = await fetch(
-        "http://localhost:3000/groups",
+        "http://localhost:3001/groups",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

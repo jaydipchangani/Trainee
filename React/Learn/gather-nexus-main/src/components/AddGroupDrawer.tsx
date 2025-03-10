@@ -87,45 +87,54 @@ const AddGroupDrawer: React.FC<AddGroupDrawerProps> = ({ visible, onClose, onAdd
     fetchDropdownData();
   }, []);
 
- const handleAdd = async () => {
-  try {
-    const values = await form.validateFields();
-    setLoading(true);
-
-    const token = localStorage.getItem("token");
-    if (!token) {
-      throw new Error("No token found in local storage");
-    }
-
-    const response = await fetch("https://sandboxgathernexusapi.azurewebsites.net/api/Group/AddGroup", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+  const handleAdd = async () => {
+    try {
+      const values = await form.validateFields();
+      setLoading(true);
+  
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("No token found in local storage");
+      }
+  
+      const requestData = {
+        groupId: 0,
         groupName: values.groupName,
-        currency: values.currency,
+        currencyCode: values.currency,
+        currencyName: currencies.find((c) => c === values.currency) || "",
         financialYear: values.financialYear,
-        companies: values.companies,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to save group");
+        groupMappedCompaniesReqModel: values.companies.map((company: string) => ({
+          erpCompanyId: company,
+          erpCompanyName: company,
+          erpCompanyCurrencyCode: values.currency, // Adjust if necessary
+        })),
+      };
+  
+      const response = await fetch("https://sandboxgathernexusapi.azurewebsites.net/api/Group/AddOrUpdateGroup", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to save group");
+      }
+  
+      message.success("Group added successfully!");
+      onAdd(values);
+      form.resetFields();
+      onClose();
+    } catch (error) {
+      console.error("Error adding group:", error);
+      message.error("Failed to add group. Please try again.");
+    } finally {
+      setLoading(false);
     }
-
-    message.success("Group added successfully!");
-    onAdd(values); // Update UI
-    form.resetFields();
-    onClose();
-  } catch (error) {
-    console.error("Error adding group:", error);
-    message.error("Failed to add group. Please try again.");
-  } finally {
-    setLoading(false);
-  }
-};
+  };
+  
 
 
   return (

@@ -30,36 +30,72 @@ const AddClassDrawer: React.FC<AddClassDrawerProps> = ({ visible, onClose, onAdd
   useEffect(() => {
     const fetchCompanies = async () => {
       const token = localStorage.getItem("token");
+  
+      if (!token) {
+        message.error("Authentication failed! Please log in again.");
+        console.error("No authentication token found!");
+        return;
+      }
+  
       console.log("Fetching company dropdown data...");
-
+  
       try {
         const response = await fetch(
-          "https://sandboxgathernexusapi.azurewebsites.net/api/Company/GetCompanyDropdown?isHolding=all",
+          "https://sandboxgathernexusapi.azurewebsites.net/api/Group/GetGroupDropdown?groupType=all&reportType=0",
           {
             method: "GET",
             headers: {
               "Authorization": `Bearer ${token}`,
+              "Accept": "application/json",
               "Content-Type": "application/json",
             },
           }
         );
-
-        const data = await response.json();
-        console.log("Fetched Companies:", data);
-
-        if (response.ok && data.result) {
-          setCompanies(data.result);
-        } else {
-          message.error("Failed to fetch companies.");
+  
+        const responseText = await response.text();
+        console.log("Raw API Response:", responseText);
+  
+        if (!response.ok) {
+          console.error("Server Error Response:", response.status, responseText);
+          message.error(`Failed to fetch companies: ${response.status}`);
+          return;
         }
+  
+        const data = JSON.parse(responseText);
+  
+        if (!data || !data.result || !Array.isArray(data.result)) {
+          console.error("API returned null or invalid result.");
+          message.error("No company data available.");
+          return;
+        }
+  
+        // ✅ Extract 'option' field (company names) for dropdown
+        interface Company {
+          id: string;
+          option: string;
+        }
+
+        interface ApiResponse {
+          result: Company[];
+        }
+
+        const formattedCompanies: { id: string; name: string }[] = (data as ApiResponse).result.map((company: Company) => ({
+          id: company.id, // Use the correct id field
+          name: company.option, // Use the option field as the name
+        }));
+  
+        console.log("Formatted Companies:", formattedCompanies);
+        setCompanies(formattedCompanies); // Update state with formatted data
       } catch (error) {
         console.error("Error fetching companies:", error);
         message.error("An error occurred while fetching companies.");
       }
     };
-
+  
     fetchCompanies();
   }, []);
+  
+
 
   const addClassValueField = () => {
     setClassValues([...classValues, ""]);
