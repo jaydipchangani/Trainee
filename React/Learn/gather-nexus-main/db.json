@@ -1,0 +1,160 @@
+{
+  "groups": [
+    {
+      "key": "1",
+      "id": "1",
+      "groupName": "Tech Giants",
+      "companies": [
+        "Tech Corp"
+      ],
+      "groupClass": "Enterprise",
+      "financialYear": "2024-2025",
+      "currency": "USD",
+      "transferOwnership": "-"
+    },
+    {
+      "id": "2",
+      "groupName": "Finance Leaders",
+      "companies": [
+        "Finance Inc.",
+        "Tech Corp"
+      ],
+      "groupClass": "Corporate",
+      "financialYear": "Apr-Mar",
+      "currency": "EUR",
+      "transferOwnership": "-"
+    },
+    {
+      "id": "3",
+      "groupName": "Healthcare Innovators",
+      "companies": [
+        "Tech Corp"
+      ],
+      "groupClass": "Enterprise",
+      "financialYear": "Jan-Dec",
+      "currency": "INR",
+      "transferOwnership": "-"
+    },
+    {
+      "id": "4",
+      "groupName": "Retail Giants",
+      "companies": [
+        "Finance Inc."
+      ],
+      "groupClass": "Corporate",
+      "financialYear": "Apr-Mar",
+      "currency": "USD",
+      "transferOwnership": "-"
+    },
+    {
+      "id": "1741346394535",
+      "groupName": "Tech Giants 1 (Copy)",
+      "companies": [
+        "Tech Corp"
+      ],
+      "groupClass": "Enterprise",
+      "financialYear": "Jan-Dec",
+      "currency": "USD",
+      "transferOwnership": "-"
+    },
+    {
+      "id": "1",
+      "key": "1741349181372",
+      "groupName": "Tech Giants Copy",
+      "companies": [
+        "Tech Corp"
+      ],
+      "groupClass": "Enterprise",
+      "financialYear": "Jan-Dec",
+      "currency": "USD",
+      "transferOwnership": "-"
+    },
+    {
+      "id": "5ab2",
+      "groupName": "zxzx",
+      "currency": "EUR",
+      "financialYear": "Apr-Mar",
+      "companies": [
+        "Demo Company (US)",
+        "Sandbox Company_US_1",
+        "Sandbox Company_US_rapido"
+      ]
+    },
+    {
+      "id": "fb3b",
+      "groupName": "temp",
+      "currency": "CAD",
+      "financialYear": "Apr-Mar",
+      "companies": [
+        "Sandbox Company_US_9",
+        "Sandbox Company_AU_10",
+        "Sandbox Company_US_10",
+        "Sandbox Company_AU_9"
+      ]
+    },
+    {
+      "id": "1741346394535",
+      "key": "1741537869165",
+      "groupName": "Tech Giants 1 (Copy) Copy",
+      "companies": [
+        "Tech Corp"
+      ],
+      "groupClass": "Enterprise",
+      "financialYear": "Jan-Dec",
+      "currency": "USD",
+      "transferOwnership": "-"
+    }
+  ],
+  "companies": [
+    {
+      "companyId": "C1",
+      "companyName": "Tech Corp",
+      "industry": "Software",
+      "location": "USA",
+      "id": "1075"
+    },
+    {
+      "companyId": "C2",
+      "companyName": "Finance Inc.",
+      "industry": "Banking",
+      "location": "UK",
+      "id": "e801"
+    }
+  ],
+  "classValues": [
+    {
+      "id": "1",
+      "name": "tony1"
+    },
+    {
+      "id": "2",
+      "name": "tony2"
+    },
+    {
+      "id": "3",
+      "name": "tony3"
+    }
+  ],
+  "regions": [
+    {
+      "id": "1",
+      "name": "North"
+    },
+    {
+      "id": "2",
+      "name": "Administrative"
+    },
+    {
+      "id": "3",
+      "name": "South"
+    },
+    {
+      "id": "4",
+      "name": "East"
+    },
+    {
+      "id": "5",
+      "name": "West"
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+.register-container {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .register-image-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #FEFFFE;
+    padding: 20px;
+  }
+  
+  .register-image {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .register-form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+  }
+  
+  .register-form-box {
+    width: 100%;
+    max-width: 450px;
+    border-radius: 10px;
+    background: #FEFFFE;
+    padding: 20px;
+  }
+  
+  .register-title {
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .register-title .highlight {
+    color: #1d724d;
+  }
+  
+  .register-subtitle {
+    display: block;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .register-form {
+    width: 100%;
+  }
+  
+  .register-btn {
+    background-color: #1d724d;
+    border: none;
+    height: 40px;
+    font-size: 16px;
+  }
+  
+  .register-footer {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+  }
+  

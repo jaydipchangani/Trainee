@@ -1,0 +1,101 @@
+.login-container {
+  display: flex;
+  height: 100vh;
+  background-color: #e3f2f0;
+}
+
+/* Left Side - Image */
+.login-left {
+  flex: 1;
+  background: url("https://sandboxgathernexus.azurewebsites.net/assets/images/Log-in-Vector.svg") center/cover no-repeat;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-size: 70%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+}
+
+/* Right Side - Form */
+.login-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f4fdfa;
+}
+
+.login-card {
+  width: 450px;
+  padding: 40px;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-top: 5px solid #2b7869;
+}
+
+.login-title {
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 24px;
+  color: #2b7869;
+  font-weight: bold;
+}
+
+.login-links {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 15px;
+}
+
+.login-links a {
+  color: #2b7869;
+  font-weight: bold;
+}
+
+.login-links a:hover {
+  text-decoration: underline;
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 15px;
+  font-weight: bold;
+  color: #2b7869;
+}
+
+.register-link a {
+  color: #2b7869;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}
+
+.ant-btn-primary {
+  background-color: #2b7869 !important;
+  border-color: #2b7869 !important;
+  font-size: 16px;
+  height: 45px;
+  font-weight: bold;
+}
+
+.ant-btn-primary:hover {
+  background-color: #235d50 !important;
+  border-color: #235d50 !important;
+}
+
+.ant-input,
+.ant-input-password {
+  height: 45px;
+  font-size: 16px;
+  border-radius: 8px;
+}
