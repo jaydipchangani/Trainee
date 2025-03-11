@@ -10,6 +10,10 @@
         "alarms",
         "scripting"
     ],
+    "externally_connectable": {
+        "matches": ["http://localhost:3000/"]
+    },
+
     "host_permissions": [
         "https://chat.openai.com/*",
         "https://claude.ai/*",

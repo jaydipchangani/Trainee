@@ -1,5 +1,5 @@
 let browsingStart = null;
-const SERVER_URL = "http://localhost:5000/update-data";
+const SERVER_URL = "http:/localhost:3000/get-data";
 async function initializeBrowsingTime() {
     const today = new Date().toISOString().split("T")[0];
 
@@ -275,9 +275,22 @@ initializeDailyData();
 
 // for desktop app
 
-chrome.runtime.onInstalled.addListener(() => {
-    console.log("AI Usage Monitor Extension Installed");
+chrome.runtime.onMessageExternal.addListener(async (request, sender, sendResponse) => {
+    if (request.action === "fetchData") {
+        chrome.storage.local.get(null, (result) => {
+            if (chrome.runtime.lastError) {
+                sendResponse({ error: chrome.runtime.lastError.message });
+            } else if (Object.keys(result).length === 0) {
+                sendResponse({ error: "No data available" });
+            } else {
+                sendResponse(result); // Send the full data
+            }
+        });
+    }
+    return true; // Keep the message channel open for async response
 });
+
+
 async function getStoredData() {
     return new Promise((resolve) => {
         chrome.storage.local.get(null, (data) => {

@@ -1,25 +1,32 @@
-const express = require('express');
-const cors = require('cors');
+const express = require("express");
+const cors = require("cors");
+const { exec } = require("child_process");
 
 const app = express();
-const port = 3000;
-
 app.use(cors());
-app.use(express.json());
 
-let aiUsageData = {}; // Store the extension's data
+const EXTENSION_ID = "ekcjghgfnphnbaiknfplkmjpnflbdban"; // Replace with your actual extension ID
 
-// Endpoint to receive data from the Chrome extension
-app.post('/update-data', (req, res) => {
-    aiUsageData = req.body;
-    res.json({ success: true });
+async function fetchExtensionData() {
+    return new Promise((resolve) => {
+        exec(`curl -s --unix-socket /tmp/chrome-remote-debug.sock http://localhost:3000/json`, (error, stdout) => {
+            if (error) {
+                console.error("Error fetching extension data:", error);
+                resolve({});
+            } else {
+                resolve(JSON.parse(stdout));
+            }
+        });
+    });
+}
+
+app.get("/get-data", async (req, res) => {
+    try {
+        const extensionData = await fetchExtensionData();
+        res.json(extensionData);
+    } catch (error) {
+        res.status(500).json({ error: "Failed to fetch extension data" });
+    }
 });
 
-// Endpoint to fetch stored data from the extension
-app.get('/get-data', (req, res) => {
-    res.json(aiUsageData);
-});
-
-app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
-});
+app.listen(3000, () => console.log("Server running on port 3000"));

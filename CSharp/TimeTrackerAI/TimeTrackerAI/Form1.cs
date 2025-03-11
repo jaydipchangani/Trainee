@@ -40,30 +40,59 @@ namespace AIUsageMonitor
             timer.Tick += async (sender, e) => await FetchData();
             timer.Start();
         }
-
         private async Task FetchData()
         {
             try
             {
                 string response = await client.GetStringAsync("http://localhost:3000/get-data");
-                AIUsageData data = JsonConvert.DeserializeObject<AIUsageData>(response);
+
+                // Check if response is empty or just "{}"
+                if (string.IsNullOrWhiteSpace(response) || response == "{}")
+                {
+                    lblTotalTime.Text = "Total Time: No Data";
+                    lblAITime.Text = "AI Time: No Data";
+                    lblTabsOpened.Text = "Tabs Opened: No Data";
+                    lblTabsClosed.Text = "Tabs Closed: No Data";
+                    lblLastUsed.Text = "Last Used: No Data";
+                    return;
+                }
+
+                // Deserialize into a dictionary where the keys are date strings
+                var dataDict = JsonConvert.DeserializeObject<Dictionary<string, AIUsageData>>(response);
+
+                if (dataDict == null || dataDict.Count == 0)
+                {
+                    lblTotalTime.Text = "Total Time: No Data";
+                    return;
+                }
+
+                // Find the latest date (most recent entry)
+                string latestDate = dataDict.Keys.OrderByDescending(date => date).FirstOrDefault();
+
+                if (latestDate == null || !dataDict.ContainsKey(latestDate))
+                {
+                    lblTotalTime.Text = "Total Time: No Data";
+                    return;
+                }
+
+                AIUsageData data = dataDict[latestDate];
 
                 lblTotalTime.Text = $"Total Time: {data.totalTime / 1000} sec";
                 lblAITime.Text = $"AI Time: {data.aiTime / 1000} sec";
                 lblTabsOpened.Text = $"Tabs Opened: {data.tabsOpened}";
                 lblTabsClosed.Text = $"Tabs Closed: {data.tabsClosed}";
 
-                // ✅ Check if `lastAIUsed` is null before using it
+                // Handle possible null `lastAIUsed`
                 if (data.lastAIUsed != null)
                 {
                     lblLastUsed.Text = $"Last Used: {data.lastAIUsed.website} at {DateTimeOffset.FromUnixTimeMilliseconds(data.lastAIUsed.timestamp)}";
                 }
                 else
                 {
-                    lblLastUsed.Text = "Last Used: No data available";
+                    lblLastUsed.Text = "Last Used: No Data";
                 }
 
-                // ✅ Ensure `aiUsage` is not null before looping
+                // Clear and update AI usage list
                 lstAIUsage.Items.Clear();
                 if (data.aiUsage != null)
                 {
