@@ -1,3 +1,5 @@
+using AIUsageMonitor;
+
 namespace TimeTrackerAI
 {
     internal static class Program

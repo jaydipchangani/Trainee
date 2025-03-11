@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TimeTrackerAI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0c78c88293d6f7e9bb3c9457b99e9bec4b70b304")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bf2e68d36a24f8b15c962332afdd204dc07e8676")]
 [assembly: System.Reflection.AssemblyProductAttribute("TimeTrackerAI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TimeTrackerAI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

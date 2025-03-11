@@ -5,3 +5,13 @@ C:\Trainee_new\CSharp\TimeTrackerAI\TimeTrackerAI\obj\Debug\net8.0-windows\TimeT
 C:\Trainee_new\CSharp\TimeTrackerAI\TimeTrackerAI\obj\Debug\net8.0-windows\TimeTrackerAI.AssemblyInfo.cs
 C:\Trainee_new\CSharp\TimeTrackerAI\TimeTrackerAI\obj\Debug\net8.0-windows\TimeTrackerAI.csproj.CoreCompileInputs.cache
 C:\Trainee_new\CSharp\TimeTrackerAI\TimeTrackerAI\obj\Debug\net8.0-windows\TimeTrackerAI.sourcelink.json
+C:\Trainee_new\CSharp\TimeTrackerAI\TimeTrackerAI\bin\Debug\net8.0-windows\TimeTrackerAI.exe
+C:\Trainee_new\CSharp\TimeTrackerAI\TimeTrackerAI\bin\Debug\net8.0-windows\TimeTrackerAI.deps.json
+C:\Trainee_new\CSharp\TimeTrackerAI\TimeTrackerAI\bin\Debug\net8.0-windows\TimeTrackerAI.runtimeconfig.json
+C:\Trainee_new\CSharp\TimeTrackerAI\TimeTrackerAI\bin\Debug\net8.0-windows\TimeTrackerAI.dll
+C:\Trainee_new\CSharp\TimeTrackerAI\TimeTrackerAI\bin\Debug\net8.0-windows\TimeTrackerAI.pdb
+C:\Trainee_new\CSharp\TimeTrackerAI\TimeTrackerAI\obj\Debug\net8.0-windows\TimeTrackerAI.dll
+C:\Trainee_new\CSharp\TimeTrackerAI\TimeTrackerAI\obj\Debug\net8.0-windows\refint\TimeTrackerAI.dll
+C:\Trainee_new\CSharp\TimeTrackerAI\TimeTrackerAI\obj\Debug\net8.0-windows\TimeTrackerAI.pdb
+C:\Trainee_new\CSharp\TimeTrackerAI\TimeTrackerAI\obj\Debug\net8.0-windows\TimeTrackerAI.genruntimeconfig.cache
+C:\Trainee_new\CSharp\TimeTrackerAI\TimeTrackerAI\obj\Debug\net8.0-windows\ref\TimeTrackerAI.dll

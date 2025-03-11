@@ -65,7 +65,6 @@ namespace AIUsageMonitor
             lblTabsClosed.Text = "Tabs Closed: " + data.Data.TabsClosed;
             lblLastUsed.Text = "Last AI Used: " + data.Data.LastAIUsed.Website + " at " + data.Data.LastAIUsed.Timestamp;
 
-            // Update AI Usage List
             lstAIUsage.Items.Clear();
             foreach (var usage in data.Data.AIUsage)
             {
