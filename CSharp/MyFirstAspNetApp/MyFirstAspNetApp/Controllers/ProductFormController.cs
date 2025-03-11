@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyFirstAspNetApp.Models;
 
 namespace MyFirstAspNetApp.Controllers
 {
@@ -10,10 +11,9 @@ namespace MyFirstAspNetApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(string fname,string lname)
+        public IActionResult Index(UserModel user)
         {
-            ViewData["Message"] = "Hello " + fname + " "+lname;
-            return View();
+            return View(user);
         }
     }
 }

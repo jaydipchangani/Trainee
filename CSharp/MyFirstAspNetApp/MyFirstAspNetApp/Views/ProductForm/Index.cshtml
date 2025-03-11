@@ -2,6 +2,7 @@
 	Layout = "~/Views/Shared/_Layout.cshtml";
 	ViewData["Title"] = "Product Form Page";
 }
+@model UserModel
 
 <h2>Fill the form</h2>
 <form method="post">
@@ -9,24 +10,13 @@
 	<table>
 		<tr>
 			<td> <label for="fname">First Name:</label> </td>
-			<td> <input type="text" name="fname" id="fname" required /> </td>
+			<td> <input type="text" asp-for="Fname" required /> </td>
 		</tr>
 
 		<tr>
 			<td> <label for="lname">Last Name:</label> </td>
-			<td> <input type="text" name="lname" id="lname" required /> </td>
+			<td> <input type="text" asp-for="Lname" required /> </td>
 		</tr>
-
-		<tr>
-			<td> <label for="fname">First Name:</label> </td>
-			<td> <input type="text" name="fname" id="fname" required /> </td>
-		</tr>
-
-		<tr>
-			<td> <label for="lname">Last Name:</label> </td>
-			<td> <input type="text" name="lname" id="lname" required /> </td>
-		</tr>
-
 
 		<tr>
 			<td>
@@ -39,7 +29,7 @@
 
 </form>
 
-@if (!string.IsNullOrEmpty(ViewData["Message"] as string))
+@if (Model != null)
 {
-	<p><strong>Message:</strong> @ViewData["Message"]</p>
+	<p><strong>Your name is  @Model.Fname @Model.Lname </strong></p>
 }
