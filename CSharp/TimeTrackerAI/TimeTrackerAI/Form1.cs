@@ -87,12 +87,13 @@ namespace AIUsageMonitor
             lblAITime = new Label();
             lblLastUsed = new Label();
             lblTabsClosed = new Label();
+            lstAIUsage = new ListBox();
             SuspendLayout();
             // 
             // lblTotalTime
             // 
             lblTotalTime.AutoSize = true;
-            lblTotalTime.Location = new Point(118, 34);
+            lblTotalTime.Location = new Point(10, 40);
             lblTotalTime.Name = "lblTotalTime";
             lblTotalTime.Size = new Size(71, 15);
             lblTotalTime.TabIndex = 0;
@@ -102,7 +103,7 @@ namespace AIUsageMonitor
             // lblDate
             // 
             lblDate.AutoSize = true;
-            lblDate.Location = new Point(118, 72);
+            lblDate.Location = new Point(10, 10);
             lblDate.Name = "lblDate";
             lblDate.Size = new Size(44, 15);
             lblDate.TabIndex = 1;
@@ -112,7 +113,7 @@ namespace AIUsageMonitor
             // lblTabsOpened
             // 
             lblTabsOpened.AutoSize = true;
-            lblTabsOpened.Location = new Point(118, 147);
+            lblTabsOpened.Location = new Point(10, 100);
             lblTabsOpened.Name = "lblTabsOpened";
             lblTabsOpened.Size = new Size(85, 15);
             lblTabsOpened.TabIndex = 3;
@@ -123,7 +124,7 @@ namespace AIUsageMonitor
             // 
             lblAITime.AutoSize = true;
             lblAITime.BackColor = SystemColors.Control;
-            lblAITime.Location = new Point(118, 109);
+            lblAITime.Location = new Point(10, 70);
             lblAITime.Name = "lblAITime";
             lblAITime.Size = new Size(57, 15);
             lblAITime.TabIndex = 2;
@@ -132,7 +133,7 @@ namespace AIUsageMonitor
             // lblLastUsed
             // 
             lblLastUsed.AutoSize = true;
-            lblLastUsed.Location = new Point(118, 220);
+            lblLastUsed.Location = new Point(10, 160);
             lblLastUsed.Name = "lblLastUsed";
             lblLastUsed.Size = new Size(67, 15);
             lblLastUsed.TabIndex = 5;
@@ -142,22 +143,35 @@ namespace AIUsageMonitor
             // 
             lblTabsClosed.AutoSize = true;
             lblTabsClosed.BackColor = SystemColors.Control;
-            lblTabsClosed.Location = new Point(118, 182);
+            lblTabsClosed.Location = new Point(10, 130);
             lblTabsClosed.Name = "lblTabsClosed";
             lblTabsClosed.Size = new Size(79, 15);
             lblTabsClosed.TabIndex = 4;
             lblTabsClosed.Text = "lblTabsClosed";
             // 
+            // lstAIUsage
+            // 
+            lstAIUsage.FormattingEnabled = true;
+            lstAIUsage.ItemHeight = 15;
+            lstAIUsage.Location = new Point(10, 200);
+            lstAIUsage.Name = "lstAIUsage";
+            lstAIUsage.Size = new Size(260, 139);
+            lstAIUsage.TabIndex = 6;
+            // 
             // Form1
             // 
             ClientSize = new Size(695, 409);
+            Controls.Add(lstAIUsage);
             Controls.Add(lblLastUsed);
             Controls.Add(lblTabsClosed);
             Controls.Add(lblTabsOpened);
             Controls.Add(lblAITime);
             Controls.Add(lblDate);
             Controls.Add(lblTotalTime);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
             Name = "Form1";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "AI Usage Monitor";
             Load += Form1_Load;
             ResumeLayout(false);
             PerformLayout();
@@ -189,6 +203,7 @@ namespace AIUsageMonitor
         }
         private Label lblLastUsed;
         private Label lblTabsClosed;
+        private ListBox lstAIUsage;
     }
 
     public class AIUsageData
