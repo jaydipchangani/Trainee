@@ -172,15 +172,22 @@ function forceReflow() {
 
 // desktop app
 
-document.getElementById("copyData").addEventListener("click", async function () {
-    chrome.runtime.sendMessage({ action: "fetchData" }, (response) => {
-        if (response && response.data) {
-            const jsonData = JSON.stringify(response.data, null, 2);
-            navigator.clipboard.writeText(jsonData).then(() => {
-                alert("Data copied to clipboard!");
+chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+    if (request.action === "fetchData") {
+        const data = await new Promise((resolve) => {
+            chrome.storage.local.get(null, (result) => {
+                resolve(result);
             });
-        } else {
-            alert("No data found.");
-        }
-    });
+        });
+
+        fetch("http://localhost:5000/store", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        });
+
+        sendResponse({ success: true });
+    }
 });
+
+

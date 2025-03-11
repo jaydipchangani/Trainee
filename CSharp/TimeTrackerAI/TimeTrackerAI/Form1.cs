@@ -1,74 +1,83 @@
 ﻿using System;
-using System.IO;
-using System.Windows.Forms;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.Windows.Forms;
+
+public class AIUsageData
+{
+    public long aiTime { get; set; }
+    public long totalTime { get; set; }
+    public int tabsOpened { get; set; }
+    public int tabsClosed { get; set; }
+
+    public LastAIUsed lastAIUsed { get; set; }
+    public Dictionary<string, long> aiUsage { get; set; }
+}
+
+public class LastAIUsed
+{
+    public string website { get; set; }
+    public long timestamp { get; set; }
+}
 
 namespace AIUsageMonitor
 {
     public partial class Form1 : Form
     {
-        private string jsonFilePath = @"C:\Users\YourUsername\Documents\ai_usage_data.json"; // 🔹 Update this path
+        private static readonly HttpClient client = new HttpClient();
 
         public Form1()
         {
             InitializeComponent();
-            LoadData();  // 🔹 Call this method to load and display data
+            FetchData(); // Fetch data on startup
+
+            // **Explicitly specifying Windows Forms Timer**
+            System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer
+            {
+                Interval = 10000 // Refresh every 10 seconds
+            };
+            timer.Tick += async (sender, e) => await FetchData();
+            timer.Start();
         }
 
-        private void LoadData()
+        private async Task FetchData()
         {
             try
             {
-                if (!File.Exists(jsonFilePath))
+                string response = await client.GetStringAsync("http://localhost:3000/get-data");
+                AIUsageData data = JsonConvert.DeserializeObject<AIUsageData>(response);
+
+                lblTotalTime.Text = $"Total Time: {data.totalTime / 1000} sec";
+                lblAITime.Text = $"AI Time: {data.aiTime / 1000} sec";
+                lblTabsOpened.Text = $"Tabs Opened: {data.tabsOpened}";
+                lblTabsClosed.Text = $"Tabs Closed: {data.tabsClosed}";
+
+                // ✅ Check if `lastAIUsed` is null before using it
+                if (data.lastAIUsed != null)
                 {
-                    MessageBox.Show("Data file not found!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                string jsonData = File.ReadAllText(jsonFilePath);
-                var aiUsageData = JsonConvert.DeserializeObject<AIUsageData>(jsonData);
-
-                if (aiUsageData != null)
-                {
-                    lblDate.Text = "Date: " + aiUsageData.date;
-                    lblTotalTime.Text = "Total Time: " + aiUsageData.total_time_spent;
-                    lblAITime.Text = "AI Time: " + aiUsageData.ai_time_spent;
-                    lblTabsOpened.Text = "Tabs Opened: " + aiUsageData.tabs_opened;
-                    lblTabsClosed.Text = "Tabs Closed: " + aiUsageData.tabs_closed;
-                    lblLastUsed.Text = "Last AI Used: " + aiUsageData.last_ai_used;
-
-                    lstAIUsage.Items.Clear();
-                    foreach (var ai in aiUsageData.ai_usage)
-                    {
-                        lstAIUsage.Items.Add($"{ai.name} - {ai.time_spent}");
-                    }
+                    lblLastUsed.Text = $"Last Used: {data.lastAIUsed.website} at {DateTimeOffset.FromUnixTimeMilliseconds(data.lastAIUsed.timestamp)}";
                 }
                 else
                 {
-                    MessageBox.Show("Invalid JSON format!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    lblLastUsed.Text = "Last Used: No data available";
+                }
+
+                // ✅ Ensure `aiUsage` is not null before looping
+                lstAIUsage.Items.Clear();
+                if (data.aiUsage != null)
+                {
+                    foreach (var entry in data.aiUsage)
+                    {
+                        lstAIUsage.Items.Add($"{entry.Key}: {entry.Value / 1000} sec");
+                    }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error reading data: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Console.WriteLine("Error fetching data: " + ex.Message);
             }
         }
-    }
 
-    public class AIUsageData
-    {
-        public string date { get; set; }
-        public string total_time_spent { get; set; }
-        public string ai_time_spent { get; set; }
-        public int tabs_opened { get; set; }
-        public int tabs_closed { get; set; }
-        public string last_ai_used { get; set; }
-        public AIUsage[] ai_usage { get; set; }
-    }
-
-    public class AIUsage
-    {
-        public string name { get; set; }
-        public string time_spent { get; set; }
     }
 }
