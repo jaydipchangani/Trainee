@@ -1,0 +1,7 @@
+C:\Trainee_new\CSharp\TimeTrackerAI\TimeTrackerAI\obj\Debug\net8.0-windows\AIUsageMonitor.Form1.resources
+C:\Trainee_new\CSharp\TimeTrackerAI\TimeTrackerAI\obj\Debug\net8.0-windows\TimeTrackerAI.csproj.GenerateResource.cache
+C:\Trainee_new\CSharp\TimeTrackerAI\TimeTrackerAI\obj\Debug\net8.0-windows\TimeTrackerAI.GeneratedMSBuildEditorConfig.editorconfig
+C:\Trainee_new\CSharp\TimeTrackerAI\TimeTrackerAI\obj\Debug\net8.0-windows\TimeTrackerAI.AssemblyInfoInputs.cache
+C:\Trainee_new\CSharp\TimeTrackerAI\TimeTrackerAI\obj\Debug\net8.0-windows\TimeTrackerAI.AssemblyInfo.cs
+C:\Trainee_new\CSharp\TimeTrackerAI\TimeTrackerAI\obj\Debug\net8.0-windows\TimeTrackerAI.csproj.CoreCompileInputs.cache
+C:\Trainee_new\CSharp\TimeTrackerAI\TimeTrackerAI\obj\Debug\net8.0-windows\TimeTrackerAI.sourcelink.json

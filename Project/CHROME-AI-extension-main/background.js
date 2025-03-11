@@ -1,5 +1,5 @@
 let browsingStart = null;
-
+const SERVER_URL = "http://localhost:5000/update-data";
 async function initializeBrowsingTime() {
     const today = new Date().toISOString().split("T")[0];
 
@@ -108,14 +108,26 @@ async function getTodayData() {
     });
 }
 
-// Update storage with new data
-// Update storage with new data and cumulative tab count
-// Update storage with new data
+async function sendDataToDesktopApp() {
+    const today = new Date().toISOString().split("T")[0];
+    const data = await getTodayData();
+
+    fetch(SERVER_URL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ date: today, data })
+    }).catch(error => console.error("Failed to send data to desktop app:", error));
+}
+
+// Send data to the desktop app every minute
+setInterval(sendDataToDesktopApp, 60000); 
+
 async function updateStorage(updates) {
     const today = new Date().toISOString().split("T")[0];
     const currentData = await getTodayData();
 
-    // Deep merge updates
     const newData = {
         ...currentData,
         ...updates,
@@ -127,7 +139,9 @@ async function updateStorage(updates) {
         tabsClosed: currentData.tabsClosed + (updates.tabsClosed || 0)
     };
 
-    chrome.storage.local.set({ [today]: newData });
+    chrome.storage.local.set({ [today]: newData }, () => {
+        sendDataToDesktopApp(); // Send updated data immediately
+    });
 }
 
 // Track total tabs opened
