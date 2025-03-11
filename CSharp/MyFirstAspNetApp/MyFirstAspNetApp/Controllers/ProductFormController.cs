@@ -10,9 +10,9 @@ namespace MyFirstAspNetApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(string username)
+        public IActionResult Index(string fname,string lname)
         {
-            ViewData["Message"] = "Hello " + username + " !!";
+            ViewData["Message"] = "Hello " + fname + " "+lname;
             return View();
         }
     }
