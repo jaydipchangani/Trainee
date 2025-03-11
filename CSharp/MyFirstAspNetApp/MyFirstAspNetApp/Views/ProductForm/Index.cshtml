@@ -1,0 +1,17 @@
+﻿@{
+	Layout = "~/Views/Shared/_Layout.cshtml";
+	ViewData["Title"] = "Product Form Page";
+}
+
+<h2>Fill the form</h2>
+<form method="post">
+	<label for="username">Name:</label>
+	<input type="text" name="username" id="username" required />
+
+	<button type="submit">Submit</button>
+</form>
+
+@if (!string.IsNullOrEmpty(ViewData["Message"] as string))
+{
+	<p><strong>Message:</strong> @ViewData["Message"]</p>
+}
