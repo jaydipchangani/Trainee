@@ -1,7 +1,10 @@
 ﻿@{
-    ViewData["Title"] = "Hello Page";
+	ViewData["Title"] = "Hello Page";
+	int number = 8;
+	string name = "Jaydip";
+
+
 }
 
-<h1>Hello, Welcome to ASP.NET Core!</h1>
-<p>This is your first custom page.</p>
-<p>My name is jd</p>
+<h1>Hello @name, Welcome to ASP.NET Core!, currently using @number Verison</h1>
+<p>The current date and time is: @DateTime.Now</p>
