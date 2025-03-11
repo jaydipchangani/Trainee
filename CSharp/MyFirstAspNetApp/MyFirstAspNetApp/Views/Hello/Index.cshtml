@@ -1,10 +1,23 @@
 ﻿@{
 	ViewData["Title"] = "Hello Page";
-	int number = 8;
+	int number = 1;
 	string name = "Jaydip";
 
+	int time = DateTime.Now.Hour;
 
 }
 
-<h1>Hello @name, Welcome to ASP.NET Core!, currently using @number Verison</h1>
-<p>The current date and time is: @DateTime.Now</p>
+@if (time < 12)
+{
+<p>Good Morning @name</p>
+}
+else{
+<p>Good Afternoon @name</p>
+}
+
+<ul>
+	@for (int i = 1; i <= 5; i++)
+	{
+		<li>Item number @i</li>
+	}
+</ul>
