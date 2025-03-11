@@ -168,3 +168,19 @@ function forceReflow() {
     document.body.offsetHeight;  // Trigger reflow
     document.body.style.display = "";
 }
+
+
+// desktop app
+
+document.getElementById("copyData").addEventListener("click", async function () {
+    chrome.runtime.sendMessage({ action: "fetchData" }, (response) => {
+        if (response && response.data) {
+            const jsonData = JSON.stringify(response.data, null, 2);
+            navigator.clipboard.writeText(jsonData).then(() => {
+                alert("Data copied to clipboard!");
+            });
+        } else {
+            alert("No data found.");
+        }
+    });
+});

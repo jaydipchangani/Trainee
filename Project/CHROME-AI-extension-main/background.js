@@ -271,3 +271,26 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 
 // Initialize on extension load
 initializeDailyData();
+
+
+// for desktop app
+
+chrome.runtime.onInstalled.addListener(() => {
+    console.log("AI Usage Monitor Extension Installed");
+});
+async function getStoredData() {
+    return new Promise((resolve) => {
+        chrome.storage.local.get(null, (data) => {
+            resolve(data);
+        });
+    });
+}
+
+// Simple local server to serve the data
+chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+    if (request.action === "fetchData") {
+        const data = await getStoredData();
+        sendResponse({ data });
+    }
+    return true;
+});
