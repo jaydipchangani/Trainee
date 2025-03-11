@@ -1,0 +1,19 @@
+{
+    "manifest_version": 3,
+    "name": "AI Time Tracker",
+    "version": "1.0",
+    "description": "Tracks the time spent on AI websites",
+    "permissions": ["storage", "tabs"],
+    "host_permissions": [
+      "https://chat.openai.com/*",
+      "https://bard.google.com/*",
+      "https://gemini.google.com/*","https://chatgpt.com/*"
+    ],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "action": {
+      "default_popup": "popup.html"
+    }
+  }
+  
