@@ -13,6 +13,11 @@ namespace MyFirstAspNetApp.Controllers
         [HttpPost]
         public IActionResult Index(UserModel user)
         {
+            if(!ModelState.IsValid)
+            {
+                return View(user);
+            }
+
             return View(user);
         }
     }

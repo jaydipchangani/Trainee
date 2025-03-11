@@ -10,12 +10,36 @@
 	<table>
 		<tr>
 			<td> <label for="fname">First Name:</label> </td>
-			<td> <input type="text" asp-for="Fname" required /> </td>
+			<td> <input type="text" asp-for="Fname" required />
+				<span asp-validation-for="Fname" style="color:red"></span>
+			</td>
 		</tr>
 
 		<tr>
 			<td> <label for="lname">Last Name:</label> </td>
 			<td> <input type="text" asp-for="Lname" required /> </td>
+		</tr>
+
+		<tr>
+			<td> <label for="address">Address:</label> </td>
+			<td> <input type="text" asp-for="Address" required /> </td>
+		</tr>
+
+		<tr>
+			<td> <label for="phone">Phone Number:</label> </td>
+			<td> <input type="text" asp-for="Phone" required /> </td>
+		</tr>
+
+		<tr>
+			<td> <label for="email">Email:</label> </td>
+			<td> <input type="text" asp-for="Email" required /> </td>
+		</tr>
+
+		<tr>
+			<td><label for="quantity"> Quantity</label></td>
+			<td><input type="number" asp-for="Quantity" required />
+				<span asp-validation-for="Quantity" style="color:red"></span>
+			</td>
 		</tr>
 
 		<tr>
@@ -31,5 +55,14 @@
 
 @if (Model != null)
 {
-	<p><strong>Your name is  @Model.Fname @Model.Lname </strong></p>
+	<h3>Your Deatils</h3>
+	<p>Your name is  @Model.Fname @Model.Lname</p>
+	<p>Your Address is  @Model.Address </p>
+	<p>Your Contact Deatils are @Model.Email and @Model.Phone </p>
+	<p>Your Selected Quantity is @Model.Quantity</p>
+}
+
+@section Scripts {
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
 }
