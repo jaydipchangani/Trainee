@@ -1,26 +1,75 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
+import * as fs from "fs";
+import * as path from "path";
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+let startTime: number | null = null;
+let totalUsageTime = 0;
+let storagePath: string;
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "copilot-tracker" is now active!');
-
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	const disposable = vscode.commands.registerCommand('copilot-tracker.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from copilot-tracker!');
-	});
-
-	context.subscriptions.push(disposable);
+function loadPreviousData() {
+    try {
+        if (fs.existsSync(storagePath)) {
+            const data = JSON.parse(fs.readFileSync(storagePath, "utf8"));
+            totalUsageTime = data.totalUsageTime || 0;
+        }
+    } catch (error) {
+        console.error("Error loading previous data:", error);
+    }
 }
 
-// This method is called when your extension is deactivated
-export function deactivate() {}
+function saveUsageData() {
+    try {
+        const data = { totalUsageTime };
+        fs.writeFileSync(storagePath, JSON.stringify(data, null, 2));
+    } catch (error) {
+        console.error("Error saving usage data:", error);
+    }
+}
+
+export function activate(context: vscode.ExtensionContext) {
+	console.log("===== Copilot Tracker Extension ACTIVATED =====");
+
+    // Get the path for storage
+
+    let disposable = vscode.commands.registerCommand('copilotTracker.start', () => {
+        console.log("🚀 Copilot Tracker START command executed");
+        vscode.window.showInformationMessage("Copilot Tracker started tracking!");
+    });
+    storagePath = path.join(context.globalStorageUri.fsPath, "copilot_usage.json");
+
+    console.log("Storage Path:", storagePath); // Debugging: Check storage path
+
+    // Ensure directory exists
+    if (!fs.existsSync(context.globalStorageUri.fsPath)) {
+        console.log("Creating storage directory...");
+        fs.mkdirSync(context.globalStorageUri.fsPath, { recursive: true });
+    }
+
+    loadPreviousData();
+
+    const startTracking = vscode.workspace.onDidChangeTextDocument((event) => {
+        if (event.document.languageId === "javascript" || event.document.languageId === "typescript") {
+            if (!startTime) {
+                console.log("Copilot usage started...");
+                startTime = Date.now();
+            }
+        }
+    });
+
+    const stopTracking = vscode.window.onDidChangeVisibleTextEditors(() => {
+        if (startTime) {
+            totalUsageTime += Math.floor((Date.now() - startTime) / 1000);
+            console.log(`Copilot usage stopped. Total time: ${totalUsageTime} seconds`);
+            startTime = null;
+            saveUsageData();
+        }
+    });
+
+    context.subscriptions.push(startTracking, stopTracking);
+}
+export function deactivate() {
+    if (startTime) {
+        totalUsageTime += Math.floor((Date.now() - startTime) / 1000);
+        saveUsageData();
+    }
+}

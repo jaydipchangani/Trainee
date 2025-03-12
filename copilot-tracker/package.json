@@ -9,13 +9,16 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [     
+   "onStartupFinished",
+    "onCommand:copilotTracker.start",
+    "onDidChangeTextDocument"],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "copilot-tracker.helloWorld",
-        "title": "Hello World"
+        "command": "copilotTracker.start",
+        "title": "Start Copilot Tracker"
       }
     ]
   },
