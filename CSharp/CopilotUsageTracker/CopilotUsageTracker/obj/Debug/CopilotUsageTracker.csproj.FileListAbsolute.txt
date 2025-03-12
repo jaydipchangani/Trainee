@@ -1,0 +1,8 @@
+C:\Trainee_new\CSharp\CopilotUsageTracker\CopilotUsageTracker\obj\Debug\CopilotUsageTracker.csproj.AssemblyReference.cache
+C:\Trainee_new\CSharp\CopilotUsageTracker\CopilotUsageTracker\obj\Debug\UsageWindow.baml
+C:\Trainee_new\CSharp\CopilotUsageTracker\CopilotUsageTracker\obj\Debug\UsageWindow.g.cs
+C:\Trainee_new\CSharp\CopilotUsageTracker\CopilotUsageTracker\obj\Debug\CopilotUsageTracker_MarkupCompile.cache
+C:\Trainee_new\CSharp\CopilotUsageTracker\CopilotUsageTracker\obj\Debug\CopilotUsageTracker.g.resources
+C:\Trainee_new\CSharp\CopilotUsageTracker\CopilotUsageTracker\obj\Debug\_EmptyResource.resources
+C:\Trainee_new\CSharp\CopilotUsageTracker\CopilotUsageTracker\obj\Debug\CopilotUsageTracker.csproj.GenerateResource.cache
+C:\Trainee_new\CSharp\CopilotUsageTracker\CopilotUsageTracker\obj\Debug\CopilotUsageTracker.csproj.CoreCompileInputs.cache
