@@ -1,0 +1,145 @@
+{
+  "2025-03-15": {
+    "aiTime": 87500,
+    "aiUsage": {
+      "Gemini": 60000,
+      "Bard": 27500
+    },
+    "lastAIUsed": {
+      "timestamp": 1741996831561,
+      "website": "Bard"
+    },
+    "tabsClosed": 3,
+    "tabsOpened": 1,
+    "totalTime": 150000
+  },
+  "2025-03-14": {
+    "aiTime": 620000,
+    "aiUsage": {
+      "DeepSeek": 300000,
+      "Claude": 200000,
+      "Vercel": 120000
+    },
+    "lastAIUsed": {
+      "timestamp": 1741910431561,
+      "website": "Vercel"
+    },
+    "tabsClosed": 12,
+    "tabsOpened": 20,
+    "totalTime": 900000
+  },
+  "2025-03-13": {
+    "aiTime": 350000,
+    "aiUsage": {
+      "GPT": 150000,
+      "Bard": 2000,
+      "Claude": 100000,
+      "Gemini": 98000
+    },
+    "lastAIUsed": {
+      "timestamp": 1741846431561,
+      "website": "Gemini"
+    },
+    "tabsClosed": 5,
+    "tabsOpened": 10,
+    "totalTime": 500000
+  },
+  "2025-03-12": {
+    "aiTime": 220889,
+    "aiUsage": {
+      "GPT": 220889,
+      "Bard": 1025
+    },
+    "lastAIUsed": {
+      "timestamp": 1741760031561,
+      "website": "ChatGPT"
+    },
+    "tabsClosed": 0,
+    "tabsOpened": 0,
+    "totalTime": 110000
+  },
+  "2025-03-11": {
+    "aiTime": 110889,
+    "aiUsage": {
+      "ChatGPT": 110889,
+      "Bard": 1025
+    },
+    "lastAIUsed": {
+      "timestamp": 1741760031561,
+      "website": "ChatGPT"
+    },
+    "tabsClosed": 0,
+    "tabsOpened": 0,
+    "totalTime": 110000
+  },
+  "2025-03-10": {
+    "aiTime": 400000,
+    "aiUsage": {
+      "Vercel": 50000,
+      "DeepSeek": 200000,
+      "Lovable": 150000
+    },
+    "lastAIUsed": {
+      "timestamp": 1741673631561,
+      "website": "Lovable"
+    },
+    "tabsClosed": 2,
+    "tabsOpened": 7,
+    "totalTime": 600000
+  },
+  "2025-03-09": {
+    "aiTime": 180000,
+    "aiUsage": {
+      "Bard": 50000,
+      "Claude": 130000
+    },
+    "lastAIUsed": {
+      "timestamp": 1741590431561,
+      "website": "Claude"
+    },
+    "tabsClosed": 1,
+    "tabsOpened": 3,
+    "totalTime": 250000
+  },
+    "2025-03-08": {
+    "aiTime": 95000,
+    "aiUsage": {
+      "GPT": 70000,
+      "Gemini": 25000
+    },
+    "lastAIUsed": {
+      "timestamp": 1741504031561,
+      "website": "GPT"
+    },
+    "tabsClosed": 4,
+    "tabsOpened": 2,
+    "totalTime": 180000
+  },
+  "2025-03-07": {
+    "aiTime": 780000,
+    "aiUsage": {
+      "DeepSeek": 400000,
+      "Lovable": 380000
+    },
+    "lastAIUsed": {
+      "timestamp": 1741417631561,
+      "website": "Lovable"
+    },
+    "tabsClosed": 15,
+    "tabsOpened": 25,
+    "totalTime": 1000000
+  },
+  "2025-03-06": {
+    "aiTime": 30000,
+    "aiUsage": {
+      "Bard": 30000
+    },
+    "lastAIUsed": {
+      "timestamp": 1741331231561,
+      "website": "Bard"
+    },
+    "tabsClosed": 0,
+    "tabsOpened": 1,
+    "totalTime": 60000
+  }
+}

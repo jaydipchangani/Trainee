@@ -191,3 +191,35 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 });
 
 
+
+
+document.getElementById("copyData").addEventListener("click", function () {
+    chrome.storage.local.get(null, (data) => {
+        if (!data || Object.keys(data).length === 0) {
+            alert("No data found in storage!");
+            return;
+        }
+
+        const latestDate = Object.keys(data).sort().pop();
+        const latestData = data[latestDate];
+
+        if (!latestData) {
+            alert("No valid data found for the latest date!");
+            return;
+        }
+
+        const jsonData = JSON.stringify(latestData, null, 2);
+        const blob = new Blob([jsonData], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "ai_usage.json";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        alert("AI usage data downloaded as 'ai_usage.json'.");
+    });
+});
