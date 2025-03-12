@@ -53,20 +53,28 @@ namespace AIUsageMonitor
             }
         }
 
-        private void UpdateChart(JObject aiUsageData)
+        private void UpdateChart(JObject data)
         {
-            // Clear previous data
-            chartAIUsage.Series["AI Usage"].Points.Clear();
-
-            foreach (var ai in aiUsageData["aiUsage"])
+            chartAIUsage.Series.Clear();  // Clear old data
+            var series = new System.Windows.Forms.DataVisualization.Charting.Series("AI Usage")
             {
-                string aiName = ai.Path; // AI name (e.g., ChatGPT)
-                double timeUsed = (double)ai.First / 1000; // Convert ms to seconds
+                ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie
+            };
 
-                // Add data to Pie Chart
-                chartAIUsage.Series["AI Usage"].Points.AddXY(aiName, timeUsed);
+            if (data["aiUsage"] is JObject aiUsage)
+            {
+                foreach (var ai in aiUsage)
+                {
+                    string aiName = ai.Key;
+                    double usageTime = Convert.ToDouble(ai.Value);
+
+                    series.Points.AddXY(aiName, usageTime);
+                }
             }
+
+            chartAIUsage.Series.Add(series);
         }
+
 
 
         private void cmbSelectDate_SelectedIndexChanged(object sender, EventArgs e)
@@ -79,45 +87,49 @@ namespace AIUsageMonitor
             }
 
             string selectedDate = cmbSelectDate.SelectedItem.ToString();
-            if (jsonData.ContainsKey(selectedDate))
+            if (!jsonData.ContainsKey(selectedDate))
             {
-                var selectedData = jsonData[selectedDate];
+                MessageBox.Show("No data found for the selected date.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
-                lblDate.Text = "Date: " + selectedDate;
+            var selectedData = jsonData[selectedDate];
 
-                // ✅ Get Time in HH:MM:SS format
-                int totalTimeMs = selectedData["totalTime"]?.Value<int>() ?? 0;
-                int aiTimeMs = selectedData["aiTime"]?.Value<int>() ?? 0;
+            lblDate.Text = "Date: " + selectedDate;
 
-                lblTotalTime.Text = "Total Time: " + ConvertToHHMMSS(totalTimeMs);
-                lblAITime.Text = "AI Time: " + ConvertToHHMMSS(aiTimeMs);
-                lblTabsOpened.Text = "Tabs Opened: " + (selectedData["tabsOpened"]?.ToString() ?? "N/A");
-                lblTabsClosed.Text = "Tabs Closed: " + (selectedData["tabsClosed"]?.ToString() ?? "N/A");
-                lblLastUsed.Text = "Last AI Used: " + (selectedData["lastAIUsed"]?["website"]?.ToString() ?? "N/A");
+            // ✅ Convert time to HH:MM:SS
+            int totalTimeMs = selectedData["totalTime"]?.Value<int>() ?? 0;
+            int aiTimeMs = selectedData["aiTime"]?.Value<int>() ?? 0;
+            lblTotalTime.Text = "Total Time: " + ConvertToHHMMSS(totalTimeMs);
+            lblAITime.Text = "AI Time: " + ConvertToHHMMSS(aiTimeMs);
+            lblTabsOpened.Text = "Tabs Opened: " + (selectedData["tabsOpened"]?.ToString() ?? "N/A");
+            lblTabsClosed.Text = "Tabs Closed: " + (selectedData["tabsClosed"]?.ToString() ?? "N/A");
+            lblLastUsed.Text = "Last AI Used: " + (selectedData["lastAIUsed"]?["website"]?.ToString() ?? "N/A");
 
-                // ✅ Update AI Usage List
-                lstAIUsage.Items.Clear();
-                chartAIUsage.Series["AI Usage"].Points.Clear(); // Clear previous data
+            // ✅ Update AI Usage List
+            lstAIUsage.Items.Clear();
+            chartAIUsage.Series["AI Usage"].Points.Clear(); // Clear previous data
 
-                if (selectedData["aiUsage"] != null)
+            if (selectedData["aiUsage"] is JObject aiUsage && aiUsage.Count > 0)
+            {
+                foreach (var ai in aiUsage)
                 {
-                    foreach (var ai in selectedData["aiUsage"])
-                    {
-                        string aiName = ai.Path.Split('.').Last();
-                        int aiTime = ai.First?.ToObject<int>() ?? 0;
-                        string aiTimeFormatted = ConvertToHHMMSS(aiTime);
+                    string aiName = ai.Key;
+                    int aiTime = ai.Value?.ToObject<int>() ?? 0;
+                    string aiTimeFormatted = ConvertToHHMMSS(aiTime);
 
-                        lstAIUsage.Items.Add($"{aiName}: {aiTimeFormatted}");
+                    lstAIUsage.Items.Add($"{aiName}: {aiTimeFormatted}");
 
-                        // ✅ Add AI data to Pie Chart
-                        chartAIUsage.Series["AI Usage"].Points.AddXY(aiName, aiTime);
-                    }
+                    // ✅ Add AI data to Pie Chart
+                    chartAIUsage.Series["AI Usage"].Points.AddXY(aiName, aiTime);
                 }
             }
             else
             {
-                MessageBox.Show("No data found for the selected date.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                lstAIUsage.Items.Add("No AI Usage Data");
             }
+
+
         }
 
         private string ConvertToHHMMSS(int milliseconds)

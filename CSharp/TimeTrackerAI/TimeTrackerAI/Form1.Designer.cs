@@ -1,5 +1,7 @@
 ﻿
 
+using System.Windows.Forms.DataVisualization.Charting;
+
 namespace AIUsageMonitor
 {
     partial class Form1 :Form
@@ -16,28 +18,6 @@ namespace AIUsageMonitor
         private void InitializeComponent()
 
         {
-
-            this.chartAIUsage = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            ((System.ComponentModel.ISupportInitialize)(this.chartAIUsage)).BeginInit();
-
-            // Configure Chart Properties
-            this.chartAIUsage.Location = new System.Drawing.Point(300, 20);
-            this.chartAIUsage.Size = new System.Drawing.Size(400, 300);
-            this.chartAIUsage.ChartAreas.Add(new System.Windows.Forms.DataVisualization.Charting.ChartArea("ChartArea1"));
-
-            // Configure Series
-            var series = new System.Windows.Forms.DataVisualization.Charting.Series("AI Usage")
-            {
-                ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Pie
-            };
-            this.chartAIUsage.Series.Add(series);
-
-            // Add to Form
-            this.Controls.Add(this.chartAIUsage);
-
-            ((System.ComponentModel.ISupportInitialize)(this.chartAIUsage)).EndInit();
-
-
             lblDate = new Label();
             lblTotalTime = new Label();
             lblAITime = new Label();
@@ -119,7 +99,7 @@ namespace AIUsageMonitor
             // 
             // Form1
             // 
-            ClientSize = new Size(300, 420);
+            ClientSize = new Size(684, 461);
             Controls.Add(cmbSelectDate);
             Controls.Add(lblDate);
             Controls.Add(lblTotalTime);
@@ -132,6 +112,28 @@ namespace AIUsageMonitor
             Name = "Form1";
             Text = "AI Usage Monitor";
             ResumeLayout(false);
+
+            this.chartAIUsage = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            ((System.ComponentModel.ISupportInitialize)(this.chartAIUsage)).BeginInit();
+            this.SuspendLayout();
+
+            this.chartAIUsage = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            ((System.ComponentModel.ISupportInitialize)(this.chartAIUsage)).BeginInit();
+            this.SuspendLayout();
+
+            // Chart Properties
+            this.chartAIUsage.Location = new System.Drawing.Point(300, 150);
+            this.chartAIUsage.Size = new System.Drawing.Size(400, 300);
+            this.chartAIUsage.ChartAreas.Add(new ChartArea("ChartArea1"));
+            this.chartAIUsage.Series.Add(new Series("AI Usage") { ChartType = SeriesChartType.Pie });
+
+            // Add Chart to Form Controls
+            this.Controls.Add(this.chartAIUsage);
+
+            ((System.ComponentModel.ISupportInitialize)(this.chartAIUsage)).EndInit();
+            this.ResumeLayout(false);
+
+
         }
         private ComboBox cmbSelectDate;
     }
