@@ -27,7 +27,7 @@ exports.deactivate = exports.activate = void 0;
 const vscode = __importStar(require("vscode"));
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
-let totalUsageTime = 0; // Total time in seconds
+let totalUsageSeconds = 0; // Store time in seconds
 let lastActiveTimestamp = null;
 let storagePath;
 function activate(context) {
@@ -67,16 +67,17 @@ function updateUsageTime() {
     const currentTime = Date.now();
     if (lastActiveTimestamp !== null) {
         const timeDiff = (currentTime - lastActiveTimestamp) / 1000; // Convert to seconds
-        totalUsageTime += Math.round(timeDiff);
-        console.log(`⏳ Updated Copilot time: ${totalUsageTime} seconds`);
+        totalUsageSeconds += Math.round(timeDiff);
+        console.log(`⏳ Updated Copilot time: ${formatTime(totalUsageSeconds)}`);
     }
     lastActiveTimestamp = currentTime;
 }
 function saveUsageData() {
     try {
-        const data = { totalUsageTime };
+        const formattedTime = formatTime(totalUsageSeconds);
+        const data = { totalUsageTime: formattedTime };
         fs.writeFileSync(storagePath, JSON.stringify(data, null, 2));
-        console.log("✅ Copilot usage time saved!", totalUsageTime, "seconds");
+        console.log("✅ Copilot usage time saved!", formattedTime);
     }
     catch (error) {
         console.error("❌ Error saving usage data:", error);
@@ -86,13 +87,25 @@ function loadUsageData() {
     try {
         if (fs.existsSync(storagePath)) {
             const data = JSON.parse(fs.readFileSync(storagePath, 'utf8'));
-            totalUsageTime = data.totalUsageTime || 0;
-            console.log("📊 Loaded previous Copilot usage:", totalUsageTime, "seconds");
+            totalUsageSeconds = timeToSeconds(data.totalUsageTime) || 0;
+            console.log("📊 Loaded previous Copilot usage:", formatTime(totalUsageSeconds));
         }
     }
     catch (error) {
         console.error("⚠️ Error loading previous usage data:", error);
     }
+}
+function formatTime(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+}
+function timeToSeconds(timeStr) {
+    if (!timeStr)
+        return 0;
+    const [hours, minutes, seconds] = timeStr.split(":").map(Number);
+    return (hours * 3600) + (minutes * 60) + seconds;
 }
 function deactivate() {
     console.log("❌ Copilot Tracker: Extension DEACTIVATED!");
