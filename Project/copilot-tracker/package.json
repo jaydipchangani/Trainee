@@ -1,0 +1,41 @@
+{
+    "name": "copilot-tracker",
+    "displayName": "Copilot Tracker",
+    "description": "Tracks how much time GitHub Copilot is used",
+    "version": "1.0.0",
+    "publisher": "your-name",
+    "engines": {
+        "vscode": "^1.70.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onStartupFinished"
+    ],
+    "main": "./src/extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "extension.showCopilotUsage",
+                "title": "Show Copilot Usage Time"
+            }
+        ]
+    },
+    "scripts": {
+        "compile": "tsc",
+        "watch": "tsc -w",
+        "prepublishOnly": "npm run compile"
+    },
+    "devDependencies": {
+        "@types/node": "^22.13.10",
+        "typescript": "^4.8.4",
+        "vsce": "^2.8.1"
+    },
+    "dependencies": {
+        "fs": "^0.0.1-security",
+        "fs-extra": "^11.3.0",
+        "path": "^0.12.7",
+        "vscode": "^1.1.37"
+    }
+}
