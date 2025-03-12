@@ -43,6 +43,7 @@ let totalCopilotUsage = 0;
 const logFile = path.join(__dirname, "..", "copilot_usage_log.json");
 function activate(context) {
     vscode.workspace.onDidChangeTextDocument((event) => {
+        console.log("Copilot activity detected.");
         if (event.contentChanges.length > 0 && event.document.languageId !== 'plaintext') {
             trackCopilotUsage();
         }
