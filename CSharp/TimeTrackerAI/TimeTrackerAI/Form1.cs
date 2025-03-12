@@ -79,7 +79,6 @@ namespace AIUsageMonitor
 
         private void cmbSelectDate_SelectedIndexChanged(object sender, EventArgs e)
         {
-
             if (cmbSelectDate.SelectedItem == null || jsonData == null)
             {
                 MessageBox.Show("No data available for the selected date.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -128,8 +127,6 @@ namespace AIUsageMonitor
             {
                 lstAIUsage.Items.Add("No AI Usage Data");
             }
-
-
         }
 
         private string ConvertToHHMMSS(int milliseconds)
@@ -138,7 +135,9 @@ namespace AIUsageMonitor
             return $"{time.Hours:D2}:{time.Minutes:D2}:{time.Seconds:D2}";
         }
 
-       
+        private void Form1_Load(object sender, EventArgs e)
+        {
 
+        }
     }
 }

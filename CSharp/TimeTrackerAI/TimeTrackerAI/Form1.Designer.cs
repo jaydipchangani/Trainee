@@ -111,11 +111,8 @@ namespace AIUsageMonitor
             Controls.Add(btnLoadData);
             Name = "Form1";
             Text = "AI Usage Monitor";
+            Load += Form1_Load;
             ResumeLayout(false);
-
-            this.chartAIUsage = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            ((System.ComponentModel.ISupportInitialize)(this.chartAIUsage)).BeginInit();
-            this.SuspendLayout();
 
             this.chartAIUsage = new System.Windows.Forms.DataVisualization.Charting.Chart();
             ((System.ComponentModel.ISupportInitialize)(this.chartAIUsage)).BeginInit();
@@ -132,6 +129,7 @@ namespace AIUsageMonitor
 
             ((System.ComponentModel.ISupportInitialize)(this.chartAIUsage)).EndInit();
             this.ResumeLayout(false);
+
 
 
         }
