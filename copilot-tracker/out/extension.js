@@ -15,86 +15,87 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.activate = activate;
-exports.deactivate = deactivate;
+exports.deactivate = exports.activate = void 0;
 const vscode = __importStar(require("vscode"));
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
-let startTime = null;
-let totalUsageTime = 0;
+let totalUsageTime = 0; // Total time in seconds
+let lastActiveTimestamp = null;
 let storagePath;
-function loadPreviousData() {
-    try {
-        if (fs.existsSync(storagePath)) {
-            const data = JSON.parse(fs.readFileSync(storagePath, "utf8"));
-            totalUsageTime = data.totalUsageTime || 0;
-        }
+function activate(context) {
+    console.log("🔥 Copilot Tracker: Extension ACTIVATED!");
+    vscode.window.showInformationMessage("Copilot Tracker Loaded!");
+    storagePath = path.join(context.globalStorageUri.fsPath, "copilot_usage.json");
+    console.log("📂 Storage Path:", storagePath);
+    // Ensure storage directory exists
+    if (!fs.existsSync(context.globalStorageUri.fsPath)) {
+        fs.mkdirSync(context.globalStorageUri.fsPath, { recursive: true });
     }
-    catch (error) {
-        console.error("Error loading previous data:", error);
+    // Load saved data
+    loadUsageData();
+    // Listen for Copilot completions
+    vscode.workspace.onDidChangeTextDocument(handleTextChange, null, context.subscriptions);
+    // Save usage every 5 seconds
+    setInterval(saveUsageData, 5000);
+    let disposable = vscode.commands.registerCommand('copilotTracker.start', () => {
+        console.log("🚀 Copilot Tracker: START command executed");
+        vscode.window.showInformationMessage("Copilot Tracker started tracking!");
+    });
+    context.subscriptions.push(disposable);
+}
+exports.activate = activate;
+function handleTextChange(event) {
+    if (event.contentChanges.length === 0) {
+        return; // No actual text changes
     }
+    // Check if the change is likely from Copilot
+    const changeText = event.contentChanges[0].text;
+    if (changeText.length > 5) { // Copilot usually inserts longer text
+        console.log("🤖 Copilot suggestion detected!");
+        updateUsageTime();
+    }
+}
+function updateUsageTime() {
+    const currentTime = Date.now();
+    if (lastActiveTimestamp !== null) {
+        const timeDiff = (currentTime - lastActiveTimestamp) / 1000; // Convert to seconds
+        totalUsageTime += Math.round(timeDiff);
+        console.log(`⏳ Updated Copilot time: ${totalUsageTime} seconds`);
+    }
+    lastActiveTimestamp = currentTime;
 }
 function saveUsageData() {
     try {
         const data = { totalUsageTime };
         fs.writeFileSync(storagePath, JSON.stringify(data, null, 2));
+        console.log("✅ Copilot usage time saved!", totalUsageTime, "seconds");
     }
     catch (error) {
-        console.error("Error saving usage data:", error);
+        console.error("❌ Error saving usage data:", error);
     }
 }
-function activate(context) {
-    console.log("Copilot Tracker Activated");
-    console.log("===== Copilot Tracker Extension ACTIVATED =====");
-    // Get the path for storage
-    storagePath = path.join(context.globalStorageUri.fsPath, "copilot_usage.json");
-    console.log("Storage Path:", storagePath); // Debugging: Check storage path
-    // Ensure directory exists
-    if (!fs.existsSync(context.globalStorageUri.fsPath)) {
-        console.log("Creating storage directory...");
-        fs.mkdirSync(context.globalStorageUri.fsPath, { recursive: true });
+function loadUsageData() {
+    try {
+        if (fs.existsSync(storagePath)) {
+            const data = JSON.parse(fs.readFileSync(storagePath, 'utf8'));
+            totalUsageTime = data.totalUsageTime || 0;
+            console.log("📊 Loaded previous Copilot usage:", totalUsageTime, "seconds");
+        }
     }
-    loadPreviousData();
-    const startTracking = vscode.workspace.onDidChangeTextDocument((event) => {
-        if (event.document.languageId === "javascript" || event.document.languageId === "typescript") {
-            if (!startTime) {
-                console.log("Copilot usage started...");
-                startTime = Date.now();
-            }
-        }
-    });
-    const stopTracking = vscode.window.onDidChangeVisibleTextEditors(() => {
-        if (startTime) {
-            totalUsageTime += Math.floor((Date.now() - startTime) / 1000);
-            console.log(`Copilot usage stopped. Total time: ${totalUsageTime} seconds`);
-            startTime = null;
-            saveUsageData();
-        }
-    });
-    context.subscriptions.push(startTracking, stopTracking);
+    catch (error) {
+        console.error("⚠️ Error loading previous usage data:", error);
+    }
 }
 function deactivate() {
-    if (startTime) {
-        totalUsageTime += Math.floor((Date.now() - startTime) / 1000);
-        saveUsageData();
-    }
+    console.log("❌ Copilot Tracker: Extension DEACTIVATED!");
+    saveUsageData();
 }
-//# sourceMappingURL=extension.js.map
+exports.deactivate = deactivate;

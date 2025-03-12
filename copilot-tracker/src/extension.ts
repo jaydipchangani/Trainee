@@ -1,75 +1,86 @@
-import * as vscode from "vscode";
-import * as fs from "fs";
-import * as path from "path";
+import * as vscode from 'vscode';
+import * as fs from 'fs';
+import * as path from 'path';
 
-let startTime: number | null = null;
-let totalUsageTime = 0;
+let totalUsageTime = 0;  // Total time in seconds
+let lastActiveTimestamp: number | null = null;
 let storagePath: string;
 
-function loadPreviousData() {
-    try {
-        if (fs.existsSync(storagePath)) {
-            const data = JSON.parse(fs.readFileSync(storagePath, "utf8"));
-            totalUsageTime = data.totalUsageTime || 0;
-        }
-    } catch (error) {
-        console.error("Error loading previous data:", error);
+export function activate(context: vscode.ExtensionContext) {
+    console.log("🔥 Copilot Tracker: Extension ACTIVATED!");
+    vscode.window.showInformationMessage("Copilot Tracker Loaded!");
+
+    storagePath = path.join(context.globalStorageUri.fsPath, "copilot_usage.json");
+    console.log("📂 Storage Path:", storagePath);
+
+    // Ensure storage directory exists
+    if (!fs.existsSync(context.globalStorageUri.fsPath)) {
+        fs.mkdirSync(context.globalStorageUri.fsPath, { recursive: true });
     }
+
+    // Load saved data
+    loadUsageData();
+
+    // Listen for Copilot completions
+    vscode.workspace.onDidChangeTextDocument(handleTextChange, null, context.subscriptions);
+
+    // Save usage every 5 seconds
+    setInterval(saveUsageData, 5000);
+
+    let disposable = vscode.commands.registerCommand('copilotTracker.start', () => {
+        console.log("🚀 Copilot Tracker: START command executed");
+        vscode.window.showInformationMessage("Copilot Tracker started tracking!");
+    });
+
+    context.subscriptions.push(disposable);
+}
+
+function handleTextChange(event: vscode.TextDocumentChangeEvent) {
+    if (event.contentChanges.length === 0) {
+        return;  // No actual text changes
+    }
+
+    // Check if the change is likely from Copilot
+    const changeText = event.contentChanges[0].text;
+    if (changeText.length > 5) {  // Copilot usually inserts longer text
+        console.log("🤖 Copilot suggestion detected!");
+        updateUsageTime();
+    }
+}
+
+function updateUsageTime() {
+    const currentTime = Date.now();
+    if (lastActiveTimestamp !== null) {
+        const timeDiff = (currentTime - lastActiveTimestamp) / 1000;  // Convert to seconds
+        totalUsageTime += Math.round(timeDiff);
+        console.log(`⏳ Updated Copilot time: ${totalUsageTime} seconds`);
+    }
+    lastActiveTimestamp = currentTime;
 }
 
 function saveUsageData() {
     try {
         const data = { totalUsageTime };
         fs.writeFileSync(storagePath, JSON.stringify(data, null, 2));
+        console.log("✅ Copilot usage time saved!", totalUsageTime, "seconds");
     } catch (error) {
-        console.error("Error saving usage data:", error);
+        console.error("❌ Error saving usage data:", error);
     }
 }
 
-export function activate(context: vscode.ExtensionContext) {
-	console.log("===== Copilot Tracker Extension ACTIVATED =====");
-
-    // Get the path for storage
-
-    let disposable = vscode.commands.registerCommand('copilotTracker.start', () => {
-        console.log("🚀 Copilot Tracker START command executed");
-        vscode.window.showInformationMessage("Copilot Tracker started tracking!");
-    });
-    storagePath = path.join(context.globalStorageUri.fsPath, "copilot_usage.json");
-
-    console.log("Storage Path:", storagePath); // Debugging: Check storage path
-
-    // Ensure directory exists
-    if (!fs.existsSync(context.globalStorageUri.fsPath)) {
-        console.log("Creating storage directory...");
-        fs.mkdirSync(context.globalStorageUri.fsPath, { recursive: true });
+function loadUsageData() {
+    try {
+        if (fs.existsSync(storagePath)) {
+            const data = JSON.parse(fs.readFileSync(storagePath, 'utf8'));
+            totalUsageTime = data.totalUsageTime || 0;
+            console.log("📊 Loaded previous Copilot usage:", totalUsageTime, "seconds");
+        }
+    } catch (error) {
+        console.error("⚠️ Error loading previous usage data:", error);
     }
-
-    loadPreviousData();
-
-    const startTracking = vscode.workspace.onDidChangeTextDocument((event) => {
-        if (event.document.languageId === "javascript" || event.document.languageId === "typescript") {
-            if (!startTime) {
-                console.log("Copilot usage started...");
-                startTime = Date.now();
-            }
-        }
-    });
-
-    const stopTracking = vscode.window.onDidChangeVisibleTextEditors(() => {
-        if (startTime) {
-            totalUsageTime += Math.floor((Date.now() - startTime) / 1000);
-            console.log(`Copilot usage stopped. Total time: ${totalUsageTime} seconds`);
-            startTime = null;
-            saveUsageData();
-        }
-    });
-
-    context.subscriptions.push(startTracking, stopTracking);
 }
+
 export function deactivate() {
-    if (startTime) {
-        totalUsageTime += Math.floor((Date.now() - startTime) / 1000);
-        saveUsageData();
-    }
+    console.log("❌ Copilot Tracker: Extension DEACTIVATED!");
+    saveUsageData();
 }

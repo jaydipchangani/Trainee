@@ -1,18 +1,17 @@
 {
   "name": "copilot-tracker",
-  "displayName": "copilot-tracker",
-  "description": "time tracker for copilot",
+  "displayName": "Copilot Tracker",
+  "description": "Tracks GitHub Copilot usage time.",
   "version": "0.0.1",
   "engines": {
-    "vscode": "^1.98.0"
+    "vscode": "^1.75.0"
   },
   "categories": [
     "Other"
   ],
-  "activationEvents": [     
-   "onStartupFinished",
-    "onCommand:copilotTracker.start",
-    "onDidChangeTextDocument"],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
@@ -23,22 +22,18 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
-    "lint": "eslint src",
-    "test": "vscode-test"
+    "compile": "tsc",
+    "watch": "tsc -w",
+    "prepublish": "npm run compile"
   },
   "devDependencies": {
-    "@types/vscode": "^1.98.0",
-    "@types/mocha": "^10.0.10",
-    "@types/node": "20.x",
-    "@typescript-eslint/eslint-plugin": "^8.25.0",
-    "@typescript-eslint/parser": "^8.25.0",
-    "eslint": "^9.21.0",
-    "typescript": "^5.7.3",
-    "@vscode/test-cli": "^0.0.10",
-    "@vscode/test-electron": "^2.4.1"
+    "@types/node": "^22.13.10",
+    "@types/vscode": "^1.75.0",
+    "typescript": "^4.5.5",
+    "vsce": "^2.8.0"
+  },
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7"
   }
 }
