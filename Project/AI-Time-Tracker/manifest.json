@@ -1,19 +1,21 @@
 {
     "manifest_version": 3,
     "name": "AI Time Tracker",
-    "version": "1.0",
-    "description": "Track time spent on AI chat tools like ChatGPT, Gemini, Claude, and Perplexity.",
-    "permissions": ["storage", "activeTab", "tabs"],
+    "version": "1.1",
+    "description": "Track time spent using AI tools",
+    "permissions": ["storage", "activeTab", "scripting", "tabs","downloads"],
+    "host_permissions": [ "https://gemini.google.com/app*","https://chatgpt.com/*"],
     "background": {
       "service_worker": "background.js"
     },
     "action": {
-      "default_popup": "popup/popup.html",
-      "default_icon": {
-        "16": "icons/icon128.png"
-      }
+      "default_popup": "popup.html"
     },
-    "host_permissions": ["*://*.openai.com/*", "*://*.gemini.google.com/*", "*://*.perplexity.ai/*", "*://*.claude.ai/*"],
-    "options_page": "options/options.html"
+    "content_scripts": [
+      {
+        "matches": [ "https://gemini.google.com/app*","https://chatgpt.com/*" ],
+        "js": ["content.js"]
+      }
+    ]
   }
   

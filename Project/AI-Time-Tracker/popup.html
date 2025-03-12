@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Time Tracker</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <h2>AI Time Tracker</h2>
+
+    <div class="box">
+        <h3>Total Time Tracked</h3>
+        <span id="total-time">00:00:00</span>
+    </div>
+
+    <div class="box">
+        <h3>AI Usage Time (Today)</h3>
+        <span id="ai-time">00:00:00</span>
+    </div>
+
+    <h3>Session History</h3>
+    <ul id="sessions"></ul>
+
+    <button id="reset">Reset Data</button>
+    <button id="export">Export Data</button>
+
+    <script src="popup.js"></script>
+</body>
+</html>

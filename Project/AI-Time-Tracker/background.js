@@ -1,109 +1,86 @@
 let activeTabId = null;
 let startTime = null;
-let totalTime = {};
-const AI_SITES = {
-    "openai.com": "ChatGPT",
-    "gemini.google.com": "Gemini",
-    "perplexity.ai": "Perplexity",
-    "claude.ai": "Claude"
-};
+let isTabActive = false;
+let aiWebsites = ["chatgpt.com", "gemini.google.com"];
 
-// Load saved AI time on extension startup
-chrome.storage.local.get(["ai_usage"], (data) => {
-    totalTime = data.ai_usage || {};
-});
+// Detect tab activation
+chrome.tabs.onActivated.addListener(({ tabId }) => checkTab(tabId));
 
-// Listen for tab activation
-chrome.tabs.onActivated.addListener((activeInfo) => {
-    chrome.tabs.get(activeInfo.tabId, (tab) => {
-        if (tab && tab.url) {
-            handleTabChange(tab);
-        }
-    });
-});
-
-// Listen for tab URL updates (e.g., navigation inside a site)
+// Detect tab updates (URL changes)
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    if (changeInfo.url) {
-        handleTabChange(tab);
+    if (changeInfo.status === "complete") {
+        checkTab(tabId);
     }
 });
 
-// Detect when Chrome starts and restore tracking
-chrome.runtime.onStartup.addListener(() => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        if (tabs.length > 0) {
-            handleTabChange(tabs[0]);
+// Detect tab closing
+chrome.tabs.onRemoved.addListener((tabId) => {
+    if (tabId === activeTabId) stopTracking();
+});
+
+// Detect window focus change (Inactive when switching apps)
+chrome.windows.onFocusChanged.addListener((windowId) => {
+    if (windowId === chrome.windows.WINDOW_ID_NONE) pauseTracking();
+    else checkTab(activeTabId);
+});
+
+// Check if current tab is an AI tab
+function checkTab(tabId) {
+    chrome.tabs.get(tabId, (tab) => {
+        if (tab && tab.url) {
+            const url = new URL(tab.url);
+            if (aiWebsites.includes(url.hostname)) {
+                startTracking(tabId);
+            } else {
+                pauseTracking();
+            }
         }
     });
-});
-
-// Handle tab change
-function handleTabChange(tab) {
-    if (!tab || !tab.url) return;
-    const url = new URL(tab.url);
-    const domain = url.hostname;
-    const aiName = AI_SITES[domain];
-
-    if (aiName) {
-        startTracking(tab.id, aiName);
-    } else {
-        stopTracking();
-    }
 }
 
-// Start tracking time
-function startTracking(tabId, aiName) {
-    if (activeTabId !== tabId) {
-        stopTracking();
+// Start tracking AI time
+function startTracking(tabId) {
+    if (activeTabId !== tabId || !isTabActive) {
+        stopTracking(); // Save previous session
         activeTabId = tabId;
         startTime = Date.now();
-        console.log(`Started tracking ${aiName}`);
+        isTabActive = true;
     }
 }
 
-// Stop tracking and save elapsed time
+// Pause tracking if user switches away
+function pauseTracking() {
+    if (isTabActive) {
+        stopTracking();
+        isTabActive = false;
+    }
+}
+
+// Stop tracking & save session data
 function stopTracking() {
     if (activeTabId && startTime) {
-        let elapsedTime = Math.floor((Date.now() - startTime) / 1000 / 60); // Convert to minutes
-        chrome.tabs.get(activeTabId, (tab) => {
-            if (tab && tab.url) {
-                let url = new URL(tab.url);
-                let aiName = AI_SITES[url.hostname];
-
-                if (aiName) {
-                    totalTime[aiName] = (totalTime[aiName] || 0) + elapsedTime;
-
-                    // Save updated time
-                    chrome.storage.local.set({ "ai_usage": totalTime }, () => {
-                        console.log("AI time saved:", totalTime);
-                    });
-                }
-            }
-        });
+        const duration = Date.now() - startTime;
+        saveTime(duration);
     }
-    activeTabId = null;
     startTime = null;
 }
 
-// Auto-save time every minute
-setInterval(() => {
-    if (activeTabId && startTime) {
-        let elapsedTime = Math.floor((Date.now() - startTime) / 1000 / 60);
-        chrome.tabs.get(activeTabId, (tab) => {
-            if (tab && tab.url) {
-                let url = new URL(tab.url);
-                let aiName = AI_SITES[url.hostname];
+// Save AI usage time to local storage
+function saveTime(timeData) {
+    chrome.storage.local.set({ AITimeTracker: timeData }, () => {
+        if (chrome.runtime.lastError) {
+            console.error("❌ Error saving time:", chrome.runtime.lastError);
+        } else {
+            console.log("✅ Time data saved successfully.");
+        }
+    });
+}
 
-                if (aiName) {
-                    totalTime[aiName] = (totalTime[aiName] || 0) + elapsedTime;
-                    startTime = Date.now(); // Reset start time
-
-                    chrome.storage.local.set({ "ai_usage": totalTime }, () => {
-                        console.log("Auto-saved AI time:", totalTime);
-                    });
-                }
-            }
-        });
+chrome.storage.local.get("AITimeTracker", (result) => {
+    if (chrome.runtime.lastError) {
+        console.error("❌ Error reading storage:", chrome.runtime.lastError);
+    } else {
+        const data = result.AITimeTracker || {};
+        console.log("📦 Retrieved AI Tracker data:", data);
     }
-}, 60000);
+});
