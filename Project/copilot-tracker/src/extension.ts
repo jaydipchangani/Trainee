@@ -4,20 +4,12 @@ import * as path from 'path';
 
 let copilotUsageStart: number | null = null;
 let totalCopilotUsage = 0;
-const logFile = path.join(__dirname, "copilot_usage_log.json");
+const logFile = path.join(__dirname, "..", "copilot_usage_log.json");
 
 export function activate(context: vscode.ExtensionContext) {
-    vscode.window.onDidChangeTextEditorVisibleRanges((event) => {
-        if (event.textEditor.document.languageId === 'copilot') {
-            if (copilotUsageStart === null) {
-                copilotUsageStart = Date.now();
-            }
-        } else {
-            if (copilotUsageStart !== null) {
-                totalCopilotUsage += Date.now() - copilotUsageStart;
-                copilotUsageStart = null;
-                saveUsageData();
-            }
+    vscode.workspace.onDidChangeTextDocument((event) => {
+        if (event.contentChanges.length > 0 && event.document.languageId !== 'plaintext') {
+            trackCopilotUsage();
         }
     });
 
@@ -25,6 +17,8 @@ export function activate(context: vscode.ExtensionContext) {
         const usageInSeconds = Math.floor(totalCopilotUsage / 1000);
         vscode.window.showInformationMessage(`Copilot used for: ${convertToHHMMSS(usageInSeconds)}`);
     }));
+
+    loadPreviousUsage();
 }
 
 export function deactivate() {
@@ -34,8 +28,29 @@ export function deactivate() {
     }
 }
 
+function trackCopilotUsage() {
+    if (copilotUsageStart === null) {
+        copilotUsageStart = Date.now();
+    }
+    setTimeout(() => {
+        if (copilotUsageStart !== null) {
+            totalCopilotUsage += Date.now() - copilotUsageStart;
+            copilotUsageStart = Date.now();
+            saveUsageData();
+        }
+    }, 5000);  // Logs time every 5 seconds while using Copilot
+}
+
 function saveUsageData() {
-    fs.writeFileSync(logFile, JSON.stringify({ copilotUsage: totalCopilotUsage }, null, 2));
+    const data = { copilotUsage: totalCopilotUsage };
+    fs.writeFileSync(logFile, JSON.stringify(data, null, 2));
+}
+
+function loadPreviousUsage() {
+    if (fs.existsSync(logFile)) {
+        const data = JSON.parse(fs.readFileSync(logFile, "utf-8"));
+        totalCopilotUsage = data.copilotUsage || 0;
+    }
 }
 
 function convertToHHMMSS(seconds: number) {
