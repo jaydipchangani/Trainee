@@ -4,10 +4,8 @@ import * as path from 'path';
 
 let copilotUsageSeconds = 0;
 let totalUsageSeconds = 0;
-let vscodeStartTime: number | null = null;
 let lastActiveTimestamp: number | null = null;
 let storagePath: string;
-let isExtensionDevHost = vscode.env.appName.includes("Code - OSS Dev"); // Detect Extension Dev Mode
 
 export function activate(context: vscode.ExtensionContext) {
     console.log("🔥 Copilot Tracker: Extension ACTIVATED!");
@@ -16,51 +14,31 @@ export function activate(context: vscode.ExtensionContext) {
     storagePath = path.join(context.globalStorageUri.fsPath, "copilot_usage.json");
     console.log("📂 Storage Path:", storagePath);
 
+    // Ensure storage directory exists
     if (!fs.existsSync(context.globalStorageUri.fsPath)) {
         fs.mkdirSync(context.globalStorageUri.fsPath, { recursive: true });
     }
 
+    // Load saved data
     loadUsageData();
 
-    if (isExtensionDevHost) {
-        console.log("🟢 Tracking active time in Extension Development Mode.");
-
-        if (!vscodeStartTime) {
-            vscodeStartTime = Date.now();
-            console.log("🚀 VS Code Started At:", new Date(vscodeStartTime).toLocaleTimeString());
-        }
-        
-        // ✅ Track VS Code open time when the window is active
-vscode.window.onDidChangeWindowState((state) => {
-    if (state.focused) {
-        console.log("🟢 VS Code Active");
-        if (!vscodeStartTime) {
-            vscodeStartTime = Date.now(); // Capture the exact start time only once
-        }
-        lastActiveTimestamp = Date.now(); // Update last active timestamp
-    } else {
-        console.log("🔴 VS Code Inactive");
-        updateTotalUsageTime();
-    }
-});
-        
-// ✅ Ensure total VS Code usage time is only counted when the window is active
-setInterval(() => {
-    if (vscode.window.state.focused) {
-        if (lastActiveTimestamp !== null) {
-            totalUsageSeconds += Math.round((Date.now() - lastActiveTimestamp) / 1000);
+    // Track VS Code total active time
+    vscode.window.onDidChangeWindowState((state) => {
+        if (state.focused) {
+            console.log("🟢 VS Code Active");
             lastActiveTimestamp = Date.now();
-        }
-    }
-}, 1000);
-    }
-
-    vscode.workspace.onDidChangeTextDocument(handleTextChange, null, context.subscriptions);
-
-    setInterval(() => {
-        if (isExtensionDevHost) {
+        } else {
+            console.log("🔴 VS Code Inactive");
             updateTotalUsageTime();
         }
+    });
+
+    // Listen for Copilot completions
+    vscode.workspace.onDidChangeTextDocument(handleTextChange, null, context.subscriptions);
+
+    // Save usage every 5 seconds
+    setInterval(() => {
+        updateTotalUsageTime();
         saveUsageData();
     }, 5000);
 
@@ -91,15 +69,15 @@ function updateCopilotUsageTime() {
     lastActiveTimestamp = currentTime;
 }
 
-// ✅ Modify `updateTotalUsageTime` to count time only when VS Code was active
 function updateTotalUsageTime() {
-    if (vscodeStartTime !== null && lastActiveTimestamp !== null) {
-        totalUsageSeconds += Math.round((Date.now() - lastActiveTimestamp) / 1000);
-        lastActiveTimestamp = Date.now(); // Reset timestamp
+    if (lastActiveTimestamp !== null) {
+        const timeDiff = (Date.now() - lastActiveTimestamp) / 1000;
+        totalUsageSeconds += Math.round(timeDiff);
+        console.log(`⏳ Total VS Code Usage: ${formatTime(totalUsageSeconds)}`);
     }
+    lastActiveTimestamp = Date.now();
 }
 
-// ✅ Modify `saveUsageData` to correctly store total VS Code usage time
 function saveUsageData() {
     try {
         const today = getFormattedDate();
@@ -107,7 +85,7 @@ function saveUsageData() {
 
         data[today] = {
             Copilot: formatTime(copilotUsageSeconds),
-            totalUsageTime: formatTime(totalUsageSeconds) // Always store active usage time
+            totalUsageTime: formatTime(totalUsageSeconds),
         };
 
         fs.writeFileSync(storagePath, JSON.stringify(data, null, 2));
@@ -115,7 +93,7 @@ function saveUsageData() {
     } catch (error) {
         console.error("❌ Error saving data:", error);
     }
-}  
+}
 
 function loadUsageData() {
     try {
@@ -124,7 +102,7 @@ function loadUsageData() {
             const today = getFormattedDate();
             if (data[today]) {
                 copilotUsageSeconds = timeToSeconds(data[today].Copilot) || 0;
-                totalUsageSeconds = isExtensionDevHost ? timeToSeconds(data[today].totalUsageTime) || 0 : 0;
+                totalUsageSeconds = timeToSeconds(data[today].totalUsageTime) || 0;
                 console.log("📊 Loaded previous data:", data[today]);
             }
         }
@@ -153,6 +131,6 @@ function getFormattedDate(): string {
 
 export function deactivate() {
     console.log("❌ Copilot Tracker: Extension DEACTIVATED!");
-    if (isExtensionDevHost) updateTotalUsageTime();
+    updateTotalUsageTime();
     saveUsageData();
 }
