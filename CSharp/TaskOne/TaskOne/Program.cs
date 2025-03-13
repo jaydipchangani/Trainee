@@ -54,19 +54,20 @@ public class HelloWorl{
             };
 
         string[,] options = {
-            { "Au", "Ag", "Fe", "Cu" },
-            { "3.14", "2.71", "1.61", "4.20" },
-            { "Australia", "Africa", "South America", "Europe" },
+            { "Ab", "Ag", "Gl", "Au" },
+            { "3.18", "2.14", "3.14", "4.20" },
+            { "India", "Africa", "Australia", "Europe" },
             { "Central Processing Unit", "Computer Peripheral Unit", "Control Program Utility", "Circuit Processing Unit" },
-            { "1945", "1939", "1950", "1941" },
-            { "Directing network traffic", "Storing data", "Displaying web pages", "Printing documents" },
+            { "1951", "1945", "1950", "1940" },
+            { "Printing documents", "Storing data", "Displaying web pages", "Directing network traffic" },
             { "Pacific Ocean", "Atlantic Ocean", "Indian Ocean", "Arctic Ocean" },
             { "William Shakespeare", "Charles Dickens", "Jane Austen", "Mark Twain" },
-            { "Mitochondria", "Nucleus", "Endoplasmic reticulum", "Golgi apparatus" },
-            { "Mars", "Venus", "Jupiter", "Saturn" },
-            { "Paris", "London", "Rome", "Berlin" }
+            { "Golgi apparatus", "Nucleus", "Endoplasmic reticulum", "Mitochondria" },
+            { "Moon", "Venus", "Mars", "Saturn" },
+            { "Mumbai", "Paris", "Rome", "Berlin" }
                };
 
+        ShuffleAllArrays(questions, answers, options);
 
         for (int i = 0; i <= questions.Length - 1; i++)
         {
@@ -146,5 +147,38 @@ public class HelloWorl{
             }
 
         }
-    
+    public static void ShuffleAllArrays(string[] questions, string[] answers, string[,] options)
+    {
+        int length = questions.Length;
+        int[] indices = Enumerable.Range(0, length).ToArray();
+
+        Random rng = new Random();
+
+        for (int i = length - 1; i > 0; i--)
+        {
+            int j = rng.Next(i + 1);
+            int temp = indices[i];
+            indices[i] = indices[j];
+            indices[j] = temp;
+        }
+
+        string[] shuffledQuestions = new string[length];
+        string[] shuffledAnswers = new string[length];
+        string[,] shuffledOptions = new string[length, 4];
+
+        for (int i = 0; i < length; i++)
+        {
+            shuffledQuestions[i] = questions[indices[i]];
+            shuffledAnswers[i] = answers[indices[i]];
+            for (int j = 0; j < 4; j++)
+            {
+                shuffledOptions[i, j] = options[indices[i], j];
+            }
+        }
+
+        Array.Copy(shuffledQuestions, questions, length);
+        Array.Copy(shuffledAnswers, answers, length);
+        Array.Copy(shuffledOptions, options, length * 4);
+    }
+
 }
