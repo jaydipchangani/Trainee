@@ -24,11 +24,11 @@ public class HelloWorld
 
         string[] answers = {
             "Au",
-            "3.14159",
+            "3.14",
             "Australia",
             "Central Processing Unit",
             "1945",
-            "Forwards data packets between computer networks",
+            "Directing network traffic",
             "Pacific Ocean",
             "William Shakespeare",
             "Mitochondria",
@@ -50,7 +50,42 @@ public class HelloWorld
 
         for(int i=0;i <=questions.Length-1;i++)
         {
+            Console.WriteLine(questions[i]);
 
+            for(int j = 0; j <= 3; j++)
+            {
+                Console.WriteLine(options[i, j]); 
+            }
+
+            Console.WriteLine("Enter your answer: ");
+
+
+            string ans = Console.ReadLine().ToLower();
+
+            if(ans == answers[i].ToLower())
+            {
+                Console.WriteLine("Correct!");
+                score++;
+            }
+            else
+            {
+                Console.WriteLine("Incorrect!");
+            }
+
+        }
+
+        int per=(score/questions.Length) * 100;
+
+        Console.WriteLine("");
+        Console.WriteLine("Your Score is: " + "score");
+
+        if (per >= 70)
+        {
+            Console.WriteLine("Congratulations! You have passed the quiz.");
+        }
+        else
+        {
+            Console.WriteLine("You have failed the quiz.");
         }
 
     }
