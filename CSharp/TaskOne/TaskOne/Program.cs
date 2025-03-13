@@ -1,20 +1,26 @@
-﻿using System;
-using System.Reflection.Metadata.Ecma335;
-using System.Security.Cryptography.X509Certificates;
-
-public class HelloWorld
-{
+﻿
+public class HelloWorl{
     public static void Main(string[] args)
     {
         int score = 0;
+        string name = "null";
 
-        Console.WriteLine("Hello User!");
-        Console.WriteLine("Enter your Subh name:");
+        do { 
+            Console.WriteLine("Hello User!\nEnter your Subh name:");
+            name = Console.ReadLine().Trim();
 
-        string name = Console.ReadLine();
-        Console.WriteLine();
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                Console.WriteLine("Invalid input. Spaces or empty input are not allowed.");
+            }
+            else
+            {
+                Console.WriteLine($"\nWelcome to the Quiz, {name}!");
+                break;
+            }
+        }while(true);
+        
 
-        Console.WriteLine($"Welcome to the Quiz, {name}!");
 
         Console.WriteLine("Only options A,B,C and D are accepted \nBest of Luck !! ");
 
@@ -61,8 +67,6 @@ public class HelloWorld
             { "Paris", "London", "Rome", "Berlin" }
                };
 
-        Console.WriteLine(questions.Length);
-
 
         for (int i = 0; i <= questions.Length - 1; i++)
         {
@@ -71,15 +75,16 @@ public class HelloWorld
 
             Console.WriteLine();
 
-        Again:
+        
             Console.WriteLine($"A : {options[i, 0]}");
             Console.WriteLine($"B : {options[i, 1]}");
             Console.WriteLine($"C : {options[i, 2]}");
             Console.WriteLine($"D : {options[i, 3]}");
 
+        Again:
             Console.WriteLine("Enter your answer: ");
 
-            a
+            
             string ans = Console.ReadLine().ToLower();
             ans = ans.Trim();
             string realAnswer = "";
@@ -105,8 +110,8 @@ public class HelloWorld
                 }
                 else
                 {
-                    Console.WriteLine("Invalid Option\nAg" +
-                        "aain enter your Answer");
+                    Console.WriteLine("Invalid Option\n" +
+                        "Again enter your Answer");
                     goto Again;
 
                 }
@@ -116,10 +121,12 @@ public class HelloWorld
             {
                 Console.WriteLine("Correct Answer!");
                 score++;
+                Console.WriteLine($"Your Score after {i+1} question is {score}");
             }
             else
             {
                 Console.WriteLine("Wrong Answer!");
+                Console.WriteLine($"Your Score after {i + 1} question is {score}");
             }
 
         }
