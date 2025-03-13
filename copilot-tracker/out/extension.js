@@ -29,6 +29,7 @@ const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
 let copilotUsageSeconds = 0;
 let totalUsageSeconds = 0;
+let vscodeStartTime = null;
 let lastActiveTimestamp = null;
 let storagePath;
 let isExtensionDevHost = vscode.env.appName.includes("Code - OSS Dev"); // Detect Extension Dev Mode
@@ -43,19 +44,33 @@ function activate(context) {
     loadUsageData();
     if (isExtensionDevHost) {
         console.log("🟢 Tracking active time in Extension Development Mode.");
+        if (!vscodeStartTime) {
+            vscodeStartTime = Date.now();
+            console.log("🚀 VS Code Started At:", new Date(vscodeStartTime).toLocaleTimeString());
+        }
+        // ✅ Track VS Code open time when the window is active
         vscode.window.onDidChangeWindowState((state) => {
             if (state.focused) {
-                console.log("🟢 VS Code Extension Dev Host Active");
-                lastActiveTimestamp = Date.now();
+                console.log("🟢 VS Code Active");
+                if (!vscodeStartTime) {
+                    vscodeStartTime = Date.now(); // Capture the exact start time only once
+                }
+                lastActiveTimestamp = Date.now(); // Update last active timestamp
             }
             else {
-                console.log("🔴 VS Code Extension Dev Host Inactive");
+                console.log("🔴 VS Code Inactive");
                 updateTotalUsageTime();
             }
         });
-    }
-    else {
-        console.log("🔴 Not running in Extension Dev Mode, total usage tracking disabled.");
+        // ✅ Ensure total VS Code usage time is only counted when the window is active
+        setInterval(() => {
+            if (vscode.window.state.focused) {
+                if (lastActiveTimestamp !== null) {
+                    totalUsageSeconds += Math.round((Date.now() - lastActiveTimestamp) / 1000);
+                    lastActiveTimestamp = Date.now();
+                }
+            }
+        }, 1000);
     }
     vscode.workspace.onDidChangeTextDocument(handleTextChange, null, context.subscriptions);
     setInterval(() => {
@@ -88,21 +103,21 @@ function updateCopilotUsageTime() {
     }
     lastActiveTimestamp = currentTime;
 }
+// ✅ Modify `updateTotalUsageTime` to count time only when VS Code was active
 function updateTotalUsageTime() {
-    if (lastActiveTimestamp !== null) {
-        const timeDiff = (Date.now() - lastActiveTimestamp) / 1000;
-        totalUsageSeconds += Math.round(timeDiff);
-        console.log(`⏳ Total Extension Dev Host Usage: ${formatTime(totalUsageSeconds)}`);
+    if (vscodeStartTime !== null && lastActiveTimestamp !== null) {
+        totalUsageSeconds += Math.round((Date.now() - lastActiveTimestamp) / 1000);
+        lastActiveTimestamp = Date.now(); // Reset timestamp
     }
-    lastActiveTimestamp = Date.now();
 }
+// ✅ Modify `saveUsageData` to correctly store total VS Code usage time
 function saveUsageData() {
     try {
         const today = getFormattedDate();
         const data = fs.existsSync(storagePath) ? JSON.parse(fs.readFileSync(storagePath, 'utf8')) : {};
         data[today] = {
             Copilot: formatTime(copilotUsageSeconds),
-            totalUsageTime: isExtensionDevHost ? formatTime(totalUsageSeconds) : "00:00:00"
+            totalUsageTime: formatTime(totalUsageSeconds) // Always store active usage time
         };
         fs.writeFileSync(storagePath, JSON.stringify(data, null, 2));
         console.log("✅ Data saved:", JSON.stringify(data[today]));
