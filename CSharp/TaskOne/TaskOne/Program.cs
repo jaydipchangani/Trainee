@@ -79,7 +79,9 @@ public class HelloWorld
 
             Console.WriteLine("Enter your answer: ");
 
+            a
             string ans = Console.ReadLine().ToLower();
+            ans = ans.Trim();
             string realAnswer = "";
 
 
@@ -121,9 +123,10 @@ public class HelloWorld
             }
 
         }
-            int per = (score / questions.Length) * 100;
 
-            Console.WriteLine("");
+        int per = (int)(((double)score / questions.Length) * 100);
+
+        Console.WriteLine("");
             Console.WriteLine("Your Score is: " + per);
 
             if (per >= 70)
