@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Reflection.Metadata.Ecma335;
+using System.Security.Cryptography.X509Certificates;
 
 public class HelloWorld
 {
@@ -14,6 +16,9 @@ public class HelloWorld
 
         Console.WriteLine($"Welcome to the Quiz, {name}!");
 
+        Console.WriteLine("Only options A,B,C and D are accepted \nBest of Luck !! ");
+
+
         string[] questions = {
             "What is the chemical symbol for gold?",
             "What is the value of pi (π) approximately?",
@@ -24,7 +29,8 @@ public class HelloWorld
             "What is the largest ocean in the world?",
             "Who wrote 'Romeo and Juliet'?",
             "What is the powerhouse of the cell?",
-            "Which planet is known as the 'Red Planet'?"
+            "Which planet is known as the 'Red Planet'?",
+            "What is the capital of France?"
             };
 
         string[] answers = {
@@ -37,7 +43,8 @@ public class HelloWorld
             "Pacific Ocean",
             "William Shakespeare",
             "Mitochondria",
-            "Mars"
+            "Mars",
+            "Paris"
             };
 
         string[,] options = {
@@ -50,49 +57,84 @@ public class HelloWorld
             { "Pacific Ocean", "Atlantic Ocean", "Indian Ocean", "Arctic Ocean" },
             { "William Shakespeare", "Charles Dickens", "Jane Austen", "Mark Twain" },
             { "Mitochondria", "Nucleus", "Endoplasmic reticulum", "Golgi apparatus" },
-            { "Mars", "Venus", "Jupiter", "Saturn" }
+            { "Mars", "Venus", "Jupiter", "Saturn" },
+            { "Paris", "London", "Rome", "Berlin" }
                };
 
-        for(int i=0;i <=questions.Length-1;i++)
+        Console.WriteLine(questions.Length);
+
+
+        for (int i = 0; i <= questions.Length - 1; i++)
         {
             Console.WriteLine();
             Console.WriteLine(questions[i]);
 
-            for(int j = 0; j <= 3; j++)
-            {
-                Console.WriteLine(options[i, j]); 
-            }
+            Console.WriteLine();
+
+        Again:
+            Console.WriteLine($"A : {options[i, 0]}");
+            Console.WriteLine($"B : {options[i, 1]}");
+            Console.WriteLine($"C : {options[i, 2]}");
+            Console.WriteLine($"D : {options[i, 3]}");
 
             Console.WriteLine("Enter your answer: ");
 
-
             string ans = Console.ReadLine().ToLower();
+            string realAnswer = "";
 
-            if(ans == answers[i].ToLower())
+
+            for (int j = 0; j <= answers.Length - 1; j++)
             {
-                Console.WriteLine("Correct!");
+                if (ans == "a")
+                {
+                    realAnswer = options[i, 0];
+                }
+                else if (ans == "b")
+                {
+                    realAnswer = options[i, 1];
+                }
+                else if (ans == "c")
+                {
+                    realAnswer = options[i, 2];
+                }
+                else if (ans == "d")
+                {
+                    realAnswer = options[i, 3];
+                }
+                else
+                {
+                    Console.WriteLine("Invalid Option\nAg" +
+                        "aain enter your Answer");
+                    goto Again;
+
+                }
+            }
+
+            if (realAnswer == answers[i])
+            {
+                Console.WriteLine("Correct Answer!");
                 score++;
             }
             else
             {
-                Console.WriteLine("Incorrect!");
+                Console.WriteLine("Wrong Answer!");
             }
 
         }
+            int per = (score / questions.Length) * 100;
 
-        int per=(score/questions.Length) * 100;
+            Console.WriteLine("");
+            Console.WriteLine("Your Score is: " + per);
 
-        Console.WriteLine("");
-        Console.WriteLine("Your Score is: " + "score");
+            if (per >= 70)
+            {
+                Console.WriteLine("Congratulations! " +name+ " You have passed the quiz.");
+            }
+            else
+            {
+                Console.WriteLine("Awwwwww Sorry "+name+" You have failed the quiz.");
+            }
 
-        if (per >= 70)
-        {
-            Console.WriteLine("Congratulations! You have passed the quiz.");
         }
-        else
-        {
-            Console.WriteLine("You have failed the quiz.");
-        }
-
-    }
+    
 }
