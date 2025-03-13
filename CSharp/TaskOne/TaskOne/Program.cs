@@ -7,7 +7,12 @@ public class HelloWorld
         int score = 0;
 
         Console.WriteLine("Hello User!");
-        Console.WriteLine("Welcome to the Quiz!");
+        Console.WriteLine("Enter your Subh name:");
+
+        string name = Console.ReadLine();
+        Console.WriteLine();
+
+        Console.WriteLine($"Welcome to the Quiz, {name}!");
 
         string[] questions = {
             "What is the chemical symbol for gold?",
@@ -50,6 +55,7 @@ public class HelloWorld
 
         for(int i=0;i <=questions.Length-1;i++)
         {
+            Console.WriteLine();
             Console.WriteLine(questions[i]);
 
             for(int j = 0; j <= 3; j++)
