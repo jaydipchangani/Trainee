@@ -1,8 +1,9 @@
 {
   "name": "copilot-tracker",
   "displayName": "Copilot Tracker",
-  "description": "Tracks GitHub Copilot usage time.",
-  "version": "0.0.1",
+  "description": "Tracks GitHub Copilot usage time in VS Code",
+  "version": "1.0.0",
+  "publisher": "Jaydip_Changani",
   "engines": {
     "vscode": "^1.75.0"
   },
