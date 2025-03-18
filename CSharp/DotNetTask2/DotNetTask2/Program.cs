@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Numerics;
 using System.Text.Json;
 using DotNetTask2;
 
@@ -92,7 +93,7 @@ public class Program
             while (designation.isValidDesignantion())
             {
                 Console.WriteLine("Enter Designation again, not valid designantion");
-                designation = Console.ReadLine();
+                designation = Console.ReadLine().ToLower(); ;
             }
 
             Console.WriteLine("Enter Salary :");
@@ -135,7 +136,7 @@ public class Program
             try
             {
                 string updatedJson = JsonSerializer.Serialize(employees, new JsonSerializerOptions { WriteIndented = true });
-                File.WriteAllText(file, updatedJson); // This writes the updated employee list to the file
+                File.WriteAllText(file, updatedJson);
                 Console.WriteLine("Data inserted successfully with Id: " + newId);
             }
             catch (IOException ex)
@@ -179,9 +180,20 @@ public class Program
             {
                 Console.WriteLine("Enter new First Name:");
                 employeeToUpdate.FirstName = Console.ReadLine();
+                while (employeeToUpdate.FirstName.isNull())
+                {
+                    Console.WriteLine("Enter First Name Again");
+                    employeeToUpdate.FirstName = Console.ReadLine();
+                }
 
                 Console.WriteLine("Enter new Last Name:");
                 employeeToUpdate.LastName = Console.ReadLine();
+                while (employeeToUpdate.LastName.isNull())
+                {
+                    Console.WriteLine("Enter Last Name Again");
+                    employeeToUpdate.LastName = Console.ReadLine();
+                }
+
 
                 string newEmail;
                 do
@@ -192,14 +204,31 @@ public class Program
 
                 employeeToUpdate.Email = newEmail;
 
+
+
                 Console.WriteLine("Enter new Phone:");
                 employeeToUpdate.Phone = Console.ReadLine();
+                while (employeeToUpdate.Phone.isValidPhone())
+                {
+                    Console.WriteLine("Enter Phone Again");
+                    employeeToUpdate.Phone = Console.ReadLine();
+                }
 
                 Console.WriteLine("Enter new Designation:");
                 employeeToUpdate.Designation = Console.ReadLine();
+                while (employeeToUpdate.Designation.isValidDesignantion())
+                {
+                    Console.WriteLine("Enter Designation again, not valid designantion");
+                    employeeToUpdate.Designation = Console.ReadLine();
+                }
 
                 Console.WriteLine("Enter new Salary:");
                 employeeToUpdate.Salary = Convert.ToInt32(Console.ReadLine());
+                while (employeeToUpdate.Salary.isValidSalary())
+                {
+                    Console.WriteLine("Not Valid Salary, Enter Again");
+                    employeeToUpdate.Salary = Convert.ToInt32(Console.ReadLine());
+                }
 
                 SaveEmployees(employees); 
                 Console.WriteLine($"Employee with ID {id} has been updated.");

@@ -16,5 +16,23 @@
     "Phone": "7896541256",
     "Designation": "trainee",
     "Salary": 12000
+  },
+  {
+    "Id": 2,
+    "FirstName": "Jaydip",
+    "LastName": "Hello",
+    "Email": "",
+    "Phone": "7894561324",
+    "Designation": "qa",
+    "Salary": 15000
+  },
+  {
+    "Id": 3,
+    "FirstName": "aaaa",
+    "LastName": "123",
+    "Email": "abc@gmail.com",
+    "Phone": "7894561230",
+    "Designation": "qa",
+    "Salary": 45600
   }
 ]
