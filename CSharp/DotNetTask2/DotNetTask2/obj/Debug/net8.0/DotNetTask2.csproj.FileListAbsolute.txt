@@ -1,0 +1,15 @@
+C:\Trainee_new\CSharp\DotNetTask2\DotNetTask2\bin\Debug\net8.0\DotNetTask2.exe
+C:\Trainee_new\CSharp\DotNetTask2\DotNetTask2\bin\Debug\net8.0\DotNetTask2.deps.json
+C:\Trainee_new\CSharp\DotNetTask2\DotNetTask2\bin\Debug\net8.0\DotNetTask2.runtimeconfig.json
+C:\Trainee_new\CSharp\DotNetTask2\DotNetTask2\bin\Debug\net8.0\DotNetTask2.dll
+C:\Trainee_new\CSharp\DotNetTask2\DotNetTask2\bin\Debug\net8.0\DotNetTask2.pdb
+C:\Trainee_new\CSharp\DotNetTask2\DotNetTask2\obj\Debug\net8.0\DotNetTask2.GeneratedMSBuildEditorConfig.editorconfig
+C:\Trainee_new\CSharp\DotNetTask2\DotNetTask2\obj\Debug\net8.0\DotNetTask2.AssemblyInfoInputs.cache
+C:\Trainee_new\CSharp\DotNetTask2\DotNetTask2\obj\Debug\net8.0\DotNetTask2.AssemblyInfo.cs
+C:\Trainee_new\CSharp\DotNetTask2\DotNetTask2\obj\Debug\net8.0\DotNetTask2.csproj.CoreCompileInputs.cache
+C:\Trainee_new\CSharp\DotNetTask2\DotNetTask2\obj\Debug\net8.0\DotNetTask2.sourcelink.json
+C:\Trainee_new\CSharp\DotNetTask2\DotNetTask2\obj\Debug\net8.0\DotNetTask2.dll
+C:\Trainee_new\CSharp\DotNetTask2\DotNetTask2\obj\Debug\net8.0\refint\DotNetTask2.dll
+C:\Trainee_new\CSharp\DotNetTask2\DotNetTask2\obj\Debug\net8.0\DotNetTask2.pdb
+C:\Trainee_new\CSharp\DotNetTask2\DotNetTask2\obj\Debug\net8.0\DotNetTask2.genruntimeconfig.cache
+C:\Trainee_new\CSharp\DotNetTask2\DotNetTask2\obj\Debug\net8.0\ref\DotNetTask2.dll
