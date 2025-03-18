@@ -1,0 +1,20 @@
+[
+  {
+    "Id": 0,
+    "FirstName": "jaydip",
+    "LastName": "sas",
+    "Email": "sa@gmail.com",
+    "Phone": "1234567895",
+    "Designation": "qa",
+    "Salary": 15000
+  },
+  {
+    "Id": 1,
+    "FirstName": "JD",
+    "LastName": "Changani",
+    "Email": "jc@gmail.com",
+    "Phone": "7896541256",
+    "Designation": "trainee",
+    "Salary": 12000
+  }
+]
