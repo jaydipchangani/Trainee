@@ -3,24 +3,38 @@
   <BankAccount>
     <AccountNumber>1</AccountNumber>
     <AccountHolder>Jaydip</AccountHolder>
-    <Balance>5100.00</Balance>
-    <TransactionHistory />
+    <Balance>5533.50000</Balance>
+    <TransactionHistory>
+      <Transaction>Monthly Interest Applied: ₹ 433.50, New Balance: ₹ 5,533.50</Transaction>
+    </TransactionHistory>
   </BankAccount>
   <BankAccount>
     <AccountNumber>2</AccountNumber>
     <AccountHolder>JD</AccountHolder>
-    <Balance>2250</Balance>
-    <TransactionHistory />
+    <Balance>2441.250</Balance>
+    <TransactionHistory>
+      <Transaction>Monthly Interest Applied: ₹ 191.25, New Balance: ₹ 2,441.25</Transaction>
+    </TransactionHistory>
   </BankAccount>
   <BankAccount>
     <AccountNumber>3</AccountNumber>
     <AccountHolder>BD</AccountHolder>
-    <Balance>3525</Balance>
+    <Balance>3824.625</Balance>
     <TransactionHistory>
       <Transaction>Account Created - Initial Deposit: ₹ 3,000.00</Transaction>
       <Transaction>Deposited: ₹ 563.00, New Balance: ₹ 3,563.00</Transaction>
       <Transaction>Deposited: ₹ 562.00, New Balance: ₹ 4,125.00</Transaction>
       <Transaction>Withdrawn: ₹ 600.00, New Balance: ₹ 3,525.00</Transaction>
+      <Transaction>Monthly Interest Applied: ₹ 299.63, New Balance: ₹ 3,824.63</Transaction>
+    </TransactionHistory>
+  </BankAccount>
+  <BankAccount>
+    <AccountNumber>4</AccountNumber>
+    <AccountHolder>RJ</AccountHolder>
+    <Balance>2170.000</Balance>
+    <TransactionHistory>
+      <Transaction>Account Created - Initial Deposit: ₹ 2,000.00</Transaction>
+      <Transaction>Monthly Interest Applied: ₹ 170.00, New Balance: ₹ 2,170.00</Transaction>
     </TransactionHistory>
   </BankAccount>
 </ArrayOfBankAccount>

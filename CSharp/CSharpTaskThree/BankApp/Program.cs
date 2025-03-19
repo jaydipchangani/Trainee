@@ -1,4 +1,8 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
+using System.Xml.Serialization;
 
 class Program
 {
@@ -6,7 +10,7 @@ class Program
 
     public static void Main()
     {
-        LoadAccounts(); // Load accounts from XML if exists
+        LoadAccounts();
 
         while (true)
         {
@@ -14,8 +18,9 @@ class Program
             Console.WriteLine("1. Create Account");
             Console.WriteLine("2. Deposit Money");
             Console.WriteLine("3. Withdraw Money");
-            Console.WriteLine("4. Display Account Details & Transaction History");
-            Console.WriteLine("5. Exit");
+            Console.WriteLine("4. Display Account Details");
+            Console.WriteLine("5. Apply Monthly Interest");
+            Console.WriteLine("6. Exit");
             Console.Write("Enter your choice: ");
 
             string choice = Console.ReadLine();
@@ -34,7 +39,10 @@ class Program
                     DisplayAccountDetails();
                     break;
                 case "5":
-                    SaveAccounts(); // Save before exiting
+                    ApplyInterestToAllAccounts();
+                    break;
+                case "6":
+                    SaveAccounts();
                     Console.WriteLine("Exiting the application. Thank you for banking with us!");
                     return;
                 default:
@@ -56,12 +64,12 @@ class Program
             return;
         }
 
-        int accountNumber = accounts.Count + 1; // Generate unique account number
+        int accountNumber = accounts.Count + 1;
         BankAccount account = new BankAccount(accountNumber, name, initialDeposit);
         accounts[account.AccountNumber] = account;
 
         Console.WriteLine($"Account created successfully! Your Account Number is: {account.AccountNumber}");
-        SaveAccounts(); // Save changes to file
+        SaveAccounts();
     }
 
     static void DepositMoney()
@@ -81,7 +89,7 @@ class Program
         }
 
         accounts[accNumber].Deposit(amount);
-        SaveAccounts(); // Save changes after deposit
+        SaveAccounts();
     }
 
     static void WithdrawMoney()
@@ -101,7 +109,16 @@ class Program
         }
 
         if (accounts[accNumber].Withdraw(amount))
-            SaveAccounts(); // Save changes after withdrawal
+            SaveAccounts();
+    }
+
+    static void ApplyInterestToAllAccounts()
+    {
+        foreach (var account in accounts.Values)
+        {
+            account.ApplyMonthlyInterest();
+        }
+        SaveAccounts();
     }
 
     static void DisplayAccountDetails()
@@ -163,14 +180,13 @@ public class BankAccount
     public string AccountHolder { get; set; }
 
     [XmlElement("Balance")]
-    public decimal Balance { get; set; } // Balance now has a public setter for serialization
+    public decimal Balance { get; set; }
 
     [XmlArray("TransactionHistory")]
     [XmlArrayItem("Transaction")]
-    public List<string> TransactionHistory { get; set; } = new List<string>(); // Serialize transaction history
+    public List<string> TransactionHistory { get; set; } = new List<string>();
 
-    // Required for XML serialization
-    public BankAccount() { }
+    public BankAccount() { } // Required for XML serialization
 
     public BankAccount(int accNumber, string name, decimal initialBalance)
     {
@@ -209,6 +225,33 @@ public class BankAccount
         TransactionHistory.Add($"Withdrawn: {amount:C}, New Balance: {Balance:C}");
         Console.WriteLine($"Withdrawal successful! New Balance: {Balance:C}");
         return true;
+    }
+
+    /// <summary>
+    /// Applies monthly interest to the balance
+    /// </summary>
+    public void ApplyMonthlyInterest()
+    {
+        try
+        {
+            // Retrieve interest rate from App.config
+            string interestRateStr = ConfigurationManager.AppSettings["InterestRate"];
+            if (decimal.TryParse(interestRateStr, out decimal interestRate))
+            {
+                decimal interest = Balance * (interestRate / 100);
+                Balance += interest;
+                TransactionHistory.Add($"Monthly Interest Applied: {interest:C}, New Balance: {Balance:C}");
+                Console.WriteLine($"Interest Applied! Interest Earned: {interest:C}, New Balance: {Balance:C}");
+            }
+            else
+            {
+                Console.WriteLine("Error: Invalid interest rate in configuration.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error applying interest: {ex.Message}");
+        }
     }
 
     public void DisplayDetails()
