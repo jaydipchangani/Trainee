@@ -44,7 +44,6 @@ public class Program
         }
     }
 
-    // ✅ Move LoadData() here, outside Main()
     static List<Employee> LoadData()
     {
         if (!File.Exists(filePath))
@@ -124,17 +123,49 @@ public class Program
 
     static void UpdateEmployee()
     {
-        Console.Write("Enter Employee ID to update: ");
+        Console.Write("Enter Employee ID to update details: ");
         string inputId = Console.ReadLine();
+
         if (Guid.TryParse(inputId, out Guid empId))
         {
-            var emp = employees.Find(e => e.Id == empId);
+            var emp = employees.FirstOrDefault(e => e.Id == empId);
             if (emp != null)
             {
-                Console.Write("Enter New Salary: ");
-                emp.Salary = int.Parse(Console.ReadLine());
-                Console.WriteLine("Employee updated successfully!");
+                Console.WriteLine($"Updating details for {emp.FirstName} {emp.LastName}");
+
+                Console.Write($"Enter new First Name (Leave blank to keep '{emp.FirstName}'): ");
+                string newFirstName = Console.ReadLine();
+                if (!string.IsNullOrWhiteSpace(newFirstName)) emp.FirstName = newFirstName;
+
+                Console.Write($"Enter new Last Name (Leave blank to keep '{emp.LastName}'): ");
+                string newLastName = Console.ReadLine();
+                if (!string.IsNullOrWhiteSpace(newLastName)) emp.LastName = newLastName;
+
+                Console.Write($"Enter new Phone Number (Leave blank to keep '{emp.PhoneNumber}'): ");
+                string newPhone = Console.ReadLine();
+                if (!string.IsNullOrWhiteSpace(newPhone)) emp.PhoneNumber = newPhone;
+
+                Console.Write($"Enter new Email (Leave blank to keep '{emp.Email}'): ");
+                string newEmail = Console.ReadLine();
+                if (!string.IsNullOrWhiteSpace(newEmail)) emp.Email = newEmail;
+
+                Console.Write($"Enter new Password (Leave blank to keep current password): ");
+                string newPassword = Console.ReadLine();
+                if (!string.IsNullOrWhiteSpace(newPassword)) emp.Password = newPassword;
+
+                Console.Write($"Enter new Salary (Leave blank to keep '{emp.Salary}'): ");
+                string newSalaryInput = Console.ReadLine();
+                if (!string.IsNullOrWhiteSpace(newSalaryInput) && int.TryParse(newSalaryInput, out int newSalary) && newSalary >= 20000 && newSalary <= 100000)
+                {
+                    emp.Salary = newSalary;
+                }
+                else if (!string.IsNullOrWhiteSpace(newSalaryInput))
+                {
+                    Console.WriteLine("Invalid salary input. Salary must be between 20,000 and 100,000.");
+                }
+
                 SaveData();
+                Console.WriteLine("Employee details updated successfully!");
             }
             else
             {
@@ -146,6 +177,7 @@ public class Program
             Console.WriteLine("Invalid ID format!");
         }
     }
+
 
     static void DeleteEmployee()
     {

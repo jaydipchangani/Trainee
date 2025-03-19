@@ -2,11 +2,11 @@
 <ArrayOfEmployee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Employee>
     <Id>563a61e5-316d-4724-a4c6-017855d499a9</Id>
-    <FirstName>adas</FirstName>
+    <FirstName>JD</FirstName>
     <LastName>asdad</LastName>
     <Email>dasdas@gmail.com</Email>
     <PhoneNumber>1234567985</PhoneNumber>
-    <Salary>50000</Salary>
+    <Salary>99999</Salary>
     <Password>WB24LpzFBP+FR8qQYCExgA==</Password>
   </Employee>
   <Employee>
@@ -17,5 +17,14 @@
     <PhoneNumber>7984561234</PhoneNumber>
     <Salary>60000</Salary>
     <Password>sdsadad21</Password>
+  </Employee>
+  <Employee>
+    <Id>cbf624eb-30a3-4070-924e-74b600d4b240</Id>
+    <FirstName>New Temp</FirstName>
+    <LastName>temp</LastName>
+    <Email>qwq@gmail.com</Email>
+    <PhoneNumber>7894561235</PhoneNumber>
+    <Salary>80000</Salary>
+    <Password>asdasda</Password>
   </Employee>
 </ArrayOfEmployee>
