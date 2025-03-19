@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
+using System.Configuration;
 
 namespace CSharpTaskThree
 {
     class AesFunction
     {
-        private static readonly string Key = "1234567890123456"; // 16-byte key (128-bit)
-        private static readonly string IV = "6543210987654321";  // 16-byte IV
+        private static readonly string Key = ConfigurationManager.AppSettings["encKey"]; // 16-byte key (128-bit)
+
+        private static readonly string IV = ConfigurationManager.AppSettings["encIV"];  // 16-byte IV
 
         // Encrypt a string using AES
         public static string Encrypt(string plainText)
