@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfEmployee xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Employee>
+    <Id>563a61e5-316d-4724-a4c6-017855d499a9</Id>
+    <FirstName>adas</FirstName>
+    <LastName>asdad</LastName>
+    <Email>dasdas@gmail.com</Email>
+    <PhoneNumber>1234567985</PhoneNumber>
+    <Salary>50000</Salary>
+    <Password>WB24LpzFBP+FR8qQYCExgA==</Password>
+  </Employee>
+  <Employee>
+    <Id>d5251bd2-0dde-4591-be3e-1e7227b1366b</Id>
+    <FirstName>Jaydip</FirstName>
+    <LastName>Changani</LastName>
+    <Email>jc@gmail.com</Email>
+    <PhoneNumber>7984561234</PhoneNumber>
+    <Salary>60000</Salary>
+    <Password>sdsadad21</Password>
+  </Employee>
+</ArrayOfEmployee>
