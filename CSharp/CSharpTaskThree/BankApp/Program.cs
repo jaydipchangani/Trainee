@@ -6,7 +6,7 @@ using System.Xml.Serialization;
 
 class Program
 {
-    static Dictionary<int, BankAccount> accounts = new Dictionary<int, BankAccount>();
+    static Dictionary<long, BankAccount> accounts = new Dictionary<long, BankAccount>();
 
     public static void Main()
     {
@@ -56,21 +56,30 @@ class Program
     {
         Console.Write("Enter your Name: ");
         string name = Console.ReadLine();
-        Console.Write("Enter Initial Deposit Amount (Min: 1000): ");
 
+        Console.Write("Enter Initial Deposit Amount (Min: 1000): ");
         if (!decimal.TryParse(Console.ReadLine(), out decimal initialDeposit) || initialDeposit < 1000)
         {
-            Console.WriteLine("Invalid deposit amount! Minimum deposit is 1000.");
+            Console.WriteLine("❌ Invalid deposit amount! Minimum deposit is ₹1000.");
             return;
         }
+        int accountNumber;
+        Random random = new Random();
 
-        int accountNumber = accounts.Count + 1;
+        do
+        {
+            accountNumber = random.Next(1000000000, 2000000000); 
+        } while (accounts.ContainsKey(accountNumber)); 
+
         BankAccount account = new BankAccount(accountNumber, name, initialDeposit);
         accounts[account.AccountNumber] = account;
 
-        Console.WriteLine($"Account created successfully! Your Account Number is: {account.AccountNumber}");
+        Console.WriteLine($"\nAccount created successfully!");
+        Console.WriteLine($"Your Account Number is: {account.AccountNumber}");
+
         SaveAccounts();
     }
+
 
     static void DepositMoney()
     {
@@ -159,7 +168,7 @@ class Program
                 using (StreamReader reader = new StreamReader("accounts.xml"))
                 {
                     List<BankAccount> accountList = (List<BankAccount>)serializer.Deserialize(reader);
-                    accounts = new Dictionary<int, BankAccount>();
+                    accounts = new Dictionary<long, BankAccount>();
                     foreach (var acc in accountList)
                     {
                         accounts[acc.AccountNumber] = acc;
@@ -186,14 +195,14 @@ public class BankAccount
     [XmlArrayItem("Transaction")]
     public List<string> TransactionHistory { get; set; } = new List<string>();
 
-    public BankAccount() { } // Required for XML serialization
+    public BankAccount() { } 
 
     public BankAccount(int accNumber, string name, decimal initialBalance)
     {
         AccountNumber = accNumber;
         AccountHolder = name;
         Balance = initialBalance;
-        TransactionHistory.Add($"Account Created - Initial Deposit: {initialBalance:C}");
+        TransactionHistory.Add($"Account Created - Initial Deposit:{initialBalance}");
     }
 
     public void Deposit(decimal amount)
@@ -204,8 +213,8 @@ public class BankAccount
             return;
         }
         Balance += amount;
-        TransactionHistory.Add($"Deposited: {amount:C}, New Balance: {Balance:C}");
-        Console.WriteLine($"Deposit successful! New Balance: {Balance:C}");
+        TransactionHistory.Add($"Deposited: {amount}, New Balance: {Balance}");
+        Console.WriteLine($"Deposit successful! New Balance: {Balance}");
     }
 
     public bool Withdraw(decimal amount)
@@ -222,26 +231,22 @@ public class BankAccount
         }
 
         Balance -= amount;
-        TransactionHistory.Add($"Withdrawn: {amount:C}, New Balance: {Balance:C}");
-        Console.WriteLine($"Withdrawal successful! New Balance: {Balance:C}");
+        TransactionHistory.Add($"Withdrawn: {amount}, New Balance: {Balance}");
+        Console.WriteLine($"Withdrawal successful! New Balance: {Balance}");
         return true;
     }
 
-    /// <summary>
-    /// Applies monthly interest to the balance
-    /// </summary>
     public void ApplyMonthlyInterest()
     {
         try
         {
-            // Retrieve interest rate from App.config
             string interestRateStr = ConfigurationManager.AppSettings["InterestRate"];
             if (decimal.TryParse(interestRateStr, out decimal interestRate))
             {
                 decimal interest = Balance * (interestRate / 100);
                 Balance += interest;
-                TransactionHistory.Add($"Monthly Interest Applied: {interest:C}, New Balance: {Balance:C}");
-                Console.WriteLine($"Interest Applied! Interest Earned: {interest:C}, New Balance: {Balance:C}");
+                TransactionHistory.Add($"Monthly Interest Applied: {interest}, New Balance: {Balance}");
+                Console.WriteLine($"Interest Applied! Interest Earned: {interest}, New Balance: {Balance}");
             }
             else
             {
@@ -256,14 +261,23 @@ public class BankAccount
 
     public void DisplayDetails()
     {
-        Console.WriteLine("\nACCOUNT DETAILS");
-        Console.WriteLine($"Account Number: {AccountNumber}");
-        Console.WriteLine($"Account Holder: {AccountHolder}");
-        Console.WriteLine($"Balance: {Balance:C}");
-        Console.WriteLine("\nTRANSACTION HISTORY:");
+        Console.WriteLine("\n===========================================");
+        Console.WriteLine("            ACCOUNT DETAILS");
+        Console.WriteLine("===========================================");
+        Console.WriteLine($" Account Number   : {AccountNumber}");
+        Console.WriteLine($" Account Holder   : {AccountHolder}");
+        Console.WriteLine($" Balance          : {Balance}");
+        Console.WriteLine("===========================================");
+        Console.WriteLine("        TRANSACTION HISTORY");
+        Console.WriteLine("===========================================");
+
         foreach (var transaction in TransactionHistory)
         {
-            Console.WriteLine(transaction);
+            Console.WriteLine($"{transaction}");
         }
+
+        Console.WriteLine("===========================================\n");
     }
+
+
 }
