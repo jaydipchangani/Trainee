@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Numerics;
 using System.Text.Json;
+using CSharpTaskThree;
 using DotNetTask2;
 
 public class Program
@@ -79,6 +80,9 @@ public class Program
 
             Console.WriteLine("Enter Password:");
             string password = Console.ReadLine();
+            
+            string encPassword= AesFunction.Encrypt(password);
+            Console.WriteLine(encPassword);
 
             while (phone.isNull())
             {
