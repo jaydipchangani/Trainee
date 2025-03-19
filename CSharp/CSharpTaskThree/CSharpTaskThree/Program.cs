@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 using CSharpTaskThree;
+using DotNetTask2;
 
 public class Program
 {
@@ -49,22 +50,45 @@ public class Program
     static void Insertdata()
     {
         Console.Write("Enter First Name:");
-        string firstName = Console.ReadLine();
+        string firstName = Console.ReadLine().Trim();
+        if (string.IsNullOrWhiteSpace(firstName))
+            throw new ArgumentNullException("First Name");
 
         Console.Write("Enter Last Name:");
-        string lastName = Console.ReadLine();
+        string lastName = Console.ReadLine().Trim();
+        if (string.IsNullOrWhiteSpace(firstName))
+            throw new ArgumentNullException("First Name");
 
         Console.Write("Enter Email Address:");
-        string email = Console.ReadLine();
+        string email = Console.ReadLine().Trim();
+        while (email.isValidEmail())
+        {
+            Console.WriteLine("Email is not Valid, Enter Email Again");
+            email = Console.ReadLine().Trim();
+        }
 
         Console.Write("Enter Phone Number:");
-        string phone = Console.ReadLine();
+        string phone = Console.ReadLine().Trim();
+        while (phone.isValidPhone())
+        {
+            Console.WriteLine("Enter Phone Again");
+            phone = Console.ReadLine().Trim();
+        }
 
-        Console.Write("Enter Salary:");
-        int salary = int.Parse(Console.ReadLine());
+        Console.Write("Enter Salary: ");
+        if (!int.TryParse(Console.ReadLine(), out int salary))
+            throw new FormatException("Invalid salary format.");
+
+        if (salary < 20000 || salary > 100000)
+            throw new SalaryOutOfRangeException();
 
         Console.Write("Enter Password:");
-        string password = Console.ReadLine();
+        string password = Console.ReadLine().Trim();
+        while (password.isNull())
+        {
+            Console.WriteLine("Enter First Name Again");
+            password = Console.ReadLine().Trim();
+        }
 
         password = AesFunction.Encrypt(password);
 
@@ -250,4 +274,24 @@ public static class XmlHelper<T> where T : class
             return null;
         }
     }
+}
+
+public class ArgumentNullException : Exception
+{
+    public ArgumentNullException(string paramName) : base($"The field '{paramName}' cannot be empty.") { }
+}
+
+public class FormatException : Exception
+{
+    public FormatException(string message) : base(message) { }
+}
+
+public class DuplicateRecordException : Exception
+{
+    public DuplicateRecordException(string message) : base(message) { }
+}
+
+public class SalaryOutOfRangeException : Exception
+{
+    public SalaryOutOfRangeException() : base("Salary must be between 20,000 and 100,000.") { }
 }

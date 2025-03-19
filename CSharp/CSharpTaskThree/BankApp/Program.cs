@@ -246,7 +246,7 @@ public class BankAccount
                 decimal interest = Balance * (interestRate / 100);
                 Balance += interest;
                 TransactionHistory.Add($"Monthly Interest Applied: {interest}, New Balance: {Balance}");
-                Console.WriteLine($"Interest Applied! Interest Earned: {interest}, New Balance: {Balance}");
+                Console.WriteLine($"Interest Applied! Interest Earned");
             }
             else
             {

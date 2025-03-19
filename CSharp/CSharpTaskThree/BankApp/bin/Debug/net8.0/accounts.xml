@@ -3,22 +3,27 @@
   <BankAccount>
     <AccountNumber>1145899693</AccountNumber>
     <AccountHolder>JAydip</AccountHolder>
-    <Balance>11060.490</Balance>
+    <Balance>13220.675340250</Balance>
     <TransactionHistory>
       <Transaction>Account Created - Initial Deposit:4562</Transaction>
       <Transaction>Deposited: 5632, New Balance: 10194</Transaction>
       <Transaction>Monthly Interest Applied: 866.490, New Balance: 11060.490</Transaction>
+      <Transaction>Monthly Interest Applied: 940.141650, New Balance: 12000.631650</Transaction>
+      <Transaction>Monthly Interest Applied: 1020.053690250, New Balance: 13020.685340250</Transaction>
+      <Transaction>Deposited: 199.99, New Balance: 13220.675340250</Transaction>
     </TransactionHistory>
   </BankAccount>
   <BankAccount>
     <AccountNumber>1659247890</AccountNumber>
     <AccountHolder>JD</AccountHolder>
-    <Balance>54074.230</Balance>
+    <Balance>63657.535411750</Balance>
     <TransactionHistory>
       <Transaction>Account Created - Initial Deposit:45689</Transaction>
       <Transaction>Deposited: 5698, New Balance: 51387</Transaction>
       <Transaction>Withdrawn: 1549, New Balance: 49838</Transaction>
       <Transaction>Monthly Interest Applied: 4236.230, New Balance: 54074.230</Transaction>
+      <Transaction>Monthly Interest Applied: 4596.309550, New Balance: 58670.539550</Transaction>
+      <Transaction>Monthly Interest Applied: 4986.995861750, New Balance: 63657.535411750</Transaction>
     </TransactionHistory>
   </BankAccount>
 </ArrayOfBankAccount>
