@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml.Serialization;
 using CSharpTaskThree;
 
 public class Program
 {
     static string filePath = "employees.xml";
-    static List<Employee> employees = LoadData();  // Now LoadData() is recognized
+    static List<Employee> employees = XmlHelper<List<Employee>>.LoadData(filePath) ?? new List<Employee>();
 
     public static void Main(string[] args)
     {
@@ -45,68 +46,32 @@ public class Program
         }
     }
 
-    static List<Employee> LoadData()
-    {
-        if (!File.Exists(filePath))
-            return new List<Employee>();
-
-        try
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof(List<Employee>));
-            using (TextReader reader = new StreamReader(filePath))
-            {
-                return (List<Employee>)serializer.Deserialize(reader);
-            }
-        }
-        catch (Exception)
-        {
-            Console.WriteLine("Error loading data, creating new list.");
-            return new List<Employee>();
-        }
-    }
-
-    static void SaveData()
-    {
-        try
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof(List<Employee>));
-            using (TextWriter writer = new StreamWriter(filePath))
-            {
-                serializer.Serialize(writer, employees);
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error saving data: {ex.Message}");
-        }
-    }
-
     static void Insertdata()
     {
-        Console.WriteLine("Enter First Name:");
+        Console.Write("Enter First Name:");
         string firstName = Console.ReadLine();
 
-        Console.WriteLine("Enter Last Name:");
+        Console.Write("Enter Last Name:");
         string lastName = Console.ReadLine();
 
-        Console.WriteLine("Enter Email Address:");
+        Console.Write("Enter Email Address:");
         string email = Console.ReadLine();
 
-        Console.WriteLine("Enter Phone Number:");
+        Console.Write("Enter Phone Number:");
         string phone = Console.ReadLine();
 
-        Console.WriteLine("Enter Salary:");
+        Console.Write("Enter Salary:");
         int salary = int.Parse(Console.ReadLine());
 
-        Console.WriteLine("Enter Password:");
+        Console.Write("Enter Password:");
         string password = Console.ReadLine();
 
         password = AesFunction.Encrypt(password);
 
         employees.Add(new Employee(Guid.NewGuid(), firstName, lastName, email, phone, salary, password));
 
-        Console.WriteLine("Employee added successfully!");
-        SaveData();
+        Console.Write("Employee added successfully!");
+        XmlHelper<List<Employee>>.SaveData(filePath, employees);
     }
 
     static void ViewEmployees()
@@ -118,6 +83,10 @@ public class Program
         }
 
         Console.WriteLine("\nEmployee List:");
+        Console.WriteLine("-----------------------------------------------------------------------------------------------------------------------------------------");
+        Console.WriteLine($"| {"ID",-36} | {"Name",-20} | {"Email",-30} | {"Phone",-15} | {"Salary",-10} | {"Password",-20} |");
+        Console.WriteLine("-----------------------------------------------------------------------------------------------------------------------------------------");
+
         foreach (var emp in employees)
         {
             string decryptedPassword = string.Empty;
@@ -131,10 +100,11 @@ public class Program
                 Console.WriteLine($"Decryption error for Employee ID {emp.Id}: {ex.Message}");
             }
 
-            Console.WriteLine($"ID: {emp.Id}, Name: {emp.FirstName} {emp.LastName}, Email: {emp.Email}, Phone: {emp.PhoneNumber}, Salary: {emp.Salary}, Password: {decryptedPassword}");
+            Console.WriteLine($"| {emp.Id,-36} | {emp.FirstName + " " + emp.LastName,-20} | {emp.Email,-30} | {emp.PhoneNumber,-15} | {emp.Salary,-10} | {decryptedPassword,-20} |");
         }
-    }
 
+        Console.WriteLine("-----------------------------------------------------------------------------------------------------------------------------------------");
+    }
 
     static void UpdateEmployee()
     {
@@ -179,7 +149,7 @@ public class Program
                     Console.WriteLine("Invalid salary input. Salary must be between 20,000 and 100,000.");
                 }
 
-                SaveData();
+                XmlHelper<List<Employee>>.SaveData(filePath, employees);
                 Console.WriteLine("Employee details updated successfully!");
             }
             else
@@ -193,7 +163,6 @@ public class Program
         }
     }
 
-
     static void DeleteEmployee()
     {
         Console.Write("Enter Employee ID to delete: ");
@@ -205,7 +174,7 @@ public class Program
             {
                 employees.Remove(emp);
                 Console.WriteLine("Employee deleted successfully!");
-                SaveData();
+                XmlHelper<List<Employee>>.SaveData(filePath, employees);
             }
             else
             {
@@ -240,5 +209,45 @@ public class Employee
         PhoneNumber = phoneNumber;
         Salary = salary;
         Password = password;
+    }
+}
+
+// Generic XML Serializer
+public static class XmlHelper<T> where T : class
+{
+    public static void SaveData(string filePath, T data)
+    {
+        try
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(T));
+            using (TextWriter writer = new StreamWriter(filePath))
+            {
+                serializer.Serialize(writer, data);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving data: {ex.Message}");
+        }
+    }
+
+    public static T LoadData(string filePath)
+    {
+        if (!File.Exists(filePath))
+            return null;
+
+        try
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(T));
+            using (TextReader reader = new StreamReader(filePath))
+            {
+                return (T)serializer.Deserialize(reader);
+            }
+        }
+        catch (Exception)
+        {
+            Console.WriteLine("Error loading data, creating new list.");
+            return null;
+        }
     }
 }

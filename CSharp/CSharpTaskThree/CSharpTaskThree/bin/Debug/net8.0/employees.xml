@@ -9,4 +9,22 @@
     <Salary>65000</Salary>
     <Password>F/gNPIaDkBTAoL+S4VFapQ==</Password>
   </Employee>
+  <Employee>
+    <Id>b08cd0a0-1f38-411c-87b9-0e714a941e35</Id>
+    <FirstName>rajdeep</FirstName>
+    <LastName>jaydip</LastName>
+    <Email>rj@gmail.com</Email>
+    <PhoneNumber>789456895</PhoneNumber>
+    <Salary>60000</Salary>
+    <Password>NCSZ09SXagV3SXq0NLeFRg==</Password>
+  </Employee>
+  <Employee>
+    <Id>8942af82-06bd-45c3-b40e-aba6f1011481</Id>
+    <FirstName>asa</FirstName>
+    <LastName>asas</LastName>
+    <Email>asa@gmail.com</Email>
+    <PhoneNumber>1234567895</PhoneNumber>
+    <Salary>50000</Salary>
+    <Password>AWlU1yJH9z31bodjfBu7mg==</Password>
+  </Employee>
 </ArrayOfEmployee>
