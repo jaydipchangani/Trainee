@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfBankAccount xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <BankAccount>
+    <AccountNumber>1</AccountNumber>
+    <AccountHolder>Jaydip</AccountHolder>
+    <Balance>5100.00</Balance>
+    <TransactionHistory />
+  </BankAccount>
+  <BankAccount>
+    <AccountNumber>2</AccountNumber>
+    <AccountHolder>JD</AccountHolder>
+    <Balance>2250</Balance>
+    <TransactionHistory />
+  </BankAccount>
+  <BankAccount>
+    <AccountNumber>3</AccountNumber>
+    <AccountHolder>BD</AccountHolder>
+    <Balance>3525</Balance>
+    <TransactionHistory>
+      <Transaction>Account Created - Initial Deposit: ₹ 3,000.00</Transaction>
+      <Transaction>Deposited: ₹ 563.00, New Balance: ₹ 3,563.00</Transaction>
+      <Transaction>Deposited: ₹ 562.00, New Balance: ₹ 4,125.00</Transaction>
+      <Transaction>Withdrawn: ₹ 600.00, New Balance: ₹ 3,525.00</Transaction>
+    </TransactionHistory>
+  </BankAccount>
+</ArrayOfBankAccount>
