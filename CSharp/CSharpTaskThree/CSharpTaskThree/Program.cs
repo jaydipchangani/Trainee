@@ -6,8 +6,10 @@ using DotNetTask2;
 
 public class Program
 {
+    static List<Employee> employees = new List<Employee>();
     public static void Main(string[] args)
     {
+
         static void Insertdata()
         {
             Console.WriteLine("Enter First Name:");
@@ -90,62 +92,144 @@ public class Program
                 password = Console.ReadLine();
             }
 
+            employees.Add(new Employee(Guid.NewGuid(), firstName, lastName, email, phone, salaryInt, encPassword));
+
+            Console.WriteLine("Employee added successfully!");
 
         }
 
-        static bool IsEmailExist(List<Emp> employees, string email)
+
+
+        static void ViewEmployees()
         {
-            return employees.Any(e => e.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+            if (employees.Count == 0)
+            {
+                Console.WriteLine("No employees found!");
+                return;
+            }
+
+            Console.WriteLine("\nEmployee List:");
+            foreach (var emp in employees)
+            {
+                Console.WriteLine($"ID: {emp.Id}, Name: {emp.FirstName} {emp.LastName}, Email: {emp.Email}, Phone: {emp.PhoneNumber}, Salary: {emp.Salary}");
+            }
         }
 
-
-        Console.WriteLine("Choose an operation:");
-        Console.WriteLine("1. Add Data");
-        Console.WriteLine("2. Remove Data");
-        Console.WriteLine("3. Update Data");
-        Console.WriteLine("4. Show Data");
-
-        int choice = Convert.ToInt32(Console.ReadLine());
-
-        switch (choice)
+        static void UpdateEmployee()
         {
-            case 1:
-                Console.WriteLine("add Data");
-                Insertdata();
+            Console.Write("Enter Employee ID to update: ");
+            //string inputId = Console.ReadLine();
+            //if (Guid.TryParse(inputId, out Guid empId))
+            //{
+            //    var emp = employees.FirstOrDefault(e => e.Id == empId);
+            //    if (emp != null)
+            //    {
+            //        Console.Write("Enter New Salary: ");
+            //        string salaryInput = Console.ReadLine();
+            //        while (!salaryInput.IsValidSalary(out int newSalary))
+            //        {
+            //            Console.Write("Invalid salary! Enter again: ");
+            //            salaryInput = Console.ReadLine();
+            //        }
 
-                break;
+            //        emp.Salary = newSalary;
+            //        Console.WriteLine("Employee updated successfully!");
+            //    }
+            //    else
+            //    {
+            //        Console.WriteLine("Employee not found!");
+            //    }
+            //}
+            //else
+            //{
+            //    Console.WriteLine("Invalid ID format!");
+            //}
+        }
 
-            case 2:
-                Console.WriteLine("Remove Data");
-                //DeleteData();
-                break;
+        static void DeleteEmployee()
+        {
+            Console.Write("Enter Employee ID to delete: ");
+            string inputId = Console.ReadLine();
+            if (Guid.TryParse(inputId, out Guid empId))
+            {
+                var emp = employees.FirstOrDefault(e => e.Id == empId);
+                if (emp != null)
+                {
+                    employees.Remove(emp);
+                    Console.WriteLine("Employee deleted successfully!");
+                }
+                else
+                {
+                    Console.WriteLine("Employee not found!");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid ID format!");
+            }
+        }
 
-            case 3:
-                Console.WriteLine("Edit Data");
-                //UpdateData();
-                break;
+        //static bool IsEmailExist(List<Emp> employees, string email)
+        //{
+        //    return employees.Any(e => e.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+        //}
 
-            case 4:
-                Console.WriteLine("Show data");
-                //DisplayData();
-                break;
 
-            default:
-                Console.WriteLine("Enter proper");
-                break;
+        while (true)
+        {
+            Console.WriteLine("\nEmployee Management System");
+            Console.WriteLine("1. Add Employee");
+            Console.WriteLine("2. View Employees");
+            Console.WriteLine("3. Update Employee");
+            Console.WriteLine("4. Delete Employee");
+            Console.WriteLine("5. Exit");
+            Console.Write("Enter choice: ");
+            string choice = Console.ReadLine();
+
+            switch (choice)
+            {
+                case "1":
+                    Insertdata();
+                    break;
+                case "2":
+                    ViewEmployees();
+                    break;
+                case "3":
+                    UpdateEmployee();
+                    break;
+                case "4":
+                    DeleteEmployee();
+                    break;
+                case "5":
+                    return;
+                default:
+                    Console.WriteLine("Invalid choice! Try again.");
+                    break;
+            }
         }
 
     }
 }
 
 
-public class Emp
+class Employee
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string Email { get; set; }
-    public string Phone { get; set; }
-    public string Designation { get; set; }
-    public Int32 Salary { get; set; }
+    public string PhoneNumber { get; set; }
+    public int Salary { get; set; }
+    public string Password { get; set; } // Encrypted Password
+
+    public Employee(Guid id, string firstName, string lastName, string email, string phoneNumber, int salary, string password)
+    {
+        Id = id;
+        FirstName = firstName;
+        LastName = lastName;
+        Email = email;
+        PhoneNumber = phoneNumber;
+        Salary = salary;
+        Password = password;
+    }
 }
