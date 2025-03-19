@@ -1,0 +1,15 @@
+C:\Trainee_new\CSharp\CSharpTaskThree\CSharpTaskThree\obj\Debug\net8.0\CSharpTaskThree.GeneratedMSBuildEditorConfig.editorconfig
+C:\Trainee_new\CSharp\CSharpTaskThree\CSharpTaskThree\obj\Debug\net8.0\CSharpTaskThree.AssemblyInfoInputs.cache
+C:\Trainee_new\CSharp\CSharpTaskThree\CSharpTaskThree\obj\Debug\net8.0\CSharpTaskThree.AssemblyInfo.cs
+C:\Trainee_new\CSharp\CSharpTaskThree\CSharpTaskThree\obj\Debug\net8.0\CSharpTaskThree.csproj.CoreCompileInputs.cache
+C:\Trainee_new\CSharp\CSharpTaskThree\CSharpTaskThree\obj\Debug\net8.0\CSharpTaskThree.sourcelink.json
+C:\Trainee_new\CSharp\CSharpTaskThree\CSharpTaskThree\bin\Debug\net8.0\CSharpTaskThree.exe
+C:\Trainee_new\CSharp\CSharpTaskThree\CSharpTaskThree\bin\Debug\net8.0\CSharpTaskThree.deps.json
+C:\Trainee_new\CSharp\CSharpTaskThree\CSharpTaskThree\bin\Debug\net8.0\CSharpTaskThree.runtimeconfig.json
+C:\Trainee_new\CSharp\CSharpTaskThree\CSharpTaskThree\bin\Debug\net8.0\CSharpTaskThree.dll
+C:\Trainee_new\CSharp\CSharpTaskThree\CSharpTaskThree\bin\Debug\net8.0\CSharpTaskThree.pdb
+C:\Trainee_new\CSharp\CSharpTaskThree\CSharpTaskThree\obj\Debug\net8.0\CSharpTaskThree.dll
+C:\Trainee_new\CSharp\CSharpTaskThree\CSharpTaskThree\obj\Debug\net8.0\refint\CSharpTaskThree.dll
+C:\Trainee_new\CSharp\CSharpTaskThree\CSharpTaskThree\obj\Debug\net8.0\CSharpTaskThree.pdb
+C:\Trainee_new\CSharp\CSharpTaskThree\CSharpTaskThree\obj\Debug\net8.0\CSharpTaskThree.genruntimeconfig.cache
+C:\Trainee_new\CSharp\CSharpTaskThree\CSharpTaskThree\obj\Debug\net8.0\ref\CSharpTaskThree.dll
