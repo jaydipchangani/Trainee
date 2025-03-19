@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
+using CSharpTaskThree;
 
 public class Program
 {
@@ -100,6 +101,8 @@ public class Program
         Console.WriteLine("Enter Password:");
         string password = Console.ReadLine();
 
+        password = AesFunction.Encrypt(password);
+
         employees.Add(new Employee(Guid.NewGuid(), firstName, lastName, email, phone, salary, password));
 
         Console.WriteLine("Employee added successfully!");
@@ -117,9 +120,21 @@ public class Program
         Console.WriteLine("\nEmployee List:");
         foreach (var emp in employees)
         {
-            Console.WriteLine($"ID: {emp.Id}, Name: {emp.FirstName} {emp.LastName}, Email: {emp.Email}, Phone: {emp.PhoneNumber}, Salary: {emp.Salary}");
+            string decryptedPassword = string.Empty;
+            try
+            {
+                decryptedPassword = AesFunction.Decrypt(emp.Password);
+            }
+            catch (Exception ex)
+            {
+                decryptedPassword = "Error decrypting password";
+                Console.WriteLine($"Decryption error for Employee ID {emp.Id}: {ex.Message}");
+            }
+
+            Console.WriteLine($"ID: {emp.Id}, Name: {emp.FirstName} {emp.LastName}, Email: {emp.Email}, Phone: {emp.PhoneNumber}, Salary: {emp.Salary}, Password: {decryptedPassword}");
         }
     }
+
 
     static void UpdateEmployee()
     {
