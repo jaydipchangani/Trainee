@@ -60,7 +60,7 @@ class Program
         Console.Write("Enter Initial Deposit Amount (Min: 1000): ");
         if (!decimal.TryParse(Console.ReadLine(), out decimal initialDeposit) || initialDeposit < 1000)
         {
-            Console.WriteLine("❌ Invalid deposit amount! Minimum deposit is ₹1000.");
+            Console.WriteLine("Invalid deposit amount! Minimum deposit is ₹1000.");
             return;
         }
         int accountNumber;
@@ -167,7 +167,7 @@ class Program
                 XmlSerializer serializer = new XmlSerializer(typeof(List<BankAccount>));
                 using (StreamReader reader = new StreamReader("accounts.xml"))
                 {
-                    List<BankAccount> accountList = (List<BankAccount>)serializer.Deserialize(reader);
+                    List<BankAccount> accountList = (List<BankAccount>)serializer.Deserialize(reader);   //XML data ne BankAccount Object ma convert krva
                     accounts = new Dictionary<long, BankAccount>();
                     foreach (var acc in accountList)
                     {
@@ -188,7 +188,7 @@ public class BankAccount
     public int AccountNumber { get; set; }
     public string AccountHolder { get; set; }
 
-    [XmlElement("Balance")]
+    [XmlElement("Balance")]  
     public decimal Balance { get; set; }
 
     [XmlArray("TransactionHistory")]
