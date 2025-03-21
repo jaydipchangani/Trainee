@@ -15,6 +15,9 @@
 <div class="container mt-5">
     <div class="card shadow-lg p-4">
         <h2 class="text-center mb-4">Student Register Page</h2>
+        <h3 class="text-center mb-4 fw-bold text-danger text-decoration-underline" style="text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);">
+            @ViewData["Instruction"]
+        </h3>
 
         <form method="post" asp-action="Register" class="needs-validation" novalidate>
             <div class="mb-3">

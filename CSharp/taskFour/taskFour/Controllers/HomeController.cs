@@ -15,13 +15,10 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
+        ViewBag.Message = "Welcome to ASP.NET Core MVC!";
         return View();
     }
 
-    public IActionResult Privacy()
-    {
-        return View();
-    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

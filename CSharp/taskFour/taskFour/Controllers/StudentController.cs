@@ -7,6 +7,7 @@ namespace taskFour.Controllers
     {
         public IActionResult Register()
         {
+            ViewData["Instruction"] = "Enter Data carefully";
             return View();
         }
 
