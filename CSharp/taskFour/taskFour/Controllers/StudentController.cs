@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using taskFour.Models;
 
 namespace taskFour.Controllers
 {
@@ -8,20 +9,16 @@ namespace taskFour.Controllers
         {
             return View();
         }
-        public IActionResult Create()
-        {
-            return View();
-        }
+
         [HttpPost]
-        public IActionResult Create(StudentController students) {
+        public IActionResult Register(Student students) {
             if (ModelState.IsValid)
             {
 
-                ViewBag.Message = "Student added successfully!";
-                ModelState.Clear();
-                return View();
+                TempData["msg"] = "Student Registration Successfully";
+                return View("Index");
             }
-            return View(students);
+            return View("Index");
         }
 
     }

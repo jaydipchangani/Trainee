@@ -2,14 +2,14 @@
 	ViewData["Title"] = "Student Register";
 }
 @model taskFour.Models.Student;
+
+@if (TempData["msg"] != null)
+{
+	<div class="alert alert-success">@TempData["msg"]</div>
+}
 <div>
 	
 	<h2>Student Register Page</h2>
-
-	@if (ViewBag.Message != null)
-	{
-		<div class="alert alert-success">@ViewBag.Message</div>
-	}
 	
 	<form method="post" asp-action="Register">
 		
