@@ -16,7 +16,7 @@ namespace taskFour.Controllers
             if (ModelState.IsValid)
             {
 
-                TempData["msg"] = "Student Registration Successfully";
+                TempData["sucessmsg"] = "Student Registration Successfully";
                 return View("Index");
             }
             return View("Index");

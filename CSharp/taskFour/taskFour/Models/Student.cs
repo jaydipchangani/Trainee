@@ -4,10 +4,10 @@ namespace taskFour.Models
 {
     public class Student
     {
-        public int Id { get; set; }
 
         [Required(ErrorMessage = "Student name is required")]
         [StringLength(100, MinimumLength = 3, ErrorMessage = "Student name must be between 3 and 100 characters")]
+        [RegularExpression(@"^(?!\s+$)[A-Za-z\s]+$", ErrorMessage = "Only alphabets and spaces are allowed. Name cannot be only spaces.")]
         public string name { get; set; }
 
         [Required(ErrorMessage = "Student Age is required")]
