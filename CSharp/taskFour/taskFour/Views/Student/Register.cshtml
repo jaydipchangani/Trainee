@@ -1,62 +1,54 @@
 ﻿@{
-	ViewData["Title"] = "Student Register";
+    ViewData["Title"] = "Student Register";
 }
 @model taskFour.Models.Student;
 
+<!-- Success Message using TempData -->
 @if (TempData["msg"] != null)
 {
-	<div class="alert alert-success">@TempData["msg"]</div>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["msg"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 }
-<div>
-	
-	<h2>Student Register Page</h2>
-	
-	<form method="post" asp-action="Register">
-		
-		<table>
-			<tr>
-				<td><label asp-for="name"></label></td>
 
-				<td>
-					<input asp-for="name" class="form-controller" />
-					<span asp-validation-for="name" class="text-danger"></span>
+<div class="container mt-5">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-center mb-4">Student Register Page</h2>
 
-				</td>
-			</tr>
+        <form method="post" asp-action="Register" class="needs-validation" novalidate>
+            <div class="mb-3">
+                <label asp-for="name" class="form-label fw-bold">Name</label>
+                <input asp-for="name" class="form-control" placeholder="Enter your full name" required />
+                <span asp-validation-for="name" class="text-danger"></span>
+            </div>
 
-			<tr>
-				<td><label asp-for="age"></label></td>
-				<td>
-					<input asp-for="age" class="form-controller" />
-					<span asp-validation-for="age" class="text-danger"></span>
-				</td>
-			</tr>
+            <div class="mb-3">
+                <label asp-for="age" class="form-label fw-bold">Age</label>
+                <input asp-for="age" type="number" class="form-control" placeholder="Enter your age" required />
+                <span asp-validation-for="age" class="text-danger"></span>
+            </div>
 
-			<tr>
-				<td><label asp-for="email"></label></td>
-				<td>
-					<input asp-for="email" class="form-controller" />
-					<span asp-validation-for="email" class="text-danger"></span>
-				</td>
-			</tr>
-			
-			<tr>
-				<td><label asp-for="course"></label></td>
-				<td>
-					<input asp-for="course" class="form-controller" />
-					<span asp-validation-for="course" class="text-danger"></span>
-				</td>
-			</tr>
+            <div class="mb-3">
+                <label asp-for="email" class="form-label fw-bold">Email</label>
+                <input asp-for="email" type="email" class="form-control" placeholder="Enter your email" required />
+                <span asp-validation-for="email" class="text-danger"></span>
+            </div>
 
+            <div class="mb-3">
+                <label asp-for="course" class="form-label fw-bold">Course</label>
+                <input asp-for="course" class="form-control" placeholder="Enter your course name" required />
+                <span asp-validation-for="course" class="text-danger"></span>
+            </div>
 
-		</table>
-		<button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary w-100">Submit</button>
+        </form>
+    </div>
+</div>
 
-	</form>
-	</div>
-
+<!-- Bootstrap and Validation Scripts -->
 @section Scripts {
-	@{
-		await Html.RenderPartialAsync("_ValidationScriptsPartial");
-	}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
