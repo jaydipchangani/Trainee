@@ -5,6 +5,7 @@ namespace taskFour.Controllers
 {
     public class StudentController : Controller
     {
+        [HttpGet]
         public IActionResult Register()
         {
             ViewData["Instruction"] = "Enter Data carefully";
@@ -17,10 +18,14 @@ namespace taskFour.Controllers
             {
 
                 TempData["sucessmsg"] = "Student Registration Successfully";
-                return View("Index");
+                return RedirectToAction("Index", "Student");
             }
-            return View("Index");
+            return View(students);
         }
 
+        public IActionResult Index()
+        {
+            return View();
+        }
     }
 }
