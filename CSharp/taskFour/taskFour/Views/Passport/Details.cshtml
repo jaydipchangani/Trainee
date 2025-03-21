@@ -1,0 +1,21 @@
+﻿@model taskFour.Models.PassportModel
+
+<h2>Passport Details</h2>
+
+<div>
+    <h3>Personal Information</h3>
+    <p><strong>Full Name:</strong> @Model.FullName</p>
+    <p><strong>Email:</strong> @Model.Email</p>
+    <p><strong>Date of Birth:</strong> @Model.DateOfBirth.ToShortDateString()</p>
+    <p><strong>Gender:</strong> @Model.Gender</p>
+    <p><strong>Nationality:</strong> @Model.Nationality</p>
+    <p><strong>Marital Status:</strong> @Model.MaritalStatus</p>
+    <p><strong>Issue Date:</strong> @Model.IssueDate.ToShortDateString()</p>
+    <p><strong>Address:</strong> @Model.Address</p>
+    <p><strong>Accept Terms:</strong> @(Model.AcceptTerms ? "Yes" : "No")</p>
+    @if (!string.IsNullOrEmpty(Model.PassportPhoto))
+    {
+        <p><strong>Passport Photo:</strong></p>
+        <img src="@Model.PassportPhoto" alt="Passport Photo" style="max-width: 200px;" />
+    }
+</div>
