@@ -42,7 +42,7 @@ namespace DotNetTask2
 
         public static bool IsValidSalary(this int salary)
         {
-            return salary >= 20000 && salary <= 100000; // Salary should be within valid range
+            return salary >= 20000 && salary <= 100000; 
         }
 
 

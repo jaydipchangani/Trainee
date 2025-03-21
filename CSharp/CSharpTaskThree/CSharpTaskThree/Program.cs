@@ -221,7 +221,7 @@ public class Employee
     public string Email { get; set; }
     public string PhoneNumber { get; set; }
     public int Salary { get; set; }
-    public string Password { get; set; } // Encrypted Password
+    public string Password { get; set; } 
 
     public Employee() { }
     public Employee(Guid id, string firstName, string lastName, string email, string phoneNumber, int salary, string password)
@@ -236,7 +236,7 @@ public class Employee
     }
 }
 
-// Generic XML Serializer
+
 public static class XmlHelper<T> where T : class
 {
     public static void SaveData(string filePath, T data)

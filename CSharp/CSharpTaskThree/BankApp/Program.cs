@@ -56,6 +56,21 @@ class Program
     {
         Console.Write("Enter your Name: ");
         string name = Console.ReadLine();
+        name = name.Trim();
+
+        while (string.IsNullOrEmpty(name) || !name.All(char.IsLetter))
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                Console.WriteLine("Name cannot be empty. Please enter your Name:");
+            }
+            else
+            {
+                Console.WriteLine("Invalid input. Only characters are allowed. Please enter your Name again:");
+            }
+            name = Console.ReadLine();
+            name = name.Trim(); 
+        }
 
         Console.Write("Enter Initial Deposit Amount (Min: 1000): ");
         if (!decimal.TryParse(Console.ReadLine(), out decimal initialDeposit) || initialDeposit < 1000)
