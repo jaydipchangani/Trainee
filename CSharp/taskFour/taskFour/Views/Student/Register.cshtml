@@ -1,0 +1,62 @@
+﻿@{
+	ViewData["Title"] = "Student Register";
+}
+@model taskFour.Models.Student;
+<div>
+	
+	<h2>Student Register Page</h2>
+
+	@if (ViewBag.Message != null)
+	{
+		<div class="alert alert-success">@ViewBag.Message</div>
+	}
+	
+	<form method="post" asp-action="Register">
+		
+		<table>
+			<tr>
+				<td><label asp-for="name"></label></td>
+
+				<td>
+					<input asp-for="name" class="form-controller" />
+					<span asp-validation-for="name" class="text-danger"></span>
+
+				</td>
+			</tr>
+
+			<tr>
+				<td><label asp-for="age"></label></td>
+				<td>
+					<input asp-for="age" class="form-controller" />
+					<span asp-validation-for="age" class="text-danger"></span>
+				</td>
+			</tr>
+
+			<tr>
+				<td><label asp-for="email"></label></td>
+				<td>
+					<input asp-for="email" class="form-controller" />
+					<span asp-validation-for="email" class="text-danger"></span>
+				</td>
+			</tr>
+			
+			<tr>
+				<td><label asp-for="course"></label></td>
+				<td>
+					<input asp-for="course" class="form-controller" />
+					<span asp-validation-for="course" class="text-danger"></span>
+				</td>
+			</tr>
+
+
+		</table>
+		<button type="submit" class="btn btn-primary">Submit</button>
+
+	</form>
+	</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}
