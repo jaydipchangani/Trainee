@@ -1,0 +1,28 @@
+﻿<h2>Product List</h2>
+<a href="@Url.Action("Create", "Product")" class="btn btn-primary">Add New Product</a>
+<table class="table table-bordered mt-3">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Category</th>
+            <th>Stock</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.Name</td>
+                <td>@product.Price</td>
+                <td>@product.Category</td>
+                <td>@product.Stock</td>
+                <td>
+                    <a href="@Url.Action("Edit", "Product", new { id = product.Id })" class="btn btn-warning">Edit</a>
+                    <a href="@Url.Action("Delete", "Product", new { id = product.Id })" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
