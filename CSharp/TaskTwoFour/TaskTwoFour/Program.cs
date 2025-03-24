@@ -1,7 +1,13 @@
+using TaskTwoFour.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+
+
+//  Load Configuration from appsettings.json
+builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
 var app = builder.Build();
 
@@ -22,6 +28,5 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
+   pattern: "{controller=Home}/{action=Index}/{id?}");
 app.Run();

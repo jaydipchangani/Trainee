@@ -1,0 +1,30 @@
+﻿@model List<TaskModel>
+
+<h2>Task List</h2>
+<a href="/Task/Create">Add New Task</a>
+
+@if (Model != null && Model.Any()) 
+{
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        @foreach (var task in Model)
+        {
+            <tr>
+                <td>@task.Title</td>
+                <td>@task.Status</td>
+                <td>
+                    <a href="/Task/Edit/@task.Id">Edit</a>
+                    <a href="/Task/Delete/@task.Id" onclick="return confirm('Are you sure?');">Delete</a>
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <p>No tasks available.</p>
+}

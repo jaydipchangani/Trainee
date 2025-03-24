@@ -1,0 +1,37 @@
+﻿@model List<TaskTwoFour.Models.TaskModel>
+
+@{
+    ViewData["Title"] = "Task List";
+}
+
+<h2>Task List</h2>
+
+<a asp-action="Create" class="btn btn-primary">Add New Task</a>
+
+<table class="table table-striped mt-3">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Due Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var task in Model)
+        {
+            <tr>
+                <td>@task.Title</td>
+                <td>@task.Description</td>
+                <td>@task.DueDate.ToString("yyyy-MM-dd")</td>
+                <td>@task.Status</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@task.Id" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-action="Details" asp-route-id="@task.Id" class="btn btn-info btn-sm">Details</a>
+                    <a asp-action="Delete" asp-route-id="@task.Id" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
