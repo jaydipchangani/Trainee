@@ -2,7 +2,16 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h2>Service Instance IDs</h2>
+
+<h3>Transient (New instance every time)</h3>
+<p>@ViewBag.Transient1</p>
+<p>@ViewBag.Transient2</p>
+
+<h3>Scoped (Same per request)</h3>
+<p>@ViewBag.Scoped1</p>
+<p>@ViewBag.Scoped2</p>
+
+<h3>Singleton (Same for entire app lifetime)</h3>
+<p>@ViewBag.Singleton1</p>
+<p>@ViewBag.Singleton2</p>

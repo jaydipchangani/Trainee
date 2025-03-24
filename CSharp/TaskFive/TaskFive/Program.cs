@@ -1,4 +1,13 @@
+using TaskFive.Services;using Microsoft.AspNetCore.Mvc;
+
 var builder = WebApplication.CreateBuilder(args);
+
+
+builder.Services.AddTransient< TransientGuidService>(); // Transient
+builder.Services.AddScoped<ScopedGuidService>();       // Scoped
+builder.Services.AddSingleton<SingletonGuidService>(); // Singleton
+
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
