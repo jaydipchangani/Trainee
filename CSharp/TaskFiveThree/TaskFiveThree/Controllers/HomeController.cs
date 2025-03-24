@@ -16,8 +16,9 @@ public class HomeController : Controller
     public IActionResult Index()
     {
         ViewBag.AppName = _configuration["ApplicationSettings:AppName"];
-        ViewBag.Version = _configuration["ApplicationSettings:Version"];
+        ViewBag.Version =  _configuration["ApplicationSettings:Version"];
         ViewBag.Auth = bool.Parse(_configuration["ApplicationSettings:Auth"]);
+        ViewBag.Value = int.Parse(_configuration["ApplicationSettings:Value"]);
 
         return View();
     }
