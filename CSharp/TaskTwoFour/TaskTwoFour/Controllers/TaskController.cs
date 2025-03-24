@@ -20,7 +20,7 @@
 
             public IActionResult Index()
             {
-            var tasks = _taskRepository.GetAllTasks(); // Ensure this method returns a non-null list
+            var tasks = _taskRepository.GetAllTasks(); 
             return View(tasks);
         }
 
@@ -42,7 +42,7 @@
             var task = _taskRepository.GetTaskById(id);
             if (task == null)
             {
-                return NotFound();  // Return 404 if task is not found
+                return NotFound();  
             }
             return View(task);
         }
