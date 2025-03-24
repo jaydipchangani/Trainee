@@ -3,7 +3,7 @@ using TaskFive.Services;using Microsoft.AspNetCore.Mvc;
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddTransient< TransientGuidService>(); // Transient
+builder.Services.AddTransient<TransientGuidService>(); // Transient
 builder.Services.AddScoped<ScopedGuidService>();       // Scoped
 builder.Services.AddSingleton<SingletonGuidService>(); // Singleton
 
@@ -24,6 +24,11 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.UseMiddleware<TaskFive.Middleware.RequestLoggingMiddleware>();
+
+
+app.UseMiddleware<TaskFive.Middleware.ExceptionHandlingMiddleware>();
 
 app.UseRouting();
 
