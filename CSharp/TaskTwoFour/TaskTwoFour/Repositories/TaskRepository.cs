@@ -1,11 +1,9 @@
-﻿using TaskTwoFour.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using TaskTwoFour.Models;
 using Microsoft.Extensions.Configuration;
-
+using TaskTwoFour.Models;
 
 namespace TaskTwoFour.Repositories
 {
@@ -49,39 +47,44 @@ namespace TaskTwoFour.Repositories
             TaskModel task = null;
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string query = "SELECT * FROM Tasks WHERE Id = @Id";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@Id", id);
-                conn.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                if (reader.Read())
+                using (SqlCommand cmd = new SqlCommand("GetTaskById", conn))
                 {
-                    task = new TaskModel
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Id", id);
+                    conn.Open();
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
                     {
-                        Id = (int)reader["Id"],
-                        Title = reader["Title"].ToString(),
-                        Description = reader["Description"].ToString(),
-                        DueDate = (DateTime)reader["DueDate"],
-                        Status = reader["Status"].ToString()
-                    };
+                        task = new TaskModel
+                        {
+                            Id = (int)reader["Id"],
+                            Title = reader["Title"].ToString(),
+                            Description = reader["Description"].ToString(),
+                            DueDate = (DateTime)reader["DueDate"],
+                            Status = reader["Status"].ToString()
+                        };
+                    }
                 }
+                return task;
             }
-            return task;
         }
 
         public void AddTask(TaskModel task)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string query = "INSERT INTO Tasks (Title, Description, DueDate, Status) VALUES (@Title, @Description, @DueDate, @Status)";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@Title", task.Title);
-                cmd.Parameters.AddWithValue("@Description", task.Description);
-                cmd.Parameters.AddWithValue("@DueDate", task.DueDate);
-                cmd.Parameters.AddWithValue("@Status", task.Status);
-                conn.Open();
-                cmd.ExecuteNonQuery();
+                using (SqlCommand cmd = new SqlCommand("AddTask", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Title", task.Title);
+                    cmd.Parameters.AddWithValue("@Description", task.Description);
+                    cmd.Parameters.AddWithValue("@DueDate", task.DueDate);
+                    cmd.Parameters.AddWithValue("@Status", task.Status);
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
             }
         }
 
@@ -89,15 +92,17 @@ namespace TaskTwoFour.Repositories
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string query = "UPDATE Tasks SET Title=@Title, Description=@Description, DueDate=@DueDate, Status=@Status WHERE Id=@Id";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@Id", task.Id);
-                cmd.Parameters.AddWithValue("@Title", task.Title);
-                cmd.Parameters.AddWithValue("@Description", task.Description);
-                cmd.Parameters.AddWithValue("@DueDate", task.DueDate);
-                cmd.Parameters.AddWithValue("@Status", task.Status);
-                conn.Open();
-                cmd.ExecuteNonQuery();
+                using (SqlCommand cmd = new SqlCommand("UpdateTask", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Id", task.Id);
+                    cmd.Parameters.AddWithValue("@Title", task.Title);
+                    cmd.Parameters.AddWithValue("@Description", task.Description);
+                    cmd.Parameters.AddWithValue("@DueDate", task.DueDate);
+                    cmd.Parameters.AddWithValue("@Status", task.Status);
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
             }
         }
 
@@ -105,11 +110,13 @@ namespace TaskTwoFour.Repositories
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                string query = "DELETE FROM Tasks WHERE Id=@Id";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@Id", id);
-                conn.Open();
-                cmd.ExecuteNonQuery();
+                using (SqlCommand cmd = new SqlCommand("DeleteTask", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Id", id);
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
             }
         }
     }

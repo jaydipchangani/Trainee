@@ -1,6 +1,6 @@
 ﻿namespace TaskFive.Services
 {
-    public class SingletonGuidService : IGuidService
+    public class SingletonGuidService 
     {
         private readonly string _guid;
 
