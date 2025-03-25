@@ -29,9 +29,19 @@ namespace ASPNetCoreMVCApp.Controllers
 
         public IActionResult Users()
         {
-            if (HttpContext.Session.GetInt32("UserRoleId") != 1) // Fix session key
-                return Unauthorized();
+            int? roleId = HttpContext.Session.GetInt32("UserRoleId");
 
+            if (roleId == null)
+            {
+                return RedirectToAction("Login", "Account"); // Ensure user is redirected if session expired
+            }
+
+            if (roleId != 1)
+            {
+                return Unauthorized(); // Prevent unauthorized access
+            }
+
+            // If session role is correct, load user data
             List<User> users = new();
             using SqlConnection conn = DatabaseHelper.GetConnection();
             conn.Open();
@@ -55,9 +65,19 @@ namespace ASPNetCoreMVCApp.Controllers
 
         public IActionResult Roles()
         {
-            if (HttpContext.Session.GetInt32("UserRoleId") != 1)  // Fix session key
-                return Unauthorized();
+            int? roleId = HttpContext.Session.GetInt32("UserRoleId");
 
+            if (roleId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            if (roleId != 1)
+            {
+                return Unauthorized();
+            }
+
+            // Fetch roles if session is valid
             List<Role> roles = new();
             using SqlConnection conn = DatabaseHelper.GetConnection();
             conn.Open();
@@ -70,6 +90,7 @@ namespace ASPNetCoreMVCApp.Controllers
 
             return View(roles);
         }
+
 
         [HttpPost]
         public IActionResult AddRole(string roleName)
