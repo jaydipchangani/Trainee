@@ -5,51 +5,81 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2 class="text-center my-4 text-primary">Edit User</h2>
+<h2>Edit User</h2>
 
-<form asp-action="Edit" method="post">
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger text-center">@ViewBag.ErrorMessage</div>
+}
+
+<form asp-action="Update" method="post">
     <input type="hidden" name="Id" value="@Model.Id" />
-
-    <div class="form-group">
+    
+    <div class="mb-3">
         <label for="FirstName" class="form-label">First Name</label>
-        <input type="text" class="form-control" id="FirstName" name="FirstName" value="@Model.FirstName" required />
+        <input type="text" name="FirstName" class="form-control" required minlength="3" id="FirstName" value="@Model.FirstName" />
     </div>
 
-    <div class="form-group">
+    <div class="mb-3">
         <label for="LastName" class="form-label">Last Name</label>
-        <input type="text" class="form-control" id="LastName" name="LastName" value="@Model.LastName" required />
+        <input type="text" name="LastName" class="form-control" required minlength="3" id="LastName" value="@Model.LastName" />
     </div>
 
-    <div class="form-group">
+    <div class="mb-3">
         <label for="Email" class="form-label">Email</label>
-        <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email" required />
+        <input type="email" name="Email" class="form-control" required id="Email" value="@Model.Email" />
     </div>
 
-    <!-- Uncomment and style the Role dropdown (if you need it) -->
-    <!-- 
-    <div class="form-group">
-    @*     <label for="RoleId" class="form-label">Role</label> *@
-    @*     <select class="form-control" id="RoleId" name="RoleId" required> *@
-    @*         <option value="1" @((Model.RoleId == 1) ? "selected" : "")>Admin</option> *@
-    @*         <option value="2" @((Model.RoleId == 2) ? "selected" : "")>User</option> *@
-    @*         <!-- Add other roles as necessary --> *@
-    @*     </select> *@
-    @* </div> *@
-    -->
+    <div class="mb-3">
+        <label for="PasswordHash" class="form-label">Password</label>
+        <input type="password" name="PasswordHash" class="form-control" id="PasswordHash" value="@Model.PasswordHash" placeholder="Enter a new password if you want to change it" />
+    </div>
 
-    <!-- Uncomment and style the Status dropdown (if you need it) -->
-    <!-- 
-    <div class="form-group">
-        <label for="IsActive" class="form-label">Status</label>
-        <select class="form-control" id="IsActive" name="IsActive" required>
-            <option value="true" @((Model.IsActive) ? "selected" : "")>Active</option>
-            <option value="false" @((!Model.IsActive) ? "selected" : "")>Inactive</option>
+    <div class="mb-3">
+        <label for="ConfirmPassword" class="form-label">Confirm Password</label>
+        <input type="password" name="ConfirmPassword" class="form-control" id="ConfirmPassword" />
+    </div>
+
+    <div class="mb-3">
+        <label for="RoleId" class="form-label">Role</label>
+        <select name="RoleId" class="form-control" required>
+            <option value="1" @* Check if the RoleId is 1 and set "selected" if true *@
+            @if (Model.RoleId == 1) {
+            <text>selected</text>
+            }
+        >Admin</option>
+
+            <option value="2" @* Check if the RoleId is 2 and set "selected" if true *@
+            @if (Model.RoleId == 2) {
+            <text>selected</text>
+            }
+        >User</option>
+            <!-- Add more roles if needed -->
         </select>
     </div>
-    -->
 
-    <div class="form-group text-center mt-4">
-        <button type="submit" class="btn btn-primary">Save Changes</button>
-        <a href="@Url.Action("Users")" class="btn btn-secondary">Cancel</a>
+    <div class="mb-3">
+        <label for="IsActive" class="form-label">Status</label>
+        <select name="IsActive" class="form-control">
+            <option value="true" @* Check if IsActive is true and set "selected" if true *@
+            @if (Model.IsActive) {
+            <text>selected</text>
+            }
+        >Active</option>
+
+            <option value="false" @* Check if IsActive is false and set "selected" if true *@
+            @if (!Model.IsActive) {
+            <text>selected</text>
+            }
+        >Inactive</option>
+        </select>
+    </div>
+
+
+
+
+
+    <div class="d-flex justify-content-center mt-4">
+        <button type="submit" class="btn btn-primary">Update User</button>
     </div>
 </form>

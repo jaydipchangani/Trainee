@@ -47,7 +47,11 @@
                         </form>
 
                         <!-- Edit Button -->
-                        <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-info btn-sm mr-2">Edit</a>
+                        
+                        <form asp-action="Edit" asp-route-id="@user.Id" style="display:inline;">
+                            <button type="submit" class="btn btn-warning">Edit</button>
+                        </form>
+
 
                         <!-- Delete Button -->
                         <form id="deleteForm_@user.Id" asp-action="Delete" method="post" style="display:inline;">

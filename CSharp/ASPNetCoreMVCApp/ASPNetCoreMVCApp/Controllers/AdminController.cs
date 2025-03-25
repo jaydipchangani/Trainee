@@ -217,6 +217,102 @@ namespace ASPNetCoreMVCApp.Controllers
             }
         }
 
+        public IActionResult Edit(int id)
+{
+    // Fetch the user from the database
+    using (SqlConnection conn = DatabaseHelper.GetConnection())
+    {
+        conn.Open();
+
+        using (SqlCommand cmd = new SqlCommand("SELECT * FROM Users WHERE Id = @Id", conn))
+        {
+            cmd.Parameters.AddWithValue("@Id", id);
+            using (SqlDataReader reader = cmd.ExecuteReader())
+            {
+                if (reader.Read())
+                {
+                    var user = new User
+                    {
+                        Id = Convert.ToInt32(reader["Id"]),
+                        FirstName = reader["FirstName"].ToString(),
+                        LastName = reader["LastName"].ToString(),
+                        Email = reader["Email"].ToString(),
+                        RoleId = Convert.ToInt32(reader["RoleId"]),
+                        IsActive = Convert.ToBoolean(reader["IsActive"])
+                    };
+
+                    // Decrypt the PasswordHash to show in the form (masked or actual depending on your requirement)
+                    string decryptedPassword = AESHelper.Decrypt(reader["PasswordHash"].ToString());
+                    user.PasswordHash = decryptedPassword; // Store decrypted password for display
+
+                    return View(user);
+                }
+                else
+                {
+                    // If user not found, show an error
+                    return NotFound();
+                }
+            }
+        }
+    }
+}
+
+
+        [HttpPost]
+        public IActionResult Update(User user)
+        {
+            // Check if the user object is null
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = "Invalid user data.";
+                return View("Edit", user);
+            }
+
+            // If password is not null or empty, encrypt it
+            string encryptedPassword = null;
+            if (!string.IsNullOrEmpty(user.PasswordHash))  // This is the new password entered by the user
+            {
+                encryptedPassword = AESHelper.Encrypt(user.PasswordHash); // Encrypt password
+            }
+            else
+            {
+                // If password is empty, use the existing password (do not change)
+                encryptedPassword = user.PasswordHash;
+            }
+
+            using (SqlConnection conn = DatabaseHelper.GetConnection())
+            {
+                conn.Open();
+
+                // Update user details
+                using (SqlCommand cmd = new SqlCommand("UPDATE Users SET FirstName = @FirstName, LastName = @LastName, Email = @Email, PasswordHash = @PasswordHash, RoleId = @RoleId, IsActive = @IsActive WHERE Id = @Id", conn))
+                {
+                    cmd.Parameters.AddWithValue("@Id", user.Id);
+                    cmd.Parameters.AddWithValue("@FirstName", user.FirstName ?? (object)DBNull.Value); // Handle null values
+                    cmd.Parameters.AddWithValue("@LastName", user.LastName ?? (object)DBNull.Value); // Handle null values
+                    cmd.Parameters.AddWithValue("@Email", user.Email ?? (object)DBNull.Value); // Handle null values
+                    cmd.Parameters.AddWithValue("@PasswordHash", encryptedPassword ?? (object)DBNull.Value); // If password is empty, it will not be updated
+                    cmd.Parameters.AddWithValue("@RoleId", user.RoleId);
+                    cmd.Parameters.AddWithValue("@IsActive", user.IsActive);
+
+                    // Execute the query and get the number of affected rows
+                    int rowsAffected = cmd.ExecuteNonQuery();
+
+                    // If rowsAffected > 0, the update was successful
+                    if (rowsAffected > 0)
+                    {
+                        return RedirectToAction("Users"); // Make sure this action exists
+                    }
+                    else
+                    {
+                        ViewBag.ErrorMessage = "User update failed.";
+                        return View("Edit", user);
+                    }
+                }
+            }
+        }
+
+
 
     }
 }
