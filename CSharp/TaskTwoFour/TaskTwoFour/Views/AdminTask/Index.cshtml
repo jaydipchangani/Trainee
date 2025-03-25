@@ -8,7 +8,7 @@
 
 <a asp-action="Create" class="btn btn-primary">Add New Task</a>
 
-<!-- Filter & Search in One Line on the Right Side -->
+
 <div class="d-flex justify-content-end align-items-center mt-3">
     <label for="statusFilter" class="me-2 fw-bold">Filter by Status:</label>
     <select id="statusFilter" class="form-select w-auto">
@@ -19,7 +19,7 @@
     </select>
 </div>
 
-<!-- Task Table -->
+
 <table class="table table-bordered table-striped mt-3" id="taskTable">
     <thead>
         <tr>
@@ -65,7 +65,7 @@
     </tbody>
 </table>
 
-<!-- JavaScript for Sorting & Filtering -->
+
 <script>
     document.getElementById("statusFilter").addEventListener("change", function () {
         let selectedStatus = this.value;
@@ -90,24 +90,23 @@
     }
 </script>
 
-<!-- Styles -->
+
 <style>
-    /* Table Styling */
+
     .table-header {
         font-weight: bold;
         color: black;
         cursor: pointer;
-        text-decoration: none; /* Removes underline */
-    }
+        text-decoration: none; 
 
     .table {
-        border-collapse: collapse; /* Ensures borders are intact */
+        border-collapse: collapse; 
     }
 
     .table-bordered th,
     .table-bordered td {
-        border: 2px solid black !important; /* Ensures vertical & horizontal borders */
-        padding: 10px !important; /* Adds padding to all cells */
+        border: 2px solid black !important;
+        padding: 10px !important; 
         text-align: left;
     }
 </style>
