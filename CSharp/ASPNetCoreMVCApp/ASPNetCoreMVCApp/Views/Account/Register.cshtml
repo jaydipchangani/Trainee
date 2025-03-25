@@ -1,0 +1,43 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Register</h2>
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
+}
+
+<form asp-action="Register" method="post">
+    <div class="mb-3">
+        <label>First Name</label>
+        <input type="text" name="FirstName" class="form-control" required minlength="3" />
+    </div>
+
+    <div class="mb-3">
+        <label>Last Name</label>
+        <input type="text" name="LastName" class="form-control" required minlength="3" />
+    </div>
+
+    <div class="mb-3">
+        <label>Email</label>
+        <input type="email" name="Email" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label>Password</label>
+        <input type="password" name="PasswordHash" class="form-control" required minlength="6" />
+    </div>
+
+    <div class="mb-3">
+        <label>Confirm Password</label>
+        <input type="password" name="ConfirmPassword" class="form-control" required />
+    </div>
+
+    <button type="submit" class="btn btn-success">Register</button>
+
+    <p class="mt-3">
+        Already have an account? <a asp-controller="Account" asp-action="Login">Login here</a>
+    </p>
+</form>

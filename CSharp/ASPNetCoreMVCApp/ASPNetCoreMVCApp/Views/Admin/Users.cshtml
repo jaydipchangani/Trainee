@@ -1,0 +1,37 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Manage Users</h2>
+
+<a asp-action="AddUser" class="btn btn-success">Add New User</a>
+
+<table class="table table-bordered mt-3">
+    <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.FirstName @user.LastName</td>
+                <td>@user.Email</td>
+                <td>@user.RoleName</td>
+                <td>@(user.IsActive ? "Active" : "Inactive")</td>
+                <td>
+                    <a asp-action="EditUser" asp-route-id="@user.Id" class="btn btn-primary">Edit</a>
+                    @if (user.IsActive)
+                    {
+                        <a asp-action="DeactivateUser" asp-route-id="@user.Id" class="btn btn-warning">Deactivate</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

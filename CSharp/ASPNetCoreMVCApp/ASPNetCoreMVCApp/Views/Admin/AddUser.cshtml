@@ -1,0 +1,39 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Add New User</h2>
+
+<form asp-action="AddUser" method="post">
+    <div class="mb-3">
+        <label>First Name</label>
+        <input type="text" name="FirstName" class="form-control" required minlength="3" />
+    </div>
+
+    <div class="mb-3">
+        <label>Last Name</label>
+        <input type="text" name="LastName" class="form-control" required minlength="3" />
+    </div>
+
+    <div class="mb-3">
+        <label>Email</label>
+        <input type="email" name="Email" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label>Password</label>
+        <input type="password" name="Password" class="form-control" required minlength="6" />
+    </div>
+
+    <div class="mb-3">
+        <label>Role</label>
+        <select name="RoleId" class="form-control">
+            @foreach (var role in ViewBag.Roles)
+            {
+                    <option value="@role.Id">@role.RoleName</option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-success">Add User</button>
+</form>

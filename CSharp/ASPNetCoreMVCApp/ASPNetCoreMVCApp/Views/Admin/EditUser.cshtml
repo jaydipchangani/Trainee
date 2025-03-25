@@ -1,0 +1,44 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit User</h2>
+
+<form asp-action="EditUser" method="post">
+    <input type="hidden" name="Id" value="@Model.Id" />
+
+    <div class="mb-3">
+        <label>First Name</label>
+        <input type="text" name="FirstName" value="@Model.FirstName" class="form-control" required minlength="3" />
+    </div>
+
+    <div class="mb-3">
+        <label>Last Name</label>
+        <input type="text" name="LastName" value="@Model.LastName" class="form-control" required minlength="3" />
+    </div>
+
+    <div class="mb-3">
+        <label>Email</label>
+        <input type="email" name="Email" value="@Model.Email" class="form-control" required readonly />
+    </div>
+
+    <div class="mb-3">
+        <label>Role</label>
+        <select name="RoleId" class="form-control">
+            @foreach (var role in ViewBag.Roles)
+            {
+                if (role.Id == Model.RoleId)
+                {
+                    <option value="@role.Id" selected="selected">@role.RoleName</option>
+                }
+                else
+                {
+                    <option value="@role.Id">@role.RoleName</option>
+                }
+            }
+        </select>
+
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update User</button>
+</form>
