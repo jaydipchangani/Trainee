@@ -2,42 +2,44 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Register</h2>
+<h2 class="text-center my-4 text-primary">Register</h2>
 
 @if (ViewBag.ErrorMessage != null)
 {
-    <div class="alert alert-danger">@ViewBag.ErrorMessage</div>
+    <div class="alert alert-danger text-center">@ViewBag.ErrorMessage</div>
 }
 
 <form asp-action="Register" method="post">
     <div class="mb-3">
-        <label>First Name</label>
-        <input type="text" name="FirstName" class="form-control" required minlength="3" />
+        <label for="FirstName" class="form-label">First Name</label>
+        <input type="text" name="FirstName" class="form-control" required minlength="3" id="FirstName" />
     </div>
 
     <div class="mb-3">
-        <label>Last Name</label>
-        <input type="text" name="LastName" class="form-control" required minlength="3" />
+        <label for="LastName" class="form-label">Last Name</label>
+        <input type="text" name="LastName" class="form-control" required minlength="3" id="LastName" />
     </div>
 
     <div class="mb-3">
-        <label>Email</label>
-        <input type="email" name="Email" class="form-control" required />
+        <label for="Email" class="form-label">Email</label>
+        <input type="email" name="Email" class="form-control" required id="Email" />
     </div>
 
     <div class="mb-3">
-        <label>Password</label>
-        <input type="password" name="PasswordHash" class="form-control" required minlength="6" />
+        <label for="PasswordHash" class="form-label">Password</label>
+        <input type="password" name="PasswordHash" class="form-control" required minlength="6" id="PasswordHash" />
     </div>
 
     <div class="mb-3">
-        <label>Confirm Password</label>
-        <input type="password" name="ConfirmPassword" class="form-control" required />
+        <label for="ConfirmPassword" class="form-label">Confirm Password</label>
+        <input type="password" name="ConfirmPassword" class="form-control" required id="ConfirmPassword" />
     </div>
 
-    <button type="submit" class="btn btn-success">Register</button>
+    <div class="d-flex justify-content-center mt-4">
+        <button type="submit" class="btn btn-success">Register</button>
+    </div>
 
-    <p class="mt-3">
+    <p class="text-center mt-3">
         Already have an account? <a asp-controller="Account" asp-action="Login">Login here</a>
     </p>
 </form>

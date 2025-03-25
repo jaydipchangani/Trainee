@@ -5,38 +5,47 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Create New User</h2>
+<h2 class="text-center my-4 text-primary">Create New User</h2>
 
 <form asp-action="Create" method="post">
-    <div>
-        <label for="FirstName">First Name</label>
-        <input type="text" id="FirstName" name="FirstName" value="@Model.FirstName" required />
+    <div class="form-group">
+        <label for="FirstName" class="form-label">First Name</label>
+        <input type="text" class="form-control" id="FirstName" name="FirstName" value="@Model.FirstName" required />
     </div>
-    <div>
-        <label for="LastName">Last Name</label>
-        <input type="text" id="LastName" name="LastName" value="@Model.LastName" required />
+
+    <div class="form-group">
+        <label for="LastName" class="form-label">Last Name</label>
+        <input type="text" class="form-control" id="LastName" name="LastName" value="@Model.LastName" required />
     </div>
-    <div>
-        <label for="Email">Email</label>
-        <input type="email" id="Email" name="Email" value="@Model.Email" required />
+
+    <div class="form-group">
+        <label for="Email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email" required />
     </div>
-    <div>
-        <label for="RoleId">Role</label>
-        <select id="RoleId" name="RoleId" required>
+
+    <div class="form-group">
+        <label for="RoleId" class="form-label">Role</label>
+        <select class="form-control" id="RoleId" name="RoleId" required>
             <option value="1">Admin</option>
             <option value="2">User</option>
         </select>
     </div>
-    <div>
-        <label for="IsActive">Active</label>
-        <input type="checkbox" id="IsActive" name="IsActive" checked />
+
+    <div class="form-group form-check">
+        <input type="checkbox" class="form-check-input" id="IsActive" name="IsActive" checked />
+        <label class="form-check-label" for="IsActive">Active</label>
     </div>
-    <!-- Password Field -->
-    <div>
-        <label for="Password">Password</label>
-        <input type="password" id="Password" name="Password" required />
+
+    <div class="form-group">
+        <label for="Password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="Password" name="Password" required />
     </div>
-    <button type="submit">Create User</button>
+
+    <div class="form-group text-center mt-4">
+        <button type="submit" class="btn btn-primary">Create User</button>
+    </div>
 </form>
 
-<a href="@Url.Action("Index", "Admin")">Back to User List</a>
+<div class="text-center mt-4">
+    <a href="@Url.Action("Index", "Admin")" class="btn btn-secondary">Back to User List</a>
+</div>
