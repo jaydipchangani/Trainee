@@ -34,18 +34,33 @@ public class AESHelper
             }
         }
 
-    public static string Decrypt(string encryptedText)
-    {
-        byte[] keyBytes = Encoding.UTF8.GetBytes(EncryptionKey);
-        byte[] cipherBytes = Convert.FromBase64String(encryptedText);
-        using (Aes aes = Aes.Create())
+        public static string Decrypt(string encryptedText)
         {
-                aes.Key = Convert.FromBase64String("75b4aa733b92dbde4a03d0a3065e5650");
-                aes.IV = Encoding.UTF8.GetBytes("1234567890123456");
+            if (string.IsNullOrEmpty(encryptedText))
+                throw new ArgumentNullException(nameof(encryptedText), "Input text cannot be null or empty.");
+
+            byte[] keyBytes = Convert.FromBase64String("75b4aa733b92dbde4a03d0a3065e5650");
+            byte[] combinedBytes = Convert.FromBase64String(encryptedText);
+
+            using (Aes aes = Aes.Create())
+            {
+                aes.Key = keyBytes;
+
+                // Extract IV from the first 16 bytes
+                byte[] iv = new byte[16];
+                byte[] cipherBytes = new byte[combinedBytes.Length - 16];
+
+                Buffer.BlockCopy(combinedBytes, 0, iv, 0, 16);
+                Buffer.BlockCopy(combinedBytes, 16, cipherBytes, 0, cipherBytes.Length);
+
+                aes.IV = iv;
+
                 ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
-            byte[] decrypted = decryptor.TransformFinalBlock(cipherBytes, 0, cipherBytes.Length);
-            return Encoding.UTF8.GetString(decrypted);
+                byte[] decrypted = decryptor.TransformFinalBlock(cipherBytes, 0, cipherBytes.Length);
+
+                return Encoding.UTF8.GetString(decrypted);
+            }
         }
+
     }
-}
 }

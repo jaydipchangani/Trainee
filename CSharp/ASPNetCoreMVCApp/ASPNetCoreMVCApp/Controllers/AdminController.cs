@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using ASPNetCoreMVCApp.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ASPNetCoreMVCApp.Controllers
 {
+    [Authorize(Roles = "1")]
     public class AdminController : Controller
     {
         public IActionResult Index()

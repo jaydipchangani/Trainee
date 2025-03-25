@@ -19,21 +19,18 @@
                 <ul class="navbar-nav ms-auto">
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <li class="nav-item">
-                            <a class="nav-link" href="/Admin/Index">Admin Panel</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/Account/Logout">Logout (@User.Identity.Name)</a>
-                        </li>
+                        <p>Welcome, @User.Identity.Name</p>
+
+                        @if (User.IsInRole("1")) // Admin role (RoleId = 1)
+                        {
+                            <a href="/Admin/Index">Admin Panel</a>
+                        }
+
+                        <a href="/Account/Logout">Logout</a>
                     }
                     else
                     {
-                        <li class="nav-item">
-                            <a class="nav-link" href="/Account/Login">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/Account/Register">Register</a>
-                        </li>
+                        <a href="/Account/Login">Login</a>
                     }
                 </ul>
             </div>

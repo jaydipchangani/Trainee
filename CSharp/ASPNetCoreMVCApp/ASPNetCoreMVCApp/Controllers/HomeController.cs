@@ -7,8 +7,12 @@ namespace ASPNetCoreMVCApp.Controllers
     {
         public IActionResult Index()
         {
-            if (HttpContext.Session.GetInt32("UserId") == null)
+            int? userId = HttpContext.Session.GetInt32("UserId");
+
+            if (userId == null)
+            {
                 return RedirectToAction("Login", "Account");
+            }
 
             return View();
         }

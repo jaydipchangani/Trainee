@@ -2,6 +2,9 @@
 using Microsoft.Data.SqlClient;
 using ASPNetCoreMVCApp.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
 
 namespace ASPNetCoreMVCApp.Controllers
 {
@@ -57,26 +60,34 @@ namespace ASPNetCoreMVCApp.Controllers
             using SqlConnection conn = DatabaseHelper.GetConnection();
             conn.Open();
 
-            using SqlCommand cmd = new("SELECT Id, PasswordHash, RoleId FROM Users WHERE Email = @Email AND IsActive = 1", conn);
+            using SqlCommand cmd = new("SELECT Id, PasswordHash FROM Users WHERE Email = @Email AND IsActive = 1", conn);
             cmd.Parameters.AddWithValue("@Email", email);
             using SqlDataReader reader = cmd.ExecuteReader();
 
             if (reader.Read() && AESHelper.Decrypt(reader["PasswordHash"].ToString()) == password)
             {
-                HttpContext.Session.SetInt32("UserId", (int)reader["Id"]);
-                HttpContext.Session.SetInt32("RoleId", (int)reader["RoleId"]);
+                // Store UserId in session
+                HttpContext.Session.SetInt32("UserId", Convert.ToInt32(reader["Id"]));
 
-                return (int)reader["RoleId"] == 1 ? RedirectToAction("Index", "Admin") : RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home");
             }
 
-            ViewBag.Error = "Invalid credentials or inactive account.";
+            ViewBag.Error = "Invalid credentials.";
             return View();
         }
 
+      
         public IActionResult Logout()
         {
-            HttpContext.Session.Clear();
+            HttpContext.Session.Clear(); // Clear session on logout
             return RedirectToAction("Login");
         }
+
+
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
     }
 }
