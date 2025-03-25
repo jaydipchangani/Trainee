@@ -30,13 +30,34 @@
                 <td>@user.RoleId</td>
                 <td>@(user.IsActive ? "Active" : "Inactive")</td>
                 <td>
+                    <!-- Activate / Deactivate Button -->
                     <form asp-action="ToggleUserStatus" method="post">
                         <input type="hidden" name="id" value="@user.Id" />
                         <input type="hidden" name="isActive" value="@(user.IsActive ? "false" : "true")" />
                         <button type="submit">@(user.IsActive ? "Deactivate" : "Activate")</button>
+                    </form>
+                    <br />
+
+                    <!-- Edit Button -->
+                    <a asp-action="Edit" asp-route-id="@user.Id">Edit</a>
+                    <br />
+
+                    <!-- Delete Button -->
+                    <form id="deleteForm_@user.Id" asp-action="Delete" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="@user.Id" />
+                        <button type="button" onclick="confirmDelete(@user.Id)">Delete</button>
                     </form>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+<script>
+    function confirmDelete(userId) {
+        if (confirm('Are you sure you want to delete this user?')) {
+            // If confirmed, submit the form for deletion
+            document.getElementById('deleteForm_' + userId).submit();
+        }
+    }
+</script>

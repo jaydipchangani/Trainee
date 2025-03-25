@@ -1,0 +1,47 @@
+﻿@model ASPNetCoreMVCApp.Models.User
+
+@{
+    ViewData["Title"] = "Edit User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit User</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" name="Id" value="@Model.Id" />
+
+    <div class="form-group">
+        <label for="FirstName">First Name</label>
+        <input type="text" class="form-control" id="FirstName" name="FirstName" value="@Model.FirstName" required />
+    </div>
+
+    <div class="form-group">
+        <label for="LastName">Last Name</label>
+        <input type="text" class="form-control" id="LastName" name="LastName" value="@Model.LastName" required />
+    </div>
+
+    <div class="form-group">
+        <label for="Email">Email</label>
+        <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email" required />
+    </div>
+
+    @* <div class="form-group"> *@
+    @*     <label for="RoleId">Role</label> *@
+    @*     <select class="form-control" id="RoleId" name="RoleId" required> *@
+    @*         <option value="1" @((Model.RoleId == 1) ? "selected" : "")>Admin</option> *@
+    @*         <option value="2" @((Model.RoleId == 2) ? "selected" : "")>User</option> *@
+    @*         <!-- Add other roles as necessary --> *@
+    @*     </select> *@
+    @* </div> *@
+
+    @* <div class="form-group"> *@
+    @*     <label for="IsActive">Status</label> *@
+    @*     <select class="form-control" id="IsActive" name="IsActive" required> *@
+    @*         <option value="true" @((Model.IsActive) ? "selected" : "")>Active</option> *@
+    @*         <option value="false" @((!Model.IsActive) ? "selected" : "")>Inactive</option> *@
+    @*     </select> *@
+    @* </div> *@
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a href="@Url.Action("Users")" class="btn btn-secondary">Cancel</a>
+</form>

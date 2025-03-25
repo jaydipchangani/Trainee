@@ -148,5 +148,42 @@ namespace ASPNetCoreMVCApp.Controllers
 
             return RedirectToAction("Users");
         }
+
+        [HttpPost]
+        public IActionResult Delete(int id)
+        {
+            int? userId = HttpContext.Session.GetInt32("UserId");
+            int? roleId = HttpContext.Session.GetInt32("UserRoleId");
+
+            if (userId == null || roleId == null || roleId != 1)
+            {
+                return Unauthorized(); // Unauthorized access
+            }
+
+            // Check if the admin is trying to delete their own account
+            if (userId == id)
+            {
+                TempData["ErrorMessage"] = "Admin account cannot be deleted."; // Show message if admin tries to delete their own account
+                return RedirectToAction("Users");
+            }
+
+            // Proceed with deletion for non-admin users
+            using (SqlConnection conn = DatabaseHelper.GetConnection())
+            {
+                conn.Open();
+                using (SqlCommand cmd = new("DELETE FROM Users WHERE Id = @Id", conn))
+                {
+                    cmd.Parameters.AddWithValue("@Id", id);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
+            return RedirectToAction("Users"); // Redirect back to the Users list
+        }
+
+
+
+
+
     }
 }

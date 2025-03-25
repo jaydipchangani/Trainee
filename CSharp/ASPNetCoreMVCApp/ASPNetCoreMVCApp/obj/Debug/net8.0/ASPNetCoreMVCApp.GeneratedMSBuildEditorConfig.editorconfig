@@ -36,8 +36,8 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQWRkVXNlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Trainee_new/CSharp/ASPNetCoreMVCApp/ASPNetCoreMVCApp/Views/Admin/EditUser.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRWRpdFVzZXIuY3NodG1s
+[C:/Trainee_new/CSharp/ASPNetCoreMVCApp/ASPNetCoreMVCApp/Views/Admin/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Trainee_new/CSharp/ASPNetCoreMVCApp/ASPNetCoreMVCApp/Views/Admin/InactiveUsers.cshtml]
@@ -50,10 +50,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Trainee_new/CSharp/ASPNetCoreMVCApp/ASPNetCoreMVCApp/Views/Admin/Roles.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cUm9sZXMuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Trainee_new/CSharp/ASPNetCoreMVCApp/ASPNetCoreMVCApp/Views/Admin/UserList.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cVXNlckxpc3QuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Trainee_new/CSharp/ASPNetCoreMVCApp/ASPNetCoreMVCApp/Views/Admin/Users.cshtml]
