@@ -1,0 +1,27 @@
+﻿@model List<TaskSix.Models.User>
+
+<h2>Admin Dashboard</h2>
+
+<a href="@Url.Action("CreateUser", "Admin")">Create New User</a>
+<table border="1">
+    <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+    @foreach (var user in Model)
+    {
+        <tr>
+            <td>@user.FullName</td>
+            <td>@user.Email</td>
+            <td>@user.RoleName</td>
+            <td>@(user.IsActive ? "Active" : "Inactive")</td>
+            <td>
+                <a href="@Url.Action("EditUser", "Admin", new { id = user.Id })">Edit</a> |
+                <a href="@Url.Action("DeleteUser", "Admin", new { id = user.Id })" onclick="return confirm('Are you sure?')">Delete</a>
+            </td>
+        </tr>
+    }
+</table>

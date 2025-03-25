@@ -1,0 +1,16 @@
+﻿@model TaskSix.Models.User
+
+@{
+    ViewData["Title"] = "User Dashboard";
+}
+
+<h2>Welcome, @Model.FirstName @Model.LastName</h2>
+
+<div class="card">
+    <div class="card-body">
+        <p><strong>Email:</strong> @Model.Email</p>
+        @* <p><strong>Role:</strong> @Model.Role</p> *@
+    </div>
+</div>
+
+<a href="@Url.Action("Logout", "Account")" class="btn btn-danger mt-3">Logout</a>

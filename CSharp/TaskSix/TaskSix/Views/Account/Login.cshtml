@@ -1,0 +1,26 @@
+﻿@model TaskSix.Models.LoginViewModel
+
+<h2>Login</h2>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <p style="color: red;">@TempData["ErrorMessage"]</p>
+}
+
+<form asp-action="Login" method="post">
+    <div>
+        <label>Email:</label>
+        <input type="email" asp-for="Email" required />
+        <span asp-validation-for="Email" style="color: red;"></span>
+    </div>
+    <div>
+        <label>Password:</label>
+        <input type="password" asp-for="Password" required />
+        <span asp-validation-for="Password" style="color: red;"></span>
+    </div>
+    <div>
+        <button type="submit">Login</button>
+    </div>
+</form>
+
+<p>Don't have an account? <a href="@Url.Action("Register", "Account")">Register</a></p>

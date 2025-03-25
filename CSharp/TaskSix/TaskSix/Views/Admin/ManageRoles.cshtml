@@ -1,0 +1,34 @@
+﻿@model List<TaskSix.Models.RoleModel>
+
+@{
+    ViewData["Title"] = "Manage Roles";
+}
+
+<h2>Manage Roles</h2>
+<a href="@Url.Action("AddRole", "Admin")" class="btn btn-success">Add New Role</a>
+
+<table class="table table-bordered mt-3">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Role Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var role in Model)
+        {
+            <tr>
+                <td>@role.Id</td>
+                <td>@role.RoleName</td>
+                <td>
+                    <a href="@Url.Action("EditRole", "Admin", new { id = role.Id })" class="btn btn-warning">Edit</a>
+                    @if (role.RoleName != "User" && role.RoleName != "Admin")
+                    {
+                        <a href="@Url.Action("DeleteRole", "Admin", new { id = role.Id })" class="btn btn-danger">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
