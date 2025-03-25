@@ -1,0 +1,42 @@
+﻿@model ASPNetCoreMVCApp.Models.User
+
+@{
+    ViewData["Title"] = "Create New User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create New User</h2>
+
+<form asp-action="Create" method="post">
+    <div>
+        <label for="FirstName">First Name</label>
+        <input type="text" id="FirstName" name="FirstName" value="@Model.FirstName" required />
+    </div>
+    <div>
+        <label for="LastName">Last Name</label>
+        <input type="text" id="LastName" name="LastName" value="@Model.LastName" required />
+    </div>
+    <div>
+        <label for="Email">Email</label>
+        <input type="email" id="Email" name="Email" value="@Model.Email" required />
+    </div>
+    <div>
+        <label for="RoleId">Role</label>
+        <select id="RoleId" name="RoleId" required>
+            <option value="1">Admin</option>
+            <option value="2">User</option>
+        </select>
+    </div>
+    <div>
+        <label for="IsActive">Active</label>
+        <input type="checkbox" id="IsActive" name="IsActive" checked />
+    </div>
+    <!-- Password Field -->
+    <div>
+        <label for="Password">Password</label>
+        <input type="password" id="Password" name="Password" required />
+    </div>
+    <button type="submit">Create User</button>
+</form>
+
+<a href="@Url.Action("Index", "Admin")">Back to User List</a>

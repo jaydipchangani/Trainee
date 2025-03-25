@@ -8,6 +8,8 @@ namespace ASPNetCoreMVCApp.Controllers
 {
     public class AdminController : Controller
     {
+        private readonly string connectionString = "Server=DESKTOP-LASVLUU\\SQLEXPRESS;Database=AspNetAuthDB;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True";
+        private readonly ILogger<AdminController> _logger;
         public IActionResult Index()
         {
             int? userId = HttpContext.Session.GetInt32("UserId");
@@ -92,21 +94,6 @@ namespace ASPNetCoreMVCApp.Controllers
         }
 
 
-        [HttpPost]
-        public IActionResult AddRole(string roleName)
-        {
-            if (HttpContext.Session.GetInt32("UserRoleId") != 1)  // Fix session key
-                return Unauthorized();
-
-            using SqlConnection conn = DatabaseHelper.GetConnection();
-            conn.Open();
-            using SqlCommand cmd = new("INSERT INTO Roles (RoleName) VALUES (@RoleName)", conn);
-            cmd.Parameters.AddWithValue("@RoleName", roleName);
-            cmd.ExecuteNonQuery();
-
-            return RedirectToAction("Roles");
-        }
-
         public IActionResult InactiveUsers()
         {
             if (HttpContext.Session.GetInt32("UserRoleId") != 1)  // Fix session key
@@ -181,9 +168,73 @@ namespace ASPNetCoreMVCApp.Controllers
             return RedirectToAction("Users"); // Redirect back to the Users list
         }
 
+        public IActionResult Create()
+        {
+            return View(new User());
+        }
+        public AdminController(ILogger<AdminController> logger)
+        {
+            _logger = logger;  // Initialize the logger
+        }
+        [HttpPost]
+        [HttpPost]
+        public IActionResult Create(User newUser)
+        {
+            if (newUser == null)
+            {
+                ModelState.AddModelError("", "User data is null.");
+                return View(newUser);
+            }
 
+            if (string.IsNullOrWhiteSpace(newUser.PasswordHash))
+            {
+                ModelState.AddModelError("Password", "Password cannot be empty.");
+                return View(newUser);
+            }
 
+            // Encrypt the password before saving it to the database
+            string encryptedPassword = AESHelper.Encrypt(newUser.PasswordHash);
 
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    using (SqlConnection conn = new SqlConnection(connectionString))
+                    {
+                        conn.Open();
+                        using (SqlCommand cmd = new SqlCommand("INSERT INTO Users (FirstName, LastName, Email, RoleId, IsActive, Password) VALUES (@FirstName, @LastName, @Email, @RoleId, @IsActive, @Password)", conn))
+                        {
+                            cmd.Parameters.AddWithValue("@FirstName", newUser.FirstName);
+                            cmd.Parameters.AddWithValue("@LastName", newUser.LastName);
+                            cmd.Parameters.AddWithValue("@Email", newUser.Email);
+                            cmd.Parameters.AddWithValue("@RoleId", newUser.RoleId);
+                            cmd.Parameters.AddWithValue("@IsActive", newUser.IsActive);
+                            cmd.Parameters.AddWithValue("@Password", encryptedPassword);  // Store the encrypted password
 
+                            // Execute the command
+                            int rowsAffected = cmd.ExecuteNonQuery();
+                            if (rowsAffected > 0)
+                            {
+                                _logger.LogInformation("User created successfully.");
+                            }
+                            else
+                            {
+                                _logger.LogError("User creation failed.");
+                            }
+                        }
+                    }
+
+                    return RedirectToAction("Index"); // Redirect to the user list
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception
+                    _logger.LogError($"An error occurred: {ex.Message}");
+                    ModelState.AddModelError("", "An error occurred while saving the data.");
+                }
+            }
+
+            return View(newUser); // Return the form with validation errors
+        }
     }
 }
