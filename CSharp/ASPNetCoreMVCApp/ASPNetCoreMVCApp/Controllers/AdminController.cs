@@ -9,7 +9,6 @@ namespace ASPNetCoreMVCApp.Controllers
     public class AdminController : Controller
     {
         private readonly string connectionString = "Server=DESKTOP-LASVLUU\\SQLEXPRESS;Database=AspNetAuthDB;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True";
-        private readonly ILogger<AdminController> _logger;
         public IActionResult Index()
         {
             int? userId = HttpContext.Session.GetInt32("UserId");
@@ -168,73 +167,56 @@ namespace ASPNetCoreMVCApp.Controllers
             return RedirectToAction("Users"); // Redirect back to the Users list
         }
 
-        public IActionResult Create()
-        {
-            return View(new User());
-        }
-        public AdminController(ILogger<AdminController> logger)
-        {
-            _logger = logger;  // Initialize the logger
-        }
+        public IActionResult Create() => View();
+
         [HttpPost]
-        [HttpPost]
-        public IActionResult Create(User newUser)
+        public IActionResult Create(User user)
         {
-            if (newUser == null)
+            if (user == null)
             {
-                ModelState.AddModelError("", "User data is null.");
-                return View(newUser);
+                Console.WriteLine("User object is null.");
+                return View();
             }
 
-            if (string.IsNullOrWhiteSpace(newUser.PasswordHash))
+            if (string.IsNullOrEmpty(user.PasswordHash))
             {
-                ModelState.AddModelError("Password", "Password cannot be empty.");
-                return View(newUser);
+                ModelState.AddModelError("Password", "Password is required.");
+                return View(user);
             }
 
-            // Encrypt the password before saving it to the database
-            string encryptedPassword = AESHelper.Encrypt(newUser.PasswordHash);
+            // Encrypt password
+            string encryptedPassword = AESHelper.Encrypt(user.PasswordHash);
 
-            if (ModelState.IsValid)
+            using SqlConnection conn = DatabaseHelper.GetConnection();
+            conn.Open();
+
+            // Update the SQL query to include RoleId and IsActive
+            using SqlCommand cmd = new("INSERT INTO Users (FirstName, LastName, Email, PasswordHash, RoleId, IsActive) VALUES (@FirstName, @LastName, @Email, @PasswordHash, @RoleId, @IsActive)", conn);
+
+            // Add parameters for FirstName, LastName, Email, PasswordHash
+            cmd.Parameters.AddWithValue("@FirstName", user.FirstName ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@LastName", user.LastName ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@Email", user.Email ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@PasswordHash", encryptedPassword ?? (object)DBNull.Value);
+
+            // Add RoleId and IsActive with proper null handling
+            cmd.Parameters.AddWithValue("@RoleId", user.RoleId.HasValue ? (object)user.RoleId.Value : DBNull.Value);  // If RoleId is null, use DBNull.Value
+            cmd.Parameters.AddWithValue("@IsActive", user.IsActive);  // Assuming IsActive is a non-nullable boolean
+
+            int rowsAffected = cmd.ExecuteNonQuery();
+
+            if (rowsAffected > 0)
             {
-                try
-                {
-                    using (SqlConnection conn = new SqlConnection(connectionString))
-                    {
-                        conn.Open();
-                        using (SqlCommand cmd = new SqlCommand("INSERT INTO Users (FirstName, LastName, Email, RoleId, IsActive, Password) VALUES (@FirstName, @LastName, @Email, @RoleId, @IsActive, @Password)", conn))
-                        {
-                            cmd.Parameters.AddWithValue("@FirstName", newUser.FirstName);
-                            cmd.Parameters.AddWithValue("@LastName", newUser.LastName);
-                            cmd.Parameters.AddWithValue("@Email", newUser.Email);
-                            cmd.Parameters.AddWithValue("@RoleId", newUser.RoleId);
-                            cmd.Parameters.AddWithValue("@IsActive", newUser.IsActive);
-                            cmd.Parameters.AddWithValue("@Password", encryptedPassword);  // Store the encrypted password
-
-                            // Execute the command
-                            int rowsAffected = cmd.ExecuteNonQuery();
-                            if (rowsAffected > 0)
-                            {
-                                _logger.LogInformation("User created successfully.");
-                            }
-                            else
-                            {
-                                _logger.LogError("User creation failed.");
-                            }
-                        }
-                    }
-
-                    return RedirectToAction("Index"); // Redirect to the user list
-                }
-                catch (Exception ex)
-                {
-                    // Log the exception
-                    _logger.LogError($"An error occurred: {ex.Message}");
-                    ModelState.AddModelError("", "An error occurred while saving the data.");
-                }
+                Console.WriteLine("User Added successfully.");
+                return RedirectToAction("Create");
             }
-
-            return View(newUser); // Return the form with validation errors
+            else
+            {
+                ViewBag.ErrorMessage = "Registration failed. Please try again.";
+                return View(user);
+            }
         }
+
+
     }
 }

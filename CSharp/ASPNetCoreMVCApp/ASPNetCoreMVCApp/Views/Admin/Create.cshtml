@@ -1,51 +1,78 @@
 ﻿@model ASPNetCoreMVCApp.Models.User
 
 @{
-    ViewData["Title"] = "Create New User";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2 class="text-center my-4 text-primary">Create New User</h2>
+<h2 class="text-center my-4 text-primary">Add User</h2>
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-danger text-center">@ViewBag.ErrorMessage</div>
+}
 
 <form asp-action="Create" method="post">
-    <div class="form-group">
-        <label for="FirstName" class="form-label">First Name</label>
-        <input type="text" class="form-control" id="FirstName" name="FirstName" value="@Model.FirstName" required />
-    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="card shadow-lg">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h5>Create a New User</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="FirstName" class="form-label">First Name</label>
+                            <input type="text" name="FirstName" class="form-control" required minlength="3" id="FirstName" />
+                        </div>
 
-    <div class="form-group">
-        <label for="LastName" class="form-label">Last Name</label>
-        <input type="text" class="form-control" id="LastName" name="LastName" value="@Model.LastName" required />
-    </div>
+                        <div class="mb-3">
+                            <label for="LastName" class="form-label">Last Name</label>
+                            <input type="text" name="LastName" class="form-control" required minlength="3" id="LastName" />
+                        </div>
 
-    <div class="form-group">
-        <label for="Email" class="form-label">Email</label>
-        <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email" required />
-    </div>
+                        <div class="mb-3">
+                            <label for="Email" class="form-label">Email</label>
+                            <input type="email" name="Email" class="form-control" required id="Email" />
+                        </div>
 
-    <div class="form-group">
-        <label for="RoleId" class="form-label">Role</label>
-        <select class="form-control" id="RoleId" name="RoleId" required>
-            <option value="1">Admin</option>
-            <option value="2">User</option>
-        </select>
-    </div>
+                        <div class="mb-3">
+                            <label for="PasswordHash" class="form-label">Password</label>
+                            <input type="password" name="PasswordHash" class="form-control" required minlength="6" id="PasswordHash" />
+                        </div>
 
-    <div class="form-group form-check">
-        <input type="checkbox" class="form-check-input" id="IsActive" name="IsActive" checked />
-        <label class="form-check-label" for="IsActive">Active</label>
-    </div>
+                        <div class="mb-3">
+                            <label for="ConfirmPassword" class="form-label">Confirm Password</label>
+                            <input type="password" name="ConfirmPassword" class="form-control" required id="ConfirmPassword" />
+                        </div>
 
-    <div class="form-group">
-        <label for="Password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="Password" name="Password" required />
-    </div>
+                        <!-- Role Dropdown -->
+                        <div class="mb-3">
+                            <label for="RoleId" class="form-label">Role</label>
+                            <select name="RoleId" class="form-control" required id="RoleId">
+                                <option value="">Select Role</option>
+                                <option value="1">Admin</option>
+                                <option value="2">User</option>
+                                <option value="3">Manager</option>
+                                <option value="4">HR</option>
+                            </select>
+                        </div>
 
-    <div class="form-group text-center mt-4">
-        <button type="submit" class="btn btn-primary">Create User</button>
+                        <!-- Active Status Dropdown -->
+                        <div class="mb-3">
+                            <label for="IsActive" class="form-label">Active Status</label>
+                            <select name="IsActive" class="form-control" required id="IsActive">
+                                <option value="true">Active</option>
+                                <option value="false">Inactive</option>
+                            </select>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-flex justify-content-center mt-4">
+                            <button type="submit" class="btn btn-success btn-lg">Add User</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </form>
-
-<div class="text-center mt-4">
-    <a href="@Url.Action("Index", "Admin")" class="btn btn-secondary">Back to User List</a>
-</div>
