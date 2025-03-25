@@ -15,13 +15,14 @@ builder.Services.AddAuthentication("Cookies")
 builder.Services.AddAuthorization();
 
 // Add session services
-builder.Services.AddDistributedMemoryCache();
+
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+builder.Services.AddDistributedMemoryCache();
 
 var app = builder.Build();
 

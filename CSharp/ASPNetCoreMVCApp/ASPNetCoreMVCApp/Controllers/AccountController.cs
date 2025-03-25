@@ -60,23 +60,35 @@ namespace ASPNetCoreMVCApp.Controllers
             using SqlConnection conn = DatabaseHelper.GetConnection();
             conn.Open();
 
-            using SqlCommand cmd = new("SELECT Id, PasswordHash FROM Users WHERE Email = @Email AND IsActive = 1", conn);
+            using SqlCommand cmd = new("SELECT Id, PasswordHash, RoleId FROM Users WHERE Email = @Email AND IsActive = 1", conn);
             cmd.Parameters.AddWithValue("@Email", email);
+
             using SqlDataReader reader = cmd.ExecuteReader();
 
             if (reader.Read() && AESHelper.Decrypt(reader["PasswordHash"].ToString()) == password)
             {
-                // Store UserId in session
-                HttpContext.Session.SetInt32("UserId", Convert.ToInt32(reader["Id"]));
+                int userId = Convert.ToInt32(reader["Id"]);
+                int roleId = Convert.ToInt32(reader["RoleId"]); // Fetch RoleId
 
-                return RedirectToAction("Index", "Home");
+                // Store UserId & RoleId in session
+                HttpContext.Session.SetInt32("UserId", userId);
+                HttpContext.Session.SetInt32("UserRoleId", roleId);  // Fix session key
+
+                // Redirect based on role
+                if (roleId == 1)
+                {
+                    return RedirectToAction("Index", "Admin"); // Admin Redirect
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home"); // Normal User Redirect
+                }
             }
 
             ViewBag.Error = "Invalid credentials.";
             return View();
         }
 
-      
         public IActionResult Logout()
         {
             HttpContext.Session.Clear(); // Clear session on logout

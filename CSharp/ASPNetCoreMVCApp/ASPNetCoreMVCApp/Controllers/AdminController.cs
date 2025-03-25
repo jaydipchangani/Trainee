@@ -3,24 +3,33 @@ using System.Collections.Generic;
 using Microsoft.Data.SqlClient;
 using ASPNetCoreMVCApp.Models;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Authorization;
 
 namespace ASPNetCoreMVCApp.Controllers
 {
-    [Authorize(Roles = "1")]
     public class AdminController : Controller
     {
         public IActionResult Index()
         {
-            if (HttpContext.Session.GetInt32("RoleId") != 1)
-                return Unauthorized();
+            int? userId = HttpContext.Session.GetInt32("UserId");
+            int? roleId = HttpContext.Session.GetInt32("UserRoleId");  // Fix session key
 
-            return View();
+            // Check if the user is logged in
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account"); // Redirect to login
+            }
+            // Check if the user is NOT an Admin
+            if (roleId != 1)
+            {
+                return RedirectToAction("AccessDenied", "Account"); // Redirect unauthorized users
+            }
+
+            return View(); // Show Admin Dashboard
         }
 
         public IActionResult Users()
         {
-            if (HttpContext.Session.GetInt32("RoleId") != 1)
+            if (HttpContext.Session.GetInt32("UserRoleId") != 1) // Fix session key
                 return Unauthorized();
 
             List<User> users = new();
@@ -46,7 +55,7 @@ namespace ASPNetCoreMVCApp.Controllers
 
         public IActionResult Roles()
         {
-            if (HttpContext.Session.GetInt32("RoleId") != 1)
+            if (HttpContext.Session.GetInt32("UserRoleId") != 1)  // Fix session key
                 return Unauthorized();
 
             List<Role> roles = new();
@@ -65,7 +74,7 @@ namespace ASPNetCoreMVCApp.Controllers
         [HttpPost]
         public IActionResult AddRole(string roleName)
         {
-            if (HttpContext.Session.GetInt32("RoleId") != 1)
+            if (HttpContext.Session.GetInt32("UserRoleId") != 1)  // Fix session key
                 return Unauthorized();
 
             using SqlConnection conn = DatabaseHelper.GetConnection();
@@ -79,7 +88,7 @@ namespace ASPNetCoreMVCApp.Controllers
 
         public IActionResult InactiveUsers()
         {
-            if (HttpContext.Session.GetInt32("RoleId") != 1)
+            if (HttpContext.Session.GetInt32("UserRoleId") != 1)  // Fix session key
                 return Unauthorized();
 
             List<User> users = new();
@@ -106,7 +115,7 @@ namespace ASPNetCoreMVCApp.Controllers
         [HttpPost]
         public IActionResult ToggleUserStatus(int id, bool isActive)
         {
-            if (HttpContext.Session.GetInt32("RoleId") != 1)
+            if (HttpContext.Session.GetInt32("UserRoleId") != 1)  // Fix session key
                 return Unauthorized();
 
             using SqlConnection conn = DatabaseHelper.GetConnection();
