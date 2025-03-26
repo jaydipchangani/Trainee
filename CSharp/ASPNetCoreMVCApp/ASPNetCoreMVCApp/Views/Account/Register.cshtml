@@ -1,38 +1,49 @@
-﻿@{
+﻿@model ASPNetCoreMVCApp.Models.User
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2 class="text-center my-4 text-primary">Register</h2>
 
-@if (ViewBag.ErrorMessage != null)
+@if (!ViewData.ModelState.IsValid)
 {
-    <div class="alert alert-danger text-center">@ViewBag.ErrorMessage</div>
+    <div class="alert alert-danger text-center">
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <p>@error.ErrorMessage</p>
+        }
+    </div>
 }
 
 <form asp-action="Register" method="post">
     <div class="mb-3">
         <label for="FirstName" class="form-label">First Name</label>
         <input type="text" name="FirstName" class="form-control" required minlength="3" id="FirstName" />
+        <span class="text-danger">@Html.ValidationMessageFor(m => m.FirstName)</span>
     </div>
 
     <div class="mb-3">
         <label for="LastName" class="form-label">Last Name</label>
         <input type="text" name="LastName" class="form-control" required minlength="3" id="LastName" />
+        <span class="text-danger">@Html.ValidationMessageFor(m => m.LastName)</span>
     </div>
 
     <div class="mb-3">
         <label for="Email" class="form-label">Email</label>
         <input type="email" name="Email" class="form-control" required id="Email" />
+        <span class="text-danger">@Html.ValidationMessageFor(m => m.Email)</span>
     </div>
 
     <div class="mb-3">
         <label for="PasswordHash" class="form-label">Password</label>
         <input type="password" name="PasswordHash" class="form-control" required minlength="6" id="PasswordHash" />
+        <span class="text-danger">@Html.ValidationMessageFor(m => m.PasswordHash)</span>
     </div>
 
     <div class="mb-3">
         <label for="ConfirmPassword" class="form-label">Confirm Password</label>
         <input type="password" name="ConfirmPassword" class="form-control" required id="ConfirmPassword" />
+        <span class="text-danger">@Html.ValidationMessageFor(m => m.ConfirmPassword)</span>
     </div>
 
     <div class="d-flex justify-content-center mt-4">
@@ -43,3 +54,9 @@
         Already have an account? <a asp-controller="Account" asp-action="Login">Login here</a>
     </p>
 </form>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
+}

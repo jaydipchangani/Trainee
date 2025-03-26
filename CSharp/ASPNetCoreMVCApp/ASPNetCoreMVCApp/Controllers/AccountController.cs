@@ -22,17 +22,27 @@ namespace ASPNetCoreMVCApp.Controllers
                 return View();
             }
 
-            if (string.IsNullOrEmpty(user.PasswordHash))
+            if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("Password", "Password is required.");
                 return View(user);
             }
 
-            // Encrypt password correctly
-            string encryptedPassword = AESHelper.Encrypt(user.PasswordHash);
-
             using SqlConnection conn = DatabaseHelper.GetConnection();
             conn.Open();
+
+            // Check if email already exists
+            using SqlCommand checkEmailCmd = new("SELECT COUNT(*) FROM Users WHERE Email = @Email", conn);
+            checkEmailCmd.Parameters.AddWithValue("@Email", user.Email);
+
+            int emailExists = (int)checkEmailCmd.ExecuteScalar();
+            if (emailExists > 0)
+            {
+                ModelState.AddModelError("Email", "This email is already registered.");
+                return View(user);
+            }
+
+            // Encrypt password
+            string encryptedPassword = AESHelper.Encrypt(user.PasswordHash);
 
             using SqlCommand cmd = new("INSERT INTO Users (FirstName, LastName, Email, PasswordHash, RoleId, IsActive) VALUES (@FirstName, @LastName, @Email, @PasswordHash, 2, 1)", conn);
             cmd.Parameters.AddWithValue("@FirstName", user.FirstName ?? (object)DBNull.Value);
@@ -49,10 +59,12 @@ namespace ASPNetCoreMVCApp.Controllers
             }
             else
             {
-                ViewBag.ErrorMessage = "Registration failed. Please try again.";
+                ModelState.AddModelError("", "Registration failed. Please try again.");
                 return View(user);
             }
         }
+
+
 
         [HttpPost]
         public IActionResult Login(string email, string password)
