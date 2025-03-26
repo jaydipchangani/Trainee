@@ -1,8 +1,40 @@
 [
   {
     "ContainingType": "WebAPIFirst.Controllers.ProductsController",
-    "Method": "GetProducts",
-    "RelativePath": "api/Products",
+    "Method": "Post",
+    "RelativePath": "api/Products/AddProduct",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "newProduct",
+        "Type": "WebAPIFirst.Model.Product",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebAPIFirst.Controllers.ProductsController",
+    "Method": "Delete",
+    "RelativePath": "api/Products/DeleteProductById",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebAPIFirst.Controllers.ProductsController",
+    "Method": "Get",
+    "RelativePath": "api/Products/GetAllProducts",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -11,24 +43,8 @@
   },
   {
     "ContainingType": "WebAPIFirst.Controllers.ProductsController",
-    "Method": "DeleteProduct",
-    "RelativePath": "api/Products/{id}",
-    "HttpMethod": "DELETE",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "id",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "WebAPIFirst.Controllers.ProductsController",
-    "Method": "GetProduct",
-    "RelativePath": "api/Products/{name}",
+    "Method": "Get",
+    "RelativePath": "api/Products/GetProductsByName",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -36,6 +52,27 @@
       {
         "Name": "name",
         "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "WebAPIFirst.Controllers.ProductsController",
+    "Method": "Put",
+    "RelativePath": "api/Products/UpdateProductById",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "updateProduct",
+        "Type": "WebAPIFirst.Model.Product",
         "IsRequired": true
       }
     ],
