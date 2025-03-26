@@ -10,8 +10,8 @@ namespace WebAPIFirst.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private List<Product> LoadProducts() => FileHelper.ReadFromJsonFile<Database>()?.Products ?? new List<Product>();
-        private void SaveProducts(List<Product> products) => FileHelper.WriteToJsonFile(new Database { Products = products });
+        private List<Product> LoadProducts() => FileHelper.ReadFromJsonFile<Database>()?.Products ?? new List<Product>();   //json to obj ,db obj mathi prd list , null
+        private void SaveProducts(List<Product> products) => FileHelper.WriteToJsonFile(new Database { Products = products });  //obj yo json 
 
         [HttpGet("GetAllProducts")]
         public IActionResult Get()
