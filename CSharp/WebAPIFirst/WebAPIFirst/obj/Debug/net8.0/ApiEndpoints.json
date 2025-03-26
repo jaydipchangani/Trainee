@@ -2,7 +2,7 @@
   {
     "ContainingType": "WebAPIFirst.Controllers.ProductsController",
     "Method": "Post",
-    "RelativePath": "api/Products/AddProduct",
+    "RelativePath": "api/products/AddProduct",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -18,7 +18,7 @@
   {
     "ContainingType": "WebAPIFirst.Controllers.ProductsController",
     "Method": "Delete",
-    "RelativePath": "api/Products/DeleteProductById",
+    "RelativePath": "api/products/DeleteProductById",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -34,7 +34,7 @@
   {
     "ContainingType": "WebAPIFirst.Controllers.ProductsController",
     "Method": "Get",
-    "RelativePath": "api/Products/GetAllProducts",
+    "RelativePath": "api/products/GetAllProducts",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -44,7 +44,7 @@
   {
     "ContainingType": "WebAPIFirst.Controllers.ProductsController",
     "Method": "Get",
-    "RelativePath": "api/Products/GetProductsById",
+    "RelativePath": "api/products/GetProductsById",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -60,7 +60,7 @@
   {
     "ContainingType": "WebAPIFirst.Controllers.ProductsController",
     "Method": "Put",
-    "RelativePath": "api/Products/UpdateProductById",
+    "RelativePath": "api/products/UpdateProductById",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,

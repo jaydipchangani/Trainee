@@ -6,8 +6,9 @@ using WebAPIFirst.Model;
 
 namespace WebAPIFirst.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/products")]
     [ApiController]
+    [Produces("application/json")]
     public class ProductsController : ControllerBase
     {
 
