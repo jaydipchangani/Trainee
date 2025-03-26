@@ -9,42 +9,61 @@
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
         <div class="container">
-            <a class="navbar-brand" href="/">MyApp</a>
+            <a class="navbar-brand fw-bold">MyApp</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-center">
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <p>Welcome, @User.Identity.Name</p>
+                        @* <li class="nav-item me-3 text-white"> *@
+                        @*     Welcome, <strong>@User.Identity.Name</strong> *@
+                        @* </li> *@
 
-                        @if (User.IsInRole("1")) // Admin role (RoleId = 1)
+                        @if (User.IsInRole("1"))  // Admin role (RoleId = 1)
                         {
-                            <a href="/Admin/Index">Admin Panel</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    Admin Panel
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="/Admin/Index">Dashboard</a></li>
+                                    <li><a class="dropdown-item" href="/Admin/ManageUsers">Manage Users</a></li>
+                                </ul>
+                            </li>
                         }
 
-                        <a href="/Account/Logout">Logout</a>
+                        <li class="nav-item">
+                            <a class="btn btn-outline-light btn-sm" href="/Account/Logout">Logout</a>
+                        </li>
                     }
                     else
                     {
-                        <a href="/Account/Login">Login</a>
+                        <li class="nav-item">
+                            <a class="btn btn-primary btn-sm" href="/Account/Login">Login</a>
+                        </li>
                     }
                 </ul>
             </div>
         </div>
     </nav>
 
+    <!-- Main Content -->
     <div class="container mt-4">
         @RenderBody()
     </div>
 
-    <footer class="text-center py-3 mt-5 bg-light">
-        <p>&copy; @DateTime.Now.Year - MyApp</p>
+    <!-- Footer -->
+    <footer class="text-center py-3 mt-5 bg-light shadow-sm">
+        <p class="mb-0 text-muted">&copy; @DateTime.Now.Year - MyApp. All Rights Reserved.</p>
     </footer>
 
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

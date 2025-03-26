@@ -10,8 +10,9 @@
         <!-- Display Logged-In User's First Name -->
         @if (User.Identity.IsAuthenticated)
         {
-            var firstName = User.Claims.FirstOrDefault(c => c.Type == "FirstName")?.Value;
-            if (firstName != null)
+            var firstName = TempData["FirstName"] as string;
+
+            if (!string.IsNullOrEmpty(firstName))
             {
                 <div class="alert alert-success mt-4">
                     <h4>Hello, @firstName!</h4>
@@ -39,5 +40,5 @@
     </div>
 </div>
 
-<!-- You can also add Bootstrap CDN for styling -->
+<!-- Bootstrap CDN -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css" rel="stylesheet" />

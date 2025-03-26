@@ -60,34 +60,53 @@ namespace ASPNetCoreMVCApp.Controllers
             using SqlConnection conn = DatabaseHelper.GetConnection();
             conn.Open();
 
-            using SqlCommand cmd = new("SELECT Id, PasswordHash, RoleId FROM Users WHERE Email = @Email AND IsActive = 1", conn);
+            using SqlCommand cmd = new(@"SELECT Id, FirstName, PasswordHash, RoleId, IsActive FROM Users WHERE Email = @Email", conn);
             cmd.Parameters.AddWithValue("@Email", email);
 
             using SqlDataReader reader = cmd.ExecuteReader();
 
-            if (reader.Read() && AESHelper.Decrypt(reader["PasswordHash"].ToString()) == password)
+            if (reader.Read())
             {
-                int userId = Convert.ToInt32(reader["Id"]);
-                int roleId = Convert.ToInt32(reader["RoleId"]); // Fetch RoleId
+                bool isActive = Convert.ToBoolean(reader["IsActive"]);
 
-                // Store UserId & RoleId in session
-                HttpContext.Session.SetInt32("UserId", userId);
-                HttpContext.Session.SetInt32("UserRoleId", roleId);  // Fix session key
-
-                // Redirect based on role
-                if (roleId == 1)
+                if (!isActive)
                 {
-                    return RedirectToAction("Index", "Admin"); // Admin Redirect
+                    ViewBag.ErrorMessage = "Your account is inactive. Please contact support.";
+                    return View();
+                }
+
+                if (AESHelper.Decrypt(reader["PasswordHash"].ToString()) == password)
+                {
+                    int userId = Convert.ToInt32(reader["Id"]);
+                    int roleId = Convert.ToInt32(reader["RoleId"]);
+                    string firstName = reader["FirstName"].ToString(); // Fetch FirstName
+
+                    // Store UserId & RoleId in session
+                    HttpContext.Session.SetInt32("UserId", userId);
+                    HttpContext.Session.SetInt32("UserRoleId", roleId);
+
+                    // Store FirstName in TempData
+                    TempData["FirstName"] = firstName;
+
+                    // Redirect based on role
+                    return roleId == 1
+                        ? RedirectToAction("Index", "Admin")  // Admin Redirect
+                        : RedirectToAction("Index", "Home");  // Normal User Redirect
                 }
                 else
                 {
-                    return RedirectToAction("Index", "Home"); // Normal User Redirect
+                    ViewBag.ErrorMessage = "Invalid password. Please try again.";
+                    return View();
                 }
             }
-
-            ViewBag.Error = "Invalid credentials.";
-            return View();
+            else
+            {
+                ViewBag.ErrorMessage = "No account found with this email.";
+                return View();
+            }
         }
+
+
 
         public IActionResult Logout()
         {
