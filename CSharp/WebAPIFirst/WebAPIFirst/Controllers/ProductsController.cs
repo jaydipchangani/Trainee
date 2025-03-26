@@ -23,7 +23,7 @@ namespace WebAPIFirst.Controllers
         [HttpGet("GetAllProducts")]
         public IActionResult Get()
         {
-            return Ok(products);
+            return Ok(new ApiResponse(1,"All data fetched",products));
         }
 
         [HttpGet("GetProductsByName")]
@@ -31,9 +31,9 @@ namespace WebAPIFirst.Controllers
         {
             var product = products.FirstOrDefault(e => e.Name == name);
             if (product == null)
-                return NotFound(new { message = "Product not found" });
+                return NotFound(new ApiResponse(0, "Product not found",product));
 
-            return Ok(product);
+            return Ok(new ApiResponse(1,"Data Fetched by name", product) );
         }
 
         [HttpDelete("DeleteProductById")]
@@ -42,23 +42,23 @@ namespace WebAPIFirst.Controllers
             var product = products.FirstOrDefault(e => e.Id == id);
             if (product == null)
             {
-                return NotFound(new { message = "Product not found" });
+                return NotFound(new ApiResponse(0, "Product not found", product));
             }
             products.Remove(product);
 
-            return Ok(new { message = "Product Deleted" });
+            return Ok(new ApiResponse(1, "Product Deleted Successfully", product));
         }
 
         [HttpPost("AddProduct")]
         public IActionResult Post([FromBody] Product newProduct)
         {
             if (newProduct == null || string.IsNullOrWhiteSpace(newProduct.Name) || string.IsNullOrWhiteSpace(newProduct.Description))
-                return BadRequest(new { message = "Invalid product data" });
+                return BadRequest(new ApiResponse(0, "Invalid Product data", newProduct));
 
             newProduct.Id = products.Count > 0 ? products.Max(p => p.Id) + 1 : 1;
             products.Add(newProduct);
 
-            return CreatedAtAction(nameof(Get), new { id = newProduct.Id }, newProduct);
+            return CreatedAtAction(nameof(Get), new { id = newProduct.Id }, new ApiResponse(1, "Product added successfully", newProduct));
         }
 
         [HttpPut("UpdateProductById")]
@@ -67,7 +67,7 @@ namespace WebAPIFirst.Controllers
             var product = products.FirstOrDefault(p => p.Id == id);
             if (product == null)
             {
-                return NotFound(new { message = "Product not found" });
+                return NotFound(new ApiResponse(0, "Product not found",product));
             }
 
             product.Name = updateProduct.Name;
@@ -75,7 +75,7 @@ namespace WebAPIFirst.Controllers
             product.Price = updateProduct.Price;
             product.Status = updateProduct.Status;
 
-            return Ok(product);
+            return Ok(new ApiResponse(1, "Product updated successfully", product));
         }
     }
 }
