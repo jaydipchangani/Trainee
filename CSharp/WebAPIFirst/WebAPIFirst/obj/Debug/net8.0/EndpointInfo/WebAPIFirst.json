@@ -17,17 +17,18 @@
         }
       }
     },
-    "/api/Products/GetProductsByName": {
+    "/api/Products/GetProductsById": {
       "get": {
         "tags": [
           "Products"
         ],
         "parameters": [
           {
-            "name": "name",
+            "name": "id",
             "in": "query",
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],

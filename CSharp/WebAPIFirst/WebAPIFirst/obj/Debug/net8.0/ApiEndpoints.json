@@ -44,14 +44,14 @@
   {
     "ContainingType": "WebAPIFirst.Controllers.ProductsController",
     "Method": "Get",
-    "RelativePath": "api/Products/GetProductsByName",
+    "RelativePath": "api/Products/GetProductsById",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "name",
-        "Type": "System.String",
+        "Name": "id",
+        "Type": "System.Int32",
         "IsRequired": false
       }
     ],

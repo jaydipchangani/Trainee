@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "KFSr3/1FXlZxLqbgY/PPyDld2GFQ33L24SsUpmcuI6A=",
+  "Source": "WebAPITest",
+  "BasePath": "_content/WebAPITest",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

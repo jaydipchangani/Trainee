@@ -26,10 +26,10 @@ namespace WebAPIFirst.Controllers
             return Ok(new ApiResponse(1,"All data fetched",products));
         }
 
-        [HttpGet("GetProductsByName")]
-        public IActionResult Get(string name)
+        [HttpGet("GetProductsById")]
+        public IActionResult Get(int id)
         {
-            var product = products.FirstOrDefault(e => e.Name == name);
+            var product = products.FirstOrDefault(e => e.Id == id);
             if (product == null)
                 return NotFound(new ApiResponse(0, "Product not found",product));
 
