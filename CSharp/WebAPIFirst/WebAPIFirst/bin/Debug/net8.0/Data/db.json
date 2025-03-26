@@ -1,0 +1,25 @@
+﻿{
+    "products": [
+        {
+            "id": 1,
+            "name": "Laptop",
+            "description": "High-performance laptop",
+            "price": 1200.00,
+            "status": "Active"
+        },
+        {
+            "id": 2,
+            "name": "Smartphone",
+            "description": "Latest model smartphone",
+            "price": 800.00,
+            "status": "Active"
+        },
+        {
+            "id": 3,
+            "name": "Headphones",
+            "description": "Wireless noise-canceling headphones",
+            "price": 150.00,
+            "status": "Inactive"
+        }
+    ]
+}

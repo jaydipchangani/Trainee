@@ -2,7 +2,7 @@
   {
     "ContainingType": "WebAPIFirst.Controllers.ProductsController",
     "Method": "Post",
-    "RelativePath": "api/products/AddProduct",
+    "RelativePath": "api/Products/AddProduct",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -18,7 +18,7 @@
   {
     "ContainingType": "WebAPIFirst.Controllers.ProductsController",
     "Method": "Delete",
-    "RelativePath": "api/products/DeleteProductById",
+    "RelativePath": "api/Products/DeleteProductById/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -26,7 +26,7 @@
       {
         "Name": "id",
         "Type": "System.Int32",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -34,7 +34,7 @@
   {
     "ContainingType": "WebAPIFirst.Controllers.ProductsController",
     "Method": "Get",
-    "RelativePath": "api/products/GetAllProducts",
+    "RelativePath": "api/Products/GetAllProducts",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -44,7 +44,7 @@
   {
     "ContainingType": "WebAPIFirst.Controllers.ProductsController",
     "Method": "Get",
-    "RelativePath": "api/products/GetProductsById",
+    "RelativePath": "api/Products/GetProductsById/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -52,7 +52,7 @@
       {
         "Name": "id",
         "Type": "System.Int32",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -60,7 +60,7 @@
   {
     "ContainingType": "WebAPIFirst.Controllers.ProductsController",
     "Method": "Put",
-    "RelativePath": "api/products/UpdateProductById",
+    "RelativePath": "api/Products/UpdateProductById/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -68,7 +68,7 @@
       {
         "Name": "id",
         "Type": "System.Int32",
-        "IsRequired": false
+        "IsRequired": true
       },
       {
         "Name": "updateProduct",

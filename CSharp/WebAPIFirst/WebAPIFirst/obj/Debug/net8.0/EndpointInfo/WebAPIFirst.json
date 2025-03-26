@@ -5,7 +5,7 @@
     "version": "1.0"
   },
   "paths": {
-    "/api/products/GetAllProducts": {
+    "/api/Products/GetAllProducts": {
       "get": {
         "tags": [
           "Products"
@@ -17,7 +17,7 @@
         }
       }
     },
-    "/api/products/GetProductsById": {
+    "/api/Products/GetProductsById/{id}": {
       "get": {
         "tags": [
           "Products"
@@ -25,7 +25,8 @@
         "parameters": [
           {
             "name": "id",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -39,7 +40,7 @@
         }
       }
     },
-    "/api/products/DeleteProductById": {
+    "/api/Products/DeleteProductById/{id}": {
       "delete": {
         "tags": [
           "Products"
@@ -47,7 +48,8 @@
         "parameters": [
           {
             "name": "id",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -61,7 +63,7 @@
         }
       }
     },
-    "/api/products/AddProduct": {
+    "/api/Products/AddProduct": {
       "post": {
         "tags": [
           "Products"
@@ -92,7 +94,7 @@
         }
       }
     },
-    "/api/products/UpdateProductById": {
+    "/api/Products/UpdateProductById/{id}": {
       "put": {
         "tags": [
           "Products"
@@ -100,7 +102,8 @@
         "parameters": [
           {
             "name": "id",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int32"

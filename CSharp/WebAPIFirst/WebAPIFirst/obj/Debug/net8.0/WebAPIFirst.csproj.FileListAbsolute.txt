@@ -35,3 +35,5 @@ C:\Trainee_new\CSharp\WebAPIFirst\WebAPIFirst\obj\Debug\net8.0\refint\WebAPIFirs
 C:\Trainee_new\CSharp\WebAPIFirst\WebAPIFirst\obj\Debug\net8.0\WebAPIFirst.pdb
 C:\Trainee_new\CSharp\WebAPIFirst\WebAPIFirst\obj\Debug\net8.0\WebAPIFirst.genruntimeconfig.cache
 C:\Trainee_new\CSharp\WebAPIFirst\WebAPIFirst\obj\Debug\net8.0\ref\WebAPIFirst.dll
+C:\Trainee_new\CSharp\WebAPIFirst\WebAPIFirst\bin\Debug\net8.0\Data\db.json
+C:\Trainee_new\CSharp\WebAPIFirst\WebAPIFirst\bin\Debug\net8.0\Newtonsoft.Json.dll
