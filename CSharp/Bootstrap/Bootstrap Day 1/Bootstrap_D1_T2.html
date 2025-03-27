@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .box1{
+            height: 301px;
+        }
+        .box2, .box3, .box4{
+            height: 95px;
+        }
+        .box5{
+            height: 200px;
+        }
+        .box6{
+            height: 93px;
+        }
+        .box{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+
+        <div class="row g-2">
+
+            <!-- First Column, adjusts based on screen size -->
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="box box1 border border-dark d-flex justify-content-center align-items-center">1.</div>
+            </div>
+
+            <!-- Second Column, adjusts based on screen size -->
+            <div class="col-12 col-md-3 col-lg-4">
+                <div class="row g-2">
+                    <div class="col-12">
+                        <div class="box border border-dark box2">2.</div>
+                    </div>
+                    <div class="col-12">
+                        <div class="box border border-dark box3">3.</div>
+                    </div>
+                    <div class="col-12">
+                        <div class="box border border-dark box4">4.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Third Column, adjusts based on screen size -->
+            <div class="col-12 col-md-3 col-lg-4">
+                <div class="row g-2">
+                    <div class="col-12">
+                        <div class="box border border-dark box5">5.</div>
+                    </div>
+                    <div class="col-12">
+                        <div class="box border border-dark box6">6.</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</body>
+</html>

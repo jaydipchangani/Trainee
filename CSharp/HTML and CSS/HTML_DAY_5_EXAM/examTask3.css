@@ -1,0 +1,44 @@
+body{
+    font-family: sans-serif;
+}
+.mainDiv{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+}
+#invoicetable{
+    border-collapse: collapse;
+    width: 45%;
+    border: 1px soild black;
+
+}
+#invoicetable th{
+    background-color: #dedede;
+    text-align: left;
+    color: red;
+}
+
+#invoicetable th,td{
+    height: 30px;
+    width: 10%;
+}
+
+#timeTable{
+    width: 45%;
+    text-align: center;
+    border: 1px solid black;
+}
+
+#timeTable .leftAlign{
+    text-align: left;
+
+}
+.heightRow{
+    height: 50px;
+}
+
+table{
+    border-color: blue;
+}

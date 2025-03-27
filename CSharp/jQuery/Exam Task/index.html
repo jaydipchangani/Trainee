@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intercompany Transactions</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .header {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .content {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .transaction-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 5px;
+            background-color: #fff;
+            cursor: move;
+        }
+
+        .transaction-column {
+            width: 30%;
+            text-align: center;
+        }
+
+        .transaction-column.middle {
+            width: 40%;
+        }
+
+        .drag-over {
+            background-color: #f1f1f1;
+        }
+
+    </style>
+</head>
+
+<body class="container">
+    <div class="header">Intercompany Transactions</div>
+
+    <div class="row mb-3">
+        <div class="col text-start fw-bold">Company 1</div>
+        <div class="col text-end fw-bold">Company 2</div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-auto">
+            <div class="btn-group" role="group">
+                <button class="btn btn-primary" onclick="loadData('unreconciled')">Unreconciled</button>
+                <button class="btn btn-success" onclick="loadData('reconciled')">Reconciled</button>
+                <button class="btn btn-danger" onclick="loadData('exclude')">Exclude</button>
+            </div>
+        </div>
+        <div class="col text-center">
+            <span class="fw-bold">Debit:</span> <span id="debit">0</span> |
+            <span class="fw-bold">Credit:</span> <span id="credit">0</span>
+        </div>
+        <div class="col text-end">
+            <button class="btn btn-warning" onclick="reconcile()">Reconciliation</button>
+        </div>
+    </div>
+
+    <div class="content">
+        <div id="transactionContainer">
+            <!-- Transaction rows will be loaded here -->
+        </div>
+    </div>
+
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reconciliation</title>
+    <style>
+        .transaction-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px;
+        }
+
+        .transaction-column {
+            width: 30%;
+            min-height: 150px;
+            border: 2px dashed #ccc;
+            padding: 10px;
+            overflow-y: auto;
+        }
+
+        .transaction {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            padding: 10px;
+            cursor: move;
+        }
+
+        .transaction-column.droppable {
+            background-color: #f9f9f9;
+        }
+
+        .transaction-column.droppable-hover {
+            background-color: #e6f7ff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Transaction Reconciliation</h1>
+    <div class="transaction-container">
+        <div class="transaction-column" id="fromCompanyColumn">
+            <h3>From Company</h3>
+            <!-- From Company Transactions will appear here -->
+        </div>
+        <div class="transaction-column droppable" id="middleColumn">
+            <h3>Middle Column</h3>
+            <!-- Dragged Transactions will appear here -->
+        </div>
+        <div class="transaction-column" id="toCompanyColumn">
+            <h3>To Company</h3>
+            <!-- To Company Transactions will appear here -->
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://trainingsampleapi.satva.solutions/api/Reconciliation/GetTransaction'; // Replace with actual API URL
+
+        function getJWTToken() {
+            return localStorage.getItem('jwtToken'); // Ensure JWT token is stored in localStorage
+        }
+
+        async function fetchTransactions() {
+            const JWT_TOKEN = getJWTToken();
+
+            if (!JWT_TOKEN) {
+                console.error('JWT Token is not available in local storage');
+                return;
+            }
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${JWT_TOKEN}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data && data.fromCompanyTransaction && data.toCompanyTransaction) {
+                    localStorage.setItem('fromCompanyTransaction', JSON.stringify(data.fromCompanyTransaction));
+                    localStorage.setItem('toCompanyTransaction', JSON.stringify(data.toCompanyTransaction));
+                }
+
+                renderTransactions(data.fromCompanyTransaction, data.toCompanyTransaction);
+            } catch (error) {
+                console.error('Error fetching transactions:', error);
+            }
+        }
+
+        function renderTransactions(fromCompanyTransaction, toCompanyTransaction) {
+            const fromColumn = document.getElementById('fromCompanyColumn');
+            const toColumn = document.getElementById('toCompanyColumn');
+
+            // Clear previous transactions
+            fromColumn.innerHTML = '<h3>From Company</h3>';
+            toColumn.innerHTML = '<h3>To Company</h3>';
+
+            // Create and append fromCompanyTransaction divs
+            fromCompanyTransaction.forEach(transaction => {
+                const div = createTransactionDiv(transaction, "From Company");
+                fromColumn.appendChild(div);
+            });
+
+            // Create and append toCompanyTransaction divs
+            toCompanyTransaction.forEach(transaction => {
+                const div = createTransactionDiv(transaction, "To Company");
+                toColumn.appendChild(div);
+            });
+        }
+
+        function createTransactionDiv(transaction, companyType) {
+            const div = document.createElement('div');
+            div.classList.add('transaction');
+            div.setAttribute('draggable', 'true');
+            div.dataset.transactionId = transaction.transactionId;
+
+            div.innerHTML = `
+                ${companyType} | ${transaction.transactionType} | ${transaction.date} | Amount: ${transaction.amount}
+            `;
+
+            // Add event listeners for drag events
+            div.addEventListener('dragstart', (event) => {
+                event.dataTransfer.setData('text', event.target.dataset.transactionId);
+            });
+
+            return div;
+        }
+
+        // Handle drop in middle column
+        const middleColumn = document.getElementById('middleColumn');
+
+        middleColumn.addEventListener('dragover', (event) => {
+            event.preventDefault(); // Necessary for drop to work
+            middleColumn.classList.add('droppable-hover');
+        });
+
+        middleColumn.addEventListener('dragleave', () => {
+            middleColumn.classList.remove('droppable-hover');
+        });
+
+        middleColumn.addEventListener('drop', (event) => {
+            event.preventDefault();
+            middleColumn.classList.remove('droppable-hover');
+
+            const transactionId = event.dataTransfer.getData('text');
+            const div = document.querySelector(`[data-transaction-id="${transactionId}"]`);
+
+            if (div) {
+                // Remove the div from the original column (From or To Company)
+                div.parentNode.removeChild(div);
+
+                // Append the div to the middle column
+                middleColumn.appendChild(div);
+            }
+        });
+
+        function loadData() {
+            const storedFromTransactions = localStorage.getItem('fromCompanyTransaction');
+            const storedToTransactions = localStorage.getItem('toCompanyTransaction');
+
+            if (storedFromTransactions && storedToTransactions) {
+                renderTransactions(JSON.parse(storedFromTransactions), JSON.parse(storedToTransactions));
+            } else {
+                fetchTransactions();
+            }
+        }
+
+        window.onload = function () {
+            loadData();
+        };
+    </script>
+</body>
+</html>
+
+</body>
+
+</html>

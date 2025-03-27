@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Form Table</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="container-fluid p-4">
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead class="table-light">
+                <tr>
+                    <th class="required">Project Name</th>
+                    <th class="required">TimeLog Date</th>
+                    <th class="required">Phase</th>
+                    <th class="required">Status</th>
+                    <th class="required">Logged Hours</th>
+                    <th class="required">Billable Hours</th>
+                    <th class="required">Notes</th>
+                    <th>Out of Stock</th>
+                    <th>BC Link</th>
+                    <th>BC Description</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- Rows will be added here dynamically -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="d-flex justify-content-between mt-3">
+        <button class="btn btn-danger" id="deleteLastRow" onclick="deleteLastRow();">Delete Last Row</button>
+        <button class="btn btn-primary" id="addRow" onclick="addNewRow();">Add Row</button>
+    </div>
+
+    <div class="d-flex justify-content-between mt-3 row">
+        <div class="multiplebtndiv">
+            <div class="col-md-3">
+                <div class="input-group">
+                    <!-- <label class="form-label">Example textarea</label> -->
+                    <input class="form-control" type="number" maxlength="5" min="0" max="5" value="1" id="multiplerowInput">
+                </div>
+            </div>
+            
+            <div class="col-md-3">
+                <button class="btn btn-primary w-100" onclick="addMultipleRows();">Add Multiple Rows</button>
+            </div>
+
+        </div>
+        
+    </div>
+    
+    <div class="table-responsive mt-3">
+        <table class="table table-bordered table-dark" id="dataTable">
+            <thead>
+                <tr>
+                    <th>Project Name</th>
+                    <th>Timelog Date</th>
+                    <th>Phase</th>
+                    <th>Status</th>
+                    <th>Logged Hours</th>
+                    <th>Billable Hours</th>
+                    <th>Notes</th>
+                    <th>Out Of Stock</th>
+                    <th>BC Link</th>
+                    <th>BC Description</th>
+                </tr>
+            </thead>
+            <tbody id="tablebodymain">
+                <!-- Rows will be dynamically added here -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="alert alert-success hide " id="success" role="alert" >
+        New row added successfully!
+      </div>
+    
+
+    
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+</body>
+<script src="script.js"></script>
+
+</html>

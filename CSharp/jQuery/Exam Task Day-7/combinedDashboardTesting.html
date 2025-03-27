@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reconciliation App</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container-fluid mt-4">
+    <ul class="nav nav-tabs" id="tabs">
+      <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#unreconciled">Unreconciled</a></li>
+      <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#reconciled">Reconciled</a></li>
+      <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#excluded">Excluded</a></li>
+    </ul>
+
+    <div class="tab-content mt-3">
+      <!-- Unreconciled Section -->
+      <div id="unreconciled" class="tab-pane fade show active">
+        <div class="row">
+          <div class="col" id="company1">Company 1</div>
+          <div class="col" id="company2">Company 2</div>
+        </div>
+        <button class="btn btn-primary mt-3" onclick="reconciliate()">Reconciliate</button>
+      </div>
+
+      <!-- Reconciled Section -->
+      <div id="reconciled" class="tab-pane fade">
+        <div class="row">
+          <div class="col" id="reconciled-company1">Reconciled Company 1</div>
+          <div class="col" id="reconciled-common">Reconciled Common</div>
+          <div class="col" id="reconciled-company2">Reconciled Company 2</div>
+        </div>
+        <button class="btn btn-warning mt-3" onclick="unreconciliate()">Unreconciliate</button>
+      </div>
+
+      <!-- Excluded Section -->
+      <div id="excluded" class="tab-pane fade">
+        <div class="col" id="excluded-transactions">Excluded Transactions</div>
+        <button class="btn btn-danger mt-3" onclick="restoreExcluded()">Restore Excluded</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    image.png
+  </script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>jQuery Example</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+</head>
+<body>
+
+  <h1 id="myclass">Hello, jQuery!</h1>
+  <p class="p1">Hello my dear friend, welocme to my website !!</p>
+  <p class="p2">Hello my dear friend, welocme to my website second time !!</p>
+  <p class="p3">Hello my dear friend, welocme to my website third time !!</p>
+
+  <h2 id="myDiv">Hover me for arrow change </h2>
+
+  <button id="myButton">Click Me Now</button>
+  <table >
+    <tr>
+        <td><label for="fname">Full Name</label></td>
+        <td><input type="text" required id="fname" name="fname" placeholder="First Name">
+            <input type="text" required id="mname" name="mname" placeholder="Middle Name">
+            <input type="text" required id="lname" name="lname" placeholder="Last Name">
+        </td>
+    </tr>
+
+    <tr>
+        <td><label for="mobile">Mobile Number</label></td>
+        <td><input type="tel" required id="mobile" name="mobile" placeholder="123-456-7890" pattern="[0-9]{3}[0-9]{3}[0-9]{4}"></td>
+    </tr>
+
+    <tr>
+        <td><label for="mail">Email id</label></td>
+        <td><input type="email" required id="email" name="email" placeholder="abc@gmail.com"></td>
+    </tr>
+
+    <hr style="height: 5px; background-color:black; width:100% ">  
+
+    
+</table>  
+
+<hr style="height: 5px; background-color:black; width:100% "> 
+
+<h1 id="hp">What to hide me ?</h1>
+<button id="hide">Hide</button>
+<button id="show">Show</button>
+
+<hr style="height: 5px; background-color:black; width:100% "> 
+
+<h1 id="color-change">What to change my background color ?</h1>
+<button id="change">Change</button>
+<button id="nochange">No Change</button>
+
+
+  <script>
+    $(document).ready(function(){
+
+    $(".p1").css("color", "blue"); 
+
+    $("#myclass").html("New content"); 
+
+    $(".p2").append("<p>This is a new paragraph.</p>"); 
+
+    $(".p3").css("background-color", "lightgrey"); 
+
+    $("#myButton").css("background-color","pink")
+    });
+
+    $("#myButton").click(function(){
+        alert("Button clicked!");
+      });
+
+    $("#myButton").mouseover(function(){
+        $(this).css("background-color", "yellow");
+      });
+    
+    $("#myDiv").mouseover(function(){
+        $("body").css("cursor", "pointer"); 
+      });
+
+    $("#myDiv").mouseout(function(){
+        $("body").css("cursor", "default"); 
+      });
+
+      $("input").focus(function(){
+        $(this).css("background-color", "lightgrey");
+      });
+
+      $("input").blur(function(){
+        $(this).css("background-color", "lightblue");
+      });
+
+      $("#hide").click(function(){
+        $("#hp").hide();
+      });
+      $("#show").click(function(){
+        $("#hp").show();
+      });
+
+      $("#change").click(function(){
+        $("#color-change").css("background-color","lightblue");
+      });
+      $("#nochange").click(function(){
+        $("#color-change").css("background-color","white");
+      });
+
+    
+  </script>
+
+</body>
+</html>

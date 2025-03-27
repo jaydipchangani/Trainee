@@ -1,0 +1,58 @@
+.btn{
+            min-height: 50px;
+            width: 10vw;
+        }
+
+        @media (max-width: 576px) {
+            .btn {
+                width: 80%;
+                margin: 5px auto !important;
+            }
+        }
+
+        .rounded-3{
+            border-radius: 50px !important;
+        }
+        .shadow-lg{
+            box-shadow: 3px 3px #aaaaaa !important;
+        }
+        .btn-success-gradient {
+            background: linear-gradient(to top, #28a745 50%, #218838b5 50%);
+            color: white;
+            border: none;
+        }
+        .btn-danger-gradient {
+            background: linear-gradient(to top, #dc3545 50%, #c82333b5 50%);
+            color: white;
+            border: none;
+        }
+        .btn-warning-gradient {
+            background: linear-gradient(to top, #ffc107 50%, #e0a800b5 50%);
+            color: white;
+            border: none;
+        }
+        .btn-info-gradient {
+            background: linear-gradient(to top, #17a2b8 50%, #138496b5 50%);
+            color: white;
+            border: none;
+        }
+        .btn-primary-gradient {
+            background: linear-gradient(to top, #007bff 50%, #0056b3b5 50%);
+            color: white;
+            border: none;
+        }
+        .bg-yellow{
+            background-color: lightyellow !important;
+        }
+
+        body{
+            display: flex;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            min-width: 100vw;
+            background-color: lightyellow;
+            font-family: 'Roboto', sans-serif;
+            
+        }

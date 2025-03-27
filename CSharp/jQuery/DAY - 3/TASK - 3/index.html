@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Slab Calculator</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h2 class="mb-4 text-center">Tax Slab Calculator</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <form id="taxForm" class="needs-validation" novalidate>
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label for="name">Name:</label>
+                            <input type="text" class="form-control" id="name" required pattern="[A-Za-z ]{2,50}">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="mobile">Mobile:</label>
+                            <input type="tel" class="form-control" id="mobile" required pattern="[0-9]{10}">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6 form-group">
+                            <label for="birthdate">Birthdate:</label>
+                            <input type="date" class="form-control" id="birthdate" required>
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label for="gender">Gender:</label>
+                            <select class="form-select" id="gender" required>
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-4 form-group">
+                            <label for="income">Income:</label>
+                            <input type="number" class="form-control" id="income" required min="0" step="1000">
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label for="loan">Loan:</label>
+                            <input type="number" class="form-control" id="loan" required min="0" step="1000">
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label for="investment">Investment:</label>
+                            <input type="number" class="form-control" id="investment" required min="0" step="1000">
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12 text-center">
+                            <button type="submit" class="btn btn-primary px-4">Calculate</button>
+                            <button type="reset" class="btn btn-secondary ms-2 px-4">Reset</button>
+                        </div>
+                    </div>
+                </form>
+
+                <div id="taxResult" class="tax-result mt-4">
+                    <h4>Tax Calculation Results</h4>
+                    <div id="resultDetails"></div>
+                </div>
+
+                <div class="tax-slab">
+                    <h3>Tax Slabs</h3>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h5>For Men:</h5>
+                            <ul class="list-unstyled">
+                                <li>Up to 2.4L - No Tax</li>
+                                <li>2.4L to 6L - 10%</li>
+                                <li>Above 6L - 20%</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <h5>For Women:</h5>
+                            <ul class="list-unstyled">
+                                <li>Up to 2.6L - No Tax</li>
+                                <li>2.6L to 7L - 10%</li>
+                                <li>Above 7L - 20%</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <h5>For Senior Citizen:</h5>
+                            <ul class="list-unstyled">
+                                <li>Up to 3L - No Tax</li>
+                                <li>3L to 7L - 10%</li>
+                                <li>Above 7L - 20%</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <h2>Tax Exemptions:</h2>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p>1. 80% of the Loan amount or 20% of total income, whichever is less, is non-taxable.</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p>2. Any amount invested up to 1,00,000 INR (1L) is non-taxable.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

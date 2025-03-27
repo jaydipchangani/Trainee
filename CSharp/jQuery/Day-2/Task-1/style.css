@@ -1,0 +1,104 @@
+/* Base styles for all screen sizes */
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #a6d6e3;
+    font-family: Arial, sans-serif;
+}
+
+.calculator {
+    margin-top: 10px;
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    width: calc(100vw - 20px); 
+    max-width: 500px; 
+}
+
+.display {
+    background-color: #333;
+    color: white;
+    text-align: right;
+    padding: 20px;
+    font-size: 2rem;
+}
+
+table {
+    width: 100%;
+    height: 100%;
+    border-collapse: collapse;
+}
+
+td {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+button {
+    width: 100%;
+    padding: 20px;
+    font-size: 1.5rem;
+    border: 1px solid #ddd;
+    background-color: #f8f8f8;
+    cursor: pointer;
+    outline: none;
+}
+
+button:hover {
+    background-color: #e0e0e0;
+}
+
+button.orange {
+    background-color: #f77f49;
+    color: white;
+}
+
+button.orange:hover {
+    background-color: #f66128;
+}
+
+.equal {
+    background-color: #f77f49;
+    color: black;
+    padding: 20px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    outline: none;
+}
+
+.equal:hover {
+    background-color: #f66128;
+}
+
+.color {
+    cursor: pointer;
+    background-color: rgb(214, 214, 214);
+    color: #333;
+}
+
+.color:hover {
+    background-color: #e0e0e0;
+}
+
+@media (max-width: 768px) {
+    table {
+        font-size: 1rem; 
+    }
+
+    button {
+        padding: 15px; 
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    /* Adjustments for tablets */
+    table {
+        font-size: 1.2rem; /* Increase font size slightly */
+    }
+}
