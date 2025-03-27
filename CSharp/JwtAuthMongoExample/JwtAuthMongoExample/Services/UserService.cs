@@ -35,26 +35,22 @@ namespace JwtAuthMongoExample.Services
                 throw new Exception("Password is invalid. It must be at least 8 characters long and contain an uppercase letter, a lowercase letter, a digit, and a special character.");
             }
 
-
-            // Check if user already exists
             var userExists = await _context.Users.Find(u => u.Username == username).FirstOrDefaultAsync();
             if (userExists != null)
             {
                 throw new Exception("User already exists");
             }
 
-            // Hash password
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
 
             var user = new User
             {
-                Id = Guid.NewGuid(),  // Generate a new GUID for the Id
+                Id = Guid.NewGuid(),
                 Username = username,
                 PasswordHash = passwordHash,
-                Role = "User"  // Set a default role
+                Role = "User" 
             };
 
-            // Insert into MongoDB (MongoDB will store GUID as string due to the BsonRepresentation attribute)
             await _context.Users.InsertOneAsync(user);
 
             // Return JWT token
@@ -87,7 +83,7 @@ namespace JwtAuthMongoExample.Services
         {
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),  // Convert GUID to string
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()), 
                 new Claim(ClaimTypes.Name, user.Username),
                 new Claim(ClaimTypes.Role, user.Role)
             };

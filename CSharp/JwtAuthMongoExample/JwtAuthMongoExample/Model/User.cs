@@ -1,16 +1,18 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace JwtAuthMongoExample.Models
 {
     public class User
     {
-        [BsonId]  // Mark as the primary key in MongoDB
-        [BsonRepresentation(MongoDB.Bson.BsonType.String)] // Store GUID as a string
+        [BsonId] 
+        [BsonRepresentation(MongoDB.Bson.BsonType.String)] 
         public Guid Id { get; set; }
-
         public string Username { get; set; }
+
         public string PasswordHash { get; set; }
+
         public string Role { get; set; }
     }
 }

@@ -8,10 +8,8 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 
-// Register MongoDbContext with DI container
 builder.Services.AddScoped<MongoDbContext>();
 
-// Register IUserService and UserService for Dependency Injection
 builder.Services.AddScoped<IUserService, UserService>();
 
 // Add other services and configurations

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using JwtAuthMongoExample.Services;
 using System.Threading.Tasks;
+using JwtAuthMongoExample.Model;
 
 namespace JwtAuthMongoExample.Controllers
 {
@@ -20,7 +21,7 @@ namespace JwtAuthMongoExample.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);  // Return validation errors if the model is invalid
+                return BadRequest(ModelState); 
             }
 
             try
@@ -54,15 +55,5 @@ namespace JwtAuthMongoExample.Controllers
         }
     }
 
-    public class UserRegistrationModel
-    {
-        public string Username { get; set; }
-        public string Password { get; set; }
-    }
-
-    public class UserLoginModel
-    {
-        public string Username { get; set; }
-        public string Password { get; set; }
-    }
+   
 }
