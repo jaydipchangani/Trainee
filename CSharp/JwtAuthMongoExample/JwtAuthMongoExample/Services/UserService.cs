@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace JwtAuthMongoExample.Services
 {
@@ -24,6 +25,17 @@ namespace JwtAuthMongoExample.Services
 
         public async Task<string> RegisterAsync(string username, string password)
         {
+            if (string.IsNullOrWhiteSpace(username) || !Regex.IsMatch(username, @"^[a-zA-Z]+$") || username.Length < 3 || username.Length > 50)
+            {
+                throw new Exception("Username is invalid. It should only contain letters and be between 3 and 50 characters.");
+            }
+
+            if (string.IsNullOrWhiteSpace(password) || !Regex.IsMatch(password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"))
+            {
+                throw new Exception("Password is invalid. It must be at least 8 characters long and contain an uppercase letter, a lowercase letter, a digit, and a special character.");
+            }
+
+
             // Check if user already exists
             var userExists = await _context.Users.Find(u => u.Username == username).FirstOrDefaultAsync();
             if (userExists != null)
@@ -46,11 +58,22 @@ namespace JwtAuthMongoExample.Services
             await _context.Users.InsertOneAsync(user);
 
             // Return JWT token
-            return GenerateJwtToken(user);
+            return "User Registered !!";
         }
 
         public async Task<string> LoginAsync(string username, string password)
         {
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                throw new Exception("Username cannot be empty.");
+            }
+
+            // Validate password
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                throw new Exception("Password cannot be empty.");
+            }
+
             var user = await _context.Users.Find(u => u.Username == username).FirstOrDefaultAsync();
             if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
             {
