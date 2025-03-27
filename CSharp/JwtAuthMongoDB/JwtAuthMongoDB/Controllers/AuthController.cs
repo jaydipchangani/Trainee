@@ -71,10 +71,12 @@ namespace JwtAuthMongoDB.Controllers
         }
 
         [HttpGet("protected")]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "Bearer")] // Ensures only JWT Bearer tokens are used
         public IActionResult ProtectedEndpoint()
         {
+            // If token is invalid or missing, the request will be rejected before reaching here
             return Ok("You have accessed a protected route!");
         }
+
     }
 }
