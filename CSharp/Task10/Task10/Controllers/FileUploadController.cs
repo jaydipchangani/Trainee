@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Task10.Models;
+using Task10.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -7,8 +9,16 @@ namespace Task10.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class FileUploadController : ControllerBase
+
     {
+        private readonly MongoDbService _mongoDbService;
         private readonly string _uploadFolder = "UploadFiles";
+
+        public FileUploadController(MongoDbService mongoDbService)
+        {
+            _mongoDbService = mongoDbService;
+        }
+
 
         [HttpPost("UploadSingleFile")]
         public async Task<IActionResult> UploadFile(IFormFile file)
@@ -50,9 +60,51 @@ namespace Task10.Controllers
             }
 
         [HttpPost("UploadFileWithData")]
-        public async Task<IActionResult> UploadFileWithData()
+        public async Task<IActionResult> UploadFileWithData([FromForm] Product model)
         {
-            return Ok(new { message = "Test" });
+            if (model.File == null || model.File.Length == 0)
+            {
+                return BadRequest("No file uploaded.");
+            }
+
+            try
+            {
+                string uploadFile = Path.Combine(Directory.GetCurrentDirectory(), _uploadFolder);
+                if (!Directory.Exists(uploadFile))
+                {
+                    Directory.CreateDirectory(uploadFile);
+                }
+
+                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.File.FileName);
+                string filePath = Path.Combine(uploadFile, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await model.File.CopyToAsync(stream);
+                }
+
+                var fileData = new Product
+                {
+                    ProductName = model.ProductName,
+                    ProductDescription = model.ProductDescription,
+                    FilePath = filePath
+                };
+
+                await _mongoDbService.InsertProduct(fileData);
+
+                return Ok(new
+                {
+                    message = "File uploaded successfully!",
+                    filePath,
+                    title = model.ProductName,
+                    description = model.ProductDescription
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Error uploading file", error = ex.Message });
+            }
         }
+
     }
 }
