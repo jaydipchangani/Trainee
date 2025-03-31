@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Task10.Data;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Task10.Services;
+using System.Collections.Generic;
+using Task10.Models;
 
 namespace Task10.Controllers
 {
@@ -9,23 +10,22 @@ namespace Task10.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        private readonly CsvService _csvService;
+        private readonly MongoDbService _mongoDbService;
 
-        public ProductController(IConfiguration configuration)
+        public ProductController(MongoDbService mongoDbService)
         {
-            _csvService = new CsvService(configuration);
+            _mongoDbService = mongoDbService;
         }
 
         [HttpGet("ExportToCsv")]
-        public IActionResult ExportToCsv()
+        public async Task<IActionResult> ExportToCsv()
         {
-            var products = ProductData.GetProducts();
-            string filePath = _csvService.ExportProductsToCsv(products);
+            string result = await _mongoDbService.ExportProductsToCsv();
 
-            if (filePath.StartsWith("Error"))
-                return BadRequest(filePath);
+            if (result.Contains("Error"))
+                return BadRequest(result);
 
-            return Ok(new { Message = "CSV Exported Successfully!", FilePath = filePath });
+            return Ok(new { Message = "CSV Exported Successfully!", FilePath = result });
         }
     }
 }

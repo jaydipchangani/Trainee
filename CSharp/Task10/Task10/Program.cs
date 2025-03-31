@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
+builder.Services.Configure<CsvSettings>(builder.Configuration.GetSection("CsvSettings"));
 builder.Services.AddSingleton<MongoDbService>();
 
 

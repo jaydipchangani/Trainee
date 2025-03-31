@@ -12,7 +12,7 @@ namespace Task10.Controllers
 
     {
         private readonly MongoDbService _mongoDbService;
-        private readonly string _uploadFolder = "UploadFiles";
+        private readonly string _uploadFolder = "Uploads";
 
 
         public FileUploadController(MongoDbService mongoDbService)
