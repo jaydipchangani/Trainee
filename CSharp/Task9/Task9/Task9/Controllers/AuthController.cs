@@ -56,7 +56,7 @@ namespace Task9.Controllers
             var refreshToken = _tokenServices.GenerateRefreshToken();
 
             user.RefreshToken = refreshToken;
-            user.RefreshTokenExpiry = DateTime.UtcNow.AddDays(7);
+            user.RefreshTokenExpiry = DateTime.UtcNow.AddDays(1);
 
             await _userManager.UpdateAsync(user);
 
