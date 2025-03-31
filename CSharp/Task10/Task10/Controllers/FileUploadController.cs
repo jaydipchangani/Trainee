@@ -10,7 +10,7 @@ namespace Task10.Controllers
     {
         private readonly string _uploadFolder = "UploadFiles";
 
-        [HttpPost("UploadFile")]
+        [HttpPost("UploadSingleFile")]
         public async Task<IActionResult> UploadFile(IFormFile file)
         {
             if (file == null || file.Length == 0)
@@ -25,8 +25,14 @@ namespace Task10.Controllers
                         Directory.CreateDirectory(uploadPath);
                     }
 
-                    // Generate a unique filename
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                string[] allowedExtensions = { ".jpg", ".png", ".pdf" };
+                if (!allowedExtensions.Contains(Path.GetExtension(file.FileName).ToLower()))
+                {
+                    return BadRequest("Only .jpg, .png, and .pdf files are allowed.");
+                }
+
+                // Generate a unique filename
+                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                     string filePath = Path.Combine(uploadPath, fileName);
 
                     // Save the file
@@ -43,6 +49,10 @@ namespace Task10.Controllers
                 }
             }
 
-        
+        [HttpPost("UploadFileWithData")]
+        public async Task<IActionResult> UploadFileWithData()
+        {
+            return Ok(new { message = "Test" });
+        }
     }
 }
