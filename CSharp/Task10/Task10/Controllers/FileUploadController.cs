@@ -14,6 +14,7 @@ namespace Task10.Controllers
         private readonly MongoDbService _mongoDbService;
         private readonly string _uploadFolder = "UploadFiles";
 
+
         public FileUploadController(MongoDbService mongoDbService)
         {
             _mongoDbService = mongoDbService;
@@ -107,7 +108,6 @@ namespace Task10.Controllers
         }
 
         [HttpPost("UploadMultipleFiles")]
-        [HttpPost("upload-multiple")]
         public async Task<IActionResult> UploadMultipleFiles(
         [FromForm] string title,
         [FromForm] string description,
@@ -154,6 +154,9 @@ namespace Task10.Controllers
                 return StatusCode(500, new { message = "Error uploading files", error = ex.Message });
             }
         }
+
+
+
 
     }
 }
