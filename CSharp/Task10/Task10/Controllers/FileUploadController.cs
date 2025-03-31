@@ -106,5 +106,54 @@ namespace Task10.Controllers
             }
         }
 
+        [HttpPost("UploadMultipleFiles")]
+        [HttpPost("upload-multiple")]
+        public async Task<IActionResult> UploadMultipleFiles(
+        [FromForm] string title,
+        [FromForm] string description,
+        [FromForm] IFormFileCollection files)
+        {
+            if (files == null || files.Count == 0)
+            {
+                return BadRequest("No files uploaded.");
+            }
+
+            try
+            {
+                string uploadPath = Path.Combine(Directory.GetCurrentDirectory(), _uploadFolder);
+                if (!Directory.Exists(uploadPath))
+                {
+                    Directory.CreateDirectory(uploadPath); // Ensure folder exists
+                }
+
+                List<string> filePaths = new List<string>();
+
+                foreach (var file in files)
+                {
+                    string fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+                    string filePath = Path.Combine(uploadPath, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+
+                    filePaths.Add(filePath);
+                }
+
+                return Ok(new
+                {
+                    message = "Files uploaded successfully!",
+                    storedFilePaths = filePaths,
+                    title,
+                    description
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Error uploading files", error = ex.Message });
+            }
+        }
+
     }
 }
