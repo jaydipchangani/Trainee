@@ -1,20 +1,23 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
+import ProductList from "./ProductList";
+import { Layout } from "antd";
+
+const { Header, Content, Footer } = Layout;
 
 function App() {
-    const [message, setMessage] = useState("");
-
-    useEffect(() => {
-        axios.get("https://localhost:7193/weatherforecast")
-            .then(response => setMessage(JSON.stringify(response.data)))
-            .catch(error => console.error("Error:", error));
-    }, []);
-
     return (
-        <div>
-            <h1>Data from .NET:</h1>
-            <p>{message}</p>
-        </div>
+        <Layout style={{ minHeight: "100vh" }}>
+            <Header style={{ color: "white", fontSize: "20px", textAlign: "center" }}>
+                My Product Manager
+            </Header>
+            <Content style={{ padding: "20px" }}>
+               
+                <ProductList />
+            </Content>
+            <Footer style={{ textAlign: "center" }}>
+                © 2025 My Company
+            </Footer>
+        </Layout>
     );
 }
 
