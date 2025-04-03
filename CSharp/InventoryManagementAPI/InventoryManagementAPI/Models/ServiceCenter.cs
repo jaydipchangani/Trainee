@@ -30,6 +30,6 @@ namespace InventoryManagementAPI.Models
         public DateTime ModifiedAt { get; set; } = DateTime.Now;
 
         [Required]
-        public bool Status { get; set; } = true; // Default active
+        public int Status { get; set; } = 1; // Default active
     }
 }

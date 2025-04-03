@@ -1,35 +1,19 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace InventoryManagementAPI.Models
 {
     public class User
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-
-        [Required]
-        [MaxLength(100)]
+        public int Id { get; set; } // Auto-increment primary key
         public string Username { get; set; }
-
-        [Required]
-        [EmailAddress]
-        [MaxLength(100)]
         public string Email { get; set; }
-
-        [Required]
-        [MaxLength(15)]
         public string PhoneNumber { get; set; }
+        public string Role { get; set; } // e.g., "Admin" or "User"
+        public int Status { get; set; } = 1; // 1 for active, 0 for inactive
+        public string PasswordHash { get; set; } //  Ensure this is present
+        public int? ServiceCenterId { get; set; } // Only required if Role is "Admin"
 
-        [Required]
-        [MaxLength(50)]
-        public string Role { get; set; } // Admin, User
-
-        [Required]
-        public bool Status { get; set; } = true; // Default active
-
-        public int? ServiceCenterId { get; set; }
-        public virtual ServiceCenter? ServiceCenter { get; set; }
+        public ServiceCenter? ServiceCenter { get; set; } // Navigation property
     }
+
 }

@@ -1,33 +1,37 @@
 ﻿using InventoryManagementAPI.Data;
 using InventoryManagementAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-
-[Route("api/servicecenters")]
-[ApiController]
-public class ServiceCenterController : ControllerBase
+namespace InventoryManagementAPI.Controllers
 {
-    private readonly ApplicationDbContext _context;
-
-    public ServiceCenterController(ApplicationDbContext context)
+    [Route("api/servicecenters")]
+    [ApiController]
+    [Authorize(Roles = "Admin")]
+    public class ServiceCenterController : ControllerBase
     {
-        _context = context;
-    }
+        private readonly ApplicationDbContext _context;
 
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<ServiceCenter>>> GetServiceCenters()
-    {
-        return await _context.ServiceCenters.ToListAsync();
-    }
+        public ServiceCenterController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
-    [HttpPost]
-    public async Task<ActionResult<ServiceCenter>> CreateServiceCenter(ServiceCenter serviceCenter)
-    {
-        serviceCenter.Status = true;
-        serviceCenter.ModifiedAt = DateTime.Now;
-        _context.ServiceCenters.Add(serviceCenter);
-        await _context.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetServiceCenters), new { id = serviceCenter.Id }, serviceCenter);
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var centers = await _context.ServiceCenters.ToListAsync();
+            return Ok(centers);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(ServiceCenter serviceCenter)
+        {
+            serviceCenter.Status = 1;
+            _context.ServiceCenters.Add(serviceCenter);
+            await _context.SaveChangesAsync();
+            return Ok("Service Center created.");
+        }
     }
 }
