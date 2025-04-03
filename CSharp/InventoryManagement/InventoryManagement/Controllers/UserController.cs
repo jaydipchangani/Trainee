@@ -1,58 +1,55 @@
-﻿using InventoryManagement.Data;
-using InventoryManagement.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace InventoryManagement.Controllers
+[Route("api/[controller]")]
+[ApiController]
+public class UsersController : ControllerBase
 {
-    [Route("api/users")]
-    [ApiController]
-    [Authorize(Roles = "Admin")]
-    public class UserController : ControllerBase
+    private readonly UserManager<ApplicationUser> _userManager;
+
+    public UsersController(UserManager<ApplicationUser> userManager)
     {
-        private readonly AppDbContext _context;
+        _userManager = userManager;
+    }
 
-        public UserController(AppDbContext context)
+    // GET: api/users (Admin Only)
+    [HttpGet]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<IEnumerable<ApplicationUser>>> GetUsers()
+    {
+        return await _userManager.Users.ToListAsync();
+    }
+
+    // POST: api/users (Admin Only)
+    [HttpPost]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> CreateUser([FromBody] RegisterUserDTO model)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var user = new ApplicationUser
         {
-            _context = context;
+            UserName = model.Email,
+            Email = model.Email,
+            FullName = model.FullName,
+            PhoneNumber = model.PhoneNumber,
+            Role = model.Role,
+            ServiceCenterId = model.Role == "Admin" ? model.ServiceCenterId : null
+        };
+
+        var result = await _userManager.CreateAsync(user, model.Password);
+        if (result.Succeeded)
+        {
+            await _userManager.AddToRoleAsync(user, model.Role);
+            return Ok("User created successfully!");
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetUsers() => Ok(await _context.Users.ToListAsync());
-
-        [HttpPost]
-        public async Task<IActionResult> CreateUser(User user)
-        {
-            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-            return Ok(user);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id, User updatedUser)
-        {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null) return NotFound();
-
-            user.Username = updatedUser.Username;
-            user.Role = updatedUser.Role;
-            _context.Update(user);
-            await _context.SaveChangesAsync();
-            return Ok(user);
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
-        {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null) return NotFound();
-
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
-            return Ok();
-        }
+        return BadRequest(result.Errors);
     }
 }
