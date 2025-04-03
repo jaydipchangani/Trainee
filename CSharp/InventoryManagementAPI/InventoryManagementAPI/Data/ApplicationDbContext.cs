@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using InventoryManagementAPI.Models;
-using System.Collections.Generic;
-using System.Reflection.Emit;
 
 namespace InventoryManagementAPI.Data
 {
@@ -14,11 +12,16 @@ namespace InventoryManagementAPI.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Ensure ServiceCenter is not automatically created
             modelBuilder.Entity<User>()
                 .HasOne(u => u.ServiceCenter)
-                .WithMany()
+                .WithMany() // Changed from WithOne() to WithMany()
                 .HasForeignKey(u => u.ServiceCenterId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.Restrict); //  Prevent automatic ServiceCenter creation
+
+
+            modelBuilder.Entity<ServiceCenter>().ToTable("ServiceCenters");
         }
     }
 }

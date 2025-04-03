@@ -35,6 +35,21 @@ namespace InventoryManagementAPI.Controllers
             //  Hash Password Before Storing
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(user.PasswordHash);
 
+            //  Ensure ServiceCenter is NOT automatically assigned
+            if (user.Role != "Admin")
+            {
+                user.ServiceCenterId = null; // Only Admin users can have a ServiceCenter
+            }
+            else if (user.ServiceCenterId.HasValue)
+            {
+                // Validate that the provided ServiceCenterId exists
+                var existingServiceCenter = await _context.ServiceCenters.FindAsync(user.ServiceCenterId);
+                if (existingServiceCenter == null)
+                {
+                    return BadRequest(new { message = "Invalid Service Center ID." });
+                }
+            }
+
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
@@ -59,24 +74,43 @@ namespace InventoryManagementAPI.Controllers
         //  Generate JWT Token
         private string GenerateJwtToken(User user)
         {
-            var claims = new[]
+            if (user == null || string.IsNullOrEmpty(user.Email))
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                new Claim(ClaimTypes.Role, user.Role),
-                new Claim("UserId", user.Id.ToString())
-            };
+                throw new ArgumentException("Invalid user data for token generation.");
+            }
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSettings:Key"]));
-            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var claims = new List<Claim>
+    {
+        new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        new Claim("UserId", user.Id.ToString())
+    };
+
+            // ✅ Ensure Role claim is added correctly
+            if (!string.IsNullOrEmpty(user.Role))
+            {
+                claims.Add(new Claim(ClaimTypes.Role, user.Role));
+            }
+            else
+            {
+                throw new Exception("User role is missing!");
+            }
+
+            var key = Encoding.UTF8.GetBytes(_config["JwtSettings:Key"] ?? throw new InvalidOperationException("JWT Key is missing"));
+            var credentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256);
+
             var token = new JwtSecurityToken(
-                _config["JwtSettings:Issuer"],
-                _config["JwtSettings:Audience"],
-                claims,
+                issuer: _config["JwtSettings:Issuer"],
+                audience: _config["JwtSettings:Audience"],
+                claims: claims,
                 expires: DateTime.UtcNow.AddHours(1),
-                signingCredentials: credentials);
+                signingCredentials: credentials
+            );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+
     }
 
     //  Login Model for User Authentication

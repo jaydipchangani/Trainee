@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventoryManagementAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250403125341_InitialMigration")]
+    [Migration("20250403135430_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -58,8 +58,8 @@ namespace InventoryManagementAPI.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

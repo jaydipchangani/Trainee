@@ -18,13 +18,16 @@ namespace InventoryManagementAPI.Controllers
             _context = context;
         }
 
-        [HttpGet]
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("users")]
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await _context.Users.ToListAsync();
             return Ok(users);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateUser(User user)
         {

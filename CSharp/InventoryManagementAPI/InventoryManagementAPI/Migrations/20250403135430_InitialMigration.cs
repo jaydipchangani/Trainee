@@ -23,7 +23,7 @@ namespace InventoryManagementAPI.Migrations
                     Address = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     CreatedBy = table.Column<int>(type: "int", nullable: false),
                     ModifiedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Status = table.Column<bool>(type: "bit", nullable: false)
+                    Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
