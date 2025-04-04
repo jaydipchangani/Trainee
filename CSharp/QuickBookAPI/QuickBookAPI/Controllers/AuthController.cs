@@ -40,6 +40,7 @@ public class AuthController : ControllerBase
         var client = new RestClient(_config["QuickBooks:TokenUrl"]);
         var request = new RestRequest();
         request.Method = Method.Post;
+
         request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
 
         request.AddParameter("client_id", _config["QuickBooks:ClientId"]);
@@ -53,13 +54,16 @@ public class AuthController : ControllerBase
         if (!response.IsSuccessful)
             return BadRequest("Failed to get access token!");
 
-        return Ok(new
+        var tokenData = new
         {
             AccessToken = response.Data.AccessToken,
             RefreshToken = response.Data.RefreshToken,
             ExpiresIn = response.Data.ExpiresIn
-        });
+        };
+
+        return Ok(tokenData);
     }
+
 }
 
 // Response Model
