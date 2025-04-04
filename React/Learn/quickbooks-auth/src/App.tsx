@@ -8,8 +8,8 @@ interface Account {
   Name: string;
   AccountType: string;
   AccountSubType: string;
-  CurrentBalance?: number; // Balance may be undefined
-  BankBalance?: number; // Balance may be undefined
+  CurrentBalance?: number;
+  BankBalance?: number;
 }
 
 const App = () => {
@@ -45,6 +45,9 @@ const App = () => {
           }
         })
         .catch((error) => console.error("Error fetching token:", error));
+    } else {
+      const savedToken = localStorage.getItem("quickbooks_access_token");
+      if (savedToken) setToken(savedToken);
     }
   }, []);
 
@@ -67,6 +70,13 @@ const App = () => {
       .catch((error) => {
         console.error("Error fetching accounts:", error.response?.data || error);
       });
+  };
+
+  const logout = () => {
+    localStorage.clear();
+    setToken(null);
+    setAccounts([]); // Clear account data
+    window.location.reload(); // Refresh to reset the state
   };
 
   const columns = [
@@ -104,8 +114,11 @@ const App = () => {
       {token ? (
         <>
           <p>✅ Connected to QuickBooks!</p>
-          <Button onClick={fetchAccounts} type="primary">
+          <Button onClick={fetchAccounts} type="primary" style={{ marginRight: "10px" }}>
             Fetch QuickBooks Accounts
+          </Button>
+          <Button onClick={logout} type="default" danger>
+            Logout
           </Button>
           <Table columns={columns} dataSource={accounts} rowKey="Id" />
         </>
