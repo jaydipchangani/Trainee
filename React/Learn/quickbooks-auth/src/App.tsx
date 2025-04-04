@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Dashboard from "./Dashboard";
 
 const App = () => {
   const [token, setToken] = useState<string | null>(null);
@@ -47,7 +48,8 @@ const App = () => {
     <div>
       <h1>QuickBooks OAuth Authentication</h1>
       {token ? (
-        <p>✅ Connected to QuickBooks!</p>
+        
+        <h1>This is my DashBoard</h1>
       ) : (
         <a href="https://localhost:7254/api/auth/login">
           <button>Connect to QuickBooks</button>

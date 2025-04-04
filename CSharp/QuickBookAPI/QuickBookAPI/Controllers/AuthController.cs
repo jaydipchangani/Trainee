@@ -3,6 +3,8 @@ using Microsoft.Extensions.Configuration;
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 [Route("api/auth")]
@@ -10,11 +12,14 @@ using System.Threading.Tasks;
 public class AuthController : ControllerBase
 {
     private readonly IConfiguration _config;
+    private readonly HttpClient _httpClient;
 
     public AuthController(IConfiguration config)
     {
         _config = config;
+        _httpClient = new HttpClient();
     }
+
 
     // Step 1: Redirect User to QuickBooks for Login
     [HttpGet("login")]
@@ -30,38 +35,47 @@ public class AuthController : ControllerBase
         return Redirect(authUrl);
     }
 
-    // Step 2: QuickBooks Redirects to Our App with Auth Code
     [HttpGet("callback")]
     public async Task<IActionResult> Callback([FromQuery] string code)
     {
         if (string.IsNullOrEmpty(code))
-            return BadRequest("Authorization code is missing!");
-
-        var client = new RestClient(_config["QuickBooks:TokenUrl"]);
-        var request = new RestRequest();
-        request.Method = Method.Post;
-
-        request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
-
-        request.AddParameter("client_id", _config["QuickBooks:ClientId"]);
-        request.AddParameter("client_secret", _config["QuickBooks:ClientSecret"]);
-        request.AddParameter("grant_type", "authorization_code");
-        request.AddParameter("code", code);
-        request.AddParameter("redirect_uri", _config["QuickBooks:RedirectUri"]);
-
-        var response = await client.ExecuteAsync<OAuthTokenResponse>(request);
-
-        if (!response.IsSuccessful)
-            return BadRequest("Failed to get access token!");
-
-        var tokenData = new
         {
-            AccessToken = response.Data.AccessToken,
-            RefreshToken = response.Data.RefreshToken,
-            ExpiresIn = response.Data.ExpiresIn
+            return BadRequest("Authorization code is missing!");
+        }
+
+        var clientId = _config["QuickBooks:ClientId"];
+        var clientSecret = _config["QuickBooks:ClientSecret"];
+        var redirectUri = _config["QuickBooks:RedirectUri"];
+        var tokenUrl = "https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer";
+
+        // Create Basic Authentication Header
+        var credentials = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{clientId}:{clientSecret}"));
+        var authHeader = $"Basic {credentials}";
+
+        var requestBody = new Dictionary<string, string>
+        {
+            { "grant_type", "authorization_code" },
+            { "code", code },
+            { "redirect_uri", redirectUri }
         };
 
-        return Ok(tokenData);
+        var request = new HttpRequestMessage(HttpMethod.Post, tokenUrl)
+        {
+            Content = new FormUrlEncodedContent(requestBody)
+        };
+        request.Headers.Add("Authorization", authHeader);
+        request.Headers.Add("Accept", "application/json");
+
+        var response = await _httpClient.SendAsync(request);
+        var responseContent = await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode)
+        {
+            Console.WriteLine("QuickBooks OAuth Error: " + responseContent);
+            return BadRequest("Failed to exchange auth code for tokens");
+        }
+
+        return Ok(responseContent);
     }
 
 }
