@@ -23,17 +23,49 @@ namespace SandboxAPI.Controllers
         }
 
         [HttpGet("callback")]
-        public async Task<IActionResult> Callback([FromQuery] string code)
+        public async Task<IActionResult> Callback(string code, string state)
         {
+            if (string.IsNullOrEmpty(code))
+            {
+                Console.WriteLine("❌ Missing OAuth Code");
+                return BadRequest("Missing OAuth Code");
+            }
+
+            Console.WriteLine($"🔑 Received OAuth Code: {code}");
+
+            // Validate state (if required)
+            string savedState = HttpContext.Session.GetString("oauth_state");
+            if (string.IsNullOrEmpty(savedState) || savedState != state)
+            {
+                Console.WriteLine("❌ Invalid OAuth State");
+                return BadRequest("Invalid OAuth State");
+            }
+
             try
             {
-                string token = await _oauthService.GetAccessTokenAsync(code);
-                return Ok(new { accessToken = token });
+                string accessToken = await _oauthService.GetAccessTokenAsync(code);
+                Console.WriteLine($"✅ Access Token: {accessToken}");
+
+                HttpContext.Session.SetString("access_token", accessToken);
+                return Redirect("http://localhost:5173/dashboard"); // Redirect to frontend
             }
-            catch
+            catch (Exception ex)
             {
-                return Unauthorized("OAuth authentication failed");
+                Console.WriteLine($"❌ OAuth Token Exchange Failed: {ex.Message}");
+                return BadRequest("OAuth Token Exchange Failed");
             }
         }
+
+
+
+
+
+
+
+
+
+
     }
+
+
 }
