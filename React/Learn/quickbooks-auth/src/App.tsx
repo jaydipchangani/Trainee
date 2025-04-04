@@ -13,8 +13,12 @@ interface Account {
 }
 
 const App = () => {
-  const [token, setToken] = useState<string | null>(null);
-  const [realmId, setRealmId] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(
+    localStorage.getItem("quickbooks_access_token") || null
+  );
+  const [realmId, setRealmId] = useState<string | null>(
+    localStorage.getItem("quickbooks_realm_id") || null
+  );
   const [accounts, setAccounts] = useState<Account[]>([]);
 
   const getQueryParam = (param: string) => {
@@ -45,24 +49,18 @@ const App = () => {
           }
         })
         .catch((error) => console.error("Error fetching token:", error));
-    } else {
-      const savedToken = localStorage.getItem("quickbooks_access_token");
-      if (savedToken) setToken(savedToken);
     }
   }, []);
 
   const fetchAccounts = () => {
-    const savedToken = localStorage.getItem("quickbooks_access_token");
-    const savedRealmId = localStorage.getItem("quickbooks_realm_id");
-
-    if (!savedToken || !savedRealmId) {
+    if (!token || !realmId) {
       console.error("Access Token or Realm ID is missing!");
       return;
     }
 
     axios
       .get(`https://localhost:7254/api/quickbooks/accounts`, {
-        params: { accessToken: savedToken, realmId: savedRealmId },
+        params: { accessToken: token, realmId },
       })
       .then((response) => {
         setAccounts(response.data.QueryResponse.Account || []);
