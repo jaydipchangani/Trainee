@@ -78,8 +78,48 @@ public class AuthController : ControllerBase
         return Ok(responseContent);
     }
 
+
 }
 
+[Route("api/quickbooks")]
+[ApiController]
+
+public class QuickBooksController : ControllerBase
+{
+    private readonly HttpClient _httpClient;
+
+    public QuickBooksController()
+    {
+        _httpClient = new HttpClient();
+    }
+
+    [HttpGet("accounts")]
+    public async Task<IActionResult> GetAccounts([FromQuery] string accessToken, [FromQuery] string realmId)
+    {
+        if (string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(realmId))
+        {
+            return BadRequest("Missing accessToken or realmId");
+        }
+
+        var apiUrl = $"https://sandbox-quickbooks.api.intuit.com/v3/company/{realmId}/query";
+        var query = "SELECT * FROM Account";
+
+        var request = new HttpRequestMessage(HttpMethod.Get, $"{apiUrl}?query={query}");
+        request.Headers.Add("Authorization", $"Bearer {accessToken}");
+        request.Headers.Add("Accept", "application/json");
+
+        var response = await _httpClient.SendAsync(request);
+        var responseContent = await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode)
+        {
+            Console.WriteLine("QuickBooks API Error: " + responseContent);
+            return BadRequest("Failed to fetch accounts from QuickBooks");
+        }
+
+        return Ok(responseContent);
+    }
+}
 // Response Model
 public class OAuthTokenResponse
 {
