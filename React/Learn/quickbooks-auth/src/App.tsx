@@ -228,9 +228,15 @@ const App = () => {
         ) : (
           <div style={{ marginTop: "2rem", textAlign: "center" }}>
             <a href="https://localhost:7254/api/auth/login">
-              <Button type="primary" size="large">
-                Connect to QuickBooks
-              </Button>
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
+      <Button 
+        type="primary" 
+        size="large" 
+        style={{ backgroundColor: '#4CAF50', borderColor: '#4CAF50' }}
+      >
+        Connect to QuickBooks
+      </Button>
+    </div>
             </a>
           </div>
         )}
