@@ -27,7 +27,6 @@ public class AuthController : ControllerBase
     }
 
 
-    // Step 1: Redirect User to QuickBooks for Login
     [HttpGet("login")]
     public IActionResult Login()
     {
@@ -36,7 +35,7 @@ public class AuthController : ControllerBase
                       "response_type=code&" +
                       $"redirect_uri={_config["QuickBooks:RedirectUri"]}&" +
                       "scope=com.intuit.quickbooks.accounting&" +
-                      "state=xyz123"; // State parameter for security
+                      "state=xyz123"; 
 
         return Redirect(authUrl);
     }
