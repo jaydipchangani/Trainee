@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 [Route("api/auth")]
@@ -51,16 +52,15 @@ public class AuthController : ControllerBase
         var redirectUri = _config["QuickBooks:RedirectUri"];
         var tokenUrl = "https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer";
 
-        // Create Basic Authentication Header
         var credentials = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{clientId}:{clientSecret}"));
         var authHeader = $"Basic {credentials}";
 
         var requestBody = new Dictionary<string, string>
-        {
-            { "grant_type", "authorization_code" },
-            { "code", code },
-            { "redirect_uri", redirectUri }
-        };
+    {
+        { "grant_type", "authorization_code" },
+        { "code", code },
+        { "redirect_uri", redirectUri }
+    };
 
         var request = new HttpRequestMessage(HttpMethod.Post, tokenUrl)
         {
@@ -78,18 +78,28 @@ public class AuthController : ControllerBase
             return BadRequest("Failed to exchange auth code for tokens");
         }
 
-        var tokenResult = JsonSerializer.Deserialize<OAuthTokenResponse>(responseContent);
+        var tokenResult = JsonSerializer.Deserialize<OAuthTokenResponse>(
+            responseContent,
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+        );
 
-        // Store in MongoDB
+        // Ensure tokenResult is not null and has valid values
+        if (tokenResult == null || string.IsNullOrEmpty(tokenResult.AccessToken))
+        {
+            return BadRequest("Failed to deserialize token response");
+        }
+
         await _mongoService.SaveTokenAsync(new TokenRecord
         {
             AccessToken = tokenResult.AccessToken,
             RefreshToken = tokenResult.RefreshToken,
-            ExpiresIn = tokenResult.ExpiresIn
+            ExpiresIn = tokenResult.ExpiresIn,
+            CreatedAt = DateTime.UtcNow
         });
 
         return Ok(responseContent);
     }
+
 
 
 }
@@ -136,7 +146,12 @@ public class QuickBooksController : ControllerBase
 // Response Model
 public class OAuthTokenResponse
 {
+    [JsonPropertyName("access_token")]
     public string AccessToken { get; set; }
+
+    [JsonPropertyName("refresh_token")]
     public string RefreshToken { get; set; }
+
+    [JsonPropertyName("expires_in")]
     public int ExpiresIn { get; set; }
 }
