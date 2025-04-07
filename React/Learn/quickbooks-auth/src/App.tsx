@@ -1,55 +1,25 @@
-<<<<<<< HEAD
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Table, Button, Card, Row, Col, Space, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 
 interface Account {
-  id: string;
-  name: string;
-  accountType: string;
-  accountSubType: string;
-  fullyQualifiedName: string;
-  classification: string;
-  quickBooksId: string;
-  currentBalance?: number;
-  bankBalance?: number;
+  Id: string;
+  Name: string;
+  AccountType: string;
+  AccountSubType: string;
+  CurrentBalance?: number;
+  BankBalance?: number;
 }
-=======
-import React, { useState } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { Card, Row, Col } from "antd";
-import Auth from "./components/Auth";
-import Dashboard from "./components/Dashboard";
-import AccountData from "./components/AccountData";
-import AddAccount from "./components/AddAccount";
-import Menu from "./components/Menu";
->>>>>>> b0b99b40050afc4278297d78f99683eb81d7c477
-
 
 const App = () => {
-
-  const [mongoAccounts, setMongoAccounts] = useState([]);
-
-  const fetchMongoData = () => {
-    axios
-      .get("https://localhost:7254/api/quickbooks/accounts/mongo")
-      .then((response) => {
-        setMongoAccounts(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching MongoDB data:", error.response?.data || error);
-      });
-  };
-
+  const [accounts, setAccounts] = useState<Account[]>([]);
   const [token, setToken] = useState<string | null>(
     localStorage.getItem("quickbooks_access_token")
   );
   const [realmId, setRealmId] = useState<string | null>(
     localStorage.getItem("quickbooks_realm_id")
   );
-<<<<<<< HEAD
-  const [accounts, setAccounts] = useState<Account[]>([]);
   const [dataSource, setDataSource] = useState<"quickbooks" | "mongo" | null>(null);
 
   const getQueryParam = (param: string) => {
@@ -94,8 +64,16 @@ const App = () => {
         params: { accessToken: token, realmId },
       })
       .then((response) => {
-        const accounts = response.data?.QueryResponse?.Account ?? [];
-        setAccounts(accounts);
+        const fetched = response.data?.QueryResponse?.Account ?? [];
+        const mapped: Account[] = fetched.map((acc: any) => ({
+          Id: acc.Id,
+          Name: acc.Name,
+          AccountType: acc.AccountType,
+          AccountSubType: acc.AccountSubType,
+          CurrentBalance: acc.CurrentBalance,
+          BankBalance: acc.BankBalance,
+        }));
+        setAccounts(mapped);
         setDataSource("quickbooks");
       })
       .catch((error) => {
@@ -110,12 +88,12 @@ const App = () => {
       const mongoData = response.data || [];
 
       const mappedData: Account[] = mongoData.map((item: any) => ({
-        Id: item._id?.$oid || "", // fallback to empty string if missing
-        Name: item.Name,
-        AccountType: item.AccountType,
-        AccountSubType: item.AccountSubType,
-        CurrentBalance: 0, // or undefined if you want to hide
-        BankBalance: 0,     // optional
+        Id: item._id?.$oid || item.id || item.quickBooksId || Math.random().toString(36).substr(2, 9),
+        Name: item.name || item.Name || "N/A",
+        AccountType: item.accountType || item.AccountType || "N/A",
+        AccountSubType: item.accountSubType || item.AccountSubType || "N/A",
+        CurrentBalance: item.CurrentBalance ?? 0,
+        BankBalance: item.BankBalance ?? 0,
       }));
 
       setAccounts(mappedData);
@@ -134,69 +112,58 @@ const App = () => {
     window.location.reload();
   };
 
-
   const columns: ColumnsType<Account> = [
-    { title: "Name", dataIndex: "name", key: "name" },
-    { title: "Account Type", dataIndex: "accountType", key: "accountType" },
-    { title: "Detail Type", dataIndex: "accountSubType", key: "accountSubType" },
-    { title: "Classification", dataIndex: "classification", key: "classification" },
-    { title: "QuickBooks ID", dataIndex: "quickBooksId", key: "quickBooksId" },
+    { title: "Name", dataIndex: "Name", key: "Name" },
+    { title: "Account Type", dataIndex: "AccountType", key: "AccountType" },
+    { title: "Detail Type", dataIndex: "AccountSubType", key: "AccountSubType" },
     {
       title: "QuickBooks Balance",
-      dataIndex: "currentBalance",
-      key: "currentBalance",
+      dataIndex: "CurrentBalance",
+      key: "CurrentBalance",
       render: (balance?: number) =>
         balance !== undefined ? `$${balance.toFixed(2)}` : "N/A",
     },
     {
       title: "Bank Balance",
-      dataIndex: "bankBalance",
-      key: "bankBalance",
+      dataIndex: "BankBalance",
+      key: "BankBalance",
       render: (balance?: number) =>
         balance !== undefined ? `$${balance.toFixed(2)}` : "N/A",
     },
     {
       title: "Action",
       key: "action",
-      render: (_: unknown, record: Account) => (
-        <Button type="primary" onClick={() => console.log("View", record.id)}>
+      render: (_, record: Account) => (
+        <Button type="primary" onClick={() => console.log("View", record.Id)}>
           View
         </Button>
       ),
     },
   ];
-  
-  
-=======
 
->>>>>>> b0b99b40050afc4278297d78f99683eb81d7c477
   return (
-    <Router>
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "2rem" }}>
-        <Card bordered style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
-          <Row justify="space-between" align="middle">
+    <div style={{ maxWidth: 1200, margin: "0 auto", padding: "2rem" }}>
+      <Card bordered style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
+        <Row justify="space-between" align="middle">
+          <Col>
+            <h1>QuickBooks OAuth Integration</h1>
+          </Col>
+          {token && (
             <Col>
-              <h1>QuickBooks OAuth Integration</h1>
+              <Button onClick={logout} type="default" danger>
+                Logout
+              </Button>
             </Col>
-            <Col>
-              <Auth setToken={setToken} setRealmId={setRealmId} />
-            </Col>
-          </Row>
+          )}
+        </Row>
 
-<<<<<<< HEAD
         {token ? (
           <>
             <Space style={{ marginTop: "1rem", marginBottom: "1rem" }}>
-              <Button
-                onClick={fetchAccounts}
-                type="primary"
-              >
+              <Button onClick={fetchAccounts} type="primary">
                 Fetch from QuickBooks
               </Button>
-              <Button
-                onClick={fetchFromMongoDB}
-                type="dashed"
-              >
+              <Button onClick={fetchFromMongoDB} type="dashed">
                 Fetch from MongoDB
               </Button>
             </Space>
@@ -212,10 +179,9 @@ const App = () => {
 <Table
   columns={columns}
   dataSource={accounts}
-  rowKey="id"
-  pagination={{ pageSize: 5 }}
+  rowKey={(record) => record.Id || Math.random().toString(36).substr(2, 9)}
+  pagination={{ pageSize: 10 }}
 />
-
           </>
         ) : (
           <div style={{ marginTop: "2rem", textAlign: "center" }}>
@@ -228,29 +194,6 @@ const App = () => {
         )}
       </Card>
     </div>
-=======
-          {token && realmId ? (
-            <Row>
-              <Col span={6}>
-                <Menu />
-              </Col>
-              <Col span={18}>
-                <Routes>
-                  <Route path="/account-data" element={<AccountData token={token} realmId={realmId} />} />
-                  <Route path="/add-account" element={<AddAccount />} />
-                  <Route path="/" element={<Dashboard token={token} realmId={realmId} />} />
-                </Routes>
-              </Col>
-            </Row>
-          ) : (
-            <div style={{ marginTop: "2rem", textAlign: "center" }}>
-              <p>Please connect to QuickBooks first!</p>
-            </div>
-          )}
-        </Card>
-      </div>
-    </Router>
->>>>>>> b0b99b40050afc4278297d78f99683eb81d7c477
   );
 };
 
