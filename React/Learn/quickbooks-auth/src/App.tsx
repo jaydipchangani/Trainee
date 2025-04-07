@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Row, Col, Space, Tag, Input } from "antd";
+import { Button, Card, Row, Col, Space, Tag, Input,message } from "antd";
 import OAuthLogin from "./components/OAuthLogin";
 import AccountTable from "./components/AccountTable";
 import axios from "axios";
@@ -12,6 +12,9 @@ interface Account {
   AccountSubType: string;
   CurrentBalance?: number;
   BankBalance?: number;
+  classification : string;
+  quickBooksId:number
+
 }
 
 const App = () => {
@@ -23,12 +26,16 @@ const App = () => {
 
   const fetchAccounts = () => {
     if (!token || !realmId) {
-      console.error("Access Token or Realm ID is missing!");
+      message.error("Access Token or Realm ID is missing!");
       return;
     }
-
+  
+    const hide = message.loading("Fetching data from QuickBooks...", 0);
+  
     axios
-      .get("https://localhost:7254/api/quickbooks/accounts", { params: { accessToken: token, realmId } })
+      .get("https://localhost:7254/api/quickbooks/accounts", {
+        params: { accessToken: token, realmId },
+      })
       .then((response) => {
         const fetched = response.data?.QueryResponse?.Account ?? [];
         const mapped: Account[] = fetched.map((acc: any) => ({
@@ -38,16 +45,25 @@ const App = () => {
           AccountSubType: acc.AccountSubType,
           CurrentBalance: acc.CurrentBalance,
           BankBalance: acc.BankBalance,
+          classification: acc.Classification,
+          quickBooksId: acc.QuickBooksId,
         }));
         setAccounts(mapped);
         setDataSource("quickbooks");
+        hide();
+        message.success("Data fetched successfully from QuickBooks!");
       })
       .catch((error) => {
+        hide();
+        message.error("Error fetching data from QuickBooks.");
         console.error("Error fetching accounts:", error.response?.data || error);
       });
   };
+  
 
   const fetchFromMongoDB = () => {
+    const hide = message.loading("Fetching data from MongoDB...", 0);
+  
     axios
       .get("https://localhost:7254/api/quickbooks/accounts/mongo")
       .then((response) => {
@@ -59,11 +75,17 @@ const App = () => {
           AccountSubType: item.accountSubType || item.AccountSubType || "N/A",
           CurrentBalance: item.CurrentBalance ?? 0,
           BankBalance: item.BankBalance ?? 0,
+          classification: item.classification || "N/A",
+          quickBooksId: item.quickBooksId || 0,
         }));
         setAccounts(mappedData);
         setDataSource("mongo");
+        hide();
+        message.success("Data fetched successfully from MongoDB!");
       })
       .catch((error) => {
+        hide();
+        message.error("Error fetching data from MongoDB.");
         console.error("Error fetching accounts from MongoDB:", error.response?.data || error);
       });
   };
@@ -103,20 +125,14 @@ const App = () => {
               </Button>
             </Space>
 
-            {dataSource && (
-              <p>
-                <Tag color={dataSource === "quickbooks" ? "green" : "blue"}>
-                  Showing data from: {dataSource === "quickbooks" ? "QuickBooks API" : "MongoDB"}
-                </Tag>
-              </p>
-            )}
+            
 
             <Input.Search
               placeholder="Search by Name"
               allowClear
               onSearch={(value) => setSearchText(value)}
               onChange={(e) => setSearchText(e.target.value)}
-              style={{ width: 300, marginBottom: 16 }}
+              style={{ width: 300, marginTop:15, marginLeft: 15 }}
             />
 
             <AccountTable accounts={accounts.filter(account => account.Name.toLowerCase().includes(searchText.toLowerCase()))} />

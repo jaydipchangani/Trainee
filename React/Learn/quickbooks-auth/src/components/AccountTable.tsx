@@ -32,32 +32,46 @@ const AccountTable = ({ accounts }: { accounts: Account[] }) => {
       key: "AccountSubType",
       sorter: (a, b) => a.AccountSubType.localeCompare(b.AccountSubType),
     },
-    {
-      title: "QuickBooks Balance",
-      dataIndex: "CurrentBalance",
-      key: "CurrentBalance",
-      sorter: (a, b) => (a.CurrentBalance ?? 0) - (b.CurrentBalance ?? 0),
-      render: (balance?: number) => (balance !== undefined ? `$${balance.toFixed(2)}` : "N/A"),
+    // {
+    //   title: "QuickBooks Balance",
+    //   dataIndex: "CurrentBalance",
+    //   key: "CurrentBalance",
+    //   sorter: (a, b) => (a.CurrentBalance ?? 0) - (b.CurrentBalance ?? 0),
+    //   render: (balance?: number) => (balance !== undefined ? `$${balance.toFixed(2)}` : "N/A"),
+    // },
+    // {
+    //   title: "Bank Balance",
+    //   dataIndex: "BankBalance",
+    //   key: "BankBalance",
+    //   sorter: (a, b) => (a.BankBalance ?? 0) - (b.BankBalance ?? 0),
+    //   render: (balance?: number) => (balance !== undefined ? `$${balance.toFixed(2)}` : "N/A"),
+    // },
+    
+    
+        {
+        title: "Classification",
+        dataIndex: "classification",
+        key: "classification",
+        render: (classification: string) => <span>{classification}</span>,
+        },
+        {
+        title: "QuickBooks ID",
+        dataIndex: "quickBooksId",
+        key: "quickBooksId",
+        render: (quickBooksId: number) => <span>{quickBooksId}</span>,
     },
     {
-      title: "Bank Balance",
-      dataIndex: "BankBalance",
-      key: "BankBalance",
-      sorter: (a, b) => (a.BankBalance ?? 0) - (b.BankBalance ?? 0),
-      render: (balance?: number) => (balance !== undefined ? `$${balance.toFixed(2)}` : "N/A"),
-    },
-    {
-      title: "Action",
-      key: "action",
-      render: (_, record: Account) => (
-        <Button type="primary" onClick={() => console.log("View", record.Id)}>
-          View
-        </Button>
-      ),
-    },
+        title: "Action",
+        key: "action",
+        render: (_, record: Account) => (
+          <Button type="primary" onClick={() => console.log("View", record.Id)}>
+            View
+          </Button>
+        ),
+      },
   ];
 
-  return <Table columns={columns} dataSource={accounts} rowKey={(record) => record.Id || Math.random().toString(36).substr(2, 9)} pagination={{ pageSize: 10 }} />;
+  return <Table columns={columns} dataSource={accounts} rowKey={(record) => record.Id || Math.random().toString(36).substr(2, 9)} pagination={{ pageSize: 5 }} />;
 };
 
 export default AccountTable;
