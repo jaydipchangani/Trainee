@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // src/components/Dashboard.tsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
@@ -52,6 +53,23 @@ const Dashboard = () => {
         .catch((error) => console.error("Error fetching token:", error));
     }
   }, []);
+=======
+// Dashboard.tsx
+import React, { useState } from "react";
+import axios from "axios";
+import { Table, Button, Space } from "antd";
+import type { ColumnsType } from "antd/es/table";
+import { Account } from "C:/Trainee_new/React/Learn/quickbooks-auth/src/types/types";  // Assuming you create a separate types file
+
+interface DashboardProps {
+  token: string | null;
+  realmId: string | null;
+}
+
+const Dashboard: React.FC<DashboardProps> = ({ token, realmId }) => {
+  const [accounts, setAccounts] = useState<Account[]>([]);
+  const [loading, setLoading] = useState(false);
+>>>>>>> b0b99b40050afc4278297d78f99683eb81d7c477
 
   const fetchAccounts = () => {
     if (!token || !realmId) {
@@ -59,6 +77,10 @@ const Dashboard = () => {
       return;
     }
 
+<<<<<<< HEAD
+=======
+    setLoading(true);
+>>>>>>> b0b99b40050afc4278297d78f99683eb81d7c477
     axios
       .get(`https://localhost:7254/api/quickbooks/accounts`, {
         params: { accessToken: token, realmId },
@@ -68,6 +90,7 @@ const Dashboard = () => {
       })
       .catch((error) => {
         console.error("Error fetching accounts:", error.response?.data || error);
+<<<<<<< HEAD
       });
   };
 
@@ -78,6 +101,14 @@ const Dashboard = () => {
     window.location.reload();
   };
 
+=======
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+>>>>>>> b0b99b40050afc4278297d78f99683eb81d7c477
   const columns: ColumnsType<Account> = [
     { title: "Name", dataIndex: "Name", key: "name" },
     { title: "Account Type", dataIndex: "AccountType", key: "accountType" },
@@ -108,6 +139,7 @@ const Dashboard = () => {
   ];
 
   return (
+<<<<<<< HEAD
     <div style={{ maxWidth: 1200, margin: "0 auto", padding: "2rem" }}>
       <Card bordered style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
         <Row justify="space-between" align="middle">
@@ -151,6 +183,21 @@ const Dashboard = () => {
           </div>
         )}
       </Card>
+=======
+    <div>
+      <Space style={{ marginTop: "1rem", marginBottom: "1rem" }}>
+        <Button onClick={fetchAccounts} type="primary" loading={loading}>
+          Fetch QuickBooks Accounts
+        </Button>
+      </Space>
+      <Table
+        columns={columns}
+        dataSource={accounts}
+        rowKey="Id"
+        pagination={{ pageSize: 5 }}
+        loading={loading}
+      />
+>>>>>>> b0b99b40050afc4278297d78f99683eb81d7c477
     </div>
   );
 };
