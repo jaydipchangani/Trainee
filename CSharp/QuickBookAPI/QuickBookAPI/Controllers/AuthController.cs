@@ -112,10 +112,12 @@ public class AuthController : ControllerBase
 public class QuickBooksController : ControllerBase
 {
     private readonly HttpClient _httpClient;
+    private readonly IMongoService _mongoService;
 
-    public QuickBooksController()
+    public QuickBooksController(IMongoService mongoService)
     {
         _httpClient = new HttpClient();
+        _mongoService = mongoService;
     }
 
     [HttpGet("accounts")]
@@ -142,8 +144,42 @@ public class QuickBooksController : ControllerBase
             return BadRequest("Failed to fetch accounts from QuickBooks");
         }
 
-        return Ok(responseContent);
+        // Parse and map the response JSON to QuickBooksAccount list
+        using var doc = JsonDocument.Parse(responseContent);
+        var accounts = new List<QuickBooksAccount>();
+
+        var accountArray = doc.RootElement
+                              .GetProperty("QueryResponse")
+                              .GetProperty("Account")
+                              .EnumerateArray();
+
+        foreach (var item in accountArray)
+        {
+            accounts.Add(new QuickBooksAccount
+            {
+                Name = item.GetProperty("Name").GetString(),
+                AccountType = item.GetProperty("AccountType").GetString(),
+                AccountSubType = item.TryGetProperty("AccountSubType", out var subType) ? subType.GetString() : null,
+                FullyQualifiedName = item.TryGetProperty("FullyQualifiedName", out var fq) ? fq.GetString() : null,
+                Classification = item.TryGetProperty("Classification", out var cl) ? cl.GetString() : null,
+                QuickBooksId = item.GetProperty("Id").GetString()
+            });
+        }
+
+        await _mongoService.SaveAccountsAsync(accounts);
+
+        return Ok(new { message = "Accounts fetched and stored", count = accounts.Count });
     }
+
+    [HttpGet("accounts/mongo")]
+    public async Task<IActionResult> GetAccountsFromMongo()
+    {
+        var accounts = await _mongoService.GetAccountsAsync();
+        return Ok(accounts);
+    }
+
+
+
 }
 
 

@@ -1,5 +1,9 @@
 var builder = WebApplication.CreateBuilder(args);
 
+
+builder.Services.AddSingleton<IMongoService, MongoService>();
+
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>

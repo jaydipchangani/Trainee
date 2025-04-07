@@ -1,0 +1,36 @@
+/* Full Screen Layout */
+html, body, #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .ant-layout {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .ant-layout-content {
+    background: #f0f2f5;
+    padding: 2rem;
+    flex: 1;
+  }
+  
+  /* Sidebar */
+  .ant-layout-sider {
+    background: #001529;
+    color: white;
+  }
+  
+  .ant-menu-item {
+    color: white;
+  }
+  
+  /* Header */
+  .ant-layout-header {
+    background: #001529;
+    color: white;
+    padding: 0 16px;
+  }
+  
