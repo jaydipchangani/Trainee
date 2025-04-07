@@ -1,15 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { Button, Card, Row, Col, Space, Tag, Input } from "antd";
+import OAuthLogin from "./components/OAuthLogin";
+import AccountTable from "./components/AccountTable";
 import axios from "axios";
-import {
-  Table,
-  Button,
-  Card,
-  Row,
-  Col,
-  Space,
-  Tag,
-  Input,
-} from "antd";
 import type { ColumnsType } from "antd/es/table";
 
 interface Account {
@@ -23,45 +16,10 @@ interface Account {
 
 const App = () => {
   const [accounts, setAccounts] = useState<Account[]>([]);
-  const [token, setToken] = useState<string | null>(
-    localStorage.getItem("quickbooks_access_token")
-  );
-  const [realmId, setRealmId] = useState<string | null>(
-    localStorage.getItem("quickbooks_realm_id")
-  );
+  const [token, setToken] = useState<string | null>(localStorage.getItem("quickbooks_access_token"));
+  const [realmId, setRealmId] = useState<string | null>(localStorage.getItem("quickbooks_realm_id"));
   const [dataSource, setDataSource] = useState<"quickbooks" | "mongo" | null>(null);
   const [searchText, setSearchText] = useState<string>("");
-
-  const getQueryParam = (param: string) => {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(param);
-  };
-
-  useEffect(() => {
-    const authCode = getQueryParam("code");
-    const realmIdFromUrl = getQueryParam("realmId");
-
-    if (realmIdFromUrl) setRealmId(realmIdFromUrl);
-
-    if (authCode) {
-      axios
-        .get(`https://localhost:7254/api/auth/callback?code=${authCode}`)
-        .then((response) => {
-          const { access_token, refresh_token, expires_in } = response.data;
-          if (access_token && refresh_token && expires_in) {
-            localStorage.setItem("quickbooks_access_token", access_token);
-            localStorage.setItem("quickbooks_refresh_token", refresh_token);
-            localStorage.setItem(
-              "quickbooks_token_expiry",
-              (Date.now() + expires_in * 1000).toString()
-            );
-            localStorage.setItem("quickbooks_realm_id", realmIdFromUrl || "");
-            setToken(access_token);
-          }
-        })
-        .catch((error) => console.error("Error fetching token:", error));
-    }
-  }, []);
 
   const fetchAccounts = () => {
     if (!token || !realmId) {
@@ -70,9 +28,7 @@ const App = () => {
     }
 
     axios
-      .get("https://localhost:7254/api/quickbooks/accounts", {
-        params: { accessToken: token, realmId },
-      })
+      .get("https://localhost:7254/api/quickbooks/accounts", { params: { accessToken: token, realmId } })
       .then((response) => {
         const fetched = response.data?.QueryResponse?.Account ?? [];
         const mapped: Account[] = fetched.map((acc: any) => ({
@@ -96,20 +52,14 @@ const App = () => {
       .get("https://localhost:7254/api/quickbooks/accounts/mongo")
       .then((response) => {
         const mongoData = response.data || [];
-
         const mappedData: Account[] = mongoData.map((item: any) => ({
-          Id:
-            item._id?.$oid ||
-            item.id ||
-            item.quickBooksId ||
-            Math.random().toString(36).substr(2, 9),
+          Id: item._id?.$oid || item.id || item.quickBooksId || Math.random().toString(36).substr(2, 9),
           Name: item.name || item.Name || "N/A",
           AccountType: item.accountType || item.AccountType || "N/A",
           AccountSubType: item.accountSubType || item.AccountSubType || "N/A",
           CurrentBalance: item.CurrentBalance ?? 0,
           BankBalance: item.BankBalance ?? 0,
         }));
-
         setAccounts(mappedData);
         setDataSource("mongo");
       })
@@ -125,55 +75,6 @@ const App = () => {
     setDataSource(null);
     window.location.reload();
   };
-
-  const columns: ColumnsType<Account> = [
-    {
-      title: "Name",
-      dataIndex: "Name",
-      key: "Name",
-      sorter: (a, b) => a.Name.localeCompare(b.Name),
-      filteredValue: searchText ? [searchText] : null,
-      onFilter: (value, record) =>
-        record.Name.toLowerCase().includes((value as string).toLowerCase()),
-    },
-    {
-      title: "Account Type",
-      dataIndex: "AccountType",
-      key: "AccountType",
-      sorter: (a, b) => a.AccountType.localeCompare(b.AccountType),
-    },
-    {
-      title: "Detail Type",
-      dataIndex: "AccountSubType",
-      key: "AccountSubType",
-      sorter: (a, b) => a.AccountSubType.localeCompare(b.AccountSubType),
-    },
-    {
-      title: "QuickBooks Balance",
-      dataIndex: "CurrentBalance",
-      key: "CurrentBalance",
-      sorter: (a, b) => (a.CurrentBalance ?? 0) - (b.CurrentBalance ?? 0),
-      render: (balance?: number) =>
-        balance !== undefined ? `$${balance.toFixed(2)}` : "N/A",
-    },
-    {
-      title: "Bank Balance",
-      dataIndex: "BankBalance",
-      key: "BankBalance",
-      sorter: (a, b) => (a.BankBalance ?? 0) - (b.BankBalance ?? 0),
-      render: (balance?: number) =>
-        balance !== undefined ? `$${balance.toFixed(2)}` : "N/A",
-    },
-    {
-      title: "Action",
-      key: "action",
-      render: (_, record: Account) => (
-        <Button type="primary" onClick={() => console.log("View", record.Id)}>
-          View
-        </Button>
-      ),
-    },
-  ];
 
   return (
     <div style={{ maxWidth: 1200, margin: "0 auto", padding: "2rem" }}>
@@ -218,27 +119,10 @@ const App = () => {
               style={{ width: 300, marginBottom: 16 }}
             />
 
-            <Table
-              columns={columns}
-              dataSource={accounts}
-              rowKey={(record) => record.Id || Math.random().toString(36).substr(2, 9)}
-              pagination={{ pageSize: 10 }}
-            />
+            <AccountTable accounts={accounts.filter(account => account.Name.toLowerCase().includes(searchText.toLowerCase()))} />
           </>
         ) : (
-          <div style={{ marginTop: "2rem", textAlign: "center" }}>
-            <a href="https://localhost:7254/api/auth/login">
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
-      <Button 
-        type="primary" 
-        size="large" 
-        style={{ backgroundColor: '#4CAF50', borderColor: '#4CAF50' }}
-      >
-        Connect to QuickBooks
-      </Button>
-    </div>
-            </a>
-          </div>
+          <OAuthLogin setToken={setToken} setRealmId={setRealmId} />
         )}
       </Card>
     </div>
