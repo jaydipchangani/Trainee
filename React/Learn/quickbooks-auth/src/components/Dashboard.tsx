@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+// Dashboard.tsx
+import React, { useState } from "react";
 import axios from "axios";
-import { Table, Button, Space, Pagination } from "antd";
+import { Table, Button, Space } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { Account } from "../src/types/types"; // Ensure that the Account type is imported
+import { Account } from "C:/Trainee_new/React/Learn/quickbooks-auth/src/types/types";  // Assuming you create a separate types file
 
 interface DashboardProps {
   token: string | null;
@@ -12,11 +13,8 @@ interface DashboardProps {
 const Dashboard: React.FC<DashboardProps> = ({ token, realmId }) => {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1); // Page number
-  const [pageSize, setPageSize] = useState(5); // Items per page
-  const [totalItems, setTotalItems] = useState(0); // Total items in the data set
 
-  const fetchAccounts = (page: number = currentPage) => {
+  const fetchAccounts = () => {
     if (!token || !realmId) {
       console.error("Access Token or Realm ID is missing!");
       return;
@@ -25,13 +23,10 @@ const Dashboard: React.FC<DashboardProps> = ({ token, realmId }) => {
     setLoading(true);
     axios
       .get(`https://localhost:7254/api/quickbooks/accounts`, {
-        params: { accessToken: token, realmId, page, pageSize },
+        params: { accessToken: token, realmId },
       })
       .then((response) => {
-        const fetchedAccounts = response.data.QueryResponse.Account || [];
-        const total = response.data.QueryResponse.TotalCount || 0;
-        setAccounts(fetchedAccounts);
-        setTotalItems(total); // Set the total number of items for pagination
+        setAccounts(response.data.QueryResponse.Account || []);
       })
       .catch((error) => {
         console.error("Error fetching accounts:", error.response?.data || error);
@@ -40,10 +35,6 @@ const Dashboard: React.FC<DashboardProps> = ({ token, realmId }) => {
         setLoading(false);
       });
   };
-
-  useEffect(() => {
-    fetchAccounts(currentPage); // Fetch accounts on mount and when page changes
-  }, [currentPage]);
 
   const columns: ColumnsType<Account> = [
     { title: "Name", dataIndex: "Name", key: "name" },
@@ -74,35 +65,19 @@ const Dashboard: React.FC<DashboardProps> = ({ token, realmId }) => {
     },
   ];
 
-  const handlePageChange = (page: number, pageSize: number) => {
-    setCurrentPage(page);
-    setPageSize(pageSize);
-  };
-
   return (
     <div>
       <Space style={{ marginTop: "1rem", marginBottom: "1rem" }}>
-        <Button onClick={() => fetchAccounts(currentPage)} type="primary" loading={loading}>
+        <Button onClick={fetchAccounts} type="primary" loading={loading}>
           Fetch QuickBooks Accounts
         </Button>
       </Space>
-
       <Table
         columns={columns}
         dataSource={accounts}
         rowKey="Id"
-        pagination={false} // Disable default pagination on Table
+        pagination={{ pageSize: 5 }}
         loading={loading}
-      />
-
-      <Pagination
-        current={currentPage}
-        pageSize={pageSize}
-        total={totalItems}
-        onChange={handlePageChange}
-        showSizeChanger
-        pageSizeOptions={[5, 10, 15, 20]}
-        style={{ marginTop: "1rem", textAlign: "center" }}
       />
     </div>
   );
