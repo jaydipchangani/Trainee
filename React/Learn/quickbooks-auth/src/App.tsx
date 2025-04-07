@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Table, Button, Card, Row, Col, Space, Tag } from "antd";
+import {
+  Table,
+  Button,
+  Card,
+  Row,
+  Col,
+  Space,
+  Tag,
+  Input,
+} from "antd";
 import type { ColumnsType } from "antd/es/table";
 
 interface Account {
@@ -21,6 +30,7 @@ const App = () => {
     localStorage.getItem("quickbooks_realm_id")
   );
   const [dataSource, setDataSource] = useState<"quickbooks" | "mongo" | null>(null);
+  const [searchText, setSearchText] = useState<string>("");
 
   const getQueryParam = (param: string) => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -82,27 +92,31 @@ const App = () => {
   };
 
   const fetchFromMongoDB = () => {
-  axios
-    .get("https://localhost:7254/api/quickbooks/accounts/mongo")
-    .then((response) => {
-      const mongoData = response.data || [];
+    axios
+      .get("https://localhost:7254/api/quickbooks/accounts/mongo")
+      .then((response) => {
+        const mongoData = response.data || [];
 
-      const mappedData: Account[] = mongoData.map((item: any) => ({
-        Id: item._id?.$oid || item.id || item.quickBooksId || Math.random().toString(36).substr(2, 9),
-        Name: item.name || item.Name || "N/A",
-        AccountType: item.accountType || item.AccountType || "N/A",
-        AccountSubType: item.accountSubType || item.AccountSubType || "N/A",
-        CurrentBalance: item.CurrentBalance ?? 0,
-        BankBalance: item.BankBalance ?? 0,
-      }));
+        const mappedData: Account[] = mongoData.map((item: any) => ({
+          Id:
+            item._id?.$oid ||
+            item.id ||
+            item.quickBooksId ||
+            Math.random().toString(36).substr(2, 9),
+          Name: item.name || item.Name || "N/A",
+          AccountType: item.accountType || item.AccountType || "N/A",
+          AccountSubType: item.accountSubType || item.AccountSubType || "N/A",
+          CurrentBalance: item.CurrentBalance ?? 0,
+          BankBalance: item.BankBalance ?? 0,
+        }));
 
-      setAccounts(mappedData);
-      setDataSource("mongo");
-    })
-    .catch((error) => {
-      console.error("Error fetching accounts from MongoDB:", error.response?.data || error);
-    });
-};
+        setAccounts(mappedData);
+        setDataSource("mongo");
+      })
+      .catch((error) => {
+        console.error("Error fetching accounts from MongoDB:", error.response?.data || error);
+      });
+  };
 
   const logout = () => {
     localStorage.clear();
@@ -113,13 +127,32 @@ const App = () => {
   };
 
   const columns: ColumnsType<Account> = [
-    { title: "Name", dataIndex: "Name", key: "Name" },
-    { title: "Account Type", dataIndex: "AccountType", key: "AccountType" },
-    { title: "Detail Type", dataIndex: "AccountSubType", key: "AccountSubType" },
+    {
+      title: "Name",
+      dataIndex: "Name",
+      key: "Name",
+      sorter: (a, b) => a.Name.localeCompare(b.Name),
+      filteredValue: searchText ? [searchText] : null,
+      onFilter: (value, record) =>
+        record.Name.toLowerCase().includes((value as string).toLowerCase()),
+    },
+    {
+      title: "Account Type",
+      dataIndex: "AccountType",
+      key: "AccountType",
+      sorter: (a, b) => a.AccountType.localeCompare(b.AccountType),
+    },
+    {
+      title: "Detail Type",
+      dataIndex: "AccountSubType",
+      key: "AccountSubType",
+      sorter: (a, b) => a.AccountSubType.localeCompare(b.AccountSubType),
+    },
     {
       title: "QuickBooks Balance",
       dataIndex: "CurrentBalance",
       key: "CurrentBalance",
+      sorter: (a, b) => (a.CurrentBalance ?? 0) - (b.CurrentBalance ?? 0),
       render: (balance?: number) =>
         balance !== undefined ? `$${balance.toFixed(2)}` : "N/A",
     },
@@ -127,6 +160,7 @@ const App = () => {
       title: "Bank Balance",
       dataIndex: "BankBalance",
       key: "BankBalance",
+      sorter: (a, b) => (a.BankBalance ?? 0) - (b.BankBalance ?? 0),
       render: (balance?: number) =>
         balance !== undefined ? `$${balance.toFixed(2)}` : "N/A",
     },
@@ -176,12 +210,20 @@ const App = () => {
               </p>
             )}
 
-<Table
-  columns={columns}
-  dataSource={accounts}
-  rowKey={(record) => record.Id || Math.random().toString(36).substr(2, 9)}
-  pagination={{ pageSize: 10 }}
-/>
+            <Input.Search
+              placeholder="Search by Name"
+              allowClear
+              onSearch={(value) => setSearchText(value)}
+              onChange={(e) => setSearchText(e.target.value)}
+              style={{ width: 300, marginBottom: 16 }}
+            />
+
+            <Table
+              columns={columns}
+              dataSource={accounts}
+              rowKey={(record) => record.Id || Math.random().toString(36).substr(2, 9)}
+              pagination={{ pageSize: 10 }}
+            />
           </>
         ) : (
           <div style={{ marginTop: "2rem", textAlign: "center" }}>
