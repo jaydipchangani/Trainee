@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 [Route("api/auth")]
@@ -13,11 +14,13 @@ public class AuthController : ControllerBase
 {
     private readonly IConfiguration _config;
     private readonly HttpClient _httpClient;
+    private readonly MongoTokenService _mongoService;
 
     public AuthController(IConfiguration config)
     {
         _config = config;
         _httpClient = new HttpClient();
+        _mongoService = new MongoTokenService(config);
     }
 
 
@@ -74,6 +77,16 @@ public class AuthController : ControllerBase
             Console.WriteLine("QuickBooks OAuth Error: " + responseContent);
             return BadRequest("Failed to exchange auth code for tokens");
         }
+
+        var tokenResult = JsonSerializer.Deserialize<OAuthTokenResponse>(responseContent);
+
+        // Store in MongoDB
+        await _mongoService.SaveTokenAsync(new TokenRecord
+        {
+            AccessToken = tokenResult.AccessToken,
+            RefreshToken = tokenResult.RefreshToken,
+            ExpiresIn = tokenResult.ExpiresIn
+        });
 
         return Ok(responseContent);
     }
