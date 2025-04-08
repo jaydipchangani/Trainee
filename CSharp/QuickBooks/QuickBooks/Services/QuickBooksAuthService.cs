@@ -8,11 +8,14 @@ using System.Web;
 public class QuickBooksAuthService
 {
     private readonly IConfiguration _config;
+    private readonly HttpClient _httpClient;
 
     public QuickBooksAuthService(IConfiguration config)
     {
         _config = config;
+        _httpClient = new HttpClient();
     }
+
 
     public string GetAuthUrl()
     {
@@ -32,28 +35,50 @@ public class QuickBooksAuthService
         return authUrl;
     }
 
-    public async Task<string> GetAccessTokenAsync(string code)
+    public async Task<QuickBooksTokenResponse> ExchangeCodeForTokensAsync(string code)
     {
-        var client = new HttpClient();
         var clientId = _config["QuickBooks:ClientId"];
         var clientSecret = _config["QuickBooks:ClientSecret"];
-        var redirectUri = _config["QuickBooks:RedirectUrl"];
+        var redirectUri = _config["QuickBooks:RedirectUri"];
 
-        var request = new HttpRequestMessage(HttpMethod.Post, "https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer");
+        var tokenUrl = "https://oauth.platform.intuit.com/oauth2/v1/tokens/bearer";
+        var credentials = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{clientId}:{clientSecret}"));
 
-        var authString = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes($"{clientId}:{clientSecret}"));
-        request.Headers.Authorization = new AuthenticationHeaderValue("Basic", authString);
-
-        var content = new FormUrlEncodedContent(new[]
+        var request = new HttpRequestMessage(HttpMethod.Post, tokenUrl)
         {
-            new KeyValuePair<string, string>("grant_type", "authorization_code"),
-            new KeyValuePair<string, string>("code", code),
-            new KeyValuePair<string, string>("redirect_uri", redirectUri),
-        });
+            Content = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("grant_type", "authorization_code"),
+                new KeyValuePair<string, string>("code", code),
+                new KeyValuePair<string, string>("redirect_uri", redirectUri),
+            })
+        };
 
-        request.Content = content;
+        request.Headers.Authorization = new AuthenticationHeaderValue("Basic", credentials);
+        request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-        var response = await client.SendAsync(request);
-        return await response.Content.ReadAsStringAsync(); // token response
+        var response = await _httpClient.SendAsync(request);
+        var responseContent = await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode)
+        {
+            Console.WriteLine("Token exchange failed: " + responseContent);
+            throw new Exception("Failed to exchange code for tokens.");
+        }
+
+        var tokenData = JsonSerializer.Deserialize<QuickBooksTokenResponse>(responseContent);
+
+        return tokenData!;
     }
+
+
+}
+
+public class QuickBooksTokenResponse
+{
+    public string access_token { get; set; } = "";
+    public int expires_in { get; set; }
+    public string refresh_token { get; set; } = "";
+    public int x_refresh_token_expires_in { get; set; }
+    public string token_type { get; set; } = "";
 }
