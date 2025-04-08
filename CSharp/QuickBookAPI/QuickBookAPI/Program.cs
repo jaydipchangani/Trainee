@@ -1,7 +1,13 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using QuickBookAPI.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 
-builder.Services.AddSingleton<IMongoService, MongoService>();
+builder.Services.AddSingleton<IMongoService, MongoService>(); 
+builder.Services.AddDbContext<QuickBooksDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
 builder.Services.AddCors(options =>

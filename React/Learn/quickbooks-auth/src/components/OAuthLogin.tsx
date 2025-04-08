@@ -1,8 +1,11 @@
 import React, { useEffect } from "react";
 import axios from "axios";
 import { Button } from "antd";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const OAuthLogin = ({ setToken, setRealmId }: { setToken: React.Dispatch<React.SetStateAction<string | null>>, setRealmId: React.Dispatch<React.SetStateAction<string | null>> }) => {
+  const [searchParams] =useSearchParams();  
+  const navigate = useNavigate();
   useEffect(() => {
     const authCode = new URLSearchParams(window.location.search).get("code");
     const realmIdFromUrl = new URLSearchParams(window.location.search).get("realmId");
@@ -11,8 +14,9 @@ const OAuthLogin = ({ setToken, setRealmId }: { setToken: React.Dispatch<React.S
 
     if (authCode) {
       axios
-        .get(`https://localhost:7254/api/auth/callback?code=${authCode}`)
+        .post(`https://localhost:7254/api/auth/callback?code=${authCode}`)
         .then((response) => {
+          console.log("Response from server:", response.data);
           const { access_token, refresh_token, expires_in } = response.data;
           if (access_token && refresh_token && expires_in) {
             localStorage.setItem("quickbooks_access_token", access_token);
@@ -24,7 +28,7 @@ const OAuthLogin = ({ setToken, setRealmId }: { setToken: React.Dispatch<React.S
         })
         .catch((error) => console.error("Error fetching token:", error));
     }
-  }, [setToken, setRealmId]);
+  }, [setToken, setRealmId,searchParams,navigate]);
 
   return (
     <div style={{ marginTop: "2rem", textAlign: "center" }}>

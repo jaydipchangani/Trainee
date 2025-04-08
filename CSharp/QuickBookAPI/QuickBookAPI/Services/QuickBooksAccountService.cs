@@ -1,27 +1,24 @@
 ﻿using MongoDB.Driver;
+ using QuickBookAPI.Data;
+using Microsoft.EntityFrameworkCore;
 
 public class QuickBooksAccountService
 {
-    private readonly IMongoCollection<QuickBooksAccount> _collection;
-    private readonly IMongoDatabase _database;
+    private readonly QuickBooksDbContext _dbContext;
 
-
-    public QuickBooksAccountService(IConfiguration config)
+    public QuickBooksAccountService(QuickBooksDbContext dbContext)
     {
-        var client = new MongoClient(config["MongoDB:ConnectionString"]);
-        var database = client.GetDatabase(config["MongoDB:DatabaseName"]);
-        _collection = database.GetCollection<QuickBooksAccount>("QuickBooksAccounts");
+        _dbContext = dbContext;
     }
 
     public async Task SaveAccountsAsync(List<QuickBooksAccount> accounts)
     {
-        var collection = _database.GetCollection<QuickBooksAccount>("QuickBooksAccounts");
-        await collection.InsertManyAsync(accounts);
+        await _dbContext.QuickBooksAccounts.AddRangeAsync(accounts);
+        await _dbContext.SaveChangesAsync();
     }
-
 
     public async Task<List<QuickBooksAccount>> GetAccountsAsync()
     {
-        return await _collection.Find(_ => true).ToListAsync();
+        return await _dbContext.QuickBooksAccounts.ToListAsync();
     }
 }

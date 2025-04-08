@@ -40,7 +40,7 @@ public class AuthController : ControllerBase
         return Redirect(authUrl);
     }
 
-    [HttpGet("callback")]
+    [HttpPost("callback")]
     public async Task<IActionResult> Callback([FromQuery] string code)
     {
         if (string.IsNullOrEmpty(code))
@@ -83,12 +83,6 @@ public class AuthController : ControllerBase
             responseContent,
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
         );
-
-        // Ensure tokenResult is not null and has valid values
-        if (tokenResult == null || string.IsNullOrEmpty(tokenResult.AccessToken))
-        {
-            return BadRequest("Failed to deserialize token response");
-        }
 
         await _mongoService.SaveTokenAsync(new TokenRecord
         {
