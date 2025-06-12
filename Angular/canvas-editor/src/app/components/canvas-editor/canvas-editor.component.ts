@@ -178,6 +178,16 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         letterSpacing: element.letterSpacing || 0,
         lineHeight: element.lineHeight || 1.2
       });
+      // Add click handler for selection and toolbar
+      node.on('click', () => {
+        this.selectedId = element.id;
+        this.canvasService.setSelectedElementId(element.id);
+        if (this.transformers[pageIndex] && node) {
+          this.transformers[pageIndex].nodes([node]);
+          this.layers[pageIndex].draw();
+        }
+        this.selectedPageIndex = pageIndex;
+      });
       // Double-click to edit
       node.on('dblclick dbltap', () => {
         if (this.editingTextId) return;
