@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ViewChildren, QueryList, AfterViewInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { CanvasService, CanvasElement, CanvasPage } from '../../services/canvas.service';
 import Konva from 'konva';
@@ -8,7 +8,7 @@ import Konva from 'konva';
   templateUrl: './canvas-editor.component.html',
   styleUrls: ['./canvas-editor.component.scss']
 })
-export class CanvasEditorComponent implements OnInit, AfterViewInit {
+export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
   @ViewChildren('container') canvasContainers!: QueryList<ElementRef>;
   @ViewChildren('canvasPageWrapper') canvasPageWrappers!: QueryList<ElementRef>;
@@ -48,6 +48,12 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit {
   public textToolbarElement: CanvasElement | null = null;
   public fontFamilies = ['Arial', 'Helvetica', 'Times New Roman', 'Courier New', 'Georgia', 'Verdana', 'Tahoma'];
   public alignments = ['left', 'center', 'right', 'justify'];
+
+  shapeFillColor: string = '#cccccc';
+  shapeStrokeColor: string = '#000000';
+
+  shapeToolbarVisible: boolean = false;
+  shapeToolbarElement: CanvasElement | null = null;
 
   constructor(
     private canvasService: CanvasService,
@@ -225,6 +231,87 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit {
           }
         });
         textarea.addEventListener('blur', () => setTimeout(finish, 100));
+      });
+    } else if (element.type === 'rect') {
+      node = new Konva.Rect({
+        id: element.id,
+        x: element.x,
+        y: element.y,
+        width: element.width,
+        height: element.height,
+        rotation: element.rotation,
+        fill: element.fill,
+        stroke: element.stroke,
+        strokeWidth: element.strokeWidth,
+        opacity: element.opacity,
+        cornerRadius: element.borderRadius || 0,
+        draggable: true
+      });
+    } else if (element.type === 'circle') {
+      node = new Konva.Circle({
+        id: element.id,
+        x: element.x + (element.width || 80) / 2,
+        y: element.y + (element.height || 80) / 2,
+        radius: (element.width || 80) / 2,
+        rotation: element.rotation,
+        fill: element.fill,
+        stroke: element.stroke,
+        strokeWidth: element.strokeWidth,
+        opacity: element.opacity,
+        draggable: true
+      });
+    } else if (element.type === 'ellipse') {
+      node = new Konva.Ellipse({
+        id: element.id,
+        x: element.x + (element.width || 80) / 2,
+        y: element.y + (element.height || 80) / 2,
+        radiusX: (element.width || 80) / 2,
+        radiusY: (element.height || 80) / 2,
+        rotation: element.rotation,
+        fill: element.fill,
+        stroke: element.stroke,
+        strokeWidth: element.strokeWidth,
+        opacity: element.opacity,
+        draggable: true
+      });
+    } else if (element.type === 'line') {
+      node = new Konva.Line({
+        id: element.id,
+        points: element.points || [0, 0, 100, 0],
+        stroke: element.stroke,
+        strokeWidth: element.strokeWidth,
+        opacity: element.opacity,
+        rotation: element.rotation,
+        lineCap: 'round',
+        lineJoin: 'round',
+        draggable: true
+      });
+    } else if (element.type === 'triangle') {
+      node = new Konva.Line({
+        id: element.id,
+        points: element.points || [0, 0, 100, 0, 50, 100],
+        closed: true,
+        fill: element.fill,
+        stroke: element.stroke,
+        strokeWidth: element.strokeWidth,
+        opacity: element.opacity,
+        rotation: element.rotation,
+        draggable: true
+      });
+    } else if (element.type === 'star') {
+      node = new Konva.Star({
+        id: element.id,
+        x: element.x + (element.width || 100) / 2,
+        y: element.y + (element.height || 100) / 2,
+        numPoints: element.numPoints || 5,
+        innerRadius: (element.width || 100) / 4,
+        outerRadius: (element.width || 100) / 2,
+        fill: element.fill,
+        stroke: element.stroke,
+        strokeWidth: element.strokeWidth,
+        opacity: element.opacity,
+        rotation: element.rotation,
+        draggable: true
       });
     } else {
       const image = new Image();
@@ -515,5 +602,41 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit {
     this.canvasService.switchPage(this.selectedPageIndex);
     this.canvasService.addElement(element);
     setTimeout(() => this.initAllCanvases());
+  }
+
+  public addShape(type: 'rect' | 'circle' | 'ellipse' | 'star') {
+    const element: CanvasElement = {
+      id: Date.now().toString(),
+      type,
+      x: 100,
+      y: 100,
+      width: 100,
+      height: 100,
+      rotation: 0,
+      zIndex: this.pages[this.selectedPageIndex].elements.length,
+      fill: this.shapeFillColor,
+      stroke: this.shapeStrokeColor,
+      strokeWidth: 1,
+      opacity: 1,
+      borderRadius: 0,
+      numPoints: 5,
+      points: [0, 0, 100, 0, 50, 100],
+    };
+    this.canvasService.addElement(element);
+  }
+
+  ngOnDestroy() {
+    // Cleanup if needed
+  }
+
+  onShapeSelect(element: CanvasElement) {
+    this.shapeToolbarVisible = true;
+    this.shapeToolbarElement = element;
+  }
+
+  updateShapeElement(updates: Partial<CanvasElement>) {
+    if (this.shapeToolbarElement) {
+      this.canvasService.updateElement(this.shapeToolbarElement.id, updates);
+    }
   }
 }

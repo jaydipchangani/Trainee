@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 export interface CanvasElement {
   id: string;
-  type: 'text' | 'image';
+  type: 'text' | 'image' | 'rect' | 'circle' | 'line' | 'triangle' | 'star' | 'ellipse';
   x: number;
   y: number;
   width: number;
@@ -22,6 +22,14 @@ export interface CanvasElement {
   align?: 'left' | 'center' | 'right' | 'justify';
   letterSpacing?: number;
   lineHeight?: number;
+  // Shape
+  fill?: string;
+  stroke?: string;
+  strokeWidth?: number;
+  opacity?: number;
+  borderRadius?: number; // for rect
+  points?: number[];     // for line, triangle
+  numPoints?: number;    // for star
 }
 
 export interface CanvasPage {

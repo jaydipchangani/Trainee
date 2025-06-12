@@ -73,13 +73,51 @@ export class HtmlGeneratorService {
             padding: 0;
           `;
           return `<div style='${textStyles}'>${this.escapeHtml(element.text || '')}</div>`;
-        } else {
+        } else if (element.type === 'image') {
           const imageStyles = `
             ${baseStyles}
             background: none;
           `;
           return `<img src='${element.imageUrl}' style='${imageStyles}object-fit:contain;display:block;border:none;background:none;' alt='Canvas image element'>`;
+        } else if (
+          element.type === 'rect' ||
+          element.type === 'circle' ||
+          element.type === 'ellipse' ||
+          element.type === 'star'
+        ) {
+          // SVG wrapper for shape
+          const svgStyle = `${baseStyles} display: block;`;
+          let shapeSvg = '';
+          if (element.type === 'rect') {
+            shapeSvg = `<rect x='0' y='0' width='${element.width}' height='${element.height}' fill='${element.fill}' stroke='${element.stroke}' stroke-width='${element.strokeWidth}' rx='${element.borderRadius || 0}' opacity='${element.opacity ?? 1}' />`;
+          } else if (element.type === 'circle') {
+            const r = (element.width || 80) / 2;
+            shapeSvg = `<circle cx='${r}' cy='${r}' r='${r}' fill='${element.fill}' stroke='${element.stroke}' stroke-width='${element.strokeWidth}' opacity='${element.opacity ?? 1}' />`;
+          } else if (element.type === 'ellipse') {
+            const rx = (element.width || 80) / 2;
+            const ry = (element.height || 80) / 2;
+            shapeSvg = `<ellipse cx='${rx}' cy='${ry}' rx='${rx}' ry='${ry}' fill='${element.fill}' stroke='${element.stroke}' stroke-width='${element.strokeWidth}' opacity='${element.opacity ?? 1}' />`;
+          } else if (element.type === 'star') {
+            // Star SVG path generator
+            const numPoints = element.numPoints || 5;
+            const outerRadius = (element.width || 100) / 2;
+            const innerRadius = outerRadius / 2;
+            const cx = outerRadius, cy = outerRadius;
+            let path = '';
+            for (let i = 0; i < numPoints * 2; i++) {
+              const angle = (Math.PI / numPoints) * i;
+              const r = i % 2 === 0 ? outerRadius : innerRadius;
+              const x = cx + Math.cos(angle - Math.PI / 2) * r;
+              const y = cy + Math.sin(angle - Math.PI / 2) * r;
+              path += i === 0 ? `M${x},${y}` : `L${x},${y}`;
+            }
+            path += 'Z';
+            shapeSvg = `<path d='${path}' fill='${element.fill}' stroke='${element.stroke}' stroke-width='${element.strokeWidth}' opacity='${element.opacity ?? 1}' />`;
+          }
+          return `<svg width='${element.width}' height='${element.height}' style='${svgStyle}' xmlns='http://www.w3.org/2000/svg'>${shapeSvg}</svg>`;
         }
+        // Default return for any other element type
+        return '';
       }).join('\n');
       return `<div class='canvas-preview' id='page-${idx}' style='${pageContainerStyle}'>${elementsHtml}</div>`;
     }).join('\n');

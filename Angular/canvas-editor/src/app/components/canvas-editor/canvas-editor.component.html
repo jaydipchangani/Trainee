@@ -135,6 +135,11 @@
       <input type="range" min="0.8" max="3" step="0.05" [(ngModel)]="textToolbarElement.lineHeight" (input)="updateTextElement({ lineHeight: textToolbarElement.lineHeight })" />
     </label>
   </div>
+
+  <div *ngIf="shapeToolbarVisible && shapeToolbarElement" class="floating-shape-toolbar">
+    <label>Fill Color: <input type="color" [(ngModel)]="shapeToolbarElement.fill" (input)="updateShapeElement({ fill: shapeToolbarElement.fill })" /></label>
+    <label>Stroke Color: <input type="color" [(ngModel)]="shapeToolbarElement.stroke" (input)="updateShapeElement({ stroke: shapeToolbarElement.stroke })" /></label>
+  </div>
 </div>
 
 <div class="left-sidebar">
@@ -179,7 +184,16 @@
     </div>
     <div *ngSwitchCase="'elements'">
       <h3>Elements</h3>
-      <!-- Elements content here -->
+      <div class="elements-panel">
+        <button (click)="addShape('rect')">Rectangle</button>
+        <button (click)="addShape('circle')">Circle</button>
+        <button (click)="addShape('ellipse')">Ellipse</button>
+        <button (click)="addShape('star')">Star</button>
+        <div class="color-pickers">
+          <label>Fill Color: <input type="color" [(ngModel)]="shapeFillColor" /></label>
+          <label>Stroke Color: <input type="color" [(ngModel)]="shapeStrokeColor" /></label>
+        </div>
+      </div>
     </div>
     <div *ngSwitchCase="'text'">
       <h3>Text</h3>
