@@ -29,6 +29,8 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit {
   private layers: Konva.Layer[] = [];
   private transformers: Konva.Transformer[] = [];
 
+  editingPageIndexMap: { [key: number]: boolean } = {};
+
   constructor(
     private canvasService: CanvasService,
     private router: Router
@@ -246,5 +248,27 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit {
       this.canvasService.switchPage(pageIndex);
       this.canvasService.updateElement(id, updates);
     }
+  }
+
+  deletePage(index: number) {
+    if (this.pages.length === 1) return;
+    this.canvasService.deletePage(index);
+    if (this.selectedPageIndex >= this.pages.length - 1) {
+      this.selectedPageIndex = Math.max(0, this.pages.length - 2);
+    }
+    setTimeout(() => this.initAllCanvases());
+  }
+
+  editPageName(index: number) {
+    this.editingPageIndexMap[index] = true;
+    setTimeout(() => {
+      const input = document.querySelector('.page-title-input') as HTMLInputElement;
+      if (input) input.focus();
+    });
+  }
+
+  stopEditingPageName(index: number) {
+    this.editingPageIndexMap[index] = false;
+    // Optionally, persist the new title to the service/localStorage here if needed
   }
 }
