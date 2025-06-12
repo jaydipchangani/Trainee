@@ -31,15 +31,28 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit {
 
   editingPageIndexMap: { [key: number]: boolean } = {};
 
+  fileName = 'Untitled Design';
+  isEditingFileName = false;
+  canUndo = false;
+  canRedo = false;
+
+  private historyStack: any[] = [];
+  private redoStack: any[] = [];
+
   constructor(
     private canvasService: CanvasService,
     private router: Router
-  ) {}
+  ) {
+    // Load fileName from URL if present
+    const urlFileName = this.getFileNameFromUrl();
+    if (urlFileName) this.fileName = urlFileName;
+  }
 
   ngOnInit() {
     this.canvasService.pages$.subscribe(pages => {
       this.pages = pages;
       setTimeout(() => this.initAllCanvases());
+      this.pushHistory();
     });
   }
 
@@ -270,5 +283,72 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit {
   stopEditingPageName(index: number) {
     this.editingPageIndexMap[index] = false;
     // Optionally, persist the new title to the service/localStorage here if needed
+  }
+
+  // Undo/Redo logic
+  undo() {
+    if (this.historyStack.length > 1) {
+      const current = this.historyStack.pop();
+      if (current) this.redoStack.push(current);
+      const prev = this.historyStack[this.historyStack.length - 1];
+      if (prev) {
+        this.canvasService.loadStateFromJson(JSON.stringify(prev));
+      }
+      this.updateUndoRedoState();
+    }
+  }
+
+  redo() {
+    if (this.redoStack.length > 0) {
+      const next = this.redoStack.pop();
+      if (next) {
+        this.canvasService.loadStateFromJson(JSON.stringify(next));
+        this.historyStack.push(next);
+      }
+      this.updateUndoRedoState();
+    }
+  }
+
+  private pushHistory() {
+    const state = {
+      pages: JSON.parse(JSON.stringify(this.pages)),
+      currentPageIndex: this.selectedPageIndex
+    };
+    if (!this.historyStack.length || JSON.stringify(this.historyStack[this.historyStack.length - 1]) !== JSON.stringify(state)) {
+      this.historyStack.push(state);
+      if (this.historyStack.length > 50) this.historyStack.shift();
+      this.redoStack = [];
+    }
+    this.updateUndoRedoState();
+  }
+
+  private updateUndoRedoState() {
+    this.canUndo = this.historyStack.length > 1;
+    this.canRedo = this.redoStack.length > 0;
+  }
+
+  onFileNameChange() {
+    this.isEditingFileName = false;
+    this.updateUrlWithFileName();
+  }
+
+  updateUrlWithFileName() {
+    const encoded = encodeURIComponent(this.fileName.trim());
+    this.router.navigateByUrl(`/edit/${encoded}`);
+  }
+
+  getFileNameFromUrl(): string | null {
+    const match = window.location.pathname.match(/\/edit\/([^/]+)/);
+    return match ? decodeURIComponent(match[1]) : null;
+  }
+
+  share() {
+    // Save state to localStorage and copy /view/{key} URL for HTML preview
+    const key = 'design-' + Math.random().toString(36).substr(2, 9);
+    const state = this.canvasService.getShareableState();
+    localStorage.setItem(key, state);
+    const url = `${window.location.origin}/view/${key}`;
+    navigator.clipboard.writeText(url);
+    alert('Shareable link copied!');
   }
 }

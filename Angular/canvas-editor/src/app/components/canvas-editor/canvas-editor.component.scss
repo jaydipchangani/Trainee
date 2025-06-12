@@ -336,3 +336,62 @@
 .edit-page-btn:hover {
   background: #f0f0f0;
 }
+
+.editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(90deg, #00c6fb 0%, #6a82fb 100%);
+  padding: 0 24px;
+  height: 56px;
+  color: #fff;
+  .header-left, .header-center, .header-right {
+    display: flex;
+    align-items: center;
+  }
+  .editing-label {
+    font-weight: 500;
+    margin-right: 16px;
+    display: flex;
+    align-items: center;
+    mat-icon {
+      font-size: 20px;
+      margin-right: 4px;
+    }
+  }
+  .file-name {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+    width: 320px;
+    outline: none;
+    border-radius: 4px;
+    transition: background 0.2s;
+    &:focus {
+      background: rgba(255,255,255,0.1);
+    }
+  }
+  .share-btn {
+    background: #fff;
+    color: #6a82fb;
+    border-radius: 8px;
+    padding: 6px 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 8px rgba(106,130,251,0.08);
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    mat-icon {
+      color: #6a82fb;
+    }
+    &:hover {
+      background: #f0f4ff;
+    }
+  }
+}

@@ -1,4 +1,35 @@
 <div class="editor-container">
+  <header class="editor-header">
+    <div class="header-left">
+      <span class="editing-label">
+        <mat-icon>edit</mat-icon>
+        Editing
+      </span>
+      <button mat-icon-button (click)="undo()" [disabled]="!canUndo">
+        <mat-icon>undo</mat-icon>
+      </button>
+      <button mat-icon-button (click)="redo()" [disabled]="!canRedo">
+        <mat-icon>redo</mat-icon>
+      </button>
+    </div>
+    <div class="header-center">
+      <input
+        class="file-name"
+        [(ngModel)]="fileName"
+        (blur)="onFileNameChange()"
+        (keyup.enter)="onFileNameChange()"
+        [readonly]="!isEditingFileName"
+        (dblclick)="isEditingFileName = true"
+      />
+    </div>
+    <div class="header-right">
+      <button class="share-btn" (click)="share()">
+        <mat-icon>share</mat-icon>
+        Share
+      </button>
+    </div>
+  </header>
+
   <div class="toolbar">
     <button (click)="showAddTextModal = true">Add Text</button>
     <button (click)="showAddImageModal = true">Add Image</button>
