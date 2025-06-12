@@ -322,7 +322,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     } else if (element.type === 'image' || element.type === 'video') {
       let imageOrVideo: HTMLImageElement | HTMLVideoElement;
       if (element.type === 'image') {
-        imageOrVideo = new Image();
+        imageOrVideo = new window.Image();
         (imageOrVideo as HTMLImageElement).src = element.imageUrl || '';
       } else {
         imageOrVideo = document.createElement('video');
@@ -341,10 +341,16 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         image: imageOrVideo,
         draggable: true
       });
-      node.on('click', () => {
+
+      // Ensure the node is listening for pointer events
+      node.listening(true);
+
+      node.on('mousedown touchstart', (e) => {
+        e.cancelBubble = true; // Prevent stage deselection
         this.selectedId = element.id;
         this.canvasService.setSelectedElementId(element.id);
-        // Always update the transformer for this page
+
+        // Update transformer for this page
         const transformer = this.transformers[pageIndex];
         if (transformer && node) {
           transformer.nodes([node]);
@@ -358,16 +364,33 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!node) return null;
     node.on('transformend', () => {
       const n = node!;
-      const updatedElement = {
-        x: n.x(),
-        y: n.y(),
-        width: n.width() * n.scaleX(),
-        height: n.height() * n.scaleY(),
-        rotation: n.rotation()
-      };
-      this.updateElementOnPage(element.id, updatedElement, pageIndex);
-      n.scaleX(1);
-      n.scaleY(1);
+      // For images and videos, update width/height and reset scale
+      if (element.type === 'image' || element.type === 'video') {
+        const width = n.width() * n.scaleX();
+        const height = n.height() * n.scaleY();
+        n.width(width);
+        n.height(height);
+        n.scaleX(1);
+        n.scaleY(1);
+        this.updateElementOnPage(element.id, {
+          x: n.x(),
+          y: n.y(),
+          width,
+          height,
+          rotation: n.rotation()
+        }, pageIndex);
+      } else {
+        const updatedElement = {
+          x: n.x(),
+          y: n.y(),
+          width: n.width() * n.scaleX(),
+          height: n.height() * n.scaleY(),
+          rotation: n.rotation()
+        };
+        this.updateElementOnPage(element.id, updatedElement, pageIndex);
+        n.scaleX(1);
+        n.scaleY(1);
+      }
     });
     node.on('dragend', () => {
       const n = node!;
