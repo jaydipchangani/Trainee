@@ -115,6 +115,26 @@
       </div>
     </div>
   </div>
+
+  <div *ngIf="textToolbarVisible && textToolbarElement" class="floating-text-toolbar">
+    <select [(ngModel)]="textToolbarElement.fontFamily" (change)="updateTextElement({ fontFamily: textToolbarElement.fontFamily })">
+      <option *ngFor="let font of fontFamilies" [value]="font">{{ font }}</option>
+    </select>
+    <input type="number" min="8" max="120" [(ngModel)]="textToolbarElement.fontSize" (input)="updateTextElement({ fontSize: textToolbarElement.fontSize })" style="width: 60px;" />
+    <input type="color" [(ngModel)]="textToolbarElement.color" (input)="updateTextElement({ color: textToolbarElement.color })" />
+    <button (click)="toggleBold()" [class.active]="textToolbarElement.fontWeight === 'bold'">B</button>
+    <button (click)="toggleItalic()" [class.active]="textToolbarElement.fontStyle === 'italic'">I</button>
+    <button (click)="toggleUnderline()" [class.active]="textToolbarElement.textDecoration === 'underline'">U</button>
+    <select [(ngModel)]="textToolbarElement.align" (change)="updateTextElement({ align: textToolbarElement.align })">
+      <option *ngFor="let align of alignments" [value]="align">{{ align }}</option>
+    </select>
+    <label>Spacing
+      <input type="range" min="0" max="20" step="0.5" [(ngModel)]="textToolbarElement.letterSpacing" (input)="updateTextElement({ letterSpacing: textToolbarElement.letterSpacing })" />
+    </label>
+    <label>Line
+      <input type="range" min="0.8" max="3" step="0.05" [(ngModel)]="textToolbarElement.lineHeight" (input)="updateTextElement({ lineHeight: textToolbarElement.lineHeight })" />
+    </label>
+  </div>
 </div>
 
 <div class="left-sidebar">

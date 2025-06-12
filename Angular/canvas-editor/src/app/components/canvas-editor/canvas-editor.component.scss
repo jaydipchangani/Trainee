@@ -487,3 +487,60 @@
   background: #e6f0ff;
   color: #1976d2;
 }
+
+.floating-text-toolbar {
+  position: fixed;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 200;
+  border: 1px solid #e0e0e0;
+}
+.floating-text-toolbar select,
+.floating-text-toolbar input[type='number'] {
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
+.floating-text-toolbar input[type='color'] {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: none;
+  padding: 0;
+}
+.floating-text-toolbar button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #444;
+  transition: background 0.2s, color 0.2s;
+}
+.floating-text-toolbar button.active,
+.floating-text-toolbar button:hover {
+  background: #e6f0ff;
+  color: #1976d2;
+}
+.floating-text-toolbar label {
+  font-size: 13px;
+  color: #666;
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.floating-text-toolbar input[type='range'] {
+  margin-left: 4px;
+}

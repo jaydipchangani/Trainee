@@ -43,6 +43,12 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit {
 
   private editingTextId: string | null = null;
 
+  // Floating text toolbar state
+  public textToolbarVisible = false;
+  public textToolbarElement: CanvasElement | null = null;
+  public fontFamilies = ['Arial', 'Helvetica', 'Times New Roman', 'Courier New', 'Georgia', 'Verdana', 'Tahoma'];
+  public alignments = ['left', 'center', 'right', 'justify'];
+
   constructor(
     private canvasService: CanvasService,
     private router: Router
@@ -57,6 +63,34 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit {
       this.pages = pages;
       setTimeout(() => this.initAllCanvases());
       this.pushHistory();
+    });
+    // Subscribe to selection changes
+    this.canvasService.selectedElementId$.subscribe(selectedId => {
+      this.selectedId = selectedId;
+      // Update transformer highlight
+      setTimeout(() => {
+        if (selectedId && this.selectedPageIndex < this.transformers.length) {
+          const layer = this.layers[this.selectedPageIndex];
+          const transformer = this.transformers[this.selectedPageIndex];
+          const node = layer?.findOne(`#${selectedId}`);
+          if (node) {
+            transformer.nodes([node]);
+            layer.draw();
+          } else {
+            transformer.nodes([]);
+            layer.draw();
+          }
+        }
+      });
+      // Show/hide text toolbar
+      if (selectedId) {
+        const el = this.pages[this.selectedPageIndex]?.elements.find(e => e.id === selectedId && e.type === 'text');
+        this.textToolbarElement = el ? { ...el } : null;
+        this.textToolbarVisible = !!el;
+      } else {
+        this.textToolbarElement = null;
+        this.textToolbarVisible = false;
+      }
     });
   }
 
@@ -82,8 +116,10 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit {
       stage.add(layer);
       const transformer = new Konva.Transformer({
         nodes: [],
-        rotateEnabled: true,
-        enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right']
+        rotateEnabled: false,
+        enabledAnchors: [],
+        borderStroke: '#1976d2',
+        borderStrokeWidth: 2,
       });
       layer.add(transformer);
       this.stages[i] = stage;
@@ -99,13 +135,13 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit {
     const transformer = this.transformers[pageIndex];
     if (!layer || !transformer) return;
     layer.destroyChildren();
-    layer.add(transformer);
     elements.forEach(element => {
       const node = this.createElementNode(element, pageIndex);
       if (node) {
         layer.add(node);
       }
     });
+    layer.add(transformer);
     layer.draw();
   }
 
@@ -122,7 +158,14 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit {
         text: element.text || '',
         fontSize: element.fontSize,
         fill: element.color,
-        draggable: true
+        draggable: true,
+        fontFamily: element.fontFamily || 'Arial',
+        fontStyle: element.fontStyle || 'normal',
+        fontWeight: element.fontWeight || 'normal',
+        textDecoration: element.textDecoration || '',
+        align: element.align || 'left',
+        letterSpacing: element.letterSpacing || 0,
+        lineHeight: element.lineHeight || 1.2
       });
       // Double-click to edit
       node.on('dblclick dbltap', () => {
@@ -169,6 +212,8 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit {
           (node as Konva.Text).text(newText);
           this.updateElementOnPage(element.id, { text: newText }, pageIndex);
           removeTextarea();
+          // Deselect after editing
+          this.canvasService.setSelectedElementId(null);
         };
         textarea.addEventListener('keydown', (e) => {
           if (e.key === 'Enter' && !e.shiftKey) {
@@ -176,6 +221,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit {
             finish();
           } else if (e.key === 'Escape') {
             removeTextarea();
+            this.canvasService.setSelectedElementId(null);
           }
         });
         textarea.addEventListener('blur', () => setTimeout(finish, 100));
@@ -217,6 +263,9 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit {
       this.transformers[pageIndex].nodes([node]);
       this.layers[pageIndex].draw();
       this.selectedPageIndex = pageIndex;
+      if (element.type === 'text') {
+        this.canvasService.setSelectedElementId(element.id);
+      }
     });
     return node;
   }
@@ -289,31 +338,6 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit {
     const key = 'design-' + Math.random().toString(36).substr(2, 9);
     const state = this.canvasService.getShareableState();
     localStorage.setItem(key, state);
-    const shareUrl = `${window.location.origin}/view/${key}`;
-    navigator.clipboard.writeText(shareUrl).then(() => {
-      alert('Share link copied to clipboard!');
-    });
-  }
-
-  addPage() {
-    this.canvasService.addPage();
-    setTimeout(() => {
-      this.selectedPageIndex = this.pages.length - 1;
-      this.scrollToPage(this.selectedPageIndex);
-    });
-  }
-
-  scrollToPage(index: number) {
-    if (!this.canvasPageWrappers) return;
-    const wrapper = this.canvasPageWrappers.toArray()[index]?.nativeElement;
-    if (wrapper) {
-      wrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      this.selectedPageIndex = index;
-    }
-  }
-
-  onPageClick(index: number) {
-    this.selectedPageIndex = index;
   }
 
   private updateElementOnPage(id: string, updates: Partial<CanvasElement>, pageIndex: number) {
@@ -323,50 +347,9 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit {
     }
   }
 
-  deletePage(index: number) {
-    if (this.pages.length === 1) return;
-    this.canvasService.deletePage(index);
-    if (this.selectedPageIndex >= this.pages.length - 1) {
-      this.selectedPageIndex = Math.max(0, this.pages.length - 2);
-    }
-    setTimeout(() => this.initAllCanvases());
-  }
-
-  editPageName(index: number) {
-    this.editingPageIndexMap[index] = true;
-    setTimeout(() => {
-      const input = document.querySelector('.page-title-input') as HTMLInputElement;
-      if (input) input.focus();
-    });
-  }
-
-  stopEditingPageName(index: number) {
-    this.editingPageIndexMap[index] = false;
-    // Optionally, persist the new title to the service/localStorage here if needed
-  }
-
-  // Undo/Redo logic
-  undo() {
-    if (this.historyStack.length > 1) {
-      const current = this.historyStack.pop();
-      if (current) this.redoStack.push(current);
-      const prev = this.historyStack[this.historyStack.length - 1];
-      if (prev) {
-        this.canvasService.loadStateFromJson(JSON.stringify(prev));
-      }
-      this.updateUndoRedoState();
-    }
-  }
-
-  redo() {
-    if (this.redoStack.length > 0) {
-      const next = this.redoStack.pop();
-      if (next) {
-        this.canvasService.loadStateFromJson(JSON.stringify(next));
-        this.historyStack.push(next);
-      }
-      this.updateUndoRedoState();
-    }
+  getFileNameFromUrl(): string | null {
+    const match = window.location.pathname.match(/\/edit\/([^/]+)/);
+    return match ? decodeURIComponent(match[1]) : null;
   }
 
   private pushHistory() {
@@ -397,11 +380,6 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit {
     this.router.navigateByUrl(`/edit/${encoded}`);
   }
 
-  getFileNameFromUrl(): string | null {
-    const match = window.location.pathname.match(/\/edit\/([^/]+)/);
-    return match ? decodeURIComponent(match[1]) : null;
-  }
-
   share() {
     // Save state to localStorage and copy /view/{key} URL for HTML preview
     const key = 'design-' + Math.random().toString(36).substr(2, 9);
@@ -412,15 +390,105 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit {
     alert('Shareable link copied!');
   }
 
-  addHeading() {
+  addPage() {
+    this.canvasService.addPage();
+    setTimeout(() => {
+      this.selectedPageIndex = this.pages.length - 1;
+      this.scrollToPage(this.selectedPageIndex);
+    });
+  }
+
+  scrollToPage(index: number) {
+    if (!this.canvasPageWrappers) return;
+    const wrapper = this.canvasPageWrappers.toArray()[index]?.nativeElement;
+    if (wrapper) {
+      wrapper.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      this.selectedPageIndex = index;
+    }
+  }
+
+  onPageClick(index: number) {
+    this.selectedPageIndex = index;
+  }
+
+  deletePage(index: number) {
+    if (this.pages.length === 1) return;
+    this.canvasService.deletePage(index);
+    if (this.selectedPageIndex >= this.pages.length - 1) {
+      this.selectedPageIndex = Math.max(0, this.pages.length - 2);
+    }
+    setTimeout(() => this.initAllCanvases());
+  }
+
+  editPageName(index: number) {
+    this.editingPageIndexMap[index] = true;
+    setTimeout(() => {
+      const input = document.querySelector('.page-title-input') as HTMLInputElement;
+      if (input) input.focus();
+    });
+  }
+
+  stopEditingPageName(index: number) {
+    this.editingPageIndexMap[index] = false;
+    // Optionally, persist the new title to the service/localStorage here if needed
+  }
+
+  undo() {
+    if (this.historyStack.length > 1) {
+      const current = this.historyStack.pop();
+      if (current) this.redoStack.push(current);
+      const prev = this.historyStack[this.historyStack.length - 1];
+      if (prev) {
+        this.canvasService.loadStateFromJson(JSON.stringify(prev));
+      }
+      this.updateUndoRedoState();
+    }
+  }
+
+  redo() {
+    if (this.redoStack.length > 0) {
+      const next = this.redoStack.pop();
+      if (next) {
+        this.canvasService.loadStateFromJson(JSON.stringify(next));
+        this.historyStack.push(next);
+      }
+      this.updateUndoRedoState();
+    }
+  }
+
+  public updateTextElement(changes: Partial<CanvasElement>) {
+    if (!this.selectedId) return;
+    this.canvasService.updateElement(this.selectedId, changes);
+    // Update local toolbar state for instant UI feedback
+    if (this.textToolbarElement) {
+      Object.assign(this.textToolbarElement, changes);
+    }
+    setTimeout(() => this.initAllCanvases());
+  }
+
+  public toggleBold() {
+    if (!this.textToolbarElement) return;
+    const isBold = this.textToolbarElement.fontWeight === 'bold';
+    this.updateTextElement({ fontWeight: isBold ? 'normal' : 'bold' });
+  }
+  public toggleItalic() {
+    if (!this.textToolbarElement) return;
+    const isItalic = this.textToolbarElement.fontStyle === 'italic';
+    this.updateTextElement({ fontStyle: isItalic ? 'normal' : 'italic' });
+  }
+  public toggleUnderline() {
+    if (!this.textToolbarElement) return;
+    const isUnderline = this.textToolbarElement.textDecoration === 'underline';
+    this.updateTextElement({ textDecoration: isUnderline ? 'none' : 'underline' });
+  }
+
+  public addHeading() {
     this.addPresetText('Heading', 36, 'bold');
   }
-
-  addSubheading() {
+  public addSubheading() {
     this.addPresetText('Subheading', 24, 'normal');
   }
-
-  addBodyText() {
+  public addBodyText() {
     this.addPresetText('Body text', 16, 'normal');
   }
 
@@ -442,7 +510,6 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit {
       text,
       fontSize,
       color: '#222',
-      // @ts-ignore
       fontStyle: fontStyle
     };
     this.canvasService.switchPage(this.selectedPageIndex);

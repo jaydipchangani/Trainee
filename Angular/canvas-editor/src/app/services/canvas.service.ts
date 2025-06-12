@@ -14,6 +14,14 @@ export interface CanvasElement {
   color?: string;
   text?: string;
   imageUrl?: string;
+  // Text style properties
+  fontFamily?: string;
+  fontStyle?: string;
+  fontWeight?: string;
+  textDecoration?: string;
+  align?: 'left' | 'center' | 'right' | 'justify';
+  letterSpacing?: number;
+  lineHeight?: number;
 }
 
 export interface CanvasPage {
@@ -29,6 +37,9 @@ export class CanvasService {
   private readonly STORAGE_KEY = 'canvas_pages_state';
   private pagesSubject = new BehaviorSubject<CanvasPage[]>([]);
   private currentPageIndexSubject = new BehaviorSubject<number>(0);
+
+  private selectedElementIdSubject = new BehaviorSubject<string | null>(null);
+  public selectedElementId$ = this.selectedElementIdSubject.asObservable();
 
   public pages$ = this.pagesSubject.asObservable();
   public currentPageIndex$ = this.currentPageIndexSubject.asObservable();
@@ -204,5 +215,9 @@ export class CanvasService {
       this.currentPageIndexSubject.next(0);
       this.saveToStorage();
     }
+  }
+
+  setSelectedElementId(id: string | null) {
+    this.selectedElementIdSubject.next(id);
   }
 }
