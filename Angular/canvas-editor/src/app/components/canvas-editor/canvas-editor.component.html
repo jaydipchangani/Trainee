@@ -116,3 +116,55 @@
     </div>
   </div>
 </div>
+
+<div class="left-sidebar">
+  <button 
+    class="sidebar-btn" 
+    [class.active]="activeSection === 'design'" 
+    (click)="activeSection = activeSection === 'design' ? null : 'design'">
+    <span class="material-icons">dashboard_customize</span>
+    <span>Design</span>
+  </button>
+  <button 
+    class="sidebar-btn" 
+    [class.active]="activeSection === 'elements'" 
+    (click)="activeSection = activeSection === 'elements' ? null : 'elements'">
+    <span class="material-icons">category</span>
+    <span>Elements</span>
+  </button>
+  <button 
+    class="sidebar-btn" 
+    [class.active]="activeSection === 'text'" 
+    (click)="activeSection = activeSection === 'text' ? null : 'text'">
+    <span class="material-icons">text_fields</span>
+    <span>Text</span>
+  </button>
+  <button 
+    class="sidebar-btn" 
+    [class.active]="activeSection === 'uploads'" 
+    (click)="activeSection = activeSection === 'uploads' ? null : 'uploads'">
+    <span class="material-icons">cloud_upload</span>
+    <span>Uploads</span>
+  </button>
+</div>
+
+<div class="sidebar-content" *ngIf="activeSection">
+  <ng-container [ngSwitch]="activeSection">
+    <div *ngSwitchCase="'design'">
+      <h3>Design</h3>
+      <!-- Design content here -->
+    </div>
+    <div *ngSwitchCase="'elements'">
+      <h3>Elements</h3>
+      <!-- Elements content here -->
+    </div>
+    <div *ngSwitchCase="'text'">
+      <h3>Text</h3>
+      <!-- Text content here -->
+    </div>
+    <div *ngSwitchCase="'uploads'">
+      <h3>Uploads</h3>
+      <!-- Uploads content here -->
+    </div>
+  </ng-container>
+</div>

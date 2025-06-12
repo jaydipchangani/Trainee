@@ -39,6 +39,8 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit {
   private historyStack: any[] = [];
   private redoStack: any[] = [];
 
+  activeSection: string | null = null;
+
   constructor(
     private canvasService: CanvasService,
     private router: Router
