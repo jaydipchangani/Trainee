@@ -263,6 +263,15 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         cornerRadius: element.borderRadius || 0,
         draggable: true
       });
+      node.on('click', () => {
+        this.selectedId = element.id;
+        this.canvasService.setSelectedElementId(element.id);
+        if (this.transformers[pageIndex] && node) {
+          this.transformers[pageIndex].nodes([node]);
+          this.layers[pageIndex].draw();
+        }
+        this.selectedPageIndex = pageIndex;
+      });
     } else if (element.type === 'circle') {
       node = new Konva.Circle({
         id: element.id,
@@ -275,6 +284,15 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         strokeWidth: element.strokeWidth,
         opacity: element.opacity,
         draggable: true
+      });
+      node.on('click', () => {
+        this.selectedId = element.id;
+        this.canvasService.setSelectedElementId(element.id);
+        if (this.transformers[pageIndex] && node) {
+          this.transformers[pageIndex].nodes([node]);
+          this.layers[pageIndex].draw();
+        }
+        this.selectedPageIndex = pageIndex;
       });
     } else if (element.type === 'ellipse') {
       node = new Konva.Ellipse({
@@ -290,6 +308,15 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         opacity: element.opacity,
         draggable: true
       });
+      node.on('click', () => {
+        this.selectedId = element.id;
+        this.canvasService.setSelectedElementId(element.id);
+        if (this.transformers[pageIndex] && node) {
+          this.transformers[pageIndex].nodes([node]);
+          this.layers[pageIndex].draw();
+        }
+        this.selectedPageIndex = pageIndex;
+      });
     } else if (element.type === 'line') {
       node = new Konva.Line({
         id: element.id,
@@ -302,6 +329,15 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         lineJoin: 'round',
         draggable: true
       });
+      node.on('click', () => {
+        this.selectedId = element.id;
+        this.canvasService.setSelectedElementId(element.id);
+        if (this.transformers[pageIndex] && node) {
+          this.transformers[pageIndex].nodes([node]);
+          this.layers[pageIndex].draw();
+        }
+        this.selectedPageIndex = pageIndex;
+      });
     } else if (element.type === 'triangle') {
       node = new Konva.Line({
         id: element.id,
@@ -313,6 +349,15 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         opacity: element.opacity,
         rotation: element.rotation,
         draggable: true
+      });
+      node.on('click', () => {
+        this.selectedId = element.id;
+        this.canvasService.setSelectedElementId(element.id);
+        if (this.transformers[pageIndex] && node) {
+          this.transformers[pageIndex].nodes([node]);
+          this.layers[pageIndex].draw();
+        }
+        this.selectedPageIndex = pageIndex;
       });
     } else if (element.type === 'star') {
       node = new Konva.Star({
@@ -328,6 +373,15 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         opacity: element.opacity,
         rotation: element.rotation,
         draggable: true
+      });
+      node.on('click', () => {
+        this.selectedId = element.id;
+        this.canvasService.setSelectedElementId(element.id);
+        if (this.transformers[pageIndex] && node) {
+          this.transformers[pageIndex].nodes([node]);
+          this.layers[pageIndex].draw();
+        }
+        this.selectedPageIndex = pageIndex;
       });
     } else if (element.type === 'image' || element.type === 'video') {
       let imageOrVideo: HTMLImageElement | HTMLVideoElement;
