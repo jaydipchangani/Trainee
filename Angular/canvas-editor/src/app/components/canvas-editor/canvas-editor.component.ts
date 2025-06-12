@@ -41,6 +41,8 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit {
 
   activeSection: string | null = null;
 
+  private editingTextId: string | null = null;
+
   constructor(
     private canvasService: CanvasService,
     private router: Router
@@ -121,6 +123,62 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit {
         fontSize: element.fontSize,
         fill: element.color,
         draggable: true
+      });
+      // Double-click to edit
+      node.on('dblclick dbltap', () => {
+        if (this.editingTextId) return;
+        this.editingTextId = element.id;
+        const stage = this.stages[pageIndex];
+        const absPos = node.getAbsolutePosition();
+        const containerRect = stage.container().getBoundingClientRect();
+        const areaPosition = {
+          x: containerRect.left + absPos.x,
+          y: containerRect.top + absPos.y
+        };
+        const textarea = document.createElement('textarea');
+        document.body.appendChild(textarea);
+        textarea.value = (node as Konva.Text).text();
+        textarea.style.position = 'absolute';
+        textarea.style.top = areaPosition.y + 'px';
+        textarea.style.left = areaPosition.x + 'px';
+        textarea.style.width = node.width() + 'px';
+        textarea.style.height = node.height() + 'px';
+        textarea.style.fontSize = (node as Konva.Text).fontSize() + 'px';
+        textarea.style.fontFamily = 'inherit';
+        textarea.style.color = (node as Konva.Text).fill() as string;
+        textarea.style.background = 'rgba(255,255,255,0.9)';
+        textarea.style.border = '1px solid #1976d2';
+        textarea.style.padding = '2px 4px';
+        textarea.style.margin = '0';
+        textarea.style.overflow = 'hidden';
+        textarea.style.resize = 'none';
+        textarea.style.zIndex = '9999';
+        textarea.focus();
+        textarea.select();
+        let isSaved = false;
+        const removeTextarea = () => {
+          if (document.body.contains(textarea)) {
+            document.body.removeChild(textarea);
+          }
+          this.editingTextId = null;
+        };
+        const finish = () => {
+          if (isSaved) return;
+          isSaved = true;
+          const newText = textarea.value;
+          (node as Konva.Text).text(newText);
+          this.updateElementOnPage(element.id, { text: newText }, pageIndex);
+          removeTextarea();
+        };
+        textarea.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            finish();
+          } else if (e.key === 'Escape') {
+            removeTextarea();
+          }
+        });
+        textarea.addEventListener('blur', () => setTimeout(finish, 100));
       });
     } else {
       const image = new Image();
@@ -352,5 +410,43 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit {
     const url = `${window.location.origin}/view/${key}`;
     navigator.clipboard.writeText(url);
     alert('Shareable link copied!');
+  }
+
+  addHeading() {
+    this.addPresetText('Heading', 36, 'bold');
+  }
+
+  addSubheading() {
+    this.addPresetText('Subheading', 24, 'normal');
+  }
+
+  addBodyText() {
+    this.addPresetText('Body text', 16, 'normal');
+  }
+
+  private addPresetText(text: string, fontSize: number, fontStyle: 'normal' | 'bold') {
+    if (this.pages.length === 0) return;
+    const currentElements = this.pages[this.selectedPageIndex].elements;
+    const width = 400;
+    const height = fontSize + 20;
+    const x = 200; // Centered for 800px canvas
+    const y = 300 - height / 2;
+    const element: Omit<CanvasElement, 'id'> = {
+      type: 'text',
+      x,
+      y,
+      width,
+      height,
+      rotation: 0,
+      zIndex: currentElements.length,
+      text,
+      fontSize,
+      color: '#222',
+      // @ts-ignore
+      fontStyle: fontStyle
+    };
+    this.canvasService.switchPage(this.selectedPageIndex);
+    this.canvasService.addElement(element);
+    setTimeout(() => this.initAllCanvases());
   }
 }

@@ -152,6 +152,9 @@
   <ng-container [ngSwitch]="activeSection">
     <div *ngSwitchCase="'design'">
       <h3>Design</h3>
+      <button class="text-btn heading" (click)="addHeading()">Add Heading</button>
+      <button class="text-btn subheading" (click)="addSubheading()">Add Subheading</button>
+      <button class="text-btn body" (click)="addBodyText()">Add Body Text</button>
       <!-- Design content here -->
     </div>
     <div *ngSwitchCase="'elements'">
