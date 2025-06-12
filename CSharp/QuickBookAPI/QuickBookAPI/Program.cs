@@ -1,9 +1,23 @@
+<<<<<<< HEAD
 using QuickBookAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<IAccountService, AccountService>();
+=======
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using QuickBookAPI.Data;
+
+var builder = WebApplication.CreateBuilder(args);
+
+
+builder.Services.AddSingleton<IMongoService, MongoService>(); 
+builder.Services.AddDbContext<QuickBooksDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+>>>>>>> a550f6f07e6f8c4b7a08ef3313751014e4646361
 
 builder.Services.AddCors(options =>
 {

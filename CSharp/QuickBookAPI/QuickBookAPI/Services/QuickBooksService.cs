@@ -3,13 +3,11 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using QuickBookAPI.Models;
 
 public class QuickBooksService
 {
     private readonly HttpClient _httpClient;
-    private readonly string _clientId = "ABeTlHaxNDBvf42CMg7AEXFFajzs6Sqq6ssWCX63Y5H5nhDcdq";  
-    private readonly string _clientSecret = "IQkh8eAJRY35bxfblKGgV0f7wD7mmM5vj12IjgUy";  
-    private readonly string _redirectUri = "http://localhost:3000/api/auth/callback";
     private readonly IConfiguration _config;
 
     public QuickBooksService(HttpClient httpClient, IConfiguration config)
