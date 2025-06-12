@@ -55,6 +55,10 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   shapeToolbarVisible: boolean = false;
   shapeToolbarElement: CanvasElement | null = null;
 
+  uploadedFiles: { url: string; type: string }[] = [];
+
+  lockAspectRatio: boolean = true;
+
   constructor(
     private canvasService: CanvasService,
     private router: Router
@@ -143,16 +147,17 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     layer.destroyChildren();
     elements.forEach(element => {
       const node = this.createElementNode(element, pageIndex);
-      if (node) {
+      if (node !== null) {
         layer.add(node);
       }
     });
+    // Always add transformer last so it appears above all nodes
     layer.add(transformer);
     layer.draw();
   }
 
   private createElementNode(element: CanvasElement, pageIndex: number): Konva.Shape | null {
-    let node: Konva.Shape;
+    let node: Konva.Shape | null = null;
     if (element.type === 'text') {
       node = new Konva.Text({
         id: element.id,
@@ -178,6 +183,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.editingTextId) return;
         this.editingTextId = element.id;
         const stage = this.stages[pageIndex];
+        if (!node) return;
         const absPos = node.getAbsolutePosition();
         const containerRect = stage.container().getBoundingClientRect();
         const areaPosition = {
@@ -190,8 +196,8 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         textarea.style.position = 'absolute';
         textarea.style.top = areaPosition.y + 'px';
         textarea.style.left = areaPosition.x + 'px';
-        textarea.style.width = node.width() + 'px';
-        textarea.style.height = node.height() + 'px';
+        textarea.style.width = (node ? node.width() : 0) + 'px';
+        textarea.style.height = (node ? node.height() : 0) + 'px';
         textarea.style.fontSize = (node as Konva.Text).fontSize() + 'px';
         textarea.style.fontFamily = 'inherit';
         textarea.style.color = (node as Konva.Text).fill() as string;
@@ -313,9 +319,18 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         rotation: element.rotation,
         draggable: true
       });
-    } else {
-      const image = new Image();
-      image.src = element.imageUrl || '';
+    } else if (element.type === 'image' || element.type === 'video') {
+      let imageOrVideo: HTMLImageElement | HTMLVideoElement;
+      if (element.type === 'image') {
+        imageOrVideo = new Image();
+        (imageOrVideo as HTMLImageElement).src = element.imageUrl || '';
+      } else {
+        imageOrVideo = document.createElement('video');
+        (imageOrVideo as HTMLVideoElement).src = element.videoUrl || '';
+        (imageOrVideo as HTMLVideoElement).controls = true;
+        (imageOrVideo as HTMLVideoElement).autoplay = false;
+        (imageOrVideo as HTMLVideoElement).loop = true;
+      }
       node = new Konva.Image({
         id: element.id,
         x: element.x,
@@ -323,36 +338,43 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         width: element.width,
         height: element.height,
         rotation: element.rotation,
-        image: image,
+        image: imageOrVideo,
         draggable: true
       });
+      node.on('click', () => {
+        this.selectedId = element.id;
+        this.canvasService.setSelectedElementId(element.id);
+        // Always update the transformer for this page
+        const transformer = this.transformers[pageIndex];
+        if (transformer && node) {
+          transformer.nodes([node]);
+          this.layers[pageIndex].draw();
+        }
+        this.selectedPageIndex = pageIndex;
+      });
+    } else {
+      return null;
     }
+    if (!node) return null;
     node.on('transformend', () => {
+      const n = node!;
       const updatedElement = {
-        x: node.x(),
-        y: node.y(),
-        width: node.width() * node.scaleX(),
-        height: node.height() * node.scaleY(),
-        rotation: node.rotation()
+        x: n.x(),
+        y: n.y(),
+        width: n.width() * n.scaleX(),
+        height: n.height() * n.scaleY(),
+        rotation: n.rotation()
       };
       this.updateElementOnPage(element.id, updatedElement, pageIndex);
-      node.scaleX(1);
-      node.scaleY(1);
+      n.scaleX(1);
+      n.scaleY(1);
     });
     node.on('dragend', () => {
+      const n = node!;
       this.updateElementOnPage(element.id, {
-        x: node.x(),
-        y: node.y()
+        x: n.x(),
+        y: n.y()
       }, pageIndex);
-    });
-    node.on('click', () => {
-      this.selectedId = element.id;
-      this.transformers[pageIndex].nodes([node]);
-      this.layers[pageIndex].draw();
-      this.selectedPageIndex = pageIndex;
-      if (element.type === 'text') {
-        this.canvasService.setSelectedElementId(element.id);
-      }
     });
     return node;
   }
@@ -379,24 +401,149 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     setTimeout(() => this.initAllCanvases());
   }
 
-  addImage() {
-    if (this.pages.length === 0) return;
-    const currentElements = this.pages[this.selectedPageIndex].elements;
-    const element: Omit<CanvasElement, 'id'> = {
-      type: 'image',
-      x: 100,
-      y: 100,
-      width: 200,
-      height: 200,
-      rotation: 0,
-      zIndex: currentElements.length,
-      imageUrl: this.newImageUrl
+  addImage(url: string) {
+    const img = new Image();
+    img.onload = () => {
+      const element: CanvasElement = {
+        id: Date.now().toString(),
+        type: 'image',
+        x: 100,
+        y: 100,
+        width: img.width,
+        height: img.height,
+        rotation: 0,
+        zIndex: this.pages[this.selectedPageIndex].elements.length,
+        imageUrl: url,
+        lockAspectRatio: this.lockAspectRatio,
+        originalWidth: img.width,
+        originalHeight: img.height,
+        scaleX: 1,
+        scaleY: 1
+      };
+      this.canvasService.addElement(element);
+      this.initMediaElement(element);
     };
-    this.canvasService.switchPage(this.selectedPageIndex);
-    this.canvasService.addElement(element);
-    this.showAddImageModal = false;
-    this.newImageUrl = '';
-    setTimeout(() => this.initAllCanvases());
+    img.src = url;
+  }
+
+  addVideo(url: string) {
+    const video = document.createElement('video');
+    video.onloadedmetadata = () => {
+      const element: CanvasElement = {
+        id: Date.now().toString(),
+        type: 'video',
+        x: 100,
+        y: 100,
+        width: video.videoWidth,
+        height: video.videoHeight,
+        rotation: 0,
+        zIndex: this.pages[this.selectedPageIndex].elements.length,
+        videoUrl: url,
+        lockAspectRatio: this.lockAspectRatio,
+        originalWidth: video.videoWidth,
+        originalHeight: video.videoHeight,
+        scaleX: 1,
+        scaleY: 1
+      };
+      this.canvasService.addElement(element);
+      this.initMediaElement(element);
+    };
+    video.src = url;
+  }
+
+  initMediaElement(element: CanvasElement) {
+    const stage = this.stages[this.selectedPageIndex];
+    const layer = stage.findOne('.layer') as Konva.Layer;
+    if (!layer) return;
+
+    let konvaNode: Konva.Image | null = null;
+    if (element.type === 'image') {
+      const image = new Image();
+      image.src = element.imageUrl!;
+      konvaNode = new Konva.Image({
+        id: element.id,
+        image: image,
+        x: element.x,
+        y: element.y,
+        width: element.width,
+        height: element.height,
+        rotation: element.rotation,
+        draggable: true
+      });
+    } else if (element.type === 'video') {
+      const video = document.createElement('video');
+      video.src = element.videoUrl!;
+      video.controls = true;
+      video.autoplay = false;
+      video.loop = true;
+      konvaNode = new Konva.Image({
+        id: element.id,
+        image: video,
+        x: element.x,
+        y: element.y,
+        width: element.width,
+        height: element.height,
+        rotation: element.rotation,
+        draggable: true
+      });
+    }
+
+    if (konvaNode) {
+      layer.add(konvaNode);
+      this.initTransformer(element);
+      layer.draw();
+    }
+  }
+
+  initTransformer(element: CanvasElement) {
+    const stage = this.stages[this.selectedPageIndex];
+    const layer = stage.findOne('.layer') as Konva.Layer;
+    if (!layer) return;
+
+    // Remove existing transformers
+    layer.find('Transformer').forEach(t => t.destroy());
+
+    const node = layer.findOne(`#${element.id}`);
+    if (!node) return;
+
+    const transformer = new Konva.Transformer({
+      nodes: [node],
+      enabledAnchors: [
+        'top-left', 'top-center', 'top-right',
+        'middle-left', 'middle-right',
+        'bottom-left', 'bottom-center', 'bottom-right'
+      ],
+      anchorStroke: '#fff',
+      anchorFill: '#fff',
+      anchorSize: 10,
+      anchorCornerRadius: 5,
+      anchorStrokeWidth: 2,
+      anchorShadowEnabled: true,
+      anchorShadowColor: '#a259ff',
+      anchorShadowBlur: 4,
+      borderStroke: '#a259ff',
+      borderStrokeWidth: 2,
+      rotateEnabled: false // We'll add a custom rotation handle in the next step
+    });
+
+    transformer.on('transformend', () => {
+      const node = transformer.nodes()[0];
+      const currentElement = this.pages[this.selectedPageIndex].elements.find(e => e.id === element.id);
+      if (currentElement) {
+        this.canvasService.updateElement(currentElement.id, {
+          x: node.x(),
+          y: node.y(),
+          width: node.width() * node.scaleX(),
+          height: node.height() * node.scaleY(),
+          rotation: node.rotation(),
+          scaleX: node.scaleX(),
+          scaleY: node.scaleY()
+        });
+      }
+    });
+
+    layer.add(transformer);
+    layer.draw();
   }
 
   deleteSelected() {
@@ -632,11 +779,40 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   onShapeSelect(element: CanvasElement) {
     this.shapeToolbarVisible = true;
     this.shapeToolbarElement = element;
+    this.initTransformer(element);
+  }
+
+  toggleAspectRatio() {
+    this.lockAspectRatio = !this.lockAspectRatio;
+    if (this.shapeToolbarElement) {
+      this.canvasService.updateElement(this.shapeToolbarElement.id, {
+        lockAspectRatio: this.lockAspectRatio
+      });
+    }
   }
 
   updateShapeElement(updates: Partial<CanvasElement>) {
     if (this.shapeToolbarElement) {
       this.canvasService.updateElement(this.shapeToolbarElement.id, updates);
+    }
+  }
+
+  onFileUpload(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.uploadedFiles.push({ url: e.target?.result as string, type: file.type });
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  useFile(file: { url: string; type: string }) {
+    if (file.type.startsWith('image/')) {
+      this.addImage(file.url);
+    } else if (file.type.startsWith('video/')) {
+      this.addVideo(file.url);
     }
   }
 }

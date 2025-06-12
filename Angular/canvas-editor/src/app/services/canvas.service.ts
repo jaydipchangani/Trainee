@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 export interface CanvasElement {
   id: string;
-  type: 'text' | 'image' | 'rect' | 'circle' | 'line' | 'triangle' | 'star' | 'ellipse';
+  type: 'text' | 'image' | 'rect' | 'circle' | 'ellipse' | 'line' | 'triangle' | 'star' | 'video';
   x: number;
   y: number;
   width: number;
@@ -14,6 +14,7 @@ export interface CanvasElement {
   color?: string;
   text?: string;
   imageUrl?: string;
+  videoUrl?: string;
   // Text style properties
   fontFamily?: string;
   fontStyle?: string;
@@ -30,6 +31,12 @@ export interface CanvasElement {
   borderRadius?: number; // for rect
   points?: number[];     // for line, triangle
   numPoints?: number;    // for star
+  // Media specific properties
+  lockAspectRatio?: boolean;
+  originalWidth?: number;
+  originalHeight?: number;
+  scaleX?: number;
+  scaleY?: number;
 }
 
 export interface CanvasPage {
@@ -60,10 +67,10 @@ export class CanvasService {
   }
 
   private loadFromStorage(): void {
-    const savedState = localStorage.getItem(this.STORAGE_KEY);
-    if (savedState) {
-      try {
-        const state = JSON.parse(savedState);
+    try {
+      const data = localStorage.getItem(this.STORAGE_KEY);
+      if (data) {
+        const state = JSON.parse(data);
         // If old format (array), wrap in pages
         if (Array.isArray(state)) {
           this.pagesSubject.next([{ id: this.generateId(), title: 'Page 1', elements: state }]);
@@ -76,21 +83,32 @@ export class CanvasService {
           this.pagesSubject.next([{ id: this.generateId(), title: 'Page 1', elements: [] }]);
           this.currentPageIndexSubject.next(0);
         }
-      } catch {
-        this.pagesSubject.next([{ id: this.generateId(), title: 'Page 1', elements: [] }]);
-        this.currentPageIndexSubject.next(0);
       }
-    } else {
+    } catch (error) {
+      console.error('Error loading from storage:', error);
       this.pagesSubject.next([{ id: this.generateId(), title: 'Page 1', elements: [] }]);
       this.currentPageIndexSubject.next(0);
     }
   }
 
   private saveToStorage(): void {
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify({
-      pages: this.pagesSubject.value,
-      currentPageIndex: this.currentPageIndexSubject.value
-    }));
+    try {
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify({
+        pages: this.pagesSubject.value,
+        currentPageIndex: this.currentPageIndexSubject.value
+      }));
+    } catch (error) {
+      if (error instanceof Error && error.name === 'QuotaExceededError') {
+        // Clear old data or use session storage as fallback
+        localStorage.clear();
+        sessionStorage.setItem(this.STORAGE_KEY, JSON.stringify({
+          pages: this.pagesSubject.value,
+          currentPageIndex: this.currentPageIndexSubject.value
+        }));
+      } else {
+        console.error('Error saving to storage:', error);
+      }
+    }
   }
 
   getCurrentPage(): CanvasPage {

@@ -36,6 +36,10 @@
     <button (click)="deleteSelected()" [disabled]="!selectedId">Delete Selected</button>
     <button (click)="bringForward()" [disabled]="!selectedId">Bring Forward</button>
     <button (click)="sendBackward()" [disabled]="!selectedId">Send Backward</button>
+    <button (click)="toggleAspectRatio()" [class.active]="lockAspectRatio">
+      <mat-icon>aspect_ratio</mat-icon>
+      Lock Aspect Ratio
+    </button>
     <button (click)="shareDesign()">Share Design</button>
   </div>
 
@@ -110,7 +114,7 @@
         <input type="text" [(ngModel)]="newImageUrl" placeholder="Enter image URL">
       </div>
       <div class="modal-actions">
-        <button (click)="addImage()">Add</button>
+        <button (click)="addImage(newImageUrl)">Add</button>
         <button (click)="showAddImageModal = false">Cancel</button>
       </div>
     </div>
@@ -201,7 +205,19 @@
     </div>
     <div *ngSwitchCase="'uploads'">
       <h3>Uploads</h3>
-      <!-- Uploads content here -->
+      <div class="uploads-panel">
+        <input type="file" accept="image/*,video/*" (change)="onFileUpload($event)" />
+        <div *ngIf="uploadedFiles.length > 0">
+          <h4>Uploaded Files</h4>
+          <ul>
+            <li *ngFor="let file of uploadedFiles">
+              <img *ngIf="file.type.startsWith('image/')" [src]="file.url" alt="Uploaded Image" style="width: 100px; height: 100px;" />
+              <video *ngIf="file.type.startsWith('video/')" [src]="file.url" controls style="width: 100px; height: 100px;"></video>
+              <button (click)="useFile(file)">Use</button>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </ng-container>
 </div>
