@@ -1,0 +1,67 @@
+{
+  "Products": [
+    {
+      "Id": 1,
+      "Name": "Laptop",
+      "Description": "High-performance laptop",
+      "Price": 1200.00,
+      "Status": 0
+    },
+    {
+      "Id": 2,
+      "Name": "Smartphone",
+      "Description": "Latest model smartphone",
+      "Price": 800.00,
+      "Status": 0
+    },
+    {
+      "Id": 3,
+      "Name": "Headphones",
+      "Description": "Wireless noise-canceling headphones",
+      "Price": 150.00,
+      "Status": 1
+    },
+    {
+      "Id": 5,
+      "Name": "new name",
+      "Description": "test",
+      "Price": 123.0,
+      "Status": 0
+    },
+    {
+      "Id": 7,
+      "Name": "hello",
+      "Description": "test",
+      "Price": 0.0,
+      "Status": 0
+    },
+    {
+      "Id": 8,
+      "Name": "abcd",
+      "Description": "test",
+      "Price": 0.0,
+      "Status": 0
+    },
+    {
+      "Id": 9,
+      "Name": "abcd",
+      "Description": "test",
+      "Price": 0.0,
+      "Status": 0
+    },
+    {
+      "Id": 10,
+      "Name": "abcd",
+      "Description": "test",
+      "Price": -50.0,
+      "Status": 0
+    },
+    {
+      "Id": 11,
+      "Name": "abcd",
+      "Description": "test",
+      "Price": -50.0,
+      "Status": 1
+    }
+  ]
+}

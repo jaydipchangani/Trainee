@@ -1,0 +1,44 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="text-center my-4 text-primary">Admin Dashboard</h2>
+
+<p class="lead text-center">Welcome, Admin!</p>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">Manage Users</h5>
+                </div>
+                <div class="card-body">
+                    <a class="btn btn-block btn-outline-primary" asp-action="Users">Go to Manage Users</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="card-title mb-0">Manage Roles</h5>
+                </div>
+                <div class="card-body">
+                    <a class="btn btn-block btn-outline-info" asp-action="Roles">Go to Manage Roles</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="card-title mb-0">View Inactive Users</h5>
+                </div>
+                <div class="card-body">
+                    <a class="btn btn-block btn-outline-warning" asp-action="InactiveUsers">Go to Inactive Users</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,43 @@
+﻿@{
+    Layout = "_AdminLayout";
+}
+
+@{
+    ViewData["Title"] = "Student List";
+     var students = new List<Student>
+            {
+                new Student { name = "John Doe", email = "john@example.com", age = 22, course = "Computer Science" },
+                new Student { name= "Jane Smith", email = "jane@example.com", age = 20, course = "Data Science" },
+                new Student { name = "Robert Brown", email = "robert@example.com", age = 23, course = "AI & ML" }
+            };
+}
+
+<h2 class="mb-4">Student List</h2>
+
+
+<table class="table table-striped table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Age</th>
+            <th>Course</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var student in students)
+        {
+            <tr>
+                <td>@student.name</td>
+                <td>@student.email</td>
+                <td>@student.age</td>
+                <td>@student.course</td>
+                <td>
+                    <button class="btn btn-primary btn-sm">Edit</button>
+                    <button class="btn btn-danger btn-sm">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

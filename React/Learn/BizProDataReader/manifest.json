@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "BizProValue Content Reader",
+  "version": "1.0",
+  "description": "Scrapes logged-in HTML content from all user-allowed websites",
+  "permissions": ["scripting", "activeTab", "storage"],
+  "host_permissions": [
+    "https://devbizprovalue.azurewebsites.net/*",
+    "http://localhost:4200/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [ "https://devbizprovalue.azurewebsites.net/*",
+      "http://localhost:4200/*"],
+      "js": ["bridge.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "assets/bizproicon.png"
+  },
+  "icons": {
+    "16": "assets/bizproicon.png",
+    "48": "assets/bizproicon.png",
+    "128": "assets/bizproicon.png"
+  }
+}

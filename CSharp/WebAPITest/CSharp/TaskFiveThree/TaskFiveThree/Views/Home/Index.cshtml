@@ -1,0 +1,11 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h2>Application Settings</h2>
+<ul>
+    <li><strong>App Name:</strong> @ViewBag.AppName</li>
+    <li><strong>Version:</strong> @ViewBag.Version</li>
+    <li><strong>Feature Enabled:</strong> @(ViewBag.Auth ? "Yes" : "No")</li>
+    <li><strong>Value:</strong> @(ViewBag.Value )</li>
+</ul>

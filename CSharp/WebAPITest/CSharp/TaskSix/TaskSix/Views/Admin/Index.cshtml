@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h2>Welcome, Admin</h2>
+
+<div class="card">
+    <div class="card-body">
+        <p><strong>Email:</strong> @ViewBag.AdminEmail</p>
+        <p><strong>Role:</strong> Administrator</p>
+    </div>
+</div>
+
+<a href="@Url.Action("ManageUsers", "Admin")" class="btn btn-primary">Manage Users</a>
+<a href="@Url.Action("ManageRoles", "Admin")" class="btn btn-secondary">Manage Roles</a>
+<a href="@Url.Action("InactiveUsers", "Admin")" class="btn btn-warning">View Inactive Users</a>
+<a href="@Url.Action("Logout", "Account")" class="btn btn-danger">Logout</a>

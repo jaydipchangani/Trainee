@@ -1,0 +1,10 @@
+<div class="container">
+  <h1 class="title">🔗 BizProValue Chrome Extension Bridge</h1>
+  <button class="fetch-btn" (click)="fetchContent()">Fetch Website Data</button>
+
+  <div *ngIf="content" class="card">
+
+    <h3>Data Fetched:</h3>
+    <pre>{{ content | json }}</pre>
+  </div>
+</div>

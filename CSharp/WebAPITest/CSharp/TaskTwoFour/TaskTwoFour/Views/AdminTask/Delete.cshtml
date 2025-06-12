@@ -1,0 +1,22 @@
+﻿@model TaskTwoFour.Models.TaskModel
+
+@{
+    ViewData["Title"] = "Delete Task";
+}
+
+<h2>Delete Task</h2>
+
+<p>Are you sure you want to delete this task?</p>
+
+<div>
+    <p><strong>Title:</strong> @Model.Title</p>
+    <p><strong>Description:</strong> @Model.Description</p>
+    <p><strong>Due Date:</strong> @Model.DueDate.ToString("yyyy-MM-dd")</p>
+    <p><strong>Status:</strong> @Model.Status</p>
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

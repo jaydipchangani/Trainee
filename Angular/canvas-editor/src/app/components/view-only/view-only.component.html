@@ -1,0 +1,18 @@
+<div class="view-container">
+  <button class="copy-html-btn" (click)="copyHtml()">Copy HTML</button>
+  <div class="preview-main">
+    <div class="preview-content" #previewScrollContainer>
+      <iframe #previewIframe class="preview-iframe" width="800" [style.height.px]="iframeHeight" frameborder="0"></iframe>
+    </div>
+    <div class="preview-nav-bar">
+      <div class="preview-nav-header">Pages</div>
+      <ul class="preview-nav-list">
+        <li *ngFor="let page of pageCountArray; let i = index">
+          <button (click)="scrollToPage(i)">Page {{ i + 1 }}</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+  
+  <pre class="html-source">{{ htmlPreview }}</pre>
+</div>

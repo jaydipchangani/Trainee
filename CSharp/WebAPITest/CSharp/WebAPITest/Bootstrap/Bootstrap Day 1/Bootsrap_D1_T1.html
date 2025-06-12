@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Validation Example</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-5 col-3">
+  
+  <form id="validationForm">
+
+    <div class="mb-3 ">
+      <label for="emailInput" class="form-label">Email</label>
+      <input type="email" class="form-control " id="emailInput" placeholder="name@example.com" required>
+      <div class="invalid-feedback">
+        Please provide a valid email.
+      </div>
+
+    </div>
+
+
+    <div class="mb-3">
+      <label for="passwordInput" class="form-label">Password</label>
+      <input type="password" class="form-control " id="passwordInput" placeholder="Password" required>
+      <div class="invalid-feedback">
+        Password must be at least 6 characters long.
+      </div>
+
+    </div>
+
+
+    <div class="mb-3">
+      <label for="confirmPasswordInput" class="form-label">Confirm Password</label>
+      <input type="password" class="form-control " id="confirmPasswordInput" placeholder="Confirm Password" required>
+      <div class="invalid-feedback">
+        This Field does not match the password.
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="urlInput" class="form-label">Enter a URL</label>
+      <input type="url" class="form-control " id="urlInput" placeholder="https://example.com" required>
+      <div class="invalid-feedback">
+        Please provide a valid URL.
+      </div>
+
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button> -
+
+  </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  const emailInput = document.getElementById('emailInput');
+  const passwordInput = document.getElementById('passwordInput');
+  const confirmPasswordInput = document.getElementById('confirmPasswordInput');
+  const urlInput = document.getElementById('urlInput');
+  const form = document.getElementById('validationForm');
+
+  // Email Validation
+  emailInput.addEventListener('input', function() {
+    if (emailInput.checkValidity()) {
+      emailInput.classList.add('is-valid');
+      emailInput.classList.remove('is-invalid');
+    } else {
+      emailInput.classList.add('is-invalid');
+      emailInput.classList.remove('is-valid');
+    }
+  });
+
+  // Password and Confirm Password Validation
+  function validatePasswords() {
+    if (passwordInput.value === confirmPasswordInput.value && confirmPasswordInput.value.length >= 6) {
+      confirmPasswordInput.classList.add('is-valid');
+      confirmPasswordInput.classList.remove('is-invalid');
+      passwordInput.classList.add('is-valid');
+      passwordInput.classList.remove('is-invalid');
+    } else {
+      confirmPasswordInput.classList.add('is-invalid');
+      confirmPasswordInput.classList.remove('is-valid');
+      passwordInput.classList.add('is-invalid');
+      passwordInput.classList.remove('is-valid');
+    }
+  }
+
+  passwordInput.addEventListener('input', validatePasswords);
+  confirmPasswordInput.addEventListener('input', validatePasswords);
+
+
+  urlInput.addEventListener('input', function() {
+    if (urlInput.checkValidity()) {
+      urlInput.classList.add('is-valid');
+      urlInput.classList.remove('is-invalid');
+    } else {
+      urlInput.classList.add('is-invalid');
+      urlInput.classList.remove('is-valid');
+    }
+  });
+
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    if (emailInput.checkValidity() && passwordInput.checkValidity() && confirmPasswordInput.checkValidity() && urlInput.checkValidity()) {
+      alert('Form submitted successfully!');
+    } else {
+      alert('Please fill out the form correctly.');
+    }
+  });
+</script>
+
+</body>
+</html>

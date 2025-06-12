@@ -1,0 +1,95 @@
+﻿@model taskFour.Models.PassportModel
+
+@{
+    ViewData["Title"] = "Passport Application";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center">Passport Application Form</h2>
+
+    <form asp-action="Details" asp-controller="Passport" method="post" class="needs-validation" novalidate>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="FullName" class="form-label"></label>
+                <input asp-for="FullName" class="form-control" placeholder="Enter Full Name" required />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" type="email" class="form-control" placeholder="Enter Email" required />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="DateOfBirth" class="form-label"></label>
+                <input asp-for="DateOfBirth" type="date" class="form-control" required />
+                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="Gender" class="form-label"></label>
+                <select asp-for="Gender" class="form-select" required>
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+                <span asp-validation-for="Gender" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="Nationality" class="form-label"></label>
+                <input asp-for="Nationality" class="form-control" placeholder="Enter Nationality" required />
+                <span asp-validation-for="Nationality" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="MaritalStatus" class="form-label"></label>
+                <select asp-for="MaritalStatus" class="form-select" required>
+                    <option value="">Select Marital Status</option>
+                    <option value="Single">Single</option>
+                    <option value="Married">Married</option>
+                    <option value="Divorced">Divorced</option>
+                    <option value="Widowed">Widowed</option>
+                </select>
+                <span asp-validation-for="MaritalStatus" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="IssueDate" class="form-label"></label>
+                <input asp-for="IssueDate" type="date" class="form-control" required />
+                <span asp-validation-for="IssueDate" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="Address" class="form-label"></label>
+                <input asp-for="Address" class="form-control" placeholder="Enter Address" required />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="mb-3 form-check">
+            <input asp-for="AcceptTerms" class="form-check-input" type="checkbox" required />
+            <label asp-for="AcceptTerms" class="form-check-label">I accept the terms and conditions</label>
+            <span asp-validation-for="AcceptTerms" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Passport Photo</label>
+            <input type="file" name="PassportPhoto" class="form-control" required />
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Submit Application</button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

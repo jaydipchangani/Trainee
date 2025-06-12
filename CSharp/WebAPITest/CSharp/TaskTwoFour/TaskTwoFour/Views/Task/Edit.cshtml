@@ -1,0 +1,34 @@
+﻿@model TaskModel
+
+@{
+    ViewData["Title"] = "Edit Task";
+}
+
+<h2>Edit Task</h2>
+
+<form method="post" action="/Admin/Tasks/Edit">
+    <input type="hidden" name="Id" value="@Model.Id" />
+    
+    <div class="mb-3">
+        <label>Title</label>
+        <input type="text" class="form-control" name="Title" value="@Model.Title" required />
+    </div>
+    <div class="mb-3">
+        <label>Description</label>
+        <textarea class="form-control" name="Description">@Model.Description</textarea>
+    </div>
+    <div class="mb-3">
+        <label>Due Date</label>
+        <input type="date" class="form-control" name="DueDate" value="@Model.DueDate.ToString("yyyy-MM-dd")" required />
+    </div>
+    <div class="mb-3">
+        <label>Status</label>
+        <select class="form-control" name="Status">
+            <option value="Pending" selected="@(Model.Status == "Pending")">Pending</option>
+            <option value="In Progress" selected="@(Model.Status == "In Progress")">In Progress</option>
+            <option value="Completed" selected="@(Model.Status == "Completed")">Completed</option>
+        </select>
+
+    </div>
+    <button type="submit" class="btn btn-warning">Update Task</button>
+</form>

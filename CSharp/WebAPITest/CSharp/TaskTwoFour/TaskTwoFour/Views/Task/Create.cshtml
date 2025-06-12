@@ -1,0 +1,31 @@
+﻿@model TaskModel
+
+@{
+    ViewData["Title"] = "Create Task";
+}
+
+<h2>Create Task</h2>
+
+<form method="post" action="/Admin/Tasks/Create">
+    <div class="mb-3">
+        <label>Title</label>
+        <input type="text" class="form-control" name="Title" required />
+    </div>
+    <div class="mb-3">
+        <label>Description</label>
+        <textarea class="form-control" name="Description"></textarea>
+    </div>
+    <div class="mb-3">
+        <label>Due Date</label>
+        <input type="date" class="form-control" name="DueDate" required />
+    </div>
+    <div class="mb-3">
+        <label>Status</label>
+        <select class="form-control" name="Status">
+            <option value="Pending">Pending</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-success">Save Task</button>
+</form>

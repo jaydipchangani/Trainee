@@ -1,0 +1,69 @@
+<div class="editor-container">
+  <div class="toolbar">
+    <button (click)="showAddTextModal = true">Add Text</button>
+    <button (click)="showAddImageModal = true">Add Image</button>
+    <button (click)="deleteSelected()" [disabled]="!selectedId">Delete Selected</button>
+    <button (click)="bringForward()" [disabled]="!selectedId">Bring Forward</button>
+    <button (click)="sendBackward()" [disabled]="!selectedId">Send Backward</button>
+    <button (click)="shareDesign()">Share Design</button>
+  </div>
+
+  <div class="workspace">
+    <div class="canvas-scroll-container" #scrollContainer>
+      <div class="canvas-pages-col">
+        <div *ngFor="let page of pages; let i = index" class="canvas-page-wrapper" #canvasPageWrapper [class.selected]="i === selectedPageIndex" (click)="onPageClick(i)">
+          <div class="canvas-container" #container></div>
+        </div>
+      </div>
+    </div>
+    <div class="page-table-panel">
+      <div class="page-table-header">
+        <span>Page Table</span>
+        <button (click)="addPage()" title="Add Page">+</button>
+      </div>
+      <ul class="page-table-list">
+        <li *ngFor="let page of pages; let i = index">
+          <button (click)="scrollToPage(i)">Page {{ i + 1 }}</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Add Text Modal -->
+  <div class="modal" *ngIf="showAddTextModal">
+    <div class="modal-content">
+      <h2>Add Text</h2>
+      <div class="form-group">
+        <label>Text:</label>
+        <input type="text" [(ngModel)]="newText" placeholder="Enter text">
+      </div>
+      <div class="form-group">
+        <label>Font Size:</label>
+        <input type="number" [(ngModel)]="fontSize" min="8" max="72">
+      </div>
+      <div class="form-group">
+        <label>Color:</label>
+        <input type="color" [(ngModel)]="textColor">
+      </div>
+      <div class="modal-actions">
+        <button (click)="addText()">Add</button>
+        <button (click)="showAddTextModal = false">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Image Modal -->
+  <div class="modal" *ngIf="showAddImageModal">
+    <div class="modal-content">
+      <h2>Add Image</h2>
+      <div class="form-group">
+        <label>Image URL:</label>
+        <input type="text" [(ngModel)]="newImageUrl" placeholder="Enter image URL">
+      </div>
+      <div class="modal-actions">
+        <button (click)="addImage()">Add</button>
+        <button (click)="showAddImageModal = false">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

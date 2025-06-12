@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "Student Register";
+}
+@model taskFour.Models.Student;
+
+
+
+<div class="container mt-5">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-center mb-4">Student Register Page</h2>
+        <h3 class="text-center mb-4 fw-bold text-danger text-decoration-underline" style="text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);">
+            @ViewData["Instruction"]
+        </h3>
+
+        <form method="post" asp-action="Register" class="needs-validation" novalidate>
+            <div class="mb-3">
+                <label asp-for="name" class="form-label fw-bold">Name</label>
+                <input asp-for="name" class="form-control" placeholder="Enter your full name" required />
+                <span asp-validation-for="name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="age" class="form-label fw-bold">Age</label>
+                <input asp-for="age" type="number" class="form-control" placeholder="Enter your age" required />
+                <span asp-validation-for="age" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="email" class="form-label fw-bold">Email</label>
+                <input asp-for="email" type="email" class="form-control" placeholder="Enter your email" required />
+                <span asp-validation-for="email" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="course" class="form-label fw-bold">Course</label>
+                <input asp-for="course" class="form-control" placeholder="Enter your course" required />
+                <span asp-validation-for="course" class="text-danger"></span>
+   
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Submit</button>
+        </form>
+    </div>
+</div>
+
+<!-- Bootstrap and Validation Scripts -->
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,44 @@
+﻿@{
+	Layout = "~/Views/Shared/_Layout.cshtml";
+
+	ViewData["Title"] = "Hello Page";
+	int number = 1;
+	string name = "Jaydip";
+
+	int time = DateTime.Now.Hour;
+
+	List<string> strings = new List<string> { "One", "Two", "Three" };
+
+
+
+}
+
+@if (time < 12)
+{
+	<p>Good Morning @name</p>
+}
+else{
+	<p>Good Afternoon @name</p>
+}
+
+<ul>
+	@for (int i = 1; i <= 5; i++)
+	{
+		<li>Item number @i</li>
+	}
+</ul>
+
+<ol>
+	@while (number<5)
+	{
+		<li>While loop @number</li>
+		number++;
+	}
+</ol>
+
+<ul>
+	@foreach (var s in strings)
+	{
+		<li>@s</li>
+	}
+</ul>

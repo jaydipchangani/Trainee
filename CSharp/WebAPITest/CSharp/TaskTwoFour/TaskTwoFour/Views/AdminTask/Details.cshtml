@@ -1,0 +1,17 @@
+﻿@model TaskTwoFour.Models.TaskModel
+
+@{
+    ViewData["Title"] = "Task Details";
+}
+
+<h2>Task Details</h2>
+
+<div>
+    <p><strong>Title:</strong> @Model.Title</p>
+    <p><strong>Description:</strong> @Model.Description</p>
+    <p><strong>Due Date:</strong> @Model.DueDate.ToString("yyyy-MM-dd")</p>
+    <p><strong>Status:</strong> @Model.Status</p>
+</div>
+
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+<a asp-action="Index" class="btn btn-secondary">Back to List</a>

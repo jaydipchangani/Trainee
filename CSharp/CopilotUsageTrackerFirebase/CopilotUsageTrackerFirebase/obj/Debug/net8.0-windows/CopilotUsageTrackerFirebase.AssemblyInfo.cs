@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CopilotUsageTrackerFirebase")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b4049a1a05027e70f4d94e2a6c831c81c3266bb8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0083b3256ac360b13560c5a0a704edfa7ebadeeb")]
 [assembly: System.Reflection.AssemblyProductAttribute("CopilotUsageTrackerFirebase")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CopilotUsageTrackerFirebase")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

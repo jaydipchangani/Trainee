@@ -1,0 +1,22 @@
+body {
+    font-family: Arial, sans-serif;
+    width: 250px;
+    padding: 15px;
+    background-color: #f8f9fa;
+  }
+  #container {
+    text-align: center;
+  }
+  button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  #status {
+    margin-top: 15px;
+    color: green;
+  }
+  

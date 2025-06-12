@@ -100,7 +100,7 @@ const App = () => {
 
   return (
     <div style={{ maxWidth: 1200, margin: "0 auto", padding: "2rem" }}>
-      <Card bordered style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
+      <Card variant="outlined" style={{ boxShadow: "0 4px 12px rgba(0,0,0,0.1)" }}>
         <Row justify="space-between" align="middle">
           <Col>
             <h1>QuickBooks OAuth Integration</h1>

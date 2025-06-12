@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"] - My Website</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin:0px; padding:0px; }
+        .header { background: #222; color: white; padding-bottom: 10px; margin-top:0px }
+        .footer { background: #444; color: white; padding-top: 10px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>My Website</h1>
+        @Html.Partial("_NavBar")
+    </div>
+    <div>
+		@Html.Partial("_SideBar")
+    </div>
+    <div>
+        @RenderBody() <!-- This will be replaced by the actual content -->
+    </div>
+
+    <div class="footer">
+        <p>© 2025 My Website</p>
+        @Html.Partial("_NavBar")
+    </div>
+    @RenderSection("Scripts", required: false)
+
+</body>
+</html>

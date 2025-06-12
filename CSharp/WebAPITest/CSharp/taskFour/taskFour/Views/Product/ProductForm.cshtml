@@ -1,0 +1,44 @@
+﻿@model taskFour.Models.Product
+
+<div class="container mt-5">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-center mb-4">Student Register Page</h2>
+        <h3 class="text-center mb-4 fw-bold text-danger text-decoration-underline" style="text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);">
+            @ViewData["Instruction"]
+        </h3>
+
+        <form method="post" asp-action="Register" class="needs-validation" novalidate>
+            <div class="mb-3">
+                <label asp-for="ProductName" class="form-label fw-bold">Product Name</label>
+                <input asp-for="ProductName" class="form-control" placeholder="Enter product name" required />
+                <span asp-validation-for="ProductName" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ProductDescription" class="form-label fw-bold">Product Description</label>
+                <input asp-for="ProductDescription" class="form-control" placeholder="Enter detailed Product Description" required />
+                <span asp-validation-for="ProductDescription" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Qty" class="form-label fw-bold">Quantity</label>
+                <input asp-for="Qty" type="number" class="form-control" placeholder="Enter Product Quantity" required />
+                <span asp-validation-for="Qty" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ProductCategory" class="form-label fw-bold">Product Category</label>
+                <input asp-for="ProductCategory" class="form-control" placeholder="Enter Product Category" required />
+                <span asp-validation-for="ProductCategory" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Submit</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

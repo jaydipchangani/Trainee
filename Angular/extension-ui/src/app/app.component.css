@@ -1,0 +1,63 @@
+.container {
+  width: 480px;
+  max-width: 95vw;
+  margin: 48px auto;
+  padding: 32px 28px 28px 28px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+  text-align: center;
+  font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+}
+
+.title {
+  font-size: 2.1rem;
+  margin-bottom: 28px;
+  color: #1a202c;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.fetch-btn {
+  background: linear-gradient(90deg, #007bff 0%, #0056b3 100%);
+  color: #fff;
+  border: none;
+  padding: 13px 36px;
+  border-radius: 8px;
+  font-size: 1.08rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  margin-bottom: 36px;
+  box-shadow: 0 2px 8px rgba(0,123,255,0.08);
+}
+.fetch-btn:hover {
+  background: linear-gradient(90deg, #0056b3 0%, #007bff 100%);
+}
+
+.card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 24px;
+}
+
+.card {
+  background: #f8fafc;
+  border-radius: 12px;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.07);
+  padding: 22px 20px;
+  text-align: left;
+  font-size: 1.01rem;
+  word-break: break-word;
+  margin-top: 18px;
+}
+
+pre {
+  background: #f4f6f8;
+  padding: 12px;
+  border-radius: 7px;
+  overflow-x: auto;
+  font-size: 0.98rem;
+  font-family: 'Fira Mono', 'Consolas', monospace;
+}

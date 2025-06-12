@@ -1,0 +1,33 @@
+﻿@model List<TaskSix.Models.User>
+
+@{
+    ViewData["Title"] = "Inactive Users";
+}
+
+<h2>Inactive Users</h2>
+
+<table class="table table-bordered mt-3">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Id</td>
+                <td>@user.FirstName @user.LastName</td>
+                <td>@user.Email</td>
+                <td>@user.RoleName</td>
+                <td>
+                    <a href="@Url.Action("ReactivateUser", "Admin", new { id = user.Id })" class="btn btn-success">Reactivate</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

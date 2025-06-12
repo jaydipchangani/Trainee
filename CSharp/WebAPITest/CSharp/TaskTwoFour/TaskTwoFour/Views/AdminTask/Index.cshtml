@@ -1,0 +1,112 @@
+﻿@model List<TaskTwoFour.Models.TaskModel>
+
+@{
+    ViewData["Title"] = "Task List";
+}
+
+<h2>Task List</h2>
+
+<a asp-action="Create" class="btn btn-primary">Add New Task</a>
+
+
+<div class="d-flex justify-content-end align-items-center mt-3">
+    <label for="statusFilter" class="me-2 fw-bold">Filter by Status:</label>
+    <select id="statusFilter" class="form-select w-auto">
+        <option value="All">All</option>
+        <option value="Completed">Completed</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Pending">Pending</option>
+    </select>
+</div>
+
+
+<table class="table table-bordered table-striped mt-3" id="taskTable">
+    <thead>
+        <tr>
+            <th class="table-header" onclick="sortTable(0)">Title ⬆⬇</th>
+            <th class="table-header" onclick="sortTable(1)">Description ⬆⬇</th>
+            <th class="table-header" onclick="sortTable(2)">Due Date ⬆⬇</th>
+            <th class="table-header">Status</th>
+            <th class="table-header">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var task in Model)
+        {
+            <tr class="task-row" data-status="@task.Status">
+                <td>@task.Title</td>
+                <td>@task.Description</td>
+                <td>@task.DueDate.ToString("yyyy-MM-dd")</td>
+                <td>
+                    @if (task.Status == "Completed")
+                    {
+                        <span class="badge bg-success">Completed</span>
+                    }
+                    else if (task.Status == "In Progress")
+                    {
+                        <span class="badge bg-warning text-dark">In Progress</span>
+                    }
+                    else if (task.Status == "Pending")
+                    {
+                        <span class="badge bg-danger">Pending</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-primary">@task.Status</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@task.Id" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-action="Details" asp-route-id="@task.Id" class="btn btn-info btn-sm">Details</a>
+                    <a asp-action="Delete" asp-route-id="@task.Id" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<script>
+    document.getElementById("statusFilter").addEventListener("change", function () {
+        let selectedStatus = this.value;
+        let rows = document.querySelectorAll(".task-row");
+
+        rows.forEach(row => {
+            let taskStatus = row.getAttribute("data-status");
+            row.style.display = (selectedStatus === "All" || taskStatus === selectedStatus) ? "table-row" : "none";
+        });
+    });
+
+    function sortTable(columnIndex) {
+        let table = document.getElementById("taskTable");
+        let rows = Array.from(table.rows).slice(1);
+        let sortedRows = rows.sort((a, b) => {
+            let cellA = a.cells[columnIndex].innerText.trim().toLowerCase();
+            let cellB = b.cells[columnIndex].innerText.trim().toLowerCase();
+            return cellA.localeCompare(cellB);
+        });
+
+        sortedRows.forEach(row => table.appendChild(row));
+    }
+</script>
+
+
+<style>
+
+    .table-header {
+        font-weight: bold;
+        color: black;
+        cursor: pointer;
+        text-decoration: none; 
+
+    .table {
+        border-collapse: collapse; 
+    }
+
+    .table-bordered th,
+    .table-bordered td {
+        border: 2px solid black !important;
+        padding: 10px !important; 
+        text-align: left;
+    }
+</style>
