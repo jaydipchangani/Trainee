@@ -205,16 +205,31 @@
       <!-- Design content here -->
     </div>
     <div *ngSwitchCase="'elements'">
-      <h3>Elements</h3>
-      <div class="elements-panel">
-        <button (click)="addShape('rect')">Rectangle</button>
-        <button (click)="addShape('circle')">Circle</button>
-        <button (click)="addShape('ellipse')">Ellipse</button>
-        <button (click)="addShape('star')">Star</button>
-        <div class="color-pickers">
-          <label>Fill Color: <input type="color" [(ngModel)]="shapeFillColor" /></label>
-          <label>Stroke Color: <input type="color" [(ngModel)]="shapeStrokeColor" /></label>
+      <div class="elements-header">
+        <h3>Elements</h3>
+        <div class="elements-desc">Add shapes and lines to your design.</div>
+      </div>
+      <div class="elements-shape-grid">
+        <div class="elements-shape-card" (click)="addShape('rect')">
+          <mat-icon>crop_square</mat-icon>
+          <span>Rectangle</span>
         </div>
+        <div class="elements-shape-card" (click)="addShape('circle')">
+          <mat-icon>circle</mat-icon>
+          <span>Circle</span>
+        </div>
+        <div class="elements-shape-card" (click)="addShape('ellipse')">
+          <mat-icon>panorama_fish_eye</mat-icon>
+          <span>Ellipse</span>
+        </div>
+        <div class="elements-shape-card" (click)="addShape('star')">
+          <mat-icon>star</mat-icon>
+          <span>Star</span>
+        </div>
+      </div>
+      <div class="elements-color-pickers">
+        <label>Fill Color: <input type="color" [(ngModel)]="shapeFillColor" /></label>
+        <label>Stroke Color: <input type="color" [(ngModel)]="shapeStrokeColor" /></label>
       </div>
     </div>
     <div *ngSwitchCase="'text'">
