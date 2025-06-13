@@ -5,7 +5,7 @@
   padding: 20px;
   background-color: #f5f5f5;
   margin-left: 72px;
-  margin-top: 56px;
+  padding-top: 56px;
 }
 
 .toolbar {
@@ -16,6 +16,7 @@
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
+  padding-left: 240px;
 
   button {
     padding: 8px 16px;
@@ -490,8 +491,8 @@
 
 .floating-text-toolbar {
   position: fixed;
-  top: 70px;
-  left: 50%;
+  top: 60px;
+  left: 75%;
   transform: translateX(-50%);
   background: #fff;
   border-radius: 8px;

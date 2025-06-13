@@ -32,7 +32,7 @@
 
   <div class="toolbar">
     <button (click)="showAddTextModal = true">Add Text</button>
-    <button (click)="showAddImageModal = true">Add Image</button>
+    <button (click)="showAddImageModal = true">Add Image using URL</button>
     <button (click)="deleteSelected()" [disabled]="!selectedId">Delete Selected</button>
     <button (click)="bringForward()" [disabled]="!selectedId">Bring Forward</button>
     <button (click)="sendBackward()" [disabled]="!selectedId">Send Backward</button>
@@ -40,7 +40,7 @@
       <mat-icon>aspect_ratio</mat-icon>
       Lock Aspect Ratio
     </button>
-    <button (click)="shareDesign()">Share Design</button>
+    <!-- <button (click)="shareDesign()">Share Design</button> -->
   </div>
 
   <div class="workspace">
@@ -82,7 +82,7 @@
     </div>
   </div>
 
-  <!-- Add Text Modal -->
+    <!-- Add Text Modal -->
   <div class="modal" *ngIf="showAddTextModal">
     <div class="modal-content">
       <h2>Add Text</h2>
@@ -168,6 +168,7 @@
     <span class="material-icons">category</span>
     <span>Elements</span>
   </button>
+  <!--
   <button 
     class="sidebar-btn" 
     [class.active]="activeSection === 'text'" 
@@ -175,6 +176,8 @@
     <span class="material-icons">text_fields</span>
     <span>Text</span>
   </button>
+
+-->
   <button 
     class="sidebar-btn" 
     [class.active]="activeSection === 'uploads'" 
