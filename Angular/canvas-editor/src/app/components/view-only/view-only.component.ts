@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angula
 import { ActivatedRoute } from '@angular/router';
 import { CanvasService } from '../../services/canvas.service';
 import { HtmlGeneratorService } from '../../services/html-generator.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-view-only',
@@ -13,6 +14,9 @@ export class ViewOnlyComponent implements OnInit, AfterViewInit {
   pageCountArray: number[] = [];
   iframeHeight: number = 600;
   @ViewChild('previewIframe') previewIframe!: ElementRef<HTMLIFrameElement>;
+  isPresentationMode = false;
+  currentPresentationPage = 0;
+  private pageHtmlSub: Subscription | undefined;
 
   constructor(
     private route: ActivatedRoute,
@@ -34,18 +38,14 @@ export class ViewOnlyComponent implements OnInit, AfterViewInit {
     });
 
     this.htmlGenerator.getHtmlOutput().subscribe(html => {
-      this.htmlPreview = html;
-      this.setIframeContent();
-      // Update page count for navigation
       const state = this.canvasService.getShareableState();
       try {
         const parsed = JSON.parse(state);
         this.pageCountArray = Array(parsed.pages?.length || 1).fill(0);
-        this.iframeHeight = (parsed.pages?.length || 1) * 600;
       } catch {
         this.pageCountArray = [0];
-        this.iframeHeight = 600;
       }
+      this.setPresentationPage();
     });
   }
 
@@ -80,5 +80,78 @@ export class ViewOnlyComponent implements OnInit, AfterViewInit {
     document.execCommand('copy');
     document.body.removeChild(el);
     alert('HTML copied to clipboard!');
+  }
+
+  enterPresentationMode() {
+    this.isPresentationMode = true;
+    this.currentPresentationPage = 0;
+    setTimeout(() => {
+      const preview = document.querySelector('.preview-content') as HTMLElement;
+      if (preview.requestFullscreen) {
+        preview.requestFullscreen();
+      } else if ((preview as any).webkitRequestFullscreen) {
+        (preview as any).webkitRequestFullscreen();
+      } else if ((preview as any).msRequestFullscreen) {
+        (preview as any).msRequestFullscreen();
+      }
+      this.setPresentationPage();
+      window.addEventListener('keydown', this.handlePresentationKey);
+      document.addEventListener('fullscreenchange', this.exitPresentationOnClose);
+    }, 0);
+  }
+
+  exitPresentationMode() {
+    this.isPresentationMode = false;
+    window.removeEventListener('keydown', this.handlePresentationKey);
+    document.removeEventListener('fullscreenchange', this.exitPresentationOnClose);
+  }
+
+  handlePresentationKey = (event: KeyboardEvent) => {
+    if (!this.isPresentationMode) return;
+    if (event.key === 'ArrowRight' || event.key === 'PageDown') {
+      this.nextPresentationPage();
+    } else if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
+      this.prevPresentationPage();
+    } else if (event.key === 'Escape') {
+      this.exitFullscreen();
+    }
+  };
+
+  exitPresentationOnClose = () => {
+    if (!document.fullscreenElement) {
+      this.exitPresentationMode();
+    }
+  };
+
+  setPresentationPage() {
+    if (this.pageHtmlSub) this.pageHtmlSub.unsubscribe();
+    this.pageHtmlSub = this.htmlGenerator.getSinglePageHtmlOutput(this.currentPresentationPage).subscribe(html => {
+      this.htmlPreview = html;
+      this.setIframeContent();
+    });
+  }
+
+  nextPresentationPage() {
+    if (this.currentPresentationPage < this.pageCountArray.length - 1) {
+      this.currentPresentationPage++;
+      this.setPresentationPage();
+    }
+  }
+
+  prevPresentationPage() {
+    if (this.currentPresentationPage > 0) {
+      this.currentPresentationPage--;
+      this.setPresentationPage();
+    }
+  }
+
+  exitFullscreen() {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if ((document as any).webkitExitFullscreen) {
+      (document as any).webkitExitFullscreen();
+    } else if ((document as any).msExitFullscreen) {
+      (document as any).msExitFullscreen();
+    }
   }
 }
