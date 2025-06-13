@@ -12,7 +12,7 @@ export class TemplateService {
   private templates: CanvasTemplate[] = [
     {
       name: 'Modern Frame',
-      previewUrl: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80', // Unique image 1
+      previewUrl: "assets/templateOne.png", // Unique image 1
       elements: [
         {
           id: 'frame-bg',
@@ -48,7 +48,7 @@ export class TemplateService {
     },
     {
       name: 'Sales Proposal',
-      previewUrl: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80', // Unique image 2
+      previewUrl: "assets/templateTwo.png", // Unique image 2
       elements: [
         {
           id: 'bg',
@@ -59,7 +59,7 @@ export class TemplateService {
           height: 600,
           rotation: 0,
           zIndex: 0,
-          fill: 'linear-gradient(180deg, #e9a17b 0%, #fff 100%)',
+          fill: '#99b6f2',
           stroke: '#b86b4b',
           strokeWidth: 8,
           opacity: 1,
@@ -140,7 +140,7 @@ export class TemplateService {
     },
     {
       name: 'Company Profile',
-      previewUrl: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=400&q=80', // Unique image 3
+      previewUrl: "assets/templateThree.png", // Unique image 3
       elements: [
         {
           id: 'bg',

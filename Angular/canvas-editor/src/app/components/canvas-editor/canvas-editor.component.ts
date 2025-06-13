@@ -871,7 +871,9 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       numPoints: 5,
       points: [0, 0, 100, 0, 50, 100],
     };
+    this.canvasService.switchPage(this.selectedPageIndex);
     this.canvasService.addElement(element);
+    setTimeout(() => this.initAllCanvases());
   }
 
   ngOnDestroy() {

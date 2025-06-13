@@ -589,12 +589,12 @@
 .template-preview-img {
   width: 200px;
   height: 200px;
-  object-fit: cover;
+  object-fit: fill;
   border-radius: 0;
   margin: 0;
   border: none;
   display: block;
-  padding: 10px;
+  padding: 10px 0px 0px 0px;
 }
 // ... existing code ...
 .template-info {
