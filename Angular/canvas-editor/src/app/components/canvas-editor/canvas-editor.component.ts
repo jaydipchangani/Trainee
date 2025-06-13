@@ -129,8 +129,8 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       while (container.firstChild) container.removeChild(container.firstChild);
       const stage = new Konva.Stage({
         container: container,
-        width: 800,
-        height: 600
+        width: 1024,
+        height: 768
       });
       const layer = new Konva.Layer();
       stage.add(layer);
