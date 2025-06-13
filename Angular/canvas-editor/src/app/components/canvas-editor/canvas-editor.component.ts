@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, ViewChildren, QueryList, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ViewChildren, QueryList, AfterViewInit, OnDestroy, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { CanvasService, CanvasElement, CanvasPage } from '../../services/canvas.service';
 import Konva from 'konva';
@@ -60,6 +60,8 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   lockAspectRatio: boolean = true;
 
+  private clipboardElement: CanvasElement | null = null;
+
   constructor(
     private canvasService: CanvasService,
     private router: Router,
@@ -108,6 +110,12 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     setTimeout(() => this.initAllCanvases());
+    // Add keyboard event listener to canvas container
+    const canvasContainer = document.querySelector('.canvas-scroll-container') as HTMLElement;
+    if (canvasContainer) {
+      canvasContainer.setAttribute('tabindex', '0');
+      canvasContainer.addEventListener('keydown', this.handleCanvasKeydown.bind(this));
+    }
   }
 
   private initAllCanvases() {
@@ -940,5 +948,51 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       this.canvasService.updatePageElements(i, [...templateElements, ...userElements]);
     }
     setTimeout(() => this.initAllCanvases());
+  }
+
+  handleCanvasKeydown(event: KeyboardEvent) {
+    if (document.activeElement && document.activeElement.classList.contains('canvas-scroll-container')) {
+      if ((event.key === 'Delete' || event.key === 'Backspace') && this.selectedId) {
+        event.preventDefault();
+        this.deleteSelected();
+      } else if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'z') {
+        event.preventDefault();
+        this.undo();
+      } else if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'y') {
+        event.preventDefault();
+        this.redo();
+      } else if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'c' && this.selectedId) {
+        event.preventDefault();
+        // Copy selected element
+        const el = this.pages[this.selectedPageIndex]?.elements.find(e => e.id === this.selectedId);
+        if (el) {
+          const { id, ...rest } = el;
+          this.clipboardElement = { ...rest, id: 'clipboard' };
+        }
+      } else if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'x' && this.selectedId) {
+        event.preventDefault();
+        // Cut selected element
+        const el = this.pages[this.selectedPageIndex]?.elements.find(e => e.id === this.selectedId);
+        if (el) {
+          const { id, ...rest } = el;
+          this.clipboardElement = { ...rest, id: 'clipboard' };
+          this.deleteSelected();
+        }
+      } else if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'v') {
+        event.preventDefault();
+        // Paste element
+        if (this.clipboardElement) {
+          const pasted = {
+            ...this.clipboardElement,
+            id: Date.now().toString() + Math.random(),
+            x: (this.clipboardElement.x || 0) + 20,
+            y: (this.clipboardElement.y || 0) + 20,
+          };
+          this.canvasService.switchPage(this.selectedPageIndex);
+          this.canvasService.addElement(pasted);
+          setTimeout(() => this.initAllCanvases());
+        }
+      }
+    }
   }
 }

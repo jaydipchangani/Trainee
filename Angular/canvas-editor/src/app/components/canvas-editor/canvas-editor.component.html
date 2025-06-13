@@ -44,7 +44,7 @@
   </div>
 
   <div class="workspace">
-    <div class="canvas-scroll-container" #scrollContainer>
+    <div class="canvas-scroll-container" #scrollContainer tabindex="0">
       <div class="canvas-pages-col">
         <div *ngFor="let page of pages; let i = index" class="canvas-page-wrapper" #canvasPageWrapper [class.selected]="i === selectedPageIndex" (click)="onPageClick(i)">
           <div class="canvas-page-title">{{ page.title }}</div>
