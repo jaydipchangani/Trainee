@@ -149,6 +149,13 @@
 <div class="left-sidebar">
   <button 
     class="sidebar-btn" 
+    [class.active]="activeSection === 'templates'" 
+    (click)="activeSection = activeSection === 'templates' ? null : 'templates'">
+    <span class="material-icons">view_module</span>
+    <span>Templates</span>
+  </button>
+  <button 
+    class="sidebar-btn" 
     [class.active]="activeSection === 'design'" 
     (click)="activeSection = activeSection === 'design' ? null : 'design'">
     <span class="material-icons">dashboard_customize</span>
@@ -179,6 +186,14 @@
 
 <div class="sidebar-content" *ngIf="activeSection">
   <ng-container [ngSwitch]="activeSection">
+    <div *ngSwitchCase="'templates'">
+      <h3>Templates</h3>
+      <ul class="template-list">
+        <li *ngFor="let template of templates">
+          <img [src]="template.previewUrl" alt="Template preview" class="template-preview-img" (click)="applyTemplateToAllPages(template)" style="cursor:pointer;" />
+        </li>
+      </ul>
+    </div>
     <div *ngSwitchCase="'design'">
       <h3>Design</h3>
       <button class="text-btn heading" (click)="addHeading()">Add Heading</button>

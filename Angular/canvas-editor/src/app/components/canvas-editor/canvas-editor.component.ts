@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef, ViewChildren, QueryList, Afte
 import { Router } from '@angular/router';
 import { CanvasService, CanvasElement, CanvasPage } from '../../services/canvas.service';
 import Konva from 'konva';
+import { TemplateService, CanvasTemplate } from '../../services/template.service';
 
 @Component({
   selector: 'app-canvas-editor',
@@ -61,7 +62,8 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private canvasService: CanvasService,
-    private router: Router
+    private router: Router,
+    private templateService: TemplateService
   ) {
     // Load fileName from URL if present
     const urlFileName = this.getFileNameFromUrl();
@@ -126,8 +128,12 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       stage.add(layer);
       const transformer = new Konva.Transformer({
         nodes: [],
-        rotateEnabled: false,
-        enabledAnchors: [],
+        rotateEnabled: true, // Enable rotation handle
+        enabledAnchors: [
+          'top-left', 'top-center', 'top-right',
+          'middle-left', 'middle-right',
+          'bottom-left', 'bottom-center', 'bottom-right'
+        ], // Enable all resize handles
         borderStroke: '#1976d2',
         borderStrokeWidth: 2,
       });
@@ -184,6 +190,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         this.canvasService.setSelectedElementId(element.id);
         if (this.transformers[pageIndex] && node) {
           this.transformers[pageIndex].nodes([node]);
+          this.layers[pageIndex].add(this.transformers[pageIndex]); // bring transformer to top
           this.layers[pageIndex].draw();
         }
         this.selectedPageIndex = pageIndex;
@@ -268,6 +275,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         this.canvasService.setSelectedElementId(element.id);
         if (this.transformers[pageIndex] && node) {
           this.transformers[pageIndex].nodes([node]);
+          this.layers[pageIndex].add(this.transformers[pageIndex]); // bring transformer to top
           this.layers[pageIndex].draw();
         }
         this.selectedPageIndex = pageIndex;
@@ -290,6 +298,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         this.canvasService.setSelectedElementId(element.id);
         if (this.transformers[pageIndex] && node) {
           this.transformers[pageIndex].nodes([node]);
+          this.layers[pageIndex].add(this.transformers[pageIndex]); // bring transformer to top
           this.layers[pageIndex].draw();
         }
         this.selectedPageIndex = pageIndex;
@@ -313,6 +322,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         this.canvasService.setSelectedElementId(element.id);
         if (this.transformers[pageIndex] && node) {
           this.transformers[pageIndex].nodes([node]);
+          this.layers[pageIndex].add(this.transformers[pageIndex]); // bring transformer to top
           this.layers[pageIndex].draw();
         }
         this.selectedPageIndex = pageIndex;
@@ -334,6 +344,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         this.canvasService.setSelectedElementId(element.id);
         if (this.transformers[pageIndex] && node) {
           this.transformers[pageIndex].nodes([node]);
+          this.layers[pageIndex].add(this.transformers[pageIndex]); // bring transformer to top
           this.layers[pageIndex].draw();
         }
         this.selectedPageIndex = pageIndex;
@@ -355,6 +366,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         this.canvasService.setSelectedElementId(element.id);
         if (this.transformers[pageIndex] && node) {
           this.transformers[pageIndex].nodes([node]);
+          this.layers[pageIndex].add(this.transformers[pageIndex]); // bring transformer to top
           this.layers[pageIndex].draw();
         }
         this.selectedPageIndex = pageIndex;
@@ -379,6 +391,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         this.canvasService.setSelectedElementId(element.id);
         if (this.transformers[pageIndex] && node) {
           this.transformers[pageIndex].nodes([node]);
+          this.layers[pageIndex].add(this.transformers[pageIndex]); // bring transformer to top
           this.layers[pageIndex].draw();
         }
         this.selectedPageIndex = pageIndex;
@@ -418,6 +431,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         const transformer = this.transformers[pageIndex];
         if (transformer && node) {
           transformer.nodes([node]);
+          this.layers[pageIndex].add(this.transformers[pageIndex]); // bring transformer to top
           this.layers[pageIndex].draw();
         }
         this.selectedPageIndex = pageIndex;
@@ -594,7 +608,8 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!node) return;
 
     const transformer = new Konva.Transformer({
-      nodes: [node],
+      nodes: [],
+      rotateEnabled: true,
       enabledAnchors: [
         'top-left', 'top-center', 'top-right',
         'middle-left', 'middle-right',
@@ -608,9 +623,9 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       anchorShadowEnabled: true,
       anchorShadowColor: '#a259ff',
       anchorShadowBlur: 4,
-      borderStroke: '#a259ff',
+      borderStroke: '#1976d2',
       borderStrokeWidth: 2,
-      rotateEnabled: false // We'll add a custom rotation handle in the next step
+      
     });
 
     transformer.on('transformend', () => {
@@ -901,5 +916,27 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     } else if (file.type.startsWith('video/')) {
       this.addVideo(file.url);
     }
+  }
+
+  get templates(): CanvasTemplate[] {
+    return this.templateService.getTemplates();
+  }
+
+  applyTemplateToPage(template: CanvasTemplate, pageIndex: number) {
+    // Deep copy and assign new IDs
+    const newElements = template.elements.map(el => ({ ...el, id: Date.now().toString() + Math.random() }));
+    this.canvasService.updatePageElements(pageIndex, newElements);
+    setTimeout(() => this.initAllCanvases());
+  }
+
+  applyTemplateToAllPages(template: CanvasTemplate) {
+    for (let i = 0; i < this.pages.length; i++) {
+      // Remove previous template elements (identified by isTemplate: true)
+      const userElements = this.pages[i].elements.filter(e => !(e as any).isTemplate);
+      // Add new template elements, marked as isTemplate
+      const templateElements = template.elements.map(el => ({ ...el, id: Date.now().toString() + Math.random(), isTemplate: true }));
+      this.canvasService.updatePageElements(i, [...templateElements, ...userElements]);
+    }
+    setTimeout(() => this.initAllCanvases());
   }
 }

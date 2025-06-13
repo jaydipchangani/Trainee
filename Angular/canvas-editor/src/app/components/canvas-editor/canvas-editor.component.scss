@@ -566,3 +566,58 @@
   background: #e6f0ff;
   color: #1976d2;
 }
+
+.template-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+// ... existing code ...
+.template-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.template-list li {
+  padding: 0;
+  margin: 0;
+  background: none;
+  border-radius: 0;
+  box-shadow: none;
+  display: block;
+}
+.template-preview-img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 0;
+  margin: 0;
+  border: none;
+  display: block;
+  padding: 10px;
+}
+// ... existing code ...
+.template-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.template-info span {
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+.template-info button {
+  align-self: flex-start;
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.template-info button:hover {
+  background: #1251a2;
+}

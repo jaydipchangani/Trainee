@@ -246,4 +246,12 @@ export class CanvasService {
   setSelectedElementId(id: string | null) {
     this.selectedElementIdSubject.next(id);
   }
+
+  updatePageElements(pageIndex: number, elements: CanvasElement[]) {
+    if (this.pagesSubject.value[pageIndex]) {
+      const pages = [...this.pagesSubject.value];
+      pages[pageIndex].elements = elements;
+      this.pagesSubject.next(pages);
+    }
+  }
 }
