@@ -222,18 +222,21 @@
       <!-- Text content here -->
     </div>
     <div *ngSwitchCase="'uploads'">
-      <h3>Uploads</h3>
-      <div class="uploads-panel">
-        <input type="file" accept="image/*,video/*" (change)="onFileUpload($event)" />
-        <div *ngIf="uploadedFiles.length > 0">
-          <h4>Uploaded Files</h4>
-          <ul>
-            <li *ngFor="let file of uploadedFiles">
-              <img *ngIf="file.type.startsWith('image/')" [src]="file.url" alt="Uploaded Image" style="width: 100px; height: 100px;" />
-              <video *ngIf="file.type.startsWith('video/')" [src]="file.url" controls style="width: 100px; height: 100px;"></video>
-              <button (click)="useFile(file)">Use</button>
-            </li>
-          </ul>
+      <div class="uploads-header">
+        <h3>Uploads</h3>
+        <div class="uploads-desc">Upload your images or videos to use in your design.</div>
+      </div>
+      <div class="uploads-dropzone" (click)="fileInput.click()" (dragover)="$event.preventDefault()" (drop)="onFileDrop($event)">
+        <input #fileInput type="file" accept="image/*,video/*" (change)="onFileUpload($event)" style="display:none;" multiple />
+        <div class="uploads-dropzone-content">
+          <mat-icon>cloud_upload</mat-icon>
+          <span>Click or drag files to upload</span>
+        </div>
+      </div>
+      <div *ngIf="uploadedFiles.length > 0" class="uploads-grid">
+        <div *ngFor="let file of uploadedFiles" class="uploads-thumb" (click)="useFile(file)">
+          <img *ngIf="file.type.startsWith('image/')" [src]="file.url" alt="Uploaded Image" />
+          <video *ngIf="file.type.startsWith('video/')" [src]="file.url" muted></video>
         </div>
       </div>
     </div>

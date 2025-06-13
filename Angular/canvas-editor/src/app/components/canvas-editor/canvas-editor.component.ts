@@ -518,8 +518,8 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         type: 'image',
         x: 100,
         y: 100,
-        width: img.width,
-        height: img.height,
+        width: 200,
+        height: 200,
         rotation: 0,
         zIndex: this.pages[this.selectedPageIndex].elements.length,
         imageUrl: url,
@@ -993,6 +993,20 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
           setTimeout(() => this.initAllCanvases());
         }
       }
+    }
+  }
+
+  onFileDrop(event: DragEvent) {
+    event.preventDefault();
+    if (event.dataTransfer && event.dataTransfer.files) {
+      const files = Array.from(event.dataTransfer.files);
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.uploadedFiles.push({ url: e.target?.result as string, type: file.type });
+        };
+        reader.readAsDataURL(file);
+      });
     }
   }
 }
