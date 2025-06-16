@@ -101,9 +101,16 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         const el = this.pages[this.selectedPageIndex]?.elements.find(e => e.id === selectedId && e.type === 'text');
         this.textToolbarElement = el ? { ...el } : null;
         this.textToolbarVisible = !!el;
+        
+        // Show/hide shape toolbar
+        const shapeEl = this.pages[this.selectedPageIndex]?.elements.find(e => e.id === selectedId && ['rect', 'circle', 'ellipse', 'star'].includes(e.type));
+        this.shapeToolbarElement = shapeEl ? { ...shapeEl } : null;
+        this.shapeToolbarVisible = !!shapeEl;
       } else {
         this.textToolbarElement = null;
         this.textToolbarVisible = false;
+        this.shapeToolbarElement = null;
+        this.shapeToolbarVisible = false;
       }
     });
   }
@@ -132,11 +139,25 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         width: 1024,
         height: 768
       });
+      
+      // Add stage click handler to deselect elements
+      stage.on('click', (e) => {
+        if (e.target === stage) {
+          this.selectedId = null;
+          this.canvasService.setSelectedElementId(null);
+          this.textToolbarVisible = false;
+          this.shapeToolbarVisible = false;
+          this.transformers[i].nodes([]);
+          this.layers[i].draw();
+        }
+      });
+      
       const layer = new Konva.Layer();
       stage.add(layer);
       const transformer = new Konva.Transformer({
         nodes: [],
         rotateEnabled: true, // Enable rotation handle
+        resizeEnabled: true, // Enable resize handles
         enabledAnchors: [
           'top-left', 'top-center', 'top-right',
           'middle-left', 'middle-right',
@@ -144,7 +165,28 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         ], // Enable all resize handles
         borderStroke: '#1976d2',
         borderStrokeWidth: 2,
+        anchorStroke: '#1976d2',
+        anchorFill: '#ffffff',
+        anchorSize: 8,
+        anchorCornerRadius: 4,
+        anchorStrokeWidth: 2,
+        anchorShadowEnabled: true,
+        anchorShadowColor: '#000000',
+        anchorShadowBlur: 2,
+        anchorShadowOffset: { x: 1, y: 1 },
+        anchorShadowOpacity: 0.3,
       });
+      
+      // Add transform event handler to the transformer
+      transformer.on('transform', () => {
+        const nodes = transformer.nodes();
+        if (nodes.length > 0) {
+          const node = nodes[0];
+          // Force update the transformer
+          transformer.forceUpdate();
+        }
+      });
+      
       layer.add(transformer);
       this.stages[i] = stage;
       this.layers[i] = layer;
@@ -158,13 +200,21 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     const layer = this.layers[pageIndex];
     const transformer = this.transformers[pageIndex];
     if (!layer || !transformer) return;
+    
+    // Remove transformer temporarily
+    transformer.remove();
+    
+    // Clear all nodes except transformer
     layer.destroyChildren();
+    
+    // Add elements
     elements.forEach(element => {
       const node = this.createElementNode(element, pageIndex);
       if (node !== null) {
         layer.add(node);
       }
     });
+    
     // Always add transformer last so it appears above all nodes
     layer.add(transformer);
     layer.draw();
@@ -465,7 +515,60 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
           height,
           rotation: n.rotation()
         }, pageIndex);
+      } else if (element.type === 'circle') {
+        // For circles, convert center coordinates to top-left corner
+        const circleNode = n as Konva.Circle;
+        const radius = circleNode.radius() * n.scaleX();
+        const width = radius * 2;
+        const height = radius * 2;
+        const x = n.x() - radius;
+        const y = n.y() - radius;
+        n.scaleX(1);
+        n.scaleY(1);
+        this.updateElementOnPage(element.id, {
+          x,
+          y,
+          width,
+          height,
+          rotation: n.rotation()
+        }, pageIndex);
+      } else if (element.type === 'ellipse') {
+        // For ellipses, convert center coordinates to top-left corner
+        const ellipseNode = n as Konva.Ellipse;
+        const radiusX = ellipseNode.radiusX() * n.scaleX();
+        const radiusY = ellipseNode.radiusY() * n.scaleY();
+        const width = radiusX * 2;
+        const height = radiusY * 2;
+        const x = n.x() - radiusX;
+        const y = n.y() - radiusY;
+        n.scaleX(1);
+        n.scaleY(1);
+        this.updateElementOnPage(element.id, {
+          x,
+          y,
+          width,
+          height,
+          rotation: n.rotation()
+        }, pageIndex);
+      } else if (element.type === 'star') {
+        // For stars, convert center coordinates to top-left corner
+        const starNode = n as Konva.Star;
+        const outerRadius = starNode.outerRadius() * n.scaleX();
+        const width = outerRadius * 2;
+        const height = outerRadius * 2;
+        const x = n.x() - outerRadius;
+        const y = n.y() - outerRadius;
+        n.scaleX(1);
+        n.scaleY(1);
+        this.updateElementOnPage(element.id, {
+          x,
+          y,
+          width,
+          height,
+          rotation: n.rotation()
+        }, pageIndex);
       } else {
+        // For rectangles and other shapes, use standard coordinates
         const updatedElement = {
           x: n.x(),
           y: n.y(),
@@ -480,10 +583,35 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     node.on('dragend', () => {
       const n = node!;
-      this.updateElementOnPage(element.id, {
-        x: n.x(),
-        y: n.y()
-      }, pageIndex);
+      if (element.type === 'circle') {
+        // For circles, convert center coordinates to top-left corner
+        const circleNode = n as Konva.Circle;
+        const radius = circleNode.radius();
+        const x = n.x() - radius;
+        const y = n.y() - radius;
+        this.updateElementOnPage(element.id, { x, y }, pageIndex);
+      } else if (element.type === 'ellipse') {
+        // For ellipses, convert center coordinates to top-left corner
+        const ellipseNode = n as Konva.Ellipse;
+        const radiusX = ellipseNode.radiusX();
+        const radiusY = ellipseNode.radiusY();
+        const x = n.x() - radiusX;
+        const y = n.y() - radiusY;
+        this.updateElementOnPage(element.id, { x, y }, pageIndex);
+      } else if (element.type === 'star') {
+        // For stars, convert center coordinates to top-left corner
+        const starNode = n as Konva.Star;
+        const outerRadius = starNode.outerRadius();
+        const x = n.x() - outerRadius;
+        const y = n.y() - outerRadius;
+        this.updateElementOnPage(element.id, { x, y }, pageIndex);
+      } else {
+        // For rectangles and other shapes, use standard coordinates
+        this.updateElementOnPage(element.id, {
+          x: n.x(),
+          y: n.y()
+        }, pageIndex);
+      }
     });
     return node;
   }
@@ -599,61 +727,8 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (konvaNode) {
       layer.add(konvaNode);
-      this.initTransformer(element);
       layer.draw();
     }
-  }
-
-  initTransformer(element: CanvasElement) {
-    const stage = this.stages[this.selectedPageIndex];
-    const layer = stage.findOne('.layer') as Konva.Layer;
-    if (!layer) return;
-
-    // Remove existing transformers
-    layer.find('Transformer').forEach(t => t.destroy());
-
-    const node = layer.findOne(`#${element.id}`);
-    if (!node) return;
-
-    const transformer = new Konva.Transformer({
-      nodes: [],
-      rotateEnabled: true,
-      enabledAnchors: [
-        'top-left', 'top-center', 'top-right',
-        'middle-left', 'middle-right',
-        'bottom-left', 'bottom-center', 'bottom-right'
-      ],
-      anchorStroke: '#fff',
-      anchorFill: '#fff',
-      anchorSize: 10,
-      anchorCornerRadius: 5,
-      anchorStrokeWidth: 2,
-      anchorShadowEnabled: true,
-      anchorShadowColor: '#a259ff',
-      anchorShadowBlur: 4,
-      borderStroke: '#1976d2',
-      borderStrokeWidth: 2,
-      
-    });
-
-    transformer.on('transformend', () => {
-      const node = transformer.nodes()[0];
-      const currentElement = this.pages[this.selectedPageIndex].elements.find(e => e.id === element.id);
-      if (currentElement) {
-        this.canvasService.updateElement(currentElement.id, {
-          x: node.x(),
-          y: node.y(),
-          width: node.width() * node.scaleX(),
-          height: node.height() * node.scaleY(),
-          rotation: node.rotation(),
-          scaleX: node.scaleX(),
-          scaleY: node.scaleY()
-        });
-      }
-    });
-
-    layer.add(transformer);
-    layer.draw();
   }
 
   deleteSelected() {
@@ -891,7 +966,6 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   onShapeSelect(element: CanvasElement) {
     this.shapeToolbarVisible = true;
     this.shapeToolbarElement = element;
-    this.initTransformer(element);
   }
 
   toggleAspectRatio() {
@@ -906,6 +980,8 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   updateShapeElement(updates: Partial<CanvasElement>) {
     if (this.shapeToolbarElement) {
       this.canvasService.updateElement(this.shapeToolbarElement.id, updates);
+      // Refresh the canvas to update the visual representation
+      setTimeout(() => this.loadElementsForPage(this.selectedPageIndex), 0);
     }
   }
 
