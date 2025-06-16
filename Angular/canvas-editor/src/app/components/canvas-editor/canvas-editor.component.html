@@ -58,7 +58,7 @@
         <button (click)="addPage()" title="Add Page">+</button>
       </div>
       <ul class="page-table-list">
-        <li *ngFor="let page of pages; let i = index">
+        <li *ngFor="let page of pages; let i = index" [class.selected-for-layers]="i === selectedPageForLayers">
           <button (click)="scrollToPage(i)">
             <span *ngIf="!editingPageIndexMap[i]">{{ page.title }}</span>
             <input *ngIf="editingPageIndexMap[i]" [(ngModel)]="page.title" (blur)="stopEditingPageName(i)" (keydown.enter)="stopEditingPageName(i)" class="page-title-input" />
@@ -79,6 +79,66 @@
           </button>
         </li>
       </ul>
+      
+      <!-- Layers Section -->
+      <div *ngIf="selectedPageForLayers !== null && pages[selectedPageForLayers]" class="layers-section">
+        <div class="layers-header">
+          <span>Layers - {{ pages[selectedPageForLayers].title }}</span>
+        </div>
+        <ul class="layers-list">
+          <li *ngFor="let element of getSortedElements(selectedPageForLayers); let i = index" 
+              [class.selected-layer]="element.id === selectedId"
+              [class.hidden-layer]="element.visible === false"
+              (click)="selectLayerElement(element.id)">
+            <div class="layer-item">
+              <div class="layer-drag-handle">
+                <mat-icon>drag_indicator</mat-icon>
+              </div>
+              <div class="layer-icon">
+                <mat-icon *ngIf="element.type === 'text'">text_fields</mat-icon>
+                <mat-icon *ngIf="element.type === 'image'">image</mat-icon>
+                <mat-icon *ngIf="element.type === 'rect'">crop_square</mat-icon>
+                <mat-icon *ngIf="element.type === 'circle'">circle</mat-icon>
+                <mat-icon *ngIf="element.type === 'ellipse'">panorama_fish_eye</mat-icon>
+                <mat-icon *ngIf="element.type === 'star'">star</mat-icon>
+                <mat-icon *ngIf="element.type === 'line'">remove</mat-icon>
+                <mat-icon *ngIf="element.type === 'arrow'">arrow_forward</mat-icon>
+                <mat-icon *ngIf="element.type === 'semicircle'">half_circle</mat-icon>
+              </div>
+              <div class="layer-info">
+                <span class="layer-name">{{ getLayerDisplayName(element) }}</span>
+                <span class="layer-type">{{ element.type }} ({{ element.zIndex + 1 }})</span>
+              </div>
+              <div class="layer-actions">
+                <button class="layer-move-btn layer-move-up" 
+                        (click)="moveLayerUp(element.id); $event.stopPropagation();"
+                        [disabled]="i === 0"
+                        title="Move Up">
+                  <mat-icon>keyboard_arrow_up</mat-icon>
+                </button>
+                <button class="layer-move-btn layer-move-down" 
+                        (click)="moveLayerDown(element.id); $event.stopPropagation();"
+                        [disabled]="i === getSortedElements(selectedPageForLayers).length - 1"
+                        title="Move Down">
+                  <mat-icon>keyboard_arrow_down</mat-icon>
+                </button>
+                <button class="layer-visibility-btn" 
+                        [class.visible]="element.visible !== false"
+                        [class.hidden]="element.visible === false"
+                        (click)="toggleLayerVisibility(element.id); $event.stopPropagation();"
+                        title="Toggle Visibility">
+                  <mat-icon>{{ element.visible !== false ? 'visibility' : 'visibility_off' }}</mat-icon>
+                </button>
+                <button class="layer-delete-btn" 
+                        (click)="deleteLayerElement(element.id); $event.stopPropagation();"
+                        title="Delete Layer">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 

@@ -16,6 +16,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public selectedId: string | null = null;
   public selectedPageIndex: number = 0;
+  public selectedPageForLayers: number | null = null;
   showAddTextModal = false;
   showAddImageModal = false;
   newText = '';
@@ -281,6 +282,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         fontSize: element.fontSize,
         fill: element.color,
         draggable: true,
+        visible: element.visible !== false,
         fontFamily: element.fontFamily || 'Arial',
         fontStyle: element.fontStyle || 'normal',
         fontWeight: element.fontWeight || 'normal',
@@ -373,7 +375,8 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         strokeWidth: element.strokeWidth,
         opacity: element.opacity,
         cornerRadius: element.borderRadius || 0,
-        draggable: true
+        draggable: true,
+        visible: element.visible !== false
       });
       node.on('click', () => {
         this.selectedId = element.id;
@@ -396,7 +399,8 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         stroke: element.stroke,
         strokeWidth: element.strokeWidth,
         opacity: element.opacity,
-        draggable: true
+        draggable: true,
+        visible: element.visible !== false
       });
       node.on('click', () => {
         this.selectedId = element.id;
@@ -420,7 +424,8 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         stroke: element.stroke,
         strokeWidth: element.strokeWidth,
         opacity: element.opacity,
-        draggable: true
+        draggable: true,
+        visible: element.visible !== false
       });
       node.on('click', () => {
         this.selectedId = element.id;
@@ -456,7 +461,8 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         id: element.id,
         x: element.x || 0,
         y: element.y || 0,
-        draggable: true
+        draggable: true,
+        visible: element.visible !== false
       });
       const background = new Konva.Rect({
         x: bbox.minX,
@@ -586,7 +592,8 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         stroke: element.stroke,
         strokeWidth: element.strokeWidth,
         opacity: element.opacity,
-        draggable: true
+        draggable: true,
+        visible: element.visible !== false
       });
       node.on('click', () => {
         this.selectedId = element.id;
@@ -611,7 +618,8 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         strokeWidth: element.strokeWidth,
         opacity: element.opacity,
         rotation: element.rotation,
-        draggable: true
+        draggable: true,
+        visible: element.visible !== false
       });
       node.on('click', () => {
         this.selectedId = element.id;
@@ -643,7 +651,8 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         height: element.height,
         rotation: element.rotation,
         image: imageOrVideo,
-        draggable: true
+        draggable: true,
+        visible: element.visible !== false
       });
 
       // Ensure the node is listening for pointer events
@@ -961,7 +970,8 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         width: element.width,
         height: element.height,
         rotation: element.rotation,
-        draggable: true
+        draggable: true,
+        visible: element.visible !== false
       });
     } else if (element.type === 'video') {
       const video = document.createElement('video');
@@ -977,7 +987,8 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         width: element.width,
         height: element.height,
         rotation: element.rotation,
-        draggable: true
+        draggable: true,
+        visible: element.visible !== false
       });
     }
 
@@ -1199,6 +1210,12 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onPageClick(index: number) {
     this.selectedPageIndex = index;
+    // Toggle layer visibility - if same page is clicked, hide layers; if different page, show layers for that page
+    if (this.selectedPageForLayers === index) {
+      this.selectedPageForLayers = null; // Hide layers
+    } else {
+      this.selectedPageForLayers = index; // Show layers for this page
+    }
   }
 
   deletePage(index: number) {
@@ -1541,5 +1558,97 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     const arrow2X = endX - arrowLength * Math.cos(angle + arrowAngle);
     const arrow2Y = endY - arrowLength * Math.sin(angle + arrowAngle);
     return [...points, arrow1X, arrow1Y, endX, endY, arrow2X, arrow2Y];
+  }
+
+  getLayerDisplayName(element: CanvasElement): string {
+    if (element.type === 'text') {
+      return element.text || 'Text';
+    } else if (element.type === 'image') {
+      return 'Image';
+    } else {
+      return element.type.charAt(0).toUpperCase() + element.type.slice(1);
+    }
+  }
+
+  selectLayerElement(elementId: string) {
+    this.selectedId = elementId;
+    this.canvasService.setSelectedElementId(elementId);
+    this.selectedPageIndex = this.selectedPageForLayers!;
+  }
+
+  toggleLayerVisibility(elementId: string) {
+    if (this.selectedPageForLayers === null) return;
+    
+    const page = this.pages[this.selectedPageForLayers];
+    const element = page.elements.find(el => el.id === elementId);
+    if (!element) return;
+    
+    // Toggle visibility
+    const newVisible = !element.visible;
+    
+    // Update the element's visibility
+    this.canvasService.updateElement(elementId, { visible: newVisible });
+    
+    // Update the visual representation on the canvas
+    const layer = this.layers[this.selectedPageForLayers];
+    if (layer) {
+      const node = layer.findOne(`#${elementId}`);
+      if (node) {
+        node.visible(newVisible);
+        layer.draw();
+      }
+    }
+  }
+
+  deleteLayerElement(elementId: string) {
+    this.selectedId = elementId;
+    this.deleteSelected();
+  }
+
+  moveLayerUp(elementId: string) {
+    if (this.selectedPageForLayers === null) return;
+    const page = this.pages[this.selectedPageForLayers];
+    const elementIndex = page.elements.findIndex(el => el.id === elementId);
+    if (elementIndex > 0) {
+      // Swap with previous element
+      const newElements = [...page.elements];
+      [newElements[elementIndex], newElements[elementIndex - 1]] = 
+        [newElements[elementIndex - 1], newElements[elementIndex]];
+      
+      // Update z-index values
+      newElements.forEach((element, index) => {
+        element.zIndex = index;
+      });
+      
+      // Update the page
+      this.canvasService.updatePageElements(this.selectedPageForLayers, newElements);
+      setTimeout(() => this.initAllCanvases());
+    }
+  }
+
+  moveLayerDown(elementId: string) {
+    if (this.selectedPageForLayers === null) return;
+    const page = this.pages[this.selectedPageForLayers];
+    const elementIndex = page.elements.findIndex(el => el.id === elementId);
+    if (elementIndex < page.elements.length - 1) {
+      // Swap with next element
+      const newElements = [...page.elements];
+      [newElements[elementIndex], newElements[elementIndex + 1]] = 
+        [newElements[elementIndex + 1], newElements[elementIndex]];
+      
+      // Update z-index values
+      newElements.forEach((element, index) => {
+        element.zIndex = index;
+      });
+      
+      // Update the page
+      this.canvasService.updatePageElements(this.selectedPageForLayers, newElements);
+      setTimeout(() => this.initAllCanvases());
+    }
+  }
+
+  getSortedElements(pageIndex: number): CanvasElement[] {
+    if (pageIndex < 0 || pageIndex >= this.pages.length) return [];
+    return [...this.pages[pageIndex].elements].sort((a, b) => a.zIndex - b.zIndex);
   }
 }

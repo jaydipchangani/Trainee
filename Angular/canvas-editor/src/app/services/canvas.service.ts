@@ -10,6 +10,7 @@ export interface CanvasElement {
   height: number;
   rotation: number;
   zIndex: number;
+  visible?: boolean; // Visibility property, defaults to true
   fontSize?: number;
   color?: string;
   text?: string;
