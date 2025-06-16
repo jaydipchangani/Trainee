@@ -12,6 +12,7 @@ export interface CanvasElement {
   zIndex: number;
   visible?: boolean; // Visibility property, defaults to true
   locked?: boolean; // Lock property, defaults to false
+  isTemplate?: boolean; // Template property, defaults to false
   fontSize?: number;
   color?: string;
   text?: string;

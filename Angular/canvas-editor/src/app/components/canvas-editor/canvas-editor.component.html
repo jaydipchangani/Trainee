@@ -40,6 +40,10 @@
       <mat-icon>{{ isSelectedElementLocked() ? 'lock' : 'lock_open' }}</mat-icon>
       {{ isSelectedElementLocked() ? 'Unlock' : 'Lock' }}
     </button>
+    <button (click)="unlockAllTemplateElements()" [disabled]="!hasTemplateElements()" title="Unlock All Template Elements">
+      <mat-icon>lock_open</mat-icon>
+      Unlock Templates
+    </button>
     <button (click)="toggleAspectRatio()" [class.active]="lockAspectRatio">
       <mat-icon>aspect_ratio</mat-icon>
       Lock Aspect Ratio
@@ -111,7 +115,10 @@
                 <mat-icon *ngIf="element.type === 'semicircle'">half_circle</mat-icon>
               </div>
               <div class="layer-info">
-                <span class="layer-name">{{ getLayerDisplayName(element) }}</span>
+                <span class="layer-name">
+                  {{ getLayerDisplayName(element) }}
+                  <span *ngIf="element.isTemplate" class="template-indicator" title="Template Element">📋</span>
+                </span>
                 <span class="layer-type">{{ element.type }} ({{ element.zIndex + 1 }})</span>
               </div>
               <div class="layer-actions">

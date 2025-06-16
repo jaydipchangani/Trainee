@@ -1433,21 +1433,70 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   applyTemplateToPage(template: CanvasTemplate, pageIndex: number) {
-    // Deep copy and assign new IDs
-    const newElements = template.elements.map(el => ({ ...el, id: Date.now().toString() + Math.random() }));
+    // Deep copy and assign new IDs, and lock background elements
+    const newElements = template.elements.map(el => {
+      const newElement = { 
+        ...el, 
+        id: Date.now().toString() + Math.random(),
+        isTemplate: true
+      };
+      
+      // Automatically lock background elements
+      if (this.isBackgroundElement(newElement)) {
+        newElement.locked = true;
+      }
+      
+      return newElement;
+    });
+    
     this.canvasService.updatePageElements(pageIndex, newElements);
     setTimeout(() => this.initAllCanvases());
   }
 
   applyTemplateToAllPages(template: CanvasTemplate) {
     for (let i = 0; i < this.pages.length; i++) {
-      // Remove previous template elements (identified by isTemplate: true)
-      const userElements = this.pages[i].elements.filter(e => !(e as any).isTemplate);
-      // Add new template elements, marked as isTemplate
-      const templateElements = template.elements.map(el => ({ ...el, id: Date.now().toString() + Math.random(), isTemplate: true }));
+      // Get existing user elements (non-template elements)
+      const userElements = this.pages[i].elements.filter(el => !el.isTemplate);
+      
+      // Add new template elements, marked as isTemplate and lock background elements
+      const templateElements = template.elements.map(el => {
+        const newElement = { 
+          ...el, 
+          id: Date.now().toString() + Math.random(), 
+          isTemplate: true 
+        };
+        
+        // Automatically lock background elements
+        if (this.isBackgroundElement(newElement)) {
+          newElement.locked = true;
+        }
+        
+        return newElement;
+      });
+      
       this.canvasService.updatePageElements(i, [...templateElements, ...userElements]);
     }
     setTimeout(() => this.initAllCanvases());
+  }
+
+  private isBackgroundElement(element: CanvasElement): boolean {
+    // Check if element is a background element based on ID patterns and properties
+    const backgroundIdPatterns = ['bg', 'frame', 'background', 'base'];
+    const isBackgroundId = backgroundIdPatterns.some(pattern => 
+      element.id.toLowerCase().includes(pattern)
+    );
+    
+    // Check if it's a large rectangle that covers most of the canvas
+    const isLargeBackgroundShape = element.type === 'rect' && 
+      element.width >= 800 && element.height >= 600 && 
+      element.zIndex <= 2;
+    
+    // Check if it's a decorative background element
+    const isDecorativeBackground = element.type === 'rect' && 
+      element.zIndex <= 1 && 
+      (!!element.fill || !!element.stroke);
+    
+    return isBackgroundId || isLargeBackgroundShape || isDecorativeBackground;
   }
 
   handleCanvasKeydown(event: KeyboardEvent) {
@@ -1751,5 +1800,29 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   getSortedElements(pageIndex: number): CanvasElement[] {
     if (pageIndex < 0 || pageIndex >= this.pages.length) return [];
     return [...this.pages[pageIndex].elements].sort((a, b) => a.zIndex - b.zIndex);
+  }
+
+  hasTemplateElements(): boolean {
+    return this.pages.some(page => 
+      page.elements.some(element => element.isTemplate === true)
+    );
+  }
+
+  unlockAllTemplateElements() {
+    // Unlock all template elements across all pages
+    for (let pageIndex = 0; pageIndex < this.pages.length; pageIndex++) {
+      const page = this.pages[pageIndex];
+      const updatedElements = page.elements.map(element => {
+        if (element.isTemplate === true) {
+          return { ...element, locked: false };
+        }
+        return element;
+      });
+      
+      this.canvasService.updatePageElements(pageIndex, updatedElements);
+    }
+    
+    // Refresh the canvas to update all visual elements
+    setTimeout(() => this.initAllCanvases());
   }
 }

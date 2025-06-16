@@ -938,6 +938,15 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.template-indicator {
+  font-size: 12px;
+  opacity: 0.7;
+  flex-shrink: 0;
 }
 
 .layer-type {
