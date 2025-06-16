@@ -36,6 +36,10 @@
     <button (click)="deleteSelected()" [disabled]="!selectedId">Delete Selected</button>
     <button (click)="bringForward()" [disabled]="!selectedId">Bring Forward</button>
     <button (click)="sendBackward()" [disabled]="!selectedId">Send Backward</button>
+    <button (click)="toggleSelectedElementLock()" [disabled]="!selectedId" [class.locked]="isSelectedElementLocked()" title="Lock/Unlock Selected Element">
+      <mat-icon>{{ isSelectedElementLocked() ? 'lock' : 'lock_open' }}</mat-icon>
+      {{ isSelectedElementLocked() ? 'Unlock' : 'Lock' }}
+    </button>
     <button (click)="toggleAspectRatio()" [class.active]="lockAspectRatio">
       <mat-icon>aspect_ratio</mat-icon>
       Lock Aspect Ratio
@@ -89,6 +93,7 @@
           <li *ngFor="let element of getSortedElements(selectedPageForLayers); let i = index" 
               [class.selected-layer]="element.id === selectedId"
               [class.hidden-layer]="element.visible === false"
+              [class.locked-layer]="element.locked === true"
               (click)="selectLayerElement(element.id)">
             <div class="layer-item">
               <div class="layer-drag-handle">
@@ -121,6 +126,13 @@
                         [disabled]="i === getSortedElements(selectedPageForLayers).length - 1"
                         title="Move Down">
                   <mat-icon>keyboard_arrow_down</mat-icon>
+                </button>
+                <button class="layer-lock-btn" 
+                        [class.locked]="element.locked === true"
+                        [class.unlocked]="element.locked !== true"
+                        (click)="toggleLayerLock(element.id); $event.stopPropagation();"
+                        title="Toggle Lock">
+                  <mat-icon>{{ element.locked === true ? 'lock' : 'lock_open' }}</mat-icon>
                 </button>
                 <button class="layer-visibility-btn" 
                         [class.visible]="element.visible !== false"

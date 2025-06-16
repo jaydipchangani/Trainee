@@ -11,6 +11,7 @@ export interface CanvasElement {
   rotation: number;
   zIndex: number;
   visible?: boolean; // Visibility property, defaults to true
+  locked?: boolean; // Lock property, defaults to false
   fontSize?: number;
   color?: string;
   text?: string;

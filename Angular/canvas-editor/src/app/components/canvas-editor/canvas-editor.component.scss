@@ -26,6 +26,9 @@
     color: white;
     cursor: pointer;
     transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
 
     &:hover {
       background-color: #0056b3;
@@ -34,6 +37,28 @@
     &:disabled {
       background-color: #ccc;
       cursor: not-allowed;
+    }
+
+    &.locked {
+      background-color: #f57c00;
+      
+      &:hover {
+        background-color: #e65100;
+      }
+    }
+
+    &.active {
+      background-color: #28a745;
+      
+      &:hover {
+        background-color: #1e7e34;
+      }
+    }
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
     }
   }
 }
@@ -841,6 +866,21 @@
   }
 }
 
+.layers-list li.locked-layer {
+  .layer-name {
+    color: #666;
+  }
+  
+  .layer-type {
+    color: #999;
+  }
+  
+  .layer-drag-handle {
+    opacity: 0.2;
+    cursor: not-allowed;
+  }
+}
+
 .layer-item {
   display: flex;
   align-items: center;
@@ -918,6 +958,7 @@
 }
 
 .layer-move-btn,
+.layer-lock-btn,
 .layer-visibility-btn,
 .layer-delete-btn {
   background: none;
@@ -948,6 +989,28 @@
   
   mat-icon {
     color: #1976d2;
+  }
+}
+
+.layer-lock-btn.locked {
+  mat-icon {
+    color: #f57c00;
+  }
+}
+
+.layer-lock-btn.locked:hover {
+  background: #fff3e0;
+  
+  mat-icon {
+    color: #e65100;
+  }
+}
+
+.layer-lock-btn.unlocked:hover {
+  background: #e8f5e8;
+  
+  mat-icon {
+    color: #4caf50;
   }
 }
 

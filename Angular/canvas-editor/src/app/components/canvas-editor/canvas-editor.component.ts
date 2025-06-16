@@ -237,14 +237,16 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     // Restore selection if it was the same element
     if (currentSelectedId) {
       const selectedNode = layer.findOne(`#${currentSelectedId}`);
-      if (selectedNode) {
+      const element = this.pages[pageIndex]?.elements.find(e => e.id === currentSelectedId);
+      
+      // Don't restore selection if element is locked
+      if (selectedNode && element && element.locked !== true) {
         this.selectedId = currentSelectedId;
         this.canvasService.setSelectedElementId(currentSelectedId);
         transformer.nodes([selectedNode as any]);
         layer.add(transformer); // bring transformer to top
         
         // Update toolbar visibility
-        const element = this.pages[pageIndex]?.elements.find(e => e.id === currentSelectedId);
         if (element) {
           if (element.type === 'text') {
             this.textToolbarElement = { ...element };
@@ -257,7 +259,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         }
       } else {
-        // Clear selection if element no longer exists
+        // Clear selection if element no longer exists or is locked
         this.selectedId = null;
         this.canvasService.setSelectedElementId(null);
         this.textToolbarVisible = false;
@@ -281,7 +283,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         text: element.text || '',
         fontSize: element.fontSize,
         fill: element.color,
-        draggable: true,
+        draggable: element.locked !== true,
         visible: element.visible !== false,
         fontFamily: element.fontFamily || 'Arial',
         fontStyle: element.fontStyle || 'normal',
@@ -293,6 +295,9 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       });
       // Add click handler for selection and toolbar
       node.on('click', () => {
+        // Don't select if element is locked
+        if (element.locked === true) return;
+        
         this.selectedId = element.id;
         this.canvasService.setSelectedElementId(element.id);
         if (this.transformers[pageIndex] && node) {
@@ -375,10 +380,13 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         strokeWidth: element.strokeWidth,
         opacity: element.opacity,
         cornerRadius: element.borderRadius || 0,
-        draggable: true,
+        draggable: element.locked !== true,
         visible: element.visible !== false
       });
       node.on('click', () => {
+        // Don't select if element is locked
+        if (element.locked === true) return;
+        
         this.selectedId = element.id;
         this.canvasService.setSelectedElementId(element.id);
         if (this.transformers[pageIndex] && node) {
@@ -399,10 +407,13 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         stroke: element.stroke,
         strokeWidth: element.strokeWidth,
         opacity: element.opacity,
-        draggable: true,
+        draggable: element.locked !== true,
         visible: element.visible !== false
       });
       node.on('click', () => {
+        // Don't select if element is locked
+        if (element.locked === true) return;
+        
         this.selectedId = element.id;
         this.canvasService.setSelectedElementId(element.id);
         if (this.transformers[pageIndex] && node) {
@@ -424,10 +435,13 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         stroke: element.stroke,
         strokeWidth: element.strokeWidth,
         opacity: element.opacity,
-        draggable: true,
+        draggable: element.locked !== true,
         visible: element.visible !== false
       });
       node.on('click', () => {
+        // Don't select if element is locked
+        if (element.locked === true) return;
+        
         this.selectedId = element.id;
         this.canvasService.setSelectedElementId(element.id);
         if (this.transformers[pageIndex] && node) {
@@ -461,7 +475,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         id: element.id,
         x: element.x || 0,
         y: element.y || 0,
-        draggable: true,
+        draggable: element.locked !== true,
         visible: element.visible !== false
       });
       const background = new Konva.Rect({
@@ -549,6 +563,9 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       });
       // Show/hide handles on selection
       group.on('click', () => {
+        // Don't select if element is locked
+        if (element.locked === true) return;
+        
         this.selectedId = element.id;
         this.canvasService.setSelectedElementId(element.id);
         handle1.visible(true);
@@ -560,6 +577,9 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         group.getLayer()?.draw();
       });
       group.on('mousedown touchstart', (e) => {
+        // Don't select if element is locked
+        if (element.locked === true) return;
+        
         e.cancelBubble = true;
         this.selectedId = element.id;
         this.canvasService.setSelectedElementId(element.id);
@@ -592,10 +612,13 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         stroke: element.stroke,
         strokeWidth: element.strokeWidth,
         opacity: element.opacity,
-        draggable: true,
+        draggable: element.locked !== true,
         visible: element.visible !== false
       });
       node.on('click', () => {
+        // Don't select if element is locked
+        if (element.locked === true) return;
+        
         this.selectedId = element.id;
         this.canvasService.setSelectedElementId(element.id);
         if (this.transformers[pageIndex] && node) {
@@ -618,10 +641,13 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         strokeWidth: element.strokeWidth,
         opacity: element.opacity,
         rotation: element.rotation,
-        draggable: true,
+        draggable: element.locked !== true,
         visible: element.visible !== false
       });
       node.on('click', () => {
+        // Don't select if element is locked
+        if (element.locked === true) return;
+        
         this.selectedId = element.id;
         this.canvasService.setSelectedElementId(element.id);
         if (this.transformers[pageIndex] && node) {
@@ -651,7 +677,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         height: element.height,
         rotation: element.rotation,
         image: imageOrVideo,
-        draggable: true,
+        draggable: element.locked !== true,
         visible: element.visible !== false
       });
 
@@ -970,7 +996,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         width: element.width,
         height: element.height,
         rotation: element.rotation,
-        draggable: true,
+        draggable: element.locked !== true,
         visible: element.visible !== false
       });
     } else if (element.type === 'video') {
@@ -987,7 +1013,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         width: element.width,
         height: element.height,
         rotation: element.rotation,
-        draggable: true,
+        draggable: element.locked !== true,
         visible: element.visible !== false
       });
     }
@@ -1505,6 +1531,15 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     
     const node = layer.findOne(`#${elementId}`);
     if (node) {
+      // Check if element is locked
+      const element = this.pages[pageIndex]?.elements.find(e => e.id === elementId);
+      if (element && element.locked === true) {
+        // Don't attach transformer to locked elements
+        transformer.nodes([]);
+        layer.draw();
+        return;
+      }
+      
       // Ensure transformer is attached to the node
       transformer.nodes([node as any]);
       layer.add(transformer); // bring transformer to top
@@ -1515,7 +1550,6 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       this.canvasService.setSelectedElementId(elementId);
       
       // Update toolbar visibility
-      const element = this.pages[pageIndex]?.elements.find(e => e.id === elementId);
       if (element) {
         if (element.type === 'text') {
           this.textToolbarElement = { ...element };
@@ -1571,6 +1605,16 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   selectLayerElement(elementId: string) {
+    if (this.selectedPageForLayers === null) return;
+    
+    const page = this.pages[this.selectedPageForLayers];
+    const element = page.elements.find(el => el.id === elementId);
+    
+    // Don't select locked elements
+    if (element && element.locked === true) {
+      return;
+    }
+    
     this.selectedId = elementId;
     this.canvasService.setSelectedElementId(elementId);
     this.selectedPageIndex = this.selectedPageForLayers!;
@@ -1598,6 +1642,63 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         layer.draw();
       }
     }
+  }
+
+  toggleLayerLock(elementId: string) {
+    if (this.selectedPageForLayers === null) return;
+    
+    const page = this.pages[this.selectedPageForLayers];
+    const element = page.elements.find(el => el.id === elementId);
+    if (!element) return;
+    
+    // Toggle lock
+    const newLocked = !element.locked;
+    
+    // Update the element's lock state
+    this.canvasService.updateElement(elementId, { locked: newLocked });
+    
+    // Update the visual representation on the canvas
+    const layer = this.layers[this.selectedPageForLayers];
+    if (layer) {
+      const node = layer.findOne(`#${elementId}`);
+      if (node) {
+        node.draggable(!newLocked);
+        layer.draw();
+      }
+    }
+  }
+
+  toggleSelectedElementLock() {
+    if (!this.selectedId) return;
+    
+    const element = this.pages[this.selectedPageIndex]?.elements.find(el => el.id === this.selectedId);
+    if (!element) return;
+    
+    // Toggle lock
+    const newLocked = !element.locked;
+    
+    // Update the element's lock state
+    this.canvasService.updateElement(this.selectedId, { locked: newLocked });
+    
+    // Update the visual representation on the canvas
+    const layer = this.layers[this.selectedPageIndex];
+    if (layer) {
+      const node = layer.findOne(`#${this.selectedId}`);
+      if (node) {
+        node.draggable(!newLocked);
+        layer.draw();
+      }
+    }
+    
+    // Refresh the canvas to update transformers and other visual elements
+    setTimeout(() => this.initAllCanvases());
+  }
+
+  isSelectedElementLocked(): boolean {
+    if (!this.selectedId) return false;
+    
+    const element = this.pages[this.selectedPageIndex]?.elements.find(el => el.id === this.selectedId);
+    return element?.locked === true;
   }
 
   deleteLayerElement(elementId: string) {
