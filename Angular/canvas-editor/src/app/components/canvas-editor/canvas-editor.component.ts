@@ -69,6 +69,10 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   userTemplates: CanvasTemplate[] = [];
   allTemplates: CanvasTemplate[] = [];
 
+  currentAppliedTemplate: CanvasTemplate | null = null;
+  pendingTemplateForNewPage: boolean = false;
+  lastPageCount: number = 0;
+
   constructor(
     private canvasService: CanvasService,
     private router: Router,
@@ -83,6 +87,26 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     this.canvasService.pages$.subscribe(pages => {
       // Only reload canvases if the actual page data has changed
       const pagesChanged = JSON.stringify(this.pages) !== JSON.stringify(pages);
+      // --- Template for new page logic ---
+      if (this.pendingTemplateForNewPage && pages.length > this.lastPageCount && this.currentAppliedTemplate) {
+        const newPageIndex = pages.length - 1;
+        const templateElements = this.currentAppliedTemplate.elements.map(el => {
+          const newElement = {
+            ...el,
+            id: Date.now().toString() + Math.random(),
+            isTemplate: true
+          };
+          if (this.isBackgroundElement(newElement)) {
+            newElement.locked = true;
+          }
+          return newElement;
+        });
+        this.canvasService.updatePageElements(newPageIndex, templateElements);
+        this.selectedPageIndex = newPageIndex;
+        this.scrollToPage(newPageIndex);
+        this.pendingTemplateForNewPage = false;
+      }
+      this.lastPageCount = pages.length;
       this.pages = pages;
       if (pagesChanged) {
         setTimeout(() => this.initAllCanvases());
@@ -1225,11 +1249,16 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   addPage() {
-    this.canvasService.addPage();
-    setTimeout(() => {
-      this.selectedPageIndex = this.pages.length - 1;
-      this.scrollToPage(this.selectedPageIndex);
-    });
+    if (this.currentAppliedTemplate) {
+      this.pendingTemplateForNewPage = true;
+      this.canvasService.addPage();
+    } else {
+      this.canvasService.addPage();
+      setTimeout(() => {
+        this.selectedPageIndex = this.pages.length - 1;
+        this.scrollToPage(this.selectedPageIndex);
+      });
+    }
   }
 
   scrollToPage(index: number) {
@@ -1461,10 +1490,10 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   applyTemplateToAllPages(template: CanvasTemplate) {
+    this.currentAppliedTemplate = template;
     for (let i = 0; i < this.pages.length; i++) {
       // Get existing user elements (non-template elements)
       const userElements = this.pages[i].elements.filter(el => !el.isTemplate);
-      
       // Add new template elements, marked as isTemplate and lock background elements
       const templateElements = template.elements.map(el => {
         const newElement = { 
@@ -1472,15 +1501,12 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
           id: Date.now().toString() + Math.random(), 
           isTemplate: true 
         };
-        
         // Automatically lock background elements
         if (this.isBackgroundElement(newElement)) {
           newElement.locked = true;
         }
-        
         return newElement;
       });
-      
       this.canvasService.updatePageElements(i, [...templateElements, ...userElements]);
     }
     setTimeout(() => this.initAllCanvases());
