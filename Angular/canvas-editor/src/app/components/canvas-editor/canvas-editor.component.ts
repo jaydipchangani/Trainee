@@ -74,9 +74,13 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.canvasService.pages$.subscribe(pages => {
+      // Only reload canvases if the actual page data has changed
+      const pagesChanged = JSON.stringify(this.pages) !== JSON.stringify(pages);
       this.pages = pages;
-      setTimeout(() => this.initAllCanvases());
-      this.pushHistory();
+      if (pagesChanged) {
+        setTimeout(() => this.initAllCanvases());
+        this.pushHistory();
+      }
     });
     // Subscribe to selection changes
     this.canvasService.selectedElementId$.subscribe(selectedId => {
@@ -143,12 +147,15 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       // Add stage click handler to deselect elements
       stage.on('click', (e) => {
         if (e.target === stage) {
-          this.selectedId = null;
-          this.canvasService.setSelectedElementId(null);
-          this.textToolbarVisible = false;
-          this.shapeToolbarVisible = false;
-          this.transformers[i].nodes([]);
-          this.layers[i].draw();
+          // Only update if there's actually a selection to clear
+          if (this.selectedId !== null) {
+            this.selectedId = null;
+            this.canvasService.setSelectedElementId(null);
+            this.textToolbarVisible = false;
+            this.shapeToolbarVisible = false;
+            this.transformers[i].nodes([]);
+            this.layers[i].draw();
+          }
         }
       });
       
@@ -508,7 +515,8 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         n.height(height);
         n.scaleX(1);
         n.scaleY(1);
-        this.updateElementOnPage(element.id, {
+        // Update the element data without triggering visual updates
+        this.updateElementDataOnly(element.id, {
           x: n.x(),
           y: n.y(),
           width,
@@ -525,7 +533,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         const y = n.y() - radius;
         n.scaleX(1);
         n.scaleY(1);
-        this.updateElementOnPage(element.id, {
+        this.updateElementDataOnly(element.id, {
           x,
           y,
           width,
@@ -543,7 +551,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         const y = n.y() - radiusY;
         n.scaleX(1);
         n.scaleY(1);
-        this.updateElementOnPage(element.id, {
+        this.updateElementDataOnly(element.id, {
           x,
           y,
           width,
@@ -560,7 +568,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         const y = n.y() - outerRadius;
         n.scaleX(1);
         n.scaleY(1);
-        this.updateElementOnPage(element.id, {
+        this.updateElementDataOnly(element.id, {
           x,
           y,
           width,
@@ -576,7 +584,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
           height: n.height() * n.scaleY(),
           rotation: n.rotation()
         };
-        this.updateElementOnPage(element.id, updatedElement, pageIndex);
+        this.updateElementDataOnly(element.id, updatedElement, pageIndex);
         n.scaleX(1);
         n.scaleY(1);
       }
@@ -589,7 +597,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         const radius = circleNode.radius();
         const x = n.x() - radius;
         const y = n.y() - radius;
-        this.updateElementOnPage(element.id, { x, y }, pageIndex);
+        this.updateElementDataOnly(element.id, { x, y }, pageIndex);
       } else if (element.type === 'ellipse') {
         // For ellipses, convert center coordinates to top-left corner
         const ellipseNode = n as Konva.Ellipse;
@@ -597,17 +605,17 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         const radiusY = ellipseNode.radiusY();
         const x = n.x() - radiusX;
         const y = n.y() - radiusY;
-        this.updateElementOnPage(element.id, { x, y }, pageIndex);
+        this.updateElementDataOnly(element.id, { x, y }, pageIndex);
       } else if (element.type === 'star') {
         // For stars, convert center coordinates to top-left corner
         const starNode = n as Konva.Star;
         const outerRadius = starNode.outerRadius();
         const x = n.x() - outerRadius;
         const y = n.y() - outerRadius;
-        this.updateElementOnPage(element.id, { x, y }, pageIndex);
+        this.updateElementDataOnly(element.id, { x, y }, pageIndex);
       } else {
         // For rectangles and other shapes, use standard coordinates
-        this.updateElementOnPage(element.id, {
+        this.updateElementDataOnly(element.id, {
           x: n.x(),
           y: n.y()
         }, pageIndex);
@@ -760,10 +768,84 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private updateElementOnPage(id: string, updates: Partial<CanvasElement>, pageIndex: number) {
-    if (pageIndex === this.selectedPageIndex) {
-      this.canvasService.switchPage(pageIndex);
-      this.canvasService.updateElement(id, updates);
+    // Always update the element regardless of which page is selected
+    this.canvasService.switchPage(pageIndex);
+    this.canvasService.updateElement(id, updates);
+    
+    // Update the visual representation of the specific element
+    this.updateElementVisual(id, updates, pageIndex);
+  }
+
+  private updateElementVisual(id: string, updates: Partial<CanvasElement>, pageIndex: number) {
+    const layer = this.layers[pageIndex];
+    if (!layer) return;
+    
+    const node = layer.findOne(`#${id}`);
+    if (!node) return;
+    
+    // Update the node properties based on the updates
+    if (updates.x !== undefined) node.x(updates.x);
+    if (updates.y !== undefined) node.y(updates.y);
+    if (updates.rotation !== undefined) node.rotation(updates.rotation);
+    if (updates.opacity !== undefined) node.opacity(updates.opacity);
+    
+    // Handle shape-specific updates
+    if (node instanceof Konva.Rect) {
+      if (updates.width !== undefined) node.width(updates.width);
+      if (updates.height !== undefined) node.height(updates.height);
+      if (updates.fill !== undefined) node.fill(updates.fill);
+      if (updates.stroke !== undefined) node.stroke(updates.stroke);
+      if (updates.strokeWidth !== undefined) node.strokeWidth(updates.strokeWidth);
+      if (updates.borderRadius !== undefined) node.cornerRadius(updates.borderRadius);
+    } else if (node instanceof Konva.Circle) {
+      if (updates.width !== undefined) {
+        const radius = updates.width / 2;
+        node.radius(radius);
+        // Update position to maintain center-based positioning
+        if (updates.x !== undefined) node.x(updates.x + radius);
+        if (updates.y !== undefined) node.y(updates.y + radius);
+      }
+      if (updates.fill !== undefined) node.fill(updates.fill);
+      if (updates.stroke !== undefined) node.stroke(updates.stroke);
+      if (updates.strokeWidth !== undefined) node.strokeWidth(updates.strokeWidth);
+    } else if (node instanceof Konva.Ellipse) {
+      if (updates.width !== undefined) {
+        const radiusX = updates.width / 2;
+        node.radiusX(radiusX);
+        if (updates.x !== undefined) node.x(updates.x + radiusX);
+      }
+      if (updates.height !== undefined) {
+        const radiusY = updates.height / 2;
+        node.radiusY(radiusY);
+        if (updates.y !== undefined) node.y(updates.y + radiusY);
+      }
+      if (updates.fill !== undefined) node.fill(updates.fill);
+      if (updates.stroke !== undefined) node.stroke(updates.stroke);
+      if (updates.strokeWidth !== undefined) node.strokeWidth(updates.strokeWidth);
+    } else if (node instanceof Konva.Star) {
+      if (updates.width !== undefined) {
+        const outerRadius = updates.width / 2;
+        node.outerRadius(outerRadius);
+        node.innerRadius(outerRadius / 2);
+        if (updates.x !== undefined) node.x(updates.x + outerRadius);
+        if (updates.y !== undefined) node.y(updates.y + outerRadius);
+      }
+      if (updates.fill !== undefined) node.fill(updates.fill);
+      if (updates.stroke !== undefined) node.stroke(updates.stroke);
+      if (updates.strokeWidth !== undefined) node.strokeWidth(updates.strokeWidth);
+      if (updates.numPoints !== undefined) node.numPoints(updates.numPoints);
+    } else if (node instanceof Konva.Text) {
+      if (updates.text !== undefined) node.text(updates.text);
+      if (updates.fontSize !== undefined) node.fontSize(updates.fontSize);
+      if (updates.color !== undefined) node.fill(updates.color);
+      if (updates.fontFamily !== undefined) node.fontFamily(updates.fontFamily);
+      if (updates.fontStyle !== undefined) node.fontStyle(updates.fontStyle);
+      if (updates.fontWeight !== undefined) (node as any).fontWeight(updates.fontWeight);
+      if (updates.align !== undefined) node.align(updates.align);
     }
+    
+    // Redraw the layer
+    layer.draw();
   }
 
   getFileNameFromUrl(): string | null {
@@ -980,8 +1062,9 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   updateShapeElement(updates: Partial<CanvasElement>) {
     if (this.shapeToolbarElement) {
       this.canvasService.updateElement(this.shapeToolbarElement.id, updates);
-      // Refresh the canvas to update the visual representation
-      setTimeout(() => this.loadElementsForPage(this.selectedPageIndex), 0);
+      // Update local toolbar state for instant UI feedback
+      Object.assign(this.shapeToolbarElement, updates);
+      // No need to reload the entire canvas - just update the specific element
     }
   }
 
@@ -1084,5 +1167,11 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         reader.readAsDataURL(file);
       });
     }
+  }
+
+  private updateElementDataOnly(id: string, updates: Partial<CanvasElement>, pageIndex: number) {
+    // Always update the element regardless of which page is selected
+    this.canvasService.switchPage(pageIndex);
+    this.canvasService.updateElement(id, updates);
   }
 }
