@@ -230,6 +230,18 @@
           <mat-icon>star</mat-icon>
           <span>Star</span>
         </div>
+        <div class="elements-shape-card" (click)="addShape('line')">
+          <mat-icon>remove</mat-icon>
+          <span>Line</span>
+        </div>
+        <div class="elements-shape-card" (click)="addShape('arrow')">
+          <mat-icon>arrow_forward</mat-icon>
+          <span>Arrow</span>
+        </div>
+        <div class="elements-shape-card" (click)="addShape('semicircle')">
+          <mat-icon>half_circle</mat-icon>
+          <span>Semi Circle</span>
+        </div>
       </div>
       <div class="elements-color-pickers">
         <label>Fill Color: <input type="color" [(ngModel)]="shapeFillColor" /></label>

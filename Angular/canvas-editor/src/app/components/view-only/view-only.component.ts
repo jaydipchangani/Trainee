@@ -129,7 +129,7 @@ export class ViewOnlyComponent implements OnInit, AfterViewInit {
       this.htmlPreview = html;
       this.setIframeContent();
     });
-  }
+  }        
 
   nextPresentationPage() {
     if (this.currentPresentationPage < this.pageCountArray.length - 1) {

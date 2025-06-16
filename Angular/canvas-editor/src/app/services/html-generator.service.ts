@@ -89,7 +89,10 @@ export class HtmlGeneratorService {
           element.type === 'rect' ||
           element.type === 'circle' ||
           element.type === 'ellipse' ||
-          element.type === 'star'
+          element.type === 'star' ||
+          element.type === 'line' ||
+          element.type === 'arrow' ||
+          element.type === 'semicircle'
         ) {
           // SVG wrapper for shape
           const svgStyle = `${baseStyles} display: block;`;
@@ -119,6 +122,45 @@ export class HtmlGeneratorService {
             }
             path += 'Z';
             shapeSvg = `<path d='${path}' fill='${element.fill}' stroke='${element.stroke}' stroke-width='${element.strokeWidth}' opacity='${element.opacity ?? 1}' />`;
+          } else if (element.type === 'line') {
+            const points = element.points || [0, 0, 100, 0];
+            const bbox = this.getPointsBoundingBox(points);
+            const [x1, y1, x2, y2] = [
+              points[0] - bbox.minX,
+              points[1] - bbox.minY,
+              points[2] - bbox.minX,
+              points[3] - bbox.minY
+            ];
+            shapeSvg = `<line x1='${x1}' y1='${y1}' x2='${x2}' y2='${y2}' stroke='${element.stroke}' stroke-width='${element.strokeWidth}' opacity='${element.opacity ?? 1}' />`;
+          } else if (element.type === 'arrow') {
+            const points = element.points || [0, 0, 100, 0];
+            const arrowLength = 20;
+            const arrowAngle = Math.PI / 6; // 30 degrees
+            // Calculate arrowhead points
+            const endX = points[points.length - 2];
+            const endY = points[points.length - 1];
+            const startX = points[points.length - 4];
+            const startY = points[points.length - 3];
+            const angle = Math.atan2(endY - startY, endX - startX);
+            const arrow1X = endX - arrowLength * Math.cos(angle - arrowAngle);
+            const arrow1Y = endY - arrowLength * Math.sin(angle - arrowAngle);
+            const arrow2X = endX - arrowLength * Math.cos(angle + arrowAngle);
+            const arrow2Y = endY - arrowLength * Math.sin(angle + arrowAngle);
+            const arrowPoints = [...points, arrow1X, arrow1Y, endX, endY, arrow2X, arrow2Y];
+            const bbox = this.getPointsBoundingBox(arrowPoints);
+            // Normalize all points
+            const normPoints = arrowPoints.map((p, i) => (i % 2 === 0 ? p - bbox.minX : p - bbox.minY));
+            // For path, use M for first, L for rest
+            let pathData = '';
+            for (let i = 0; i < normPoints.length; i += 2) {
+              pathData += (i === 0 ? 'M' : 'L') + normPoints[i] + ' ' + normPoints[i + 1] + ' ';
+            }
+            shapeSvg = `<path d='${pathData.trim()}' stroke='${element.stroke}' stroke-width='${element.strokeWidth}' fill='none' opacity='${element.opacity ?? 1}' />`;
+          } else if (element.type === 'semicircle') {
+            const radius = (element.width || 100) / 2;
+            const cx = radius;
+            const cy = radius;
+            shapeSvg = `<path d='M${cx - radius},${cy} A${radius},${radius} 0 0,1 ${cx + radius},${cy}' fill='${element.fill}' stroke='${element.stroke}' stroke-width='${element.strokeWidth}' opacity='${element.opacity ?? 1}' />`;
           }
           return `<svg width='${element.width}' height='${element.height}' style='${svgStyle}' xmlns='http://www.w3.org/2000/svg'>${shapeSvg}</svg>`;
         }
@@ -245,7 +287,10 @@ export class HtmlGeneratorService {
         element.type === 'rect' ||
         element.type === 'circle' ||
         element.type === 'ellipse' ||
-        element.type === 'star'
+        element.type === 'star' ||
+        element.type === 'line' ||
+        element.type === 'arrow' ||
+        element.type === 'semicircle'
       ) {
         // SVG wrapper for shape
         const svgStyle = `${baseStyles} display: block;`;
@@ -275,6 +320,45 @@ export class HtmlGeneratorService {
           }
           path += 'Z';
           shapeSvg = `<path d='${path}' fill='${element.fill}' stroke='${element.stroke}' stroke-width='${element.strokeWidth}' opacity='${element.opacity ?? 1}' />`;
+        } else if (element.type === 'line') {
+          const points = element.points || [0, 0, 100, 0];
+          const bbox = this.getPointsBoundingBox(points);
+          const [x1, y1, x2, y2] = [
+            points[0] - bbox.minX,
+            points[1] - bbox.minY,
+            points[2] - bbox.minX,
+            points[3] - bbox.minY
+          ];
+          shapeSvg = `<line x1='${x1}' y1='${y1}' x2='${x2}' y2='${y2}' stroke='${element.stroke}' stroke-width='${element.strokeWidth}' opacity='${element.opacity ?? 1}' />`;
+        } else if (element.type === 'arrow') {
+          const points = element.points || [0, 0, 100, 0];
+          const arrowLength = 20;
+          const arrowAngle = Math.PI / 6; // 30 degrees
+          // Calculate arrowhead points
+          const endX = points[points.length - 2];
+          const endY = points[points.length - 1];
+          const startX = points[points.length - 4];
+          const startY = points[points.length - 3];
+          const angle = Math.atan2(endY - startY, endX - startX);
+          const arrow1X = endX - arrowLength * Math.cos(angle - arrowAngle);
+          const arrow1Y = endY - arrowLength * Math.sin(angle - arrowAngle);
+          const arrow2X = endX - arrowLength * Math.cos(angle + arrowAngle);
+          const arrow2Y = endY - arrowLength * Math.sin(angle + arrowAngle);
+          const arrowPoints = [...points, arrow1X, arrow1Y, endX, endY, arrow2X, arrow2Y];
+          const bbox = this.getPointsBoundingBox(arrowPoints);
+          // Normalize all points
+          const normPoints = arrowPoints.map((p, i) => (i % 2 === 0 ? p - bbox.minX : p - bbox.minY));
+          // For path, use M for first, L for rest
+          let pathData = '';
+          for (let i = 0; i < normPoints.length; i += 2) {
+            pathData += (i === 0 ? 'M' : 'L') + normPoints[i] + ' ' + normPoints[i + 1] + ' ';
+          }
+          shapeSvg = `<path d='${pathData.trim()}' stroke='${element.stroke}' stroke-width='${element.strokeWidth}' fill='none' opacity='${element.opacity ?? 1}' />`;
+        } else if (element.type === 'semicircle') {
+          const radius = (element.width || 100) / 2;
+          const cx = radius;
+          const cy = radius;
+          shapeSvg = `<path d='M${cx - radius},${cy} A${radius},${radius} 0 0,1 ${cx + radius},${cy}' fill='${element.fill}' stroke='${element.stroke}' stroke-width='${element.strokeWidth}' opacity='${element.opacity ?? 1}' />`;
         }
         return `<svg width='${element.width}' height='${element.height}' style='${svgStyle}' xmlns='http://www.w3.org/2000/svg'>${shapeSvg}</svg>`;
       }
@@ -346,5 +430,23 @@ export class HtmlGeneratorService {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+  }
+
+  private getPointsBoundingBox(points: number[]): { minX: number; minY: number; maxX: number; maxY: number } {
+    let minX = Infinity;
+    let minY = Infinity;
+    let maxX = -Infinity;
+    let maxY = -Infinity;
+
+    for (let i = 0; i < points.length; i += 2) {
+      const x = points[i];
+      const y = points[i + 1];
+      if (x < minX) minX = x;
+      if (x > maxX) maxX = x;
+      if (y < minY) minY = y;
+      if (y > maxY) maxY = y;
+    }
+
+    return { minX, minY, maxX, maxY };
   }
 }

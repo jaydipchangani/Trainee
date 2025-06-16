@@ -78,8 +78,8 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       const pagesChanged = JSON.stringify(this.pages) !== JSON.stringify(pages);
       this.pages = pages;
       if (pagesChanged) {
-        setTimeout(() => this.initAllCanvases());
-        this.pushHistory();
+      setTimeout(() => this.initAllCanvases());
+      this.pushHistory();
       }
     });
     // Subscribe to selection changes
@@ -107,7 +107,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         this.textToolbarVisible = !!el;
         
         // Show/hide shape toolbar
-        const shapeEl = this.pages[this.selectedPageIndex]?.elements.find(e => e.id === selectedId && ['rect', 'circle', 'ellipse', 'star'].includes(e.type));
+        const shapeEl = this.pages[this.selectedPageIndex]?.elements.find(e => e.id === selectedId && ['rect', 'circle', 'ellipse', 'star', 'line', 'arrow', 'semicircle'].includes(e.type));
         this.shapeToolbarElement = shapeEl ? { ...shapeEl } : null;
         this.shapeToolbarVisible = !!shapeEl;
       } else {
@@ -182,6 +182,11 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         anchorShadowBlur: 2,
         anchorShadowOffset: { x: 1, y: 1 },
         anchorShadowOpacity: 0.3,
+        // Add boundBoxFunc to handle line shapes better
+        boundBoxFunc: (oldBox, newBox) => {
+          // For line shapes, allow any transformation
+          return newBox;
+        }
       });
       
       // Add transform event handler to the transformer
@@ -208,6 +213,9 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     const transformer = this.transformers[pageIndex];
     if (!layer || !transformer) return;
     
+    // Store current selection
+    const currentSelectedId = this.selectedId;
+    
     // Remove transformer temporarily
     transformer.remove();
     
@@ -218,17 +226,49 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     elements.forEach(element => {
       const node = this.createElementNode(element, pageIndex);
       if (node !== null) {
-        layer.add(node);
+        layer.add(node as any);
       }
     });
     
     // Always add transformer last so it appears above all nodes
     layer.add(transformer);
+    
+    // Restore selection if it was the same element
+    if (currentSelectedId) {
+      const selectedNode = layer.findOne(`#${currentSelectedId}`);
+      if (selectedNode) {
+        this.selectedId = currentSelectedId;
+        this.canvasService.setSelectedElementId(currentSelectedId);
+        transformer.nodes([selectedNode as any]);
+        layer.add(transformer); // bring transformer to top
+        
+        // Update toolbar visibility
+        const element = this.pages[pageIndex]?.elements.find(e => e.id === currentSelectedId);
+        if (element) {
+          if (element.type === 'text') {
+            this.textToolbarElement = { ...element };
+            this.textToolbarVisible = true;
+            this.shapeToolbarVisible = false;
+          } else if (['rect', 'circle', 'ellipse', 'star', 'line', 'arrow', 'semicircle'].includes(element.type)) {
+            this.shapeToolbarElement = { ...element };
+            this.shapeToolbarVisible = true;
+            this.textToolbarVisible = false;
+          }
+        }
+      } else {
+        // Clear selection if element no longer exists
+        this.selectedId = null;
+        this.canvasService.setSelectedElementId(null);
+        this.textToolbarVisible = false;
+        this.shapeToolbarVisible = false;
+      }
+    }
+    
     layer.draw();
   }
 
-  private createElementNode(element: CanvasElement, pageIndex: number): Konva.Shape | null {
-    let node: Konva.Shape | null = null;
+  private createElementNode(element: CanvasElement, pageIndex: number): Konva.Node | null {
+    let node: Konva.Node | null = null;
     if (element.type === 'text') {
       node = new Konva.Text({
         id: element.id,
@@ -392,38 +432,160 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         this.selectedPageIndex = pageIndex;
       });
-    } else if (element.type === 'line') {
-      node = new Konva.Line({
+    } else if (element.type === 'line' || element.type === 'arrow') {
+      // --- Custom endpoint handles for lines/arrows ---
+      const isArrow = element.type === 'arrow';
+      const points = element.points || [0, 0, 100, 0];
+      let displayPoints = points;
+      if (isArrow) {
+        const arrowLength = 20;
+        const arrowAngle = Math.PI / 6;
+        const endX = points[points.length - 2];
+        const endY = points[points.length - 1];
+        const startX = points[points.length - 4];
+        const startY = points[points.length - 3];
+        const angle = Math.atan2(endY - startY, endX - startX);
+        const arrow1X = endX - arrowLength * Math.cos(angle - arrowAngle);
+        const arrow1Y = endY - arrowLength * Math.sin(angle - arrowAngle);
+        const arrow2X = endX - arrowLength * Math.cos(angle + arrowAngle);
+        const arrow2Y = endY - arrowLength * Math.sin(angle + arrowAngle);
+        displayPoints = [...points, arrow1X, arrow1Y, endX, endY, arrow2X, arrow2Y];
+      }
+      const bbox = this.getPointsBoundingBox(displayPoints);
+      const group = new Konva.Group({
         id: element.id,
-        points: element.points || [0, 0, 100, 0],
-        stroke: element.stroke,
-        strokeWidth: element.strokeWidth,
-        opacity: element.opacity,
-        rotation: element.rotation,
-        lineCap: 'round',
-        lineJoin: 'round',
+        x: element.x || 0,
+        y: element.y || 0,
         draggable: true
       });
-      node.on('click', () => {
+      const background = new Konva.Rect({
+        x: bbox.minX,
+        y: bbox.minY,
+        width: bbox.maxX - bbox.minX || 10,
+        height: bbox.maxY - bbox.minY || 10,
+        fill: 'transparent',
+        stroke: 'transparent'
+      });
+      const line = new Konva.Line({
+        points: displayPoints,
+        stroke: element.stroke || '#000000',
+        strokeWidth: element.strokeWidth || 2,
+        opacity: element.opacity || 1,
+        rotation: element.rotation || 0,
+        lineCap: 'round',
+        lineJoin: 'round'
+      });
+      group.add(background);
+      group.add(line);
+      // --- Endpoint handles ---
+      const origPoints = element.points || [0, 0, 100, 0];
+      const handle1 = new Konva.Circle({
+        x: origPoints[0],
+        y: origPoints[1],
+        radius: 7,
+        fill: '#1976d2',
+        stroke: '#fff',
+        strokeWidth: 2,
+        draggable: true,
+        visible: this.selectedId === element.id
+      });
+      const handle2 = new Konva.Circle({
+        x: origPoints[2],
+        y: origPoints[3],
+        radius: 7,
+        fill: '#1976d2',
+        stroke: '#fff',
+        strokeWidth: 2,
+        draggable: true,
+        visible: this.selectedId === element.id
+      });
+      // Drag logic for handle1
+      handle1.on('dragmove', () => {
+        const newX = handle1.x();
+        const newY = handle1.y();
+        const newPoints = [newX, newY, origPoints[2], origPoints[3]];
+        this.updateElementDataOnly(element.id, {
+          points: newPoints
+        }, pageIndex);
+        // Redraw line and handle2
+        const newDisplayPoints = isArrow ? this.getArrowDisplayPoints(newPoints) : newPoints;
+        line.points(newDisplayPoints);
+        handle2.x(newPoints[2]);
+        handle2.y(newPoints[3]);
+        handle1.x(newPoints[0]);
+        handle1.y(newPoints[1]);
+        const newBbox = this.getPointsBoundingBox(newDisplayPoints);
+        background.x(newBbox.minX);
+        background.y(newBbox.minY);
+        background.width(newBbox.maxX - newBbox.minX || 10);
+        background.height(newBbox.maxY - newBbox.minY || 10);
+      });
+      // Drag logic for handle2
+      handle2.on('dragmove', () => {
+        const newX = handle2.x();
+        const newY = handle2.y();
+        const newPoints = [origPoints[0], origPoints[1], newX, newY];
+        this.updateElementDataOnly(element.id, {
+          points: newPoints
+        }, pageIndex);
+        // Redraw line and handle1
+        const newDisplayPoints = isArrow ? this.getArrowDisplayPoints(newPoints) : newPoints;
+        line.points(newDisplayPoints);
+        handle1.x(newPoints[0]);
+        handle1.y(newPoints[1]);
+        handle2.x(newPoints[2]);
+        handle2.y(newPoints[3]);
+        const newBbox = this.getPointsBoundingBox(newDisplayPoints);
+        background.x(newBbox.minX);
+        background.y(newBbox.minY);
+        background.width(newBbox.maxX - newBbox.minX || 10);
+        background.height(newBbox.maxY - newBbox.minY || 10);
+      });
+      // Show/hide handles on selection
+      group.on('click', () => {
         this.selectedId = element.id;
         this.canvasService.setSelectedElementId(element.id);
-        if (this.transformers[pageIndex] && node) {
-          this.transformers[pageIndex].nodes([node]);
-          this.layers[pageIndex].add(this.transformers[pageIndex]); // bring transformer to top
-          this.layers[pageIndex].draw();
-        }
+        handle1.visible(true);
+        handle2.visible(true);
+        this.shapeToolbarElement = { ...element };
+        this.shapeToolbarVisible = true;
+        this.textToolbarVisible = false;
         this.selectedPageIndex = pageIndex;
+        group.getLayer()?.draw();
       });
-    } else if (element.type === 'triangle') {
-      node = new Konva.Line({
+      group.on('mousedown touchstart', (e) => {
+        e.cancelBubble = true;
+        this.selectedId = element.id;
+        this.canvasService.setSelectedElementId(element.id);
+        handle1.visible(true);
+        handle2.visible(true);
+        this.shapeToolbarElement = { ...element };
+        this.shapeToolbarVisible = true;
+        this.textToolbarVisible = false;
+        this.selectedPageIndex = pageIndex;
+        group.getLayer()?.draw();
+      });
+      node = group;
+      group.add(handle1);
+      group.add(handle2);
+    } else if (element.type === 'semicircle') {
+      // Create semicircle using Konva.Arc
+      const radius = (element.width || 100) / 2;
+      const centerX = element.x + radius;
+      const centerY = element.y + radius;
+      
+      node = new Konva.Arc({
         id: element.id,
-        points: element.points || [0, 0, 100, 0, 50, 100],
-        closed: true,
+        x: centerX,
+        y: centerY,
+        innerRadius: 0,
+        outerRadius: radius,
+        angle: 180,
+        rotation: element.rotation,
         fill: element.fill,
         stroke: element.stroke,
         strokeWidth: element.strokeWidth,
         opacity: element.opacity,
-        rotation: element.rotation,
         draggable: true
       });
       node.on('click', () => {
@@ -575,6 +737,62 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
           height,
           rotation: n.rotation()
         }, pageIndex);
+      } else if (element.type === 'line' || element.type === 'arrow') {
+        // For line-based shapes, handle scaling and position changes
+        const originalPoints = element.points || [];
+        const scaleX = n.scaleX();
+        const scaleY = n.scaleY();
+        
+        // Scale the points based on the transformation
+        const newPoints = originalPoints.map((point, index) => {
+          if (index % 2 === 0) {
+            return point * scaleX; // x coordinate
+      } else {
+            return point * scaleY; // y coordinate
+          }
+        });
+        
+        // Reset scale and update position
+        n.scaleX(1);
+        n.scaleY(1);
+        
+        this.updateElementDataOnly(element.id, {
+          x: n.x(),
+          y: n.y(),
+          points: newPoints,
+          rotation: n.rotation()
+        }, pageIndex);
+        
+        // Update the visual representation directly without triggering reloads
+        const layer = this.layers[pageIndex];
+        if (layer) {
+          const groupNode = layer.findOne(`#${element.id}`) as Konva.Group;
+          if (groupNode) {
+            // Update the line within the group
+            const line = groupNode.findOne('Line') as Konva.Line;
+            if (line) {
+              line.points(newPoints);
+            }
+            layer.draw();
+          }
+        }
+      } else if (element.type === 'semicircle') {
+        // For semicircles, convert center coordinates to top-left corner
+        const arcNode = n as Konva.Arc;
+        const radius = arcNode.outerRadius() * n.scaleX();
+        const width = radius * 2;
+        const height = radius * 2;
+        const x = n.x() - radius;
+        const y = n.y() - radius;
+        n.scaleX(1);
+        n.scaleY(1);
+        this.updateElementDataOnly(element.id, {
+          x,
+          y,
+          width,
+          height,
+          rotation: n.rotation()
+        }, pageIndex);
       } else {
         // For rectangles and other shapes, use standard coordinates
         const updatedElement = {
@@ -588,6 +806,9 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         n.scaleX(1);
         n.scaleY(1);
       }
+      
+      // Ensure transformer stays attached and selection is preserved
+      this.ensureTransformerAttached(element.id, pageIndex);
     });
     node.on('dragend', () => {
       const n = node!;
@@ -613,12 +834,39 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         const x = n.x() - outerRadius;
         const y = n.y() - outerRadius;
         this.updateElementDataOnly(element.id, { x, y }, pageIndex);
+      } else if (element.type === 'line' || element.type === 'arrow') {
+        // For line-based shapes, update the points array based on the new position
+        const originalPoints = element.points || [];
+        const deltaX = n.x() - element.x;
+        const deltaY = n.y() - element.y;
+        
+        // Update all points by the delta
+        const newPoints = originalPoints.map((point, index) => {
+          if (index % 2 === 0) {
+            return point + deltaX; // x coordinate
+          } else {
+            return point + deltaY; // y coordinate
+          }
+        });
+        
+        this.updateElementDataOnly(element.id, {
+          x: n.x(),
+          y: n.y(),
+          points: newPoints
+        }, pageIndex);
+      } else if (element.type === 'semicircle') {
+        // For semicircles, convert center coordinates to top-left corner
+        const arcNode = n as Konva.Arc;
+        const radius = arcNode.outerRadius();
+        const x = n.x() - radius;
+        const y = n.y() - radius;
+        this.updateElementDataOnly(element.id, { x, y }, pageIndex);
       } else {
         // For rectangles and other shapes, use standard coordinates
         this.updateElementDataOnly(element.id, {
-          x: n.x(),
-          y: n.y()
-        }, pageIndex);
+        x: n.x(),
+        y: n.y()
+      }, pageIndex);
       }
     });
     return node;
@@ -769,8 +1017,8 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private updateElementOnPage(id: string, updates: Partial<CanvasElement>, pageIndex: number) {
     // Always update the element regardless of which page is selected
-    this.canvasService.switchPage(pageIndex);
-    this.canvasService.updateElement(id, updates);
+      this.canvasService.switchPage(pageIndex);
+      this.canvasService.updateElement(id, updates);
     
     // Update the visual representation of the specific element
     this.updateElementVisual(id, updates, pageIndex);
@@ -834,6 +1082,25 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       if (updates.stroke !== undefined) node.stroke(updates.stroke);
       if (updates.strokeWidth !== undefined) node.strokeWidth(updates.strokeWidth);
       if (updates.numPoints !== undefined) node.numPoints(updates.numPoints);
+    } else if (node instanceof Konva.Line) {
+      // Handle line and arrow updates
+      if (updates.stroke !== undefined) node.stroke(updates.stroke);
+      if (updates.strokeWidth !== undefined) node.strokeWidth(updates.strokeWidth);
+      if (updates.fill !== undefined) node.fill(updates.fill);
+      if (updates.points !== undefined) node.points(updates.points);
+      if (updates.x !== undefined) node.x(updates.x);
+      if (updates.y !== undefined) node.y(updates.y);
+    } else if (node instanceof Konva.Arc) {
+      // Handle semicircle updates
+      if (updates.width !== undefined) {
+        const radius = updates.width / 2;
+        node.outerRadius(radius);
+        if (updates.x !== undefined) node.x(updates.x + radius);
+        if (updates.y !== undefined) node.y(updates.y + radius);
+      }
+      if (updates.fill !== undefined) node.fill(updates.fill);
+      if (updates.stroke !== undefined) node.stroke(updates.stroke);
+      if (updates.strokeWidth !== undefined) node.strokeWidth(updates.strokeWidth);
     } else if (node instanceof Konva.Text) {
       if (updates.text !== undefined) node.text(updates.text);
       if (updates.fontSize !== undefined) node.fontSize(updates.fontSize);
@@ -842,6 +1109,28 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       if (updates.fontStyle !== undefined) node.fontStyle(updates.fontStyle);
       if (updates.fontWeight !== undefined) (node as any).fontWeight(updates.fontWeight);
       if (updates.align !== undefined) node.align(updates.align);
+    } else if (node instanceof Konva.Group) {
+      // Handle group updates (for line and arrow shapes)
+      if (updates.x !== undefined) node.x(updates.x);
+      if (updates.y !== undefined) node.y(updates.y);
+      if (updates.rotation !== undefined) node.rotation(updates.rotation);
+      
+      // Update the line within the group if points are provided
+      if (updates.points !== undefined) {
+        const line = node.findOne('Line') as Konva.Line;
+        if (line) {
+          line.points(updates.points);
+        }
+      }
+      
+      // Update stroke properties if provided
+      if (updates.stroke !== undefined || updates.strokeWidth !== undefined) {
+        const line = node.findOne('Line') as Konva.Line;
+        if (line) {
+          if (updates.stroke !== undefined) line.stroke(updates.stroke);
+          if (updates.strokeWidth !== undefined) line.strokeWidth(updates.strokeWidth);
+        }
+      }
     }
     
     // Redraw the layer
@@ -1018,7 +1307,16 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     setTimeout(() => this.initAllCanvases());
   }
 
-  public addShape(type: 'rect' | 'circle' | 'ellipse' | 'star') {
+  public addShape(type: 'rect' | 'circle' | 'ellipse' | 'star' | 'line' | 'arrow' | 'semicircle') {
+    let points: number[] = [0, 0, 100, 0]; // Default for line/arrow
+    
+    // Set appropriate default points for each shape type
+    if (type === 'line') {
+      points = [0, 0, 100, 0];
+    } else if (type === 'arrow') {
+      points = [0, 0, 100, 0];
+    }
+    
     const element: CanvasElement = {
       id: Date.now().toString(),
       type,
@@ -1034,7 +1332,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       opacity: 1,
       borderRadius: 0,
       numPoints: 5,
-      points: [0, 0, 100, 0, 50, 100],
+      points: points,
     };
     this.canvasService.switchPage(this.selectedPageIndex);
     this.canvasService.addElement(element);
@@ -1171,7 +1469,77 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private updateElementDataOnly(id: string, updates: Partial<CanvasElement>, pageIndex: number) {
     // Always update the element regardless of which page is selected
+    const element = this.pages[pageIndex]?.elements.find(e => e.id === id);
+    if (element && (element.type === 'line' || element.type === 'arrow') && updates.points) {
+      const bbox = this.getPointsBoundingBox(updates.points);
+      updates.x = bbox.minX;
+      updates.y = bbox.minY;
+      updates.width = bbox.maxX - bbox.minX;
+      updates.height = bbox.maxY - bbox.minY;
+    }
     this.canvasService.switchPage(pageIndex);
     this.canvasService.updateElement(id, updates);
+  }
+
+  private ensureTransformerAttached(elementId: string, pageIndex: number) {
+    const layer = this.layers[pageIndex];
+    const transformer = this.transformers[pageIndex];
+    if (!layer || !transformer) return;
+    
+    const node = layer.findOne(`#${elementId}`);
+    if (node) {
+      // Ensure transformer is attached to the node
+      transformer.nodes([node as any]);
+      layer.add(transformer); // bring transformer to top
+      layer.draw();
+      
+      // Update selection state
+      this.selectedId = elementId;
+      this.canvasService.setSelectedElementId(elementId);
+      
+      // Update toolbar visibility
+      const element = this.pages[pageIndex]?.elements.find(e => e.id === elementId);
+      if (element) {
+        if (element.type === 'text') {
+          this.textToolbarElement = { ...element };
+          this.textToolbarVisible = true;
+          this.shapeToolbarVisible = false;
+        } else if (['rect', 'circle', 'ellipse', 'star', 'line', 'arrow', 'semicircle'].includes(element.type)) {
+          this.shapeToolbarElement = { ...element };
+          this.shapeToolbarVisible = true;
+          this.textToolbarVisible = false;
+        }
+      }
+    }
+  }
+
+  // Utility to get bounding box from points
+  private getPointsBoundingBox(points: number[]): { minX: number, minY: number, maxX: number, maxY: number } {
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    for (let i = 0; i < points.length; i += 2) {
+      const x = points[i];
+      const y = points[i + 1];
+      if (x < minX) minX = x;
+      if (y < minY) minY = y;
+      if (x > maxX) maxX = x;
+      if (y > maxY) maxY = y;
+    }
+    return { minX, minY, maxX, maxY };
+  }
+
+  // Utility to get display points for arrow (with arrowhead)
+  private getArrowDisplayPoints(points: number[]): number[] {
+    const arrowLength = 20;
+    const arrowAngle = Math.PI / 6;
+    const endX = points[points.length - 2];
+    const endY = points[points.length - 1];
+    const startX = points[points.length - 4];
+    const startY = points[points.length - 3];
+    const angle = Math.atan2(endY - startY, endX - startX);
+    const arrow1X = endX - arrowLength * Math.cos(angle - arrowAngle);
+    const arrow1Y = endY - arrowLength * Math.sin(angle - arrowAngle);
+    const arrow2X = endX - arrowLength * Math.cos(angle + arrowAngle);
+    const arrow2Y = endY - arrowLength * Math.sin(angle + arrowAngle);
+    return [...points, arrow1X, arrow1Y, endX, endY, arrow2X, arrow2Y];
   }
 }
