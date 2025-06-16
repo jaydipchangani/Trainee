@@ -603,48 +603,85 @@
   list-style: none;
   padding: 0;
   margin: 0;
-}
-.template-list li {
-  padding: 0;
-  margin: 0;
-  background: none;
-  border-radius: 0;
-  box-shadow: none;
-  display: block;
-}
-.template-preview-img {
-  width: 200px;
-  height: 200px;
-  object-fit: fill;
-  border-radius: 0;
-  margin: 0;
-  border: none;
-  display: block;
-  padding: 10px 0px 0px 0px;
-}
-.template-info {
   display: flex;
   flex-direction: column;
+  gap: 18px;
+}
+
+.template-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding: 12px 12px 10px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  min-width: 160px;
+  max-width: 220px;
+  margin: 0 auto;
+}
+
+.template-card-header {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.template-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #222;
+  text-align: center;
   flex: 1;
+  margin-bottom: 0;
+  white-space: normal;
+  word-break: break-word;
 }
-.template-info span {
-  font-size: 15px;
-  font-weight: 500;
-  margin-bottom: 4px;
-}
-.template-info button {
-  align-self: flex-start;
-  background: #1976d2;
-  color: #fff;
+
+.delete-template-btn {
+  position: absolute;
+  right: 0;
+  top: 0;
+  background: none;
   border: none;
-  border-radius: 4px;
-  padding: 4px 12px;
-  font-size: 13px;
+  color: #d9534f;
+  font-size: 18px;
   cursor: pointer;
+  border-radius: 4px;
+  padding: 0 6px;
   transition: background 0.2s;
 }
-.template-info button:hover {
-  background: #1251a2;
+
+.delete-template-btn:hover {
+  background: #ffeaea;
+}
+
+.template-preview-img {
+  width: 100%;
+  max-width: 180px;
+  height: auto;
+  max-height: 120px;
+  object-fit: contain;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  margin: 0 auto;
+  display: block;
+  cursor: pointer;
+  background: #f8f8f8;
+}
+
+.user-template-label {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #888;
+  font-style: italic;
+  text-align: left;
+  padding-left: 4px;
 }
 
 .uploads-header {

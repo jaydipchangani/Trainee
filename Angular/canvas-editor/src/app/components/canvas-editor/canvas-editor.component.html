@@ -48,6 +48,7 @@
       <mat-icon>aspect_ratio</mat-icon>
       Lock Aspect Ratio
     </button>
+    <button (click)="openSaveTemplateModal()">Save as Template</button>
     <!-- <button (click)="shareDesign()">Share Design</button> -->
   </div>
 
@@ -199,6 +200,25 @@
     </div>
   </div>
 
+  <!-- Save as Template Modal -->
+  <div class="modal" *ngIf="showSaveTemplateModal">
+    <div class="modal-content">
+      <h2>Save as Template</h2>
+      <div class="form-group">
+        <label>Template Name:</label>
+        <input type="text" [(ngModel)]="newTemplateName" placeholder="Enter template name">
+      </div>
+      <div class="form-group">
+        <label>Preview Image URL (optional):</label>
+        <input type="text" [(ngModel)]="newTemplatePreviewUrl" placeholder="Enter image URL">
+      </div>
+      <div class="modal-actions">
+        <button (click)="saveCurrentAsTemplate()" [disabled]="!newTemplateName">Save</button>
+        <button (click)="showSaveTemplateModal = false">Cancel</button>
+      </div>
+    </div>
+  </div>
+
   <div *ngIf="textToolbarVisible && textToolbarElement" class="floating-text-toolbar">
     <select [(ngModel)]="textToolbarElement.fontFamily" (change)="updateTextElement({ fontFamily: textToolbarElement.fontFamily })">
       <option *ngFor="let font of fontFamilies" [value]="font">{{ font }}</option>
@@ -275,10 +295,17 @@
     <div *ngSwitchCase="'templates'">
       <h3>Templates</h3>
       <ul class="template-list">
-        <li *ngFor="let template of templates">
-          <img [src]="template.previewUrl" alt="Template preview" class="template-preview-img" (click)="applyTemplateToAllPages(template)" style="cursor:pointer;" />
+        <li *ngFor="let template of templates; let i = index" class="template-card">
+          <div class="template-card-header">
+            <span class="template-name">{{ template.name }}</span>
+            <button *ngIf="isUserTemplate(template)" class="delete-template-btn" (click)="deleteUserTemplate(template)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+          <img [src]="template.previewUrl" alt="Template preview" class="template-preview-img" (click)="applyTemplateToAllPages(template)" />
         </li>
       </ul>
+      <div *ngIf="userTemplates.length > 0" class="user-template-label">Your Templates</div>
     </div>
     <div *ngSwitchCase="'design'">
       <h3>Design</h3>

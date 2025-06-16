@@ -63,6 +63,12 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private clipboardElement: CanvasElement | null = null;
 
+  showSaveTemplateModal = false;
+  newTemplateName = '';
+  newTemplatePreviewUrl = '';
+  userTemplates: CanvasTemplate[] = [];
+  allTemplates: CanvasTemplate[] = [];
+
   constructor(
     private canvasService: CanvasService,
     private router: Router,
@@ -79,8 +85,8 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       const pagesChanged = JSON.stringify(this.pages) !== JSON.stringify(pages);
       this.pages = pages;
       if (pagesChanged) {
-      setTimeout(() => this.initAllCanvases());
-      this.pushHistory();
+        setTimeout(() => this.initAllCanvases());
+        this.pushHistory();
       }
     });
     // Subscribe to selection changes
@@ -118,6 +124,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         this.shapeToolbarVisible = false;
       }
     });
+    this.loadTemplates();
   }
 
   ngAfterViewInit() {
@@ -1429,7 +1436,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   get templates(): CanvasTemplate[] {
-    return this.templateService.getTemplates();
+    return this.allTemplates;
   }
 
   applyTemplateToPage(template: CanvasTemplate, pageIndex: number) {
@@ -1824,5 +1831,49 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     
     // Refresh the canvas to update all visual elements
     setTimeout(() => this.initAllCanvases());
+  }
+
+  openSaveTemplateModal() {
+    this.newTemplateName = '';
+    this.newTemplatePreviewUrl = '';
+    this.showSaveTemplateModal = true;
+  }
+
+  saveCurrentAsTemplate() {
+    const elements = this.pages[this.selectedPageIndex].elements.map(e => {
+      // Remove runtime-only properties
+      const { id, isTemplate, locked, ...rest } = e;
+      return { ...rest, type: e.type, x: e.x, y: e.y, width: e.width, height: e.height, rotation: e.rotation, zIndex: e.zIndex };
+    });
+    const newTemplate: CanvasTemplate = {
+      name: this.newTemplateName,
+      previewUrl: this.newTemplatePreviewUrl || 'assets/template-default.png',
+      elements: elements as any
+    };
+    const userTemplates = JSON.parse(localStorage.getItem('userTemplates') || '[]');
+    userTemplates.push(newTemplate);
+    localStorage.setItem('userTemplates', JSON.stringify(userTemplates));
+    this.showSaveTemplateModal = false;
+    this.loadTemplates();
+  }
+
+  loadTemplates() {
+    const builtIn = this.templateService.getTemplates();
+    const userTemplates = JSON.parse(localStorage.getItem('userTemplates') || '[]');
+    this.userTemplates = userTemplates;
+    this.allTemplates = [...builtIn, ...userTemplates];
+  }
+
+  isUserTemplate(template: CanvasTemplate): boolean {
+    return this.userTemplates.some(t => t.name === template.name && t.previewUrl === template.previewUrl);
+  }
+
+  deleteUserTemplate(template: CanvasTemplate) {
+    let userTemplates = JSON.parse(localStorage.getItem('userTemplates') || '[]');
+    userTemplates = userTemplates.filter(
+      (t: CanvasTemplate) => !(t.name === template.name && t.previewUrl === template.previewUrl)
+    );
+    localStorage.setItem('userTemplates', JSON.stringify(userTemplates));
+    this.loadTemplates();
   }
 }
