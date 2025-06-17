@@ -79,7 +79,6 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   isNewPageLoading: boolean = false;
   isFileUploading: boolean = false;
   isSavingTemplate: boolean = false;
-  isCreatingNewPageWithTemplate: boolean = false;
 
   constructor(
     private canvasService: CanvasService,
@@ -96,29 +95,9 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     this.canvasService.pages$.subscribe(pages => {
       // Only reload canvases if the actual page data has changed
       const pagesChanged = JSON.stringify(this.pages) !== JSON.stringify(pages);
-      
-      // Debug loading states
-      console.log('Pages subscription - loading states:', {
-        isCreatingNewPageWithTemplate: this.isCreatingNewPageWithTemplate,
-        isNewPageLoading: this.isNewPageLoading,
-        pendingTemplateForNewPage: this.pendingTemplateForNewPage,
-        pagesLength: pages.length,
-        lastPageCount: this.lastPageCount,
-        hasCurrentTemplate: !!this.currentAppliedTemplate
-      });
-      
       // --- Template for new page logic ---
       if (this.pendingTemplateForNewPage && pages.length > this.lastPageCount && this.currentAppliedTemplate) {
-        console.log('Applying template to new page:', {
-          pendingTemplateForNewPage: this.pendingTemplateForNewPage,
-          pagesLength: pages.length,
-          lastPageCount: this.lastPageCount,
-          hasCurrentTemplate: !!this.currentAppliedTemplate
-        });
-        
         const newPageIndex = pages.length - 1;
-        
-        // Apply template elements to the new page
         const templateElements = this.currentAppliedTemplate.elements.map(el => {
           const newElement = {
             ...el,
@@ -130,42 +109,17 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
           }
           return newElement;
         });
-        
-        // Update the new page with template elements
         this.canvasService.updatePageElements(newPageIndex, templateElements);
-        
-        // Set the new page as selected and scroll to it
         this.selectedPageIndex = newPageIndex;
         this.scrollToPage(newPageIndex);
-        
-        // Initialize canvas to ensure template elements are rendered
-        setTimeout(() => {
-          this.initAllCanvases();
-        }, 100);
-        
-        // Clear the pending state and loading indicator after template is applied
-        this.pendingTemplateForNewPage = false;
-        
-        // Add a delay to ensure the template is fully rendered before clearing loading state
-        setTimeout(() => {
-          this.isNewPageLoading = false;
-          this.isCreatingNewPageWithTemplate = false;
-          console.log('Template applied successfully, loading states cleared');
-        }, 1000); // 1 second delay to ensure template is fully rendered
-      } else if (this.isCreatingNewPageWithTemplate && pages.length > this.lastPageCount) {
-        // Fallback: If we're loading but the template condition wasn't met, still clear the loading state
-        console.log('Fallback: Clearing loading state for new page without template');
         this.pendingTemplateForNewPage = false;
         this.isNewPageLoading = false;
-        this.isCreatingNewPageWithTemplate = false;
       }
-      
       this.lastPageCount = pages.length;
       this.pages = pages;
-      
       if (pagesChanged) {
-        setTimeout(() => this.initAllCanvases());
-        this.pushHistory();
+      setTimeout(() => this.initAllCanvases());
+      this.pushHistory();
       }
     });
     // Subscribe to selection changes
@@ -303,14 +257,6 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       this.transformers[i] = transformer;
       this.loadElementsForPage(i);
     });
-    
-    // Clear loading states after canvas initialization if they're still active
-    if (this.isCreatingNewPageWithTemplate || this.isNewPageLoading) {
-      console.log('Clearing loading states after canvas initialization');
-      this.isCreatingNewPageWithTemplate = false;
-      this.isNewPageLoading = false;
-      this.pendingTemplateForNewPage = false;
-    }
   }
 
   private loadElementsForPage(pageIndex: number) {
@@ -1324,37 +1270,15 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   addPage() {
     if (this.currentAppliedTemplate) {
-      // First add the page without loading state
-      this.canvasService.addPage();
-      
-      // Then set loading state after page is added
       this.pendingTemplateForNewPage = true;
       this.isNewPageLoading = true;
-      this.isCreatingNewPageWithTemplate = true;
-      
-      console.log('Page added, now applying template with loading state:', {
-        currentAppliedTemplate: this.currentAppliedTemplate.name,
-        isCreatingNewPageWithTemplate: this.isCreatingNewPageWithTemplate,
-        isNewPageLoading: this.isNewPageLoading,
-        pendingTemplateForNewPage: this.pendingTemplateForNewPage
-      });
-      
-      // Safety timeout to clear loading state if something goes wrong
-      setTimeout(() => {
-        if (this.isCreatingNewPageWithTemplate) {
-          console.warn('Template application timeout - clearing loading state');
-          this.isCreatingNewPageWithTemplate = false;
-          this.isNewPageLoading = false;
-          this.pendingTemplateForNewPage = false;
-        }
-      }, 5000); // Increased to 5 seconds for template application
-      
-    } else {
       this.canvasService.addPage();
-      setTimeout(() => {
-        this.selectedPageIndex = this.pages.length - 1;
-        this.scrollToPage(this.selectedPageIndex);
-      });
+    } else {
+    this.canvasService.addPage();
+    setTimeout(() => {
+      this.selectedPageIndex = this.pages.length - 1;
+      this.scrollToPage(this.selectedPageIndex);
+    });
     }
   }
 
@@ -1522,9 +1446,6 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         URL.revokeObjectURL(file.url);
       }
     });
-    
-    // Clear any remaining loading states
-    this.clearLoadingStates();
   }
 
   onShapeSelect(element: CanvasElement) {
@@ -1593,9 +1514,6 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     if (isLargeTemplate) {
       this.isTemplateLoading = true;
     }
-    
-    // Set the current applied template so new pages can use it
-    this.currentAppliedTemplate = template;
     
     // Deep copy and assign new IDs, and lock background elements
     const newElements = template.elements.map(el => {
@@ -2121,32 +2039,5 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     );
     localStorage.setItem('userTemplates', JSON.stringify(userTemplates));
     this.loadTemplates();
-  }
-
-  // Debug method to clear loading states manually
-  clearLoadingStates() {
-    console.log('Manually clearing all loading states');
-    this.isTemplateLoading = false;
-    this.isNewPageLoading = false;
-    this.isFileUploading = false;
-    this.isSavingTemplate = false;
-    this.isCreatingNewPageWithTemplate = false;
-    this.pendingTemplateForNewPage = false;
-  }
-
-  // Debug method to manually trigger loading state for testing
-  triggerLoadingState() {
-    console.log('Manually triggering loading state for testing');
-    this.isCreatingNewPageWithTemplate = true;
-    this.isNewPageLoading = true;
-    this.pendingTemplateForNewPage = true;
-    
-    // Simulate template application process
-    setTimeout(() => {
-      console.log('Simulating template application completion');
-      this.pendingTemplateForNewPage = false;
-      this.isNewPageLoading = false;
-      this.isCreatingNewPageWithTemplate = false;
-    }, 3000);
   }
 }

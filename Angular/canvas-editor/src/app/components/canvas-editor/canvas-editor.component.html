@@ -7,10 +7,10 @@
     </div>
   </div>
   
-  <div *ngIf="isCreatingNewPageWithTemplate" class="loading-overlay">
+  <div *ngIf="isNewPageLoading" class="loading-overlay">
     <div class="loading-spinner">
       <mat-icon class="spinner-icon">hourglass_empty</mat-icon>
-      <p>Applying template to new page...</p>
+      <p>Creating new page...</p>
     </div>
   </div>
 
@@ -42,22 +42,6 @@
         <mat-icon>share</mat-icon>
         Share
       </button>
-      <!-- Debug button to clear loading states -->
-      <button *ngIf="isTemplateLoading || isNewPageLoading || isCreatingNewPageWithTemplate" 
-              class="debug-btn" 
-              (click)="clearLoadingStates()" 
-              title="Clear Loading States (Debug)">
-        <mat-icon>clear</mat-icon>
-        Clear Loading
-      </button>
-      <!-- Test button to trigger loading state -->
-      <button *ngIf="!isTemplateLoading && !isNewPageLoading && !isCreatingNewPageWithTemplate" 
-              class="debug-btn" 
-              (click)="triggerLoadingState()" 
-              title="Test Loading State (Debug)">
-        <mat-icon>play_arrow</mat-icon>
-        Test Loading
-      </button>
     </div>
   </header>
 
@@ -84,7 +68,7 @@
   </div>
 
   <div class="workspace">
-    <div class="canvas-scroll-container" #scrollContainer tabindex="0" [class.loading]="isTemplateLoading || isCreatingNewPageWithTemplate">
+    <div class="canvas-scroll-container" #scrollContainer tabindex="0" [class.loading]="isTemplateLoading || isNewPageLoading">
       <div class="canvas-pages-col">
         <div *ngFor="let page of pages; let i = index" class="canvas-page-wrapper" #canvasPageWrapper [class.selected]="i === selectedPageIndex" (click)="onPageClick(i)">
           <div class="canvas-page-title">{{ page.title }}</div>
@@ -92,19 +76,19 @@
         </div>
       </div>
       <!-- Canvas Loading Overlay -->
-      <div *ngIf="isTemplateLoading || isCreatingNewPageWithTemplate" class="canvas-loading-overlay">
+      <div *ngIf="isTemplateLoading || isNewPageLoading" class="canvas-loading-overlay">
         <div class="canvas-loading-spinner">
           <mat-icon class="spinner-icon">hourglass_empty</mat-icon>
-          <p>{{ isTemplateLoading ? 'Applying template...' : 'Applying template to new page...' }}</p>
+          <p>{{ isTemplateLoading ? 'Applying template...' : 'Creating new page...' }}</p>
         </div>
       </div>
     </div>
     <div class="page-table-panel">
       <div class="page-table-header">
         <span>Page Table</span>
-        <button (click)="addPage()" title="Add Page" [disabled]="isCreatingNewPageWithTemplate">
-          <mat-icon *ngIf="!isCreatingNewPageWithTemplate">add</mat-icon>
-          <mat-icon *ngIf="isCreatingNewPageWithTemplate" class="spinning">hourglass_empty</mat-icon>
+        <button (click)="addPage()" title="Add Page" [disabled]="isNewPageLoading">
+          <mat-icon *ngIf="!isNewPageLoading">add</mat-icon>
+          <mat-icon *ngIf="isNewPageLoading" class="spinning">hourglass_empty</mat-icon>
         </button>
       </div>
       <ul class="page-table-list">
