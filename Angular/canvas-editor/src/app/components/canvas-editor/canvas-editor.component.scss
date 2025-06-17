@@ -459,23 +459,50 @@
     }
   }
   .share-btn {
-    background: #fff;
-    color: #6a82fb;
-    border-radius: 8px;
-    padding: 6px 18px;
-    font-weight: 600;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 6px;
-    box-shadow: 0 2px 8px rgba(106,130,251,0.08);
-    border: none;
-    cursor: pointer;
-    transition: background 0.2s;
-    mat-icon {
-      color: #6a82fb;
-    }
+    gap: 4px;
+    font-size: 14px;
+    transition: background-color 0.2s;
+
     &:hover {
-      background: #f0f4ff;
+      background-color: #1e7e34;
+    }
+
+    mat-icon {
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+  .debug-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    transition: background-color 0.2s;
+    margin-left: 8px;
+
+    &:hover {
+      background-color: #c82333;
+    }
+
+    mat-icon {
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
     }
   }
 }
@@ -787,49 +814,129 @@
   border-color: #1976d2;
   background: #eaf3fb;
 }
+.uploads-dropzone.uploading {
+  border-color: #1976d2;
+  background: #eaf3fb;
+  pointer-events: none;
+  opacity: 0.7;
+}
 .uploads-dropzone-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 8px;
   color: #1976d2;
   font-size: 16px;
   font-weight: 500;
-  mat-icon {
-    font-size: 40px;
-    color: #1976d2;
-  }
+}
+.uploads-dropzone-content mat-icon {
+  font-size: 40px;
+  color: #1976d2;
+}
+.uploads-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+  margin-bottom: 8px;
+}
+.uploads-clear-btn {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #6c757d;
+  transition: background 0.2s, border-color 0.2s;
+}
+.uploads-clear-btn:hover {
+  background: #e9ecef;
+  border-color: #adb5bd;
+}
+.uploads-clear-btn mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
 }
 .uploads-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-  gap: 14px;
-  margin-top: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
 }
 .uploads-thumb {
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   overflow: hidden;
-  cursor: pointer;
-  transition: box-shadow 0.2s, transform 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 80px;
-  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 .uploads-thumb:hover {
-  box-shadow: 0 4px 16px rgba(25,118,210,0.15);
-  transform: translateY(-2px) scale(1.04);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
 }
-.uploads-thumb img, .uploads-thumb video {
+.uploads-thumb-content {
+  position: relative;
+  width: 100%;
+  height: 80px;
+  cursor: pointer;
+  overflow: hidden;
+}
+.uploads-thumb-content img,
+.uploads-thumb-content video {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 8px;
-  display: block;
+  border-radius: 8px 8px 0 0;
+}
+.uploads-thumb-info {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.uploads-thumb-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.uploads-thumb-size {
+  font-size: 11px;
+  color: #666;
+}
+.uploads-thumb-delete {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.uploads-thumb:hover .uploads-thumb-delete {
+  opacity: 1;
+}
+.uploads-thumb-delete mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  color: #d9534f;
+}
+.uploads-thumb-delete:hover {
+  background: #ffeaea;
 }
 
 .elements-header {
