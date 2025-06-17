@@ -92,28 +92,71 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
+    // Clear all uploaded media and templates on page refresh
+    this.clearAllOnRefresh();
+    
     this.canvasService.pages$.subscribe(pages => {
       // Only reload canvases if the actual page data has changed
       const pagesChanged = JSON.stringify(this.pages) !== JSON.stringify(pages);
       // --- Template for new page logic ---
       if (this.pendingTemplateForNewPage && pages.length > this.lastPageCount && this.currentAppliedTemplate) {
         const newPageIndex = pages.length - 1;
-        const templateElements = this.currentAppliedTemplate.elements.map(el => {
-          const newElement = {
-            ...el,
-            id: Date.now().toString() + Math.random(),
-            isTemplate: true
-          };
-          if (this.isBackgroundElement(newElement)) {
-            newElement.locked = true;
+        
+        // Process template elements to handle blob URLs
+        const processTemplateElements = async () => {
+          const templateElements = [];
+          
+          for (const el of this.currentAppliedTemplate!.elements) {
+            const newElement = {
+              ...el,
+              id: Date.now().toString() + Math.random(),
+              isTemplate: true
+            };
+            
+            // Handle image elements with blob URLs
+            if (el.type === 'image' && el.imageUrl && el.imageUrl.startsWith('blob:')) {
+              try {
+                // Try to convert the blob URL to a managed file
+                const managedFile = await this.fileUploadService.convertBlobUrlToManagedFile(
+                  el.imageUrl, 
+                  `template-image-${Date.now()}`
+                );
+                
+                if (managedFile) {
+                  newElement.imageUrl = managedFile.url;
+                } else {
+                  // If conversion fails, try to fetch and recreate the blob URL
+                  const response = await fetch(el.imageUrl);
+                  const blob = await response.blob();
+                  newElement.imageUrl = URL.createObjectURL(blob);
+                }
+              } catch (error) {
+                console.error('Error handling blob URL in new page template:', error);
+                // Keep the original URL if all else fails
+              }
+            }
+            
+            if (this.isBackgroundElement(newElement)) {
+              newElement.locked = true;
+            }
+            templateElements.push(newElement);
           }
-          return newElement;
+          
+          return templateElements;
+        };
+        
+        // Apply the processed template elements
+        processTemplateElements().then(templateElements => {
+          this.canvasService.updatePageElements(newPageIndex, templateElements);
+          this.selectedPageIndex = newPageIndex;
+          this.scrollToPage(newPageIndex);
+          this.pendingTemplateForNewPage = false;
+          this.isNewPageLoading = false;
+        }).catch(error => {
+          console.error('Error applying template to new page:', error);
+          this.pendingTemplateForNewPage = false;
+          this.isNewPageLoading = false;
         });
-        this.canvasService.updatePageElements(newPageIndex, templateElements);
-        this.selectedPageIndex = newPageIndex;
-        this.scrollToPage(newPageIndex);
-        this.pendingTemplateForNewPage = false;
-        this.isNewPageLoading = false;
       }
       this.lastPageCount = pages.length;
       this.pages = pages;
@@ -1504,6 +1547,47 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     this.uploadedFiles = this.fileUploadService.getUploadedFiles();
   }
 
+  private clearAllOnRefresh() {
+    // Clear all uploaded files
+    this.fileUploadService.clearAllFiles();
+    this.uploadedFiles = [];
+    
+    // Clear all user templates
+    localStorage.removeItem('userTemplates');
+    this.userTemplates = [];
+    this.allTemplates = this.templateService.getTemplates(); // Keep only built-in templates
+    
+    // Clear current applied template
+    this.currentAppliedTemplate = null;
+    this.pendingTemplateForNewPage = false;
+    
+    // Clear canvas state and start with a fresh page
+    this.canvasService.loadStateFromJson(JSON.stringify({
+      pages: [{ id: Date.now().toString() + Math.random(), title: 'Page 1', elements: [] }],
+      currentPageIndex: 0
+    }));
+    
+    // Reset component state
+    this.selectedPageIndex = 0;
+    this.selectedId = null;
+    this.textToolbarVisible = false;
+    this.shapeToolbarVisible = false;
+    this.textToolbarElement = null;
+    this.shapeToolbarElement = null;
+    
+    console.log('All uploaded media, templates, and canvas state cleared on page refresh');
+  }
+
+  // Public method to manually clear everything
+  clearAllData() {
+    this.clearAllOnRefresh();
+    // Refresh the UI
+    setTimeout(() => {
+      this.initAllCanvases();
+      this.loadTemplates();
+    });
+  }
+
   get templates(): CanvasTemplate[] {
     return this.allTemplates;
   }
@@ -1515,25 +1599,62 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       this.isTemplateLoading = true;
     }
     
-    // Deep copy and assign new IDs, and lock background elements
-    const newElements = template.elements.map(el => {
-      const newElement = { 
-        ...el, 
-        id: Date.now().toString() + Math.random(),
-        isTemplate: true
-      };
+    // Process template elements to handle blob URLs
+    const processElements = async () => {
+      const newElements = [];
       
-      // Automatically lock background elements
-      if (this.isBackgroundElement(newElement)) {
-        newElement.locked = true;
+      for (const el of template.elements) {
+        const newElement = { 
+          ...el, 
+          id: Date.now().toString() + Math.random(),
+          isTemplate: true
+        };
+        
+        // Handle image elements with blob URLs
+        if (el.type === 'image' && el.imageUrl && el.imageUrl.startsWith('blob:')) {
+          try {
+            // Try to convert the blob URL to a managed file
+            const managedFile = await this.fileUploadService.convertBlobUrlToManagedFile(
+              el.imageUrl, 
+              `template-image-${Date.now()}`
+            );
+            
+            if (managedFile) {
+              newElement.imageUrl = managedFile.url;
+            } else {
+              // If conversion fails, try to fetch and recreate the blob URL
+              const response = await fetch(el.imageUrl);
+              const blob = await response.blob();
+              newElement.imageUrl = URL.createObjectURL(blob);
+            }
+          } catch (error) {
+            console.error('Error handling blob URL in template:', error);
+            // Keep the original URL if all else fails
+          }
+        }
+        
+        // Automatically lock background elements
+        if (this.isBackgroundElement(newElement)) {
+          newElement.locked = true;
+        }
+        
+        newElements.push(newElement);
       }
       
-      return newElement;
-    });
+      return newElements;
+    };
     
+    // Apply the processed elements
+    processElements().then(newElements => {
     this.canvasService.updatePageElements(pageIndex, newElements);
-    setTimeout(() => {
-      this.initAllCanvases();
+      setTimeout(() => {
+        this.initAllCanvases();
+        if (isLargeTemplate) {
+          this.isTemplateLoading = false;
+        }
+      });
+    }).catch(error => {
+      console.error('Error applying template:', error);
       if (isLargeTemplate) {
         this.isTemplateLoading = false;
       }
@@ -1548,26 +1669,69 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     
     this.currentAppliedTemplate = template;
-    for (let i = 0; i < this.pages.length; i++) {
-      // Get existing user elements (non-template elements)
-      const userElements = this.pages[i].elements.filter(el => !el.isTemplate);
-      // Add new template elements, marked as isTemplate and lock background elements
-      const templateElements = template.elements.map(el => {
+    
+    // Process template elements to handle blob URLs
+    const processElements = async () => {
+      const processedElements = [];
+      
+      for (const el of template.elements) {
         const newElement = { 
           ...el, 
           id: Date.now().toString() + Math.random(), 
           isTemplate: true 
         };
+        
+        // Handle image elements with blob URLs
+        if (el.type === 'image' && el.imageUrl && el.imageUrl.startsWith('blob:')) {
+          try {
+            // Try to convert the blob URL to a managed file
+            const managedFile = await this.fileUploadService.convertBlobUrlToManagedFile(
+              el.imageUrl, 
+              `template-image-${Date.now()}`
+            );
+            
+            if (managedFile) {
+              newElement.imageUrl = managedFile.url;
+            } else {
+              // If conversion fails, try to fetch and recreate the blob URL
+              const response = await fetch(el.imageUrl);
+              const blob = await response.blob();
+              newElement.imageUrl = URL.createObjectURL(blob);
+            }
+          } catch (error) {
+            console.error('Error handling blob URL in template:', error);
+            // Keep the original URL if all else fails
+          }
+        }
+        
         // Automatically lock background elements
         if (this.isBackgroundElement(newElement)) {
           newElement.locked = true;
         }
-        return newElement;
-      });
+        
+        processedElements.push(newElement);
+      }
+      
+      return processedElements;
+    };
+    
+    // Apply the processed elements to all pages
+    processElements().then(templateElements => {
+    for (let i = 0; i < this.pages.length; i++) {
+        // Get existing user elements (non-template elements)
+        const userElements = this.pages[i].elements.filter(el => !el.isTemplate);
+        // Add new template elements
       this.canvasService.updatePageElements(i, [...templateElements, ...userElements]);
     }
-    setTimeout(() => {
-      this.initAllCanvases();
+      
+      setTimeout(() => {
+        this.initAllCanvases();
+        if (isLargeTemplate) {
+          this.isTemplateLoading = false;
+        }
+      });
+    }).catch(error => {
+      console.error('Error applying template to all pages:', error);
       if (isLargeTemplate) {
         this.isTemplateLoading = false;
       }
@@ -1928,9 +2092,11 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   saveCurrentAsTemplate() {
     this.isSavingTemplate = true;
     
-    // Handle preview URL conversion if it's a blob URL
+    // Handle preview URL - keep as is if it's a blob URL
     const processPreviewUrl = async () => {
       if (this.newTemplatePreviewUrl && this.newTemplatePreviewUrl.startsWith('blob:')) {
+        // For blob URLs, we need to convert to base64 for persistence
+        // since blob URLs are temporary and won't work after page refresh
         try {
           const response = await fetch(this.newTemplatePreviewUrl);
           const blob = await response.blob();
@@ -1947,38 +2113,20 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       // Remove runtime-only properties
       const { id, isTemplate, locked, ...rest } = e;
       
-      // Handle image URLs - convert blob URLs to base64 for persistence
-      if (e.type === 'image' && e.imageUrl && e.imageUrl.startsWith('blob:')) {
-        try {
-          // Convert blob URL to base64
-          const response = await fetch(e.imageUrl);
-          const blob = await response.blob();
-          const base64 = await this.blobToBase64(blob);
-          return { 
-            ...rest, 
-            type: e.type, 
-            x: e.x, 
-            y: e.y, 
-            width: e.width, 
-            height: e.height, 
-            rotation: e.rotation, 
-            zIndex: e.zIndex,
-            imageUrl: base64
-          };
-        } catch (error) {
-          console.error('Error converting image URL to base64:', error);
-          // If conversion fails, keep the original URL
-          return { 
-            ...rest, 
-            type: e.type, 
-            x: e.x, 
-            y: e.y, 
-            width: e.width, 
-            height: e.height, 
-            rotation: e.rotation, 
-            zIndex: e.zIndex
-          };
-        }
+      // For image elements, keep blob URLs as they are
+      // The blob URLs will be handled by the FileUploadService for persistence
+      if (e.type === 'image' && e.imageUrl) {
+        return { 
+          ...rest, 
+          type: e.type, 
+          x: e.x, 
+          y: e.y, 
+          width: e.width, 
+          height: e.height, 
+          rotation: e.rotation, 
+          zIndex: e.zIndex,
+          imageUrl: e.imageUrl // Keep the original URL (blob or otherwise)
+        };
       }
       
       return { 

@@ -151,6 +151,55 @@ export class FileUploadService implements OnDestroy {
     return [...this.uploadedFiles];
   }
 
+  // Check if a blob URL is valid and recreate it if needed
+  ensureValidBlobUrl(blobUrl: string): string {
+    if (!blobUrl || !blobUrl.startsWith('blob:')) {
+      return blobUrl; // Not a blob URL, return as is
+    }
+
+    // Check if this blob URL is already managed by our service
+    const existingFile = this.uploadedFiles.find(file => file.url === blobUrl);
+    if (existingFile) {
+      return existingFile.url; // URL is still valid
+    }
+
+    // If it's a blob URL but not in our managed files, we need to handle it
+    // For now, return the original URL and let the application handle it
+    return blobUrl;
+  }
+
+  // Convert a blob URL to a managed file entry
+  async convertBlobUrlToManagedFile(blobUrl: string, fileName: string = 'template-image'): Promise<UploadedFile | null> {
+    if (!blobUrl || !blobUrl.startsWith('blob:')) {
+      return null; // Not a blob URL
+    }
+
+    try {
+      // Check if we already have this blob URL managed
+      const existingFile = this.uploadedFiles.find(file => file.url === blobUrl);
+      if (existingFile) {
+        return existingFile;
+      }
+
+      // Fetch the blob and create a new managed file
+      const response = await fetch(blobUrl);
+      const blob = await response.blob();
+      
+      // Create a new file from the blob
+      const file = new File([blob], fileName, { type: blob.type });
+      
+      // Upload it through our service
+      return new Promise((resolve) => {
+        this.uploadFile(file).subscribe(uploadedFile => {
+          resolve(uploadedFile);
+        });
+      });
+    } catch (error) {
+      console.error('Error converting blob URL to managed file:', error);
+      return null;
+    }
+  }
+
   deleteFile(fileId: string): void {
     const fileIndex = this.uploadedFiles.findIndex(f => f.id === fileId);
     if (fileIndex !== -1) {
