@@ -73,6 +73,10 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   pendingTemplateForNewPage: boolean = false;
   lastPageCount: number = 0;
 
+  // Loading states
+  isTemplateLoading: boolean = false;
+  isNewPageLoading: boolean = false;
+
   constructor(
     private canvasService: CanvasService,
     private router: Router,
@@ -105,12 +109,13 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         this.selectedPageIndex = newPageIndex;
         this.scrollToPage(newPageIndex);
         this.pendingTemplateForNewPage = false;
+        this.isNewPageLoading = false;
       }
       this.lastPageCount = pages.length;
       this.pages = pages;
       if (pagesChanged) {
-        setTimeout(() => this.initAllCanvases());
-        this.pushHistory();
+      setTimeout(() => this.initAllCanvases());
+      this.pushHistory();
       }
     });
     // Subscribe to selection changes
@@ -1251,13 +1256,14 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   addPage() {
     if (this.currentAppliedTemplate) {
       this.pendingTemplateForNewPage = true;
+      this.isNewPageLoading = true;
       this.canvasService.addPage();
     } else {
-      this.canvasService.addPage();
-      setTimeout(() => {
-        this.selectedPageIndex = this.pages.length - 1;
-        this.scrollToPage(this.selectedPageIndex);
-      });
+    this.canvasService.addPage();
+    setTimeout(() => {
+      this.selectedPageIndex = this.pages.length - 1;
+      this.scrollToPage(this.selectedPageIndex);
+    });
     }
   }
 
@@ -1469,6 +1475,12 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   applyTemplateToPage(template: CanvasTemplate, pageIndex: number) {
+    // Show loading spinner for large templates
+    const isLargeTemplate = template.elements.length > 10;
+    if (isLargeTemplate) {
+      this.isTemplateLoading = true;
+    }
+    
     // Deep copy and assign new IDs, and lock background elements
     const newElements = template.elements.map(el => {
       const newElement = { 
@@ -1486,10 +1498,21 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     
     this.canvasService.updatePageElements(pageIndex, newElements);
-    setTimeout(() => this.initAllCanvases());
+    setTimeout(() => {
+      this.initAllCanvases();
+      if (isLargeTemplate) {
+        this.isTemplateLoading = false;
+      }
+    });
   }
 
   applyTemplateToAllPages(template: CanvasTemplate) {
+    // Show loading spinner for large templates
+    const isLargeTemplate = template.elements.length > 10;
+    if (isLargeTemplate) {
+      this.isTemplateLoading = true;
+    }
+    
     this.currentAppliedTemplate = template;
     for (let i = 0; i < this.pages.length; i++) {
       // Get existing user elements (non-template elements)
@@ -1509,7 +1532,12 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       });
       this.canvasService.updatePageElements(i, [...templateElements, ...userElements]);
     }
-    setTimeout(() => this.initAllCanvases());
+    setTimeout(() => {
+      this.initAllCanvases();
+      if (isLargeTemplate) {
+        this.isTemplateLoading = false;
+      }
+    });
   }
 
   private isBackgroundElement(element: CanvasElement): boolean {

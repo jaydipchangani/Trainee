@@ -1,4 +1,19 @@
 <div class="editor-container">
+  <!-- Loading Spinners -->
+  <div *ngIf="isTemplateLoading" class="loading-overlay">
+    <div class="loading-spinner">
+      <mat-icon class="spinner-icon">hourglass_empty</mat-icon>
+      <p>Loading template...</p>
+    </div>
+  </div>
+  
+  <div *ngIf="isNewPageLoading" class="loading-overlay">
+    <div class="loading-spinner">
+      <mat-icon class="spinner-icon">hourglass_empty</mat-icon>
+      <p>Creating new page...</p>
+    </div>
+  </div>
+
   <header class="editor-header">
     <div class="header-left">
       <span class="editing-label">
@@ -53,18 +68,28 @@
   </div>
 
   <div class="workspace">
-    <div class="canvas-scroll-container" #scrollContainer tabindex="0">
+    <div class="canvas-scroll-container" #scrollContainer tabindex="0" [class.loading]="isTemplateLoading || isNewPageLoading">
       <div class="canvas-pages-col">
         <div *ngFor="let page of pages; let i = index" class="canvas-page-wrapper" #canvasPageWrapper [class.selected]="i === selectedPageIndex" (click)="onPageClick(i)">
           <div class="canvas-page-title">{{ page.title }}</div>
           <div class="canvas-container" #container></div>
         </div>
       </div>
+      <!-- Canvas Loading Overlay -->
+      <div *ngIf="isTemplateLoading || isNewPageLoading" class="canvas-loading-overlay">
+        <div class="canvas-loading-spinner">
+          <mat-icon class="spinner-icon">hourglass_empty</mat-icon>
+          <p>{{ isTemplateLoading ? 'Applying template...' : 'Creating new page...' }}</p>
+        </div>
+      </div>
     </div>
     <div class="page-table-panel">
       <div class="page-table-header">
         <span>Page Table</span>
-        <button (click)="addPage()" title="Add Page">+</button>
+        <button (click)="addPage()" title="Add Page" [disabled]="isNewPageLoading">
+          <mat-icon *ngIf="!isNewPageLoading">add</mat-icon>
+          <mat-icon *ngIf="isNewPageLoading" class="spinning">hourglass_empty</mat-icon>
+        </button>
       </div>
       <ul class="page-table-list">
         <li *ngFor="let page of pages; let i = index" [class.selected-for-layers]="i === selectedPageForLayers">
@@ -295,14 +320,19 @@
     <div *ngSwitchCase="'templates'">
       <h3>Templates</h3>
       <ul class="template-list">
-        <li *ngFor="let template of templates; let i = index" class="template-card">
+        <li *ngFor="let template of templates; let i = index" class="template-card" [class.loading]="isTemplateLoading">
           <div class="template-card-header">
             <span class="template-name">{{ template.name }}</span>
             <button *ngIf="isUserTemplate(template)" class="delete-template-btn" (click)="deleteUserTemplate(template)">
               <mat-icon>delete</mat-icon>
             </button>
           </div>
-          <img [src]="template.previewUrl" alt="Template preview" class="template-preview-img" (click)="applyTemplateToAllPages(template)" />
+          <div class="template-preview-container">
+            <img [src]="template.previewUrl" alt="Template preview" class="template-preview-img" (click)="applyTemplateToAllPages(template)" />
+            <div *ngIf="isTemplateLoading" class="template-loading-overlay">
+              <mat-icon class="template-spinner">hourglass_empty</mat-icon>
+            </div>
+          </div>
         </li>
       </ul>
       <div *ngIf="userTemplates.length > 0" class="user-template-label">Your Templates</div>
