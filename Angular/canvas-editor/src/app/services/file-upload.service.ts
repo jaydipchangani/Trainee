@@ -227,4 +227,9 @@ export class FileUploadService implements OnDestroy {
   private generateFileId(): string {
     return Date.now().toString() + Math.random().toString(36).substr(2, 9);
   }
-} 
+
+  public addFile(file: UploadedFile): void {
+    console.log('File added:', file);
+    // Implement logic to persist the file if needed
+  }
+}

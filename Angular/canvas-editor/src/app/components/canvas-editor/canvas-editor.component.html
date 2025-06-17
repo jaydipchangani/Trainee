@@ -416,13 +416,11 @@
             <img *ngIf="file.type.startsWith('image/')" [src]="file.url" alt="Uploaded Image" />
             <video *ngIf="file.type.startsWith('video/')" [src]="file.url" muted></video>
           </div>
-          <div class="uploads-thumb-info">
-            <span class="uploads-thumb-name">{{ file.name }}</span>
-            <span class="uploads-thumb-size">{{ (file.size / 1024).toFixed(1) }} KB</span>
+
             <button class="uploads-thumb-delete" (click)="deleteUploadedFile(file.id); $event.stopPropagation();" title="Delete file">
               <mat-icon>delete</mat-icon>
             </button>
-          </div>
+         
         </div>
       </div>
     </div>

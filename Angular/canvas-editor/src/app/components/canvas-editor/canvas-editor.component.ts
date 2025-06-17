@@ -1516,12 +1516,24 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onFileUpload(event: Event) {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (file) {
-      this.isFileUploading = true;
-      this.fileUploadService.uploadFile(file).subscribe(uploadedFile => {
-        this.refreshUploadedFiles();
-        this.isFileUploading = false;
+    const files = (event.target as HTMLInputElement).files;
+    if (files) {
+      Array.from(files).forEach(file => {
+        const fileReader = new FileReader();
+        fileReader.onload = (e: ProgressEvent<FileReader>) => {
+          const fileUrl = e.target?.result as string;
+          const uploadedFile: UploadedFile = {
+            id: Date.now().toString(),
+            name: file.name,
+            size: file.size,
+            type: file.type,
+            url: fileUrl,
+            uploadedAt: new Date() // Add the missing property
+          };
+          this.uploadedFiles.push(uploadedFile);
+          this.fileUploadService.addFile(uploadedFile); // Persist the file
+        };
+        fileReader.readAsDataURL(file); // Read the file as a data URL
       });
     }
   }
