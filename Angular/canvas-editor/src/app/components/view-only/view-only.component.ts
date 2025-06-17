@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, HostListener } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CanvasService } from '../../services/canvas.service';
 import { HtmlGeneratorService } from '../../services/html-generator.service';
@@ -25,6 +25,7 @@ export class ViewOnlyComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit() {
+    this.checkScreenSize();
     this.route.params.subscribe(params => {
       const key = params['data'];
       if (key) {
@@ -154,4 +155,19 @@ export class ViewOnlyComponent implements OnInit, AfterViewInit {
       (document as any).msExitFullscreen();
     }
   }
+
+  public isMobileView: boolean = false;
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event): void {
+    this.checkScreenSize();
+  }
+
+
+
+  private checkScreenSize(): void {
+    const screenWidth = window.innerWidth;
+    this.isMobileView = screenWidth <= 768;
+  }
+
 }

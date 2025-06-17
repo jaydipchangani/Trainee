@@ -2,7 +2,7 @@
   <button class="copy-html-btn" (click)="copyHtml()">Copy HTML</button>
   <button class="presentation-btn" (click)="enterPresentationMode()">Presentation</button>
   <div class="preview-main" [class.presentation-mode]="isPresentationMode">
-    <div class="preview-content" #previewScrollContainer [class.presentation-mode]="isPresentationMode">
+    <div class="preview-content" #previewScrollContainer [ngClass]="{'mobile-view': isMobileView}" [class.presentation-mode]="isPresentationMode">
       <iframe #previewIframe class="preview-iframe" [ngClass]="{'presentation-mode': isPresentationMode}" [width]="isPresentationMode ? '100vw' : '1024'" [style.height]="isPresentationMode ? '100vh' : '768px'" frameborder="0"></iframe>
       <button *ngIf="isPresentationMode && currentPresentationPage > 0" class="presentation-nav-btn prev" (click)="prevPresentationPage()">&#8592;</button>
       <button *ngIf="isPresentationMode && currentPresentationPage < pageCountArray.length - 1" class="presentation-nav-btn next" (click)="nextPresentationPage()">&#8594;</button>

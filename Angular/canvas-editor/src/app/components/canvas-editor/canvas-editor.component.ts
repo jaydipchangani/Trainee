@@ -92,6 +92,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.checkScreenSize();
     // Clear all uploaded media and templates on page refresh
     this.clearAllOnRefresh();
     
@@ -2187,5 +2188,17 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     );
     localStorage.setItem('userTemplates', JSON.stringify(userTemplates));
     this.loadTemplates();
+  }
+
+
+  public isMobileView: boolean = false;
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event): void {
+    this.checkScreenSize();
+  }
+  private checkScreenSize(): void {
+    const screenWidth = window.innerWidth;
+    this.isMobileView = screenWidth <= 768;
   }
 }
