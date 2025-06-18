@@ -18,7 +18,6 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   public selectedId: string | null = null;
   public selectedPageIndex: number = 0;
   public selectedPageForLayers: number | null = null;
- // showAddTextModal = false;
   showAddImageModal = false;
   newText = '';
   newImageUrl = '';
@@ -47,8 +46,26 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   private editingTextId: string | null = null;
 
   // Floating text toolbar state
-  public textToolbarVisible = false;
-  public textToolbarElement: CanvasElement | null = null;
+  public textToolbarElement: CanvasElement = {
+    id: 'default-text-toolbar',
+    type: 'text',
+    x: 0,
+    y: 0,
+    width: 200,
+    height: 50,
+    rotation: 0,
+    zIndex: 0,
+    fontFamily: 'Arial',
+    fontSize: 16,
+    color: '#000000',
+    fontWeight: 'normal',
+    fontStyle: 'normal',
+    textDecoration: 'none',
+    align: 'left',
+    letterSpacing: 0,
+    lineHeight: 1.5,
+    locked: false
+  };
   public fontFamilies = ['Arial', 'Helvetica', 'Times New Roman', 'Courier New', 'Georgia', 'Verdana', 'Tahoma'];
   public alignments = ['left', 'center', 'right', 'justify'];
 
@@ -193,17 +210,14 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       // Show/hide text toolbar
       if (selectedId) {
         const el = this.pages[this.selectedPageIndex]?.elements.find(e => e.id === selectedId && e.type === 'text');
-        this.textToolbarElement = el ? { ...el } : null;
-        this.textToolbarVisible = !!el;
+        this.updateTextToolbarElement(el ?? null);
         
         // Show/hide shape toolbar
         const shapeEl = this.pages[this.selectedPageIndex]?.elements.find(e => e.id === selectedId && ['rect', 'circle', 'ellipse', 'star', 'line', 'arrow', 'semicircle'].includes(e.type));
         this.shapeToolbarElement = shapeEl ? { ...shapeEl } : null;
         this.shapeToolbarVisible = !!shapeEl;
       } else {
-        this.textToolbarElement = null;
-        this.textToolbarVisible = false;
-        this.shapeToolbarElement = null;
+        this.updateTextToolbarElement(null);
         this.shapeToolbarVisible = false;
       }
     });
@@ -249,7 +263,6 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
           if (this.selectedId !== null) {
             this.selectedId = null;
             this.canvasService.setSelectedElementId(null);
-            this.textToolbarVisible = false;
             this.shapeToolbarVisible = false;
             this.transformers[i].nodes([]);
             this.layers[i].draw();
@@ -346,20 +359,17 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         // Update toolbar visibility
         if (element) {
           if (element.type === 'text') {
-            this.textToolbarElement = { ...element };
-            this.textToolbarVisible = true;
+            this.updateTextToolbarElement(element);
             this.shapeToolbarVisible = false;
           } else if (['rect', 'circle', 'ellipse', 'star', 'line', 'arrow', 'semicircle'].includes(element.type)) {
             this.shapeToolbarElement = { ...element };
             this.shapeToolbarVisible = true;
-            this.textToolbarVisible = false;
           }
         }
       } else {
         // Clear selection if element no longer exists or is locked
         this.selectedId = null;
         this.canvasService.setSelectedElementId(null);
-        this.textToolbarVisible = false;
         this.shapeToolbarVisible = false;
       }
     }
@@ -669,7 +679,6 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         handle2.visible(true);
         this.shapeToolbarElement = { ...element };
         this.shapeToolbarVisible = true;
-        this.textToolbarVisible = false;
         this.selectedPageIndex = pageIndex;
         group.getLayer()?.draw();
       });
@@ -684,7 +693,6 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         handle2.visible(true);
         this.shapeToolbarElement = { ...element };
         this.shapeToolbarVisible = true;
-        this.textToolbarVisible = false;
         this.selectedPageIndex = pageIndex;
         group.getLayer()?.draw();
       });
@@ -1021,7 +1029,6 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     };
     this.canvasService.switchPage(this.selectedPageIndex);
     this.canvasService.addElement(element);
-    //this.showAddTextModal = false;
     this.newText = '';
     setTimeout(() => this.initAllCanvases());
   }
@@ -1616,9 +1623,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     // Reset component state
     this.selectedPageIndex = 0;
     this.selectedId = null;
-    this.textToolbarVisible = false;
     this.shapeToolbarVisible = false;
-    this.textToolbarElement = null;
     this.shapeToolbarElement = null;
     
     console.log('All uploaded media, templates, and canvas state cleared on page refresh');
@@ -1904,13 +1909,10 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       // Update toolbar visibility
       if (element) {
         if (element.type === 'text') {
-          this.textToolbarElement = { ...element };
-          this.textToolbarVisible = true;
-          this.shapeToolbarVisible = false;
+          this.updateTextToolbarElement(element);
         } else if (['rect', 'circle', 'ellipse', 'star', 'line', 'arrow', 'semicircle'].includes(element.type)) {
           this.shapeToolbarElement = { ...element };
           this.shapeToolbarVisible = true;
-          this.textToolbarVisible = false;
         }
       }
     }
@@ -2249,5 +2251,55 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   toggleSidebar(): void {
     this.isSidebarOpen = !this.isSidebarOpen;
+  }
+
+  clearTextToolbarElement(): void {
+    this.textToolbarElement = {
+      id: 'default-text-toolbar',
+      type: 'text',
+      x: 0,
+      y: 0,
+      width: 200,
+      height: 50,
+      rotation: 0,
+      zIndex: 0,
+      fontFamily: 'Arial',
+      fontSize: 16,
+      color: '#000000',
+      fontWeight: 'normal',
+      fontStyle: 'normal',
+      textDecoration: 'none',
+      align: 'left',
+      letterSpacing: 0,
+      lineHeight: 1.5,
+      locked: false
+    };
+  }
+
+  updateTextToolbarElement(el: CanvasElement | null): void {
+    if (el) {
+      this.textToolbarElement = { ...el };
+    } else {
+      this.textToolbarElement = {
+        id: 'default-text-toolbar',
+        type: 'text',
+        x: 0,
+        y: 0,
+        width: 200,
+        height: 50,
+        rotation: 0,
+        zIndex: 0,
+        fontFamily: 'Arial',
+        fontSize: 16,
+        color: '#000000',
+        fontWeight: 'normal',
+        fontStyle: 'normal',
+        textDecoration: 'none',
+        align: 'left',
+        letterSpacing: 0,
+        lineHeight: 1.5,
+        locked: false
+      };
+    }
   }
 }

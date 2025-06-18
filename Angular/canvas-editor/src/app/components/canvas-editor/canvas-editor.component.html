@@ -46,21 +46,50 @@
   </header>
 
   <div class="toolbar">
-    <!-- <button (click)="showAddTextModal = true">Add Text</button> -->
-    <!-- <button (click)="showAddImageModal = true">Add Image using URL</button> -->
-    <button (click)="deleteSelected()" [disabled]="!selectedId">Delete Selected</button>
-    <button (click)="bringForward()" [disabled]="!selectedId">Bring Forward</button>
-    <button (click)="sendBackward()" [disabled]="!selectedId">Send Backward</button>
-    <button (click)="toggleSelectedElementLock()" [disabled]="!selectedId" [class.locked]="isSelectedElementLocked()" title="Lock/Unlock Selected Element">
-      <mat-icon>{{ isSelectedElementLocked() ? 'lock' : 'lock_open' }}</mat-icon>
-      {{ isSelectedElementLocked() ? 'Unlock' : 'Lock' }}
-    </button>
-    <button (click)="unlockAllTemplateElements()" [disabled]="!hasTemplateElements()" title="Unlock All Template Elements">
-      <mat-icon>lock_open</mat-icon>
-      Unlock Templates
-    </button>
-    <button (click)="openSaveTemplateModal()">Save as Template</button>
-    <!-- <button (click)="shareDesign()">Share Design</button> -->
+    <!-- Floating Text Toolbar Content -->
+    <div class="text-toolbar single-row">
+      <select [(ngModel)]="textToolbarElement.fontFamily" (change)="updateTextElement({ fontFamily: textToolbarElement.fontFamily })">
+        <option *ngFor="let font of fontFamilies" [value]="font">{{ font }}</option>
+      </select>
+      <input type="number" min="8" max="120" [(ngModel)]="textToolbarElement.fontSize" (input)="updateTextElement({ fontSize: textToolbarElement.fontSize })" style="width: 60px;" />
+      <input type="color" [(ngModel)]="textToolbarElement.color" (input)="updateTextElement({ color: textToolbarElement.color })" />
+      <button (click)="toggleBold()" [class.active]="textToolbarElement.fontWeight === 'bold'">B</button>
+      <button (click)="toggleItalic()" [class.active]="textToolbarElement.fontStyle === 'italic'">I</button>
+      <button (click)="toggleUnderline()" [class.active]="textToolbarElement.textDecoration === 'underline'">U</button>
+      <select [(ngModel)]="textToolbarElement.align" (change)="updateTextElement({ align: textToolbarElement.align })">
+        <option *ngFor="let align of alignments" [value]="align">{{ align }}</option>
+      </select>
+      <label>Spacing</label>
+      <input type="range" min="0" max="20" step="0.5" [(ngModel)]="textToolbarElement.letterSpacing" (input)="updateTextElement({ letterSpacing: textToolbarElement.letterSpacing })" style="width: 60px;">
+      
+      <label>Line Height</label>
+      <input type="range" min="0.8" max="3" step="0.05" [(ngModel)]="textToolbarElement.lineHeight" (input)="updateTextElement({ lineHeight: textToolbarElement.lineHeight })" style="width: 60px;" />
+      <button (click)="deleteSelected()" [disabled]="!selectedId" title="Delete Selected">
+        <mat-icon>delete</mat-icon>
+      </button>
+      <button (click)="bringForward()" [disabled]="!selectedId" title="Bring Forward">
+        <mat-icon>arrow_upward</mat-icon>
+      </button>
+      <button (click)="sendBackward()" [disabled]="!selectedId" title="Send Backward">
+        <mat-icon>arrow_downward</mat-icon>
+      </button>
+      <button (click)="toggleSelectedElementLock()" [disabled]="!selectedId" [class.locked]="isSelectedElementLocked()" title="Lock/Unlock Selected Element">
+        <mat-icon>{{ isSelectedElementLocked() ? 'lock' : 'lock_open' }}</mat-icon>
+      </button>
+      <button 
+        (click)="unlockAllTemplateElements()" 
+        [disabled]="!hasTemplateElements()" 
+        title="Unlock All Template Elements" 
+        style="background-color: #f0f0f0; border: 1px solid #ccc; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+        Unlock Template
+      </button>
+      <button 
+        (click)="openSaveTemplateModal()" 
+        title="Save as Template" 
+        style="background-color: #007bff; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+        Save Template
+      </button>
+    </div>
   </div>
 
   <div class="workspace" [style.marginLeft.px]="isSidebarOpen ? 240 : 72">
@@ -244,26 +273,7 @@
     </div>
   </div>
 
-  <div *ngIf="textToolbarVisible && textToolbarElement" class="floating-text-toolbar">
-    <select [(ngModel)]="textToolbarElement.fontFamily" (change)="updateTextElement({ fontFamily: textToolbarElement.fontFamily })">
-      <option *ngFor="let font of fontFamilies" [value]="font">{{ font }}</option>
-    </select>
-    <input type="number" min="8" max="120" [(ngModel)]="textToolbarElement.fontSize" (input)="updateTextElement({ fontSize: textToolbarElement.fontSize })" style="width: 60px;" />
-    <input type="color" [(ngModel)]="textToolbarElement.color" (input)="updateTextElement({ color: textToolbarElement.color })" />
-    <button (click)="toggleBold()" [class.active]="textToolbarElement.fontWeight === 'bold'">B</button>
-    <button (click)="toggleItalic()" [class.active]="textToolbarElement.fontStyle === 'italic'">I</button>
-    <button (click)="toggleUnderline()" [class.active]="textToolbarElement.textDecoration === 'underline'">U</button>
-    <select [(ngModel)]="textToolbarElement.align" (change)="updateTextElement({ align: textToolbarElement.align })">
-      <option *ngFor="let align of alignments" [value]="align">{{ align }}</option>
-    </select>
-    <label>Spacing
-      <input type="range" min="0" max="20" step="0.5" [(ngModel)]="textToolbarElement.letterSpacing" (input)="updateTextElement({ letterSpacing: textToolbarElement.letterSpacing })" />
-    </label>
-    <label>Line
-      <input type="range" min="0.8" max="3" step="0.05" [(ngModel)]="textToolbarElement.lineHeight" (input)="updateTextElement({ lineHeight: textToolbarElement.lineHeight })" />
-    </label>
-  </div>
-
+  
   <div *ngIf="shapeToolbarVisible && shapeToolbarElement" class="floating-shape-toolbar">
     <label>Fill Color: <input type="color" [(ngModel)]="shapeToolbarElement.fill" (input)="updateShapeElement({ fill: shapeToolbarElement.fill })" /></label>
     <label>Stroke Color: <input type="color" [(ngModel)]="shapeToolbarElement.stroke" (input)="updateShapeElement({ stroke: shapeToolbarElement.stroke })" /></label>
