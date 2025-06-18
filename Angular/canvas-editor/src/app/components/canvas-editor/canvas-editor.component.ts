@@ -18,7 +18,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   public selectedId: string | null = null;
   public selectedPageIndex: number = 0;
   public selectedPageForLayers: number | null = null;
-  showAddTextModal = false;
+ // showAddTextModal = false;
   showAddImageModal = false;
   newText = '';
   newImageUrl = '';
@@ -1021,12 +1021,12 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     };
     this.canvasService.switchPage(this.selectedPageIndex);
     this.canvasService.addElement(element);
-    this.showAddTextModal = false;
+    //this.showAddTextModal = false;
     this.newText = '';
     setTimeout(() => this.initAllCanvases());
   }
 
-  addImage(url: string) {
+  addImage(url: string): void {
     const img = new Image();
     img.onload = () => {
       const element: CanvasElement = {
@@ -1047,8 +1047,39 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       };
       this.canvasService.addElement(element);
       this.initMediaElement(element);
+      this.showAddImageModal = false; // Close the modal
+      this.newImageUrl = ''; // Clear the input
+    };
+    img.onerror = () => {
+      this.showSoftAlert('Enter a proper URL. Image not found.');
+      this.showAddImageModal = false; // Close the modal
+      this.newImageUrl = ''; // Clear the input
     };
     img.src = url;
+  }
+
+  showSoftAlert(message: string): void {
+    const alertDiv = document.createElement('div');
+    alertDiv.textContent = message;
+    alertDiv.style.position = 'fixed';
+    alertDiv.style.top = '20px';
+    alertDiv.style.left = '50%';
+    alertDiv.style.transform = 'translateX(-50%)';
+    alertDiv.style.backgroundColor = '#f44336';
+    alertDiv.style.color = '#fff';
+    alertDiv.style.padding = '10px 20px';
+    alertDiv.style.borderRadius = '4px';
+    alertDiv.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.2)';
+    alertDiv.style.zIndex = '1000';
+    alertDiv.style.fontSize = '14px';
+    alertDiv.style.transition = 'opacity 0.4s ease';
+
+    document.body.appendChild(alertDiv);
+
+    setTimeout(() => {
+      alertDiv.style.opacity = '0';
+      setTimeout(() => alertDiv.remove(), 300);
+    }, 3000);
   }
 
   addVideo(url: string) {

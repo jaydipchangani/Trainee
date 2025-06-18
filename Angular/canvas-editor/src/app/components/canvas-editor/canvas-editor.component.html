@@ -46,8 +46,8 @@
   </header>
 
   <div class="toolbar">
-    <button (click)="showAddTextModal = true">Add Text</button>
-    <button (click)="showAddImageModal = true">Add Image using URL</button>
+    <!-- <button (click)="showAddTextModal = true">Add Text</button> -->
+    <!-- <button (click)="showAddImageModal = true">Add Image using URL</button> -->
     <button (click)="deleteSelected()" [disabled]="!selectedId">Delete Selected</button>
     <button (click)="bringForward()" [disabled]="!selectedId">Bring Forward</button>
     <button (click)="sendBackward()" [disabled]="!selectedId">Send Backward</button>
@@ -184,7 +184,7 @@
     </div>
   </div>
 
-    <!-- Add Text Modal -->
+    <!-- Add Text Modal 
   <div class="modal" *ngIf="showAddTextModal">
     <div class="modal-content">
       <h2>Add Text</h2>
@@ -205,7 +205,7 @@
         <button (click)="showAddTextModal = false">Cancel</button>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <!-- Add Image Modal -->
   <div class="modal" *ngIf="showAddImageModal">
@@ -217,7 +217,7 @@
       </div>
       <div class="modal-actions">
         <button (click)="addImage(newImageUrl)">Add</button>
-        <button (click)="showAddImageModal = false">Cancel</button>
+        <button (click)="showAddImageModal = false; newImageUrl = ''">Cancel</button>
       </div>
     </div>
   </div>
@@ -393,7 +393,8 @@
         <h3>Uploads</h3>
         <div class="uploads-desc">Upload your images or videos to use in your design.</div>
       </div>
-      <div class="uploads-dropzone" 
+      
+      <button class="add-image-btn" (click)="showAddImageModal = true">Add Image using URL</button>  <div class="uploads-dropzone" 
            (click)="!isFileUploading && fileInput.click()" 
            (dragover)="$event.preventDefault()" 
            (drop)="onFileDrop($event)"
