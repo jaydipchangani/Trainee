@@ -156,16 +156,14 @@
   align-items: center;
   width: 100%;
 }
-
 .canvas-page-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 1000px;
-  height: 630px;
-  margin: 20px 0;
+  width: 80%; // Reduce from 1000px to percentage
+  max-width: 1280px; // Maximum width
+  min-width: 320px; // Minimum width
+  margin: 20px auto;
   position: relative;
   transition: box-shadow 0.2s, border 0.2s;
+  aspect-ratio: 16/9; // Force 16:9 aspect ratio
 }
 
 .canvas-page-wrapper.active {
@@ -1416,10 +1414,6 @@
     flex-direction: column;
   }
 
-  .canvas-page-wrapper {
-    margin: 10px 0;
-  }
-
   .editor-container {
     margin-left: 0;
     padding: 10px;
@@ -1465,10 +1459,6 @@
 
   .canvas-container {
     padding: 5px;
-  }
-
-  .canvas-page-wrapper {
-    font-size: 14px;
   }
 
   .editor-container {
