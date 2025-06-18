@@ -80,6 +80,8 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   isFileUploading: boolean = false;
   isSavingTemplate: boolean = false;
 
+  public isSidebarOpen: boolean = true; // Track sidebar state
+
   constructor(
     private canvasService: CanvasService,
     private router: Router,
@@ -2212,5 +2214,9 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   private checkScreenSize(): void {
     const screenWidth = window.innerWidth;
     this.isMobileView = screenWidth <= 768;
+  }
+
+  toggleSidebar(): void {
+    this.isSidebarOpen = !this.isSidebarOpen;
   }
 }

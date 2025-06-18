@@ -63,7 +63,7 @@
     <!-- <button (click)="shareDesign()">Share Design</button> -->
   </div>
 
-  <div class="workspace">
+  <div class="workspace" [style.marginLeft.px]="isSidebarOpen ? 240 : 72">
     <div class="canvas-scroll-container" #scrollContainer tabindex="0" [class.loading]="isTemplateLoading || isNewPageLoading">
       <div class="canvas-pages-col">
         <div *ngFor="let page of pages; let i = index" class="canvas-page-wrapper" #canvasPageWrapper [class.selected]="i === selectedPageIndex" (click)="onPageClick(i)">
@@ -76,9 +76,10 @@
         <div class="canvas-loading-spinner">
           <mat-icon class="spinner-icon">hourglass_empty</mat-icon>
           <p>{{ isTemplateLoading ? 'Applying template...' : 'Creating new page...' }}</p>
-        </div>
+        
       </div>
     </div>
+  </div>
     <div class="page-table-panel">
       <div class="page-table-header">
         <span>Page Table</span>

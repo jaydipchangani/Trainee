@@ -75,6 +75,8 @@
   flex: 1;
   min-height: 0;
   align-items: flex-start;
+  transition: margin-left 0.3s ease; /* Smooth transition for sidebar */
+  margin-left: 240px; /* Default margin to accommodate the sidebar */
 }
 
 .canvas-scroll-container {
@@ -86,7 +88,7 @@
   display: flex;
   align-items: flex-start;
   border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   scrollbar-width: none;
   position: relative;
 }
@@ -169,8 +171,8 @@
 }
 
 .canvas-container {
-  width: 1024px !important;
-  height: 768px !important;
+  width: 100%; /* Make the canvas container responsive */
+  height: auto;
   background-color: rgb(255, 255, 255);
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
