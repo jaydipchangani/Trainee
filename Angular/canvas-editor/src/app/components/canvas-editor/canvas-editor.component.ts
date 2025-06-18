@@ -11,6 +11,11 @@ import { FileUploadService, UploadedFile } from '../../services/file-upload.serv
   styleUrls: ['./canvas-editor.component.scss']
 })
 export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
+
+  private readonly BASE_WIDTH = 1920;  // Base width for 16:9
+  private readonly BASE_HEIGHT = 1080; // Base height for 16:9
+
+  
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
   @ViewChildren('container') canvasContainers!: QueryList<ElementRef>;
   @ViewChildren('canvasPageWrapper') canvasPageWrappers!: QueryList<ElementRef>;
@@ -98,6 +103,8 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   isSavingTemplate: boolean = false;
 
   public isSidebarOpen: boolean = true; // Track sidebar state
+
+  private resizeTimeout: any;
 
   constructor(
     private canvasService: CanvasService,
@@ -231,6 +238,38 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     // This is especially important after page refresh when object URLs are recreated
   }
 
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    // Debounce resize events
+    this.checkScreenSize();
+    if (this.resizeTimeout) {
+      clearTimeout(this.resizeTimeout);
+    }
+    this.resizeTimeout = setTimeout(() => {
+      this.updateCanvasSize();
+    }, 250);
+  }
+ 
+  private updateCanvasSize() {
+    const container = this.canvasContainers?.first?.nativeElement;
+    if (!container) return;
+
+    // Get container width
+    const containerWidth = container.offsetWidth;
+    const containerHeight = containerWidth * (9/16); // Calculate height based on 16:9 ratio
+
+    // Update all stages
+    this.stages.forEach(stage => {
+      stage.width(containerWidth);
+      stage.height(containerHeight);
+      stage.scale({ 
+        x: containerWidth / 1920, // Assuming 1920x1080 as base resolution
+        y: containerHeight / 1080 
+      });
+      stage.batchDraw();
+    });
+  }
+
   ngAfterViewInit() {
     setTimeout(() => this.initAllCanvases());
     // Add keyboard event listener to canvas container
@@ -239,6 +278,11 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       canvasContainer.setAttribute('tabindex', '0');
       canvasContainer.addEventListener('keydown', this.handleCanvasKeydown.bind(this));
     }
+    
+    // Initialize canvas size
+    setTimeout(() => {
+      this.updateCanvasSize();
+    });
   }
 
   private initAllCanvases() {
@@ -250,10 +294,15 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       const container = containerRef.nativeElement;
       // Remove previous stage if any
       while (container.firstChild) container.removeChild(container.firstChild);
+      
+      // Get container dimensions
+      const containerWidth = container.offsetWidth;
+      const containerHeight = containerWidth * (9/16);
+      
       const stage = new Konva.Stage({
         container: container,
-        width: 1024,
-        height: 768
+        width: containerWidth,
+        height: containerHeight,
       });
       
       // Add stage click handler to deselect elements
@@ -2241,9 +2290,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   public isMobileView: boolean = false;
 
   @HostListener('window:resize', ['$event'])
-  onResize(event: Event): void {
-    this.checkScreenSize();
-  }
+  
   private checkScreenSize(): void {
     const screenWidth = window.innerWidth;
     this.isMobileView = screenWidth <= 768;
