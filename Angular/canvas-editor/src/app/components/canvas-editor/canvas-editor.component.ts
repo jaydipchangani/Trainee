@@ -182,6 +182,9 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
           this.scrollToPage(newPageIndex);
           this.pendingTemplateForNewPage = false;
           this.isNewPageLoading = false;
+          setTimeout(() => {
+            this.scrollToPage(newPageIndex);
+          }, 100);
         }).catch(error => {
           console.error('Error applying template to new page:', error);
           this.pendingTemplateForNewPage = false;
