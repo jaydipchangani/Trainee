@@ -6,8 +6,8 @@ import { CanvasService, CanvasElement, CanvasPage } from './canvas.service';
   providedIn: 'root'
 })
 export class HtmlGeneratorService {
-  private readonly MIN_WIDTH = 752.8;
-  private readonly MIN_HEIGHT = 423;
+  private readonly MIN_WIDTH = 775;
+  private readonly MIN_HEIGHT = 440;
 
   constructor(private canvasService: CanvasService) {}
 
@@ -223,18 +223,16 @@ export class HtmlGeneratorService {
     const page = pages[pageIndex];
     if (!page) return '';
 
-    // Get current canvas dimensions with fallback
     const canvasWidth = Math.max(this.MIN_WIDTH, page.width ?? this.MIN_WIDTH);
     const canvasHeight = Math.max(this.MIN_HEIGHT, page.height ?? this.MIN_HEIGHT);
 
-    // Filter elements that are within canvas bounds
+    // Modified bounds checking to include elements that are partially within canvas
     const elementsInBounds = page.elements.filter(element => {
       const right = element.x + (element.width || 0);
       const bottom = element.y + (element.height || 0);
-      return element.x >= 0 && 
-             element.y >= 0 && 
-             right <= canvasWidth && 
-             bottom <= canvasHeight;
+      
+      return (element.x < canvasWidth && right > 0) && 
+             (element.y < canvasHeight && bottom > 0);
     });
 
     const elementsHtml = elementsInBounds

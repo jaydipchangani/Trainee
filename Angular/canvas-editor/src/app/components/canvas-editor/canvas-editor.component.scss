@@ -159,7 +159,7 @@
 .canvas-page-wrapper {
   width: 80%;
   max-width: 1920px;
-  min-width: 752.8px;
+  min-width: 775px;
   margin: 20px auto;
   position: relative;
   transition: box-shadow 0.2s, border 0.2s;
@@ -188,8 +188,8 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   margin: 0 auto;
-  min-width: 752.8px;
-  min-height: 423px;
+  min-width: 775px;
+  min-height: 440px;
 
   .konvajs-content {
     position: absolute !important;
@@ -197,14 +197,14 @@
     left: 0;
     width: 100% !important;
     height: 100% !important;
-    min-width: 752.8px !important;
-    min-height: 423px !important;
+    min-width: 775px !important;
+    min-height: 440px !important;
 
     canvas {
       width: 100% !important;
       height: 100% !important;
-      min-width: 752.8px !important;
-      min-height: 423px !important;
+      min-width: 775px !important;
+      min-height: 440px !important;
     }
   }
 }

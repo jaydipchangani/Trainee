@@ -14,8 +14,8 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private readonly BASE_WIDTH = 1920;  // Base width for 16:9
   private readonly BASE_HEIGHT = 1080; // Base height for 16:9
-  private readonly MIN_WIDTH = 752.8;
-  private readonly MIN_HEIGHT = 423;
+  private readonly MIN_WIDTH = 775;
+  private readonly MIN_HEIGHT = 440;
   private readonly ASPECT_RATIO = 16/9;
 
   
