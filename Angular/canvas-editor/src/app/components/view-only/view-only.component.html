@@ -1,12 +1,13 @@
 <div class="view-container">
-  <div class="controls-bar">
+  <div class="controls-bar" [class.hidden]="isPresentationMode">
     <button class="copy-html-btn" (click)="copyHtml()">Copy HTML</button>
     <button class="presentation-btn" (click)="enterPresentationMode()">Presentation</button>
   </div>
-  <div class="preview-main">
-    <div class="preview-content">
+  <div class="preview-main" [class.presentation-mode]="isPresentationMode">
+    <div class="preview-content" [class.presentation-mode]="isPresentationMode">
       <iframe #previewIframe 
               class="preview-iframe" 
+              [class.presentation-mode]="isPresentationMode"
               frameborder="0">
       </iframe>
     </div>

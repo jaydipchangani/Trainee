@@ -87,19 +87,43 @@ export class ViewOnlyComponent implements OnInit, AfterViewInit {
   enterPresentationMode() {
     this.isPresentationMode = true;
     this.currentPresentationPage = 0;
+    
+    // First update the scale and then enter fullscreen
     setTimeout(() => {
-      const preview = document.querySelector('.preview-content') as HTMLElement;
-      if (preview.requestFullscreen) {
-        preview.requestFullscreen();
-      } else if ((preview as any).webkitRequestFullscreen) {
-        (preview as any).webkitRequestFullscreen();
-      } else if ((preview as any).msRequestFullscreen) {
-        (preview as any).msRequestFullscreen();
-      }
+      const previewContent = document.querySelector('.preview-content') as HTMLElement;
+      const previewMain = document.querySelector('.preview-main') as HTMLElement;
+      const previewIframe = document.querySelector('.preview-iframe') as HTMLElement;
+      
+      // Add presentation mode classes
+      previewContent?.classList.add('presentation-mode');
+      previewMain?.classList.add('presentation-mode');
+      previewIframe?.classList.add('presentation-mode');
+      
+      // Set initial presentation dimensions
+      const availableWidth = window.innerWidth;
+      const availableHeight = window.innerHeight;
+      const baseWidth = 775;
+      const baseHeight = 440;
+      
+      const scaleX = availableWidth / baseWidth;
+      const scaleY = availableHeight / baseHeight;
+      const scale = Math.min(scaleX, scaleY, 0.95);
+      
+      requestAnimationFrame(() => {
+        document.documentElement.style.setProperty('--presentation-scale', scale.toString());
+        document.documentElement.style.setProperty('--canvas-width', `${baseWidth}px`);
+        document.documentElement.style.setProperty('--canvas-height', `${baseHeight}px`);
+
+        // Request fullscreen after styles are applied
+        if (previewContent.requestFullscreen) {
+          previewContent.requestFullscreen();
+        }
+      });
+
       this.setPresentationPage();
       window.addEventListener('keydown', this.handlePresentationKey);
       document.addEventListener('fullscreenchange', this.exitPresentationOnClose);
-    }, 0);
+    }, 100);
   }
 
   exitPresentationMode() {
@@ -165,18 +189,36 @@ export class ViewOnlyComponent implements OnInit, AfterViewInit {
   }
 
   private updateScale() {
-    const container = document.querySelector('.view-container');
-    if (!container) return;
-
-    const padding = 32; // 16px padding on each side
-    const availableWidth = window.innerWidth - padding;
-    const availableHeight = window.innerHeight - padding;
-    
-    const scaleX = availableWidth / 1920;
-    const scaleY = availableHeight / 1080;
-    const scale = Math.min(scaleX, scaleY);
-    
-    document.documentElement.style.setProperty('--preview-scale', scale.toString());
+    if (this.isPresentationMode) {
+      const availableWidth = window.innerWidth;
+      const availableHeight = window.innerHeight;
+      
+      // Base dimensions (adjusted to match canvas size)
+      const baseWidth = 775;
+      const baseHeight = 440;
+      
+      // Calculate scale while maintaining aspect ratio and adding margin
+      const scaleX = (availableWidth ) / baseWidth; // 90% of available width
+      const scaleY = (availableHeight) / baseHeight; // 90% of available height
+      const scale = Math.min(scaleX, scaleY);
+      
+      requestAnimationFrame(() => {
+        document.documentElement.style.setProperty('--presentation-scale', scale.toString());
+        document.documentElement.style.setProperty('--canvas-width', `${baseWidth}px`);
+        document.documentElement.style.setProperty('--canvas-height', `${baseHeight}px`);
+      });
+    } else {
+      // Normal view scaling
+      const padding = 32;
+      const availableWidth = window.innerWidth - padding;
+      const availableHeight = window.innerHeight - padding;
+      
+      const scaleX = availableWidth / 775;
+      const scaleY = availableHeight / 440;
+      const scale = Math.min(scaleX, scaleY);
+      
+      document.documentElement.style.setProperty('--preview-scale', scale.toString());
+    }
   }
 
   private checkScreenSize(): void {
