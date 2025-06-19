@@ -14,6 +14,9 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private readonly BASE_WIDTH = 1920;  // Base width for 16:9
   private readonly BASE_HEIGHT = 1080; // Base height for 16:9
+  private readonly MIN_WIDTH = 752.8;
+  private readonly MIN_HEIGHT = 423;
+  private readonly ASPECT_RATIO = 16/9;
 
   
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
@@ -254,16 +257,16 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     const container = this.canvasContainers?.first?.nativeElement;
     if (!container) return;
 
-    // Get container width
-    const containerWidth = container.offsetWidth;
-    const containerHeight = containerWidth * (9/16); // Calculate height based on 16:9 ratio
+    // Get container width and ensure minimum size
+    const containerWidth = Math.max(container.offsetWidth, this.MIN_WIDTH);
+    const containerHeight = Math.max(containerWidth / this.ASPECT_RATIO, this.MIN_HEIGHT);
 
     // Update all stages
     this.stages.forEach(stage => {
       stage.width(containerWidth);
       stage.height(containerHeight);
       stage.scale({ 
-        x: containerWidth / 1920, // Assuming 1920x1080 as base resolution
+        x: containerWidth / 1920,
         y: containerHeight / 1080 
       });
       stage.batchDraw();

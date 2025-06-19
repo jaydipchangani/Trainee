@@ -157,13 +157,13 @@
   width: 100%;
 }
 .canvas-page-wrapper {
-  width: 80%; // Reduce from 1000px to percentage
-  max-width: 1280px; // Maximum width
-  min-width: 320px; // Minimum width
+  width: 80%;
+  max-width: 1920px;
+  min-width: 752.8px;
   margin: 20px auto;
   position: relative;
   transition: box-shadow 0.2s, border 0.2s;
-  aspect-ratio: 16/9; // Force 16:9 aspect ratio
+  aspect-ratio: 16/9;
 }
 
 .canvas-page-wrapper.active {
@@ -188,6 +188,8 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   margin: 0 auto;
+  min-width: 752.8px;
+  min-height: 423px;
 
   .konvajs-content {
     position: absolute !important;
@@ -195,10 +197,14 @@
     left: 0;
     width: 100% !important;
     height: 100% !important;
+    min-width: 752.8px !important;
+    min-height: 423px !important;
 
     canvas {
       width: 100% !important;
       height: 100% !important;
+      min-width: 752.8px !important;
+      min-height: 423px !important;
     }
   }
 }
