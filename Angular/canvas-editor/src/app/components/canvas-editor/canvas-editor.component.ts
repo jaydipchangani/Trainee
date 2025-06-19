@@ -1929,8 +1929,12 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private updateElementDataOnly(id: string, updates: Partial<CanvasElement>, pageIndex: number) {
     // Always update the element regardless of which page is selected
-    const element = this.pages[pageIndex]?.elements.find(e => e.id === id);
-    if (element && (element.type === 'line' || element.type === 'arrow') && updates.points) {
+    const page = this.pages[pageIndex];
+    if (!page) return; // <-- Prevents updating a non-existent page
+    const element = page.elements.find(e => e.id === id);
+    if (!element) return; // <-- Prevents updating a non-existent element
+  
+    if ((element.type === 'line' || element.type === 'arrow') && updates.points) {
       const bbox = this.getPointsBoundingBox(updates.points);
       updates.x = bbox.minX;
       updates.y = bbox.minY;
