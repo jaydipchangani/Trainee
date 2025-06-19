@@ -6,6 +6,9 @@ import { CanvasService, CanvasElement, CanvasPage } from './canvas.service';
   providedIn: 'root'
 })
 export class HtmlGeneratorService {
+  private readonly MIN_WIDTH = 752.8;
+  private readonly MIN_HEIGHT = 423;
+
   constructor(private canvasService: CanvasService) {}
 
   getHtmlOutput(): Observable<string> {
@@ -217,29 +220,24 @@ export class HtmlGeneratorService {
   }
 
   private generateSinglePageHtmlDoc(pages: CanvasPage[], pageIndex: number): string {
-    const containerStyle = `
-      width: 1920px;
-      height: 1080px;
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      background: white;
-    `;
-
     const page = pages[pageIndex];
     if (!page) return '';
 
-    const pageContainerStyle = `
-      position: relative;
-      width: 1920px;
-      height: 1080px;
-      background: white;
-      overflow: hidden;
-      margin: 0;
-      padding: 0;
-    `;
+    // Get current canvas dimensions with fallback
+    const canvasWidth = Math.max(this.MIN_WIDTH, page.width ?? this.MIN_WIDTH);
+    const canvasHeight = Math.max(this.MIN_HEIGHT, page.height ?? this.MIN_HEIGHT);
 
-    const elementsHtml = page.elements
+    // Filter elements that are within canvas bounds
+    const elementsInBounds = page.elements.filter(element => {
+      const right = element.x + (element.width || 0);
+      const bottom = element.y + (element.height || 0);
+      return element.x >= 0 && 
+             element.y >= 0 && 
+             right <= canvasWidth && 
+             bottom <= canvasHeight;
+    });
+
+    const elementsHtml = elementsInBounds
       .sort((a, b) => a.zIndex - b.zIndex)
       .map(element => this.generateElementHtml(element))
       .join('\n');
@@ -251,22 +249,22 @@ export class HtmlGeneratorService {
   <title>Canvas Export</title>
   <style>
     html, body {
-      width: 1920px;
-      height: 1080px;
+      width: ${canvasWidth}px;
+      height: ${canvasHeight}px;
       margin: 0;
       padding: 0;
       overflow: hidden;
     }
     .canvas-preview {
-      width: 1920px;
-      height: 1080px;
+      width: ${canvasWidth}px;
+      height: ${canvasHeight}px;
       background: white;
       position: relative;
       overflow: hidden;
     }
   </style>
 </head>
-<body style='${containerStyle}'>
+<body>
   <div class='canvas-preview'>
     ${elementsHtml}
   </div>

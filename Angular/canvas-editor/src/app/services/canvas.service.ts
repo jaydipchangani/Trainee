@@ -43,9 +43,11 @@ export interface CanvasElement {
 }
 
 export interface CanvasPage {
-  id: string;
-  title: string;
+  id:string;
   elements: CanvasElement[];
+  title?: string;
+  width?: number;
+  height?: number;
 }
 
 @Injectable({
