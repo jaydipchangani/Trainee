@@ -511,12 +511,17 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         const finish = () => {
           if (isSaved) return;
           isSaved = true;
-          const newText = textarea.value;
-          (node as Konva.Text).text(newText);
-          this.updateElementOnPage(element.id, { text: newText }, pageIndex);
+          const newValue = textarea.value;
+          if (newValue.trim() !== '') {
+            (node as Konva.Text).text(newValue);
+            this.updateElementDataOnly(element.id, { text: newValue }, pageIndex);
+          }
+          else {
+            this.canvasService.deleteElement(element.id);
+          }
           removeTextarea();
-          // Deselect after editing
-          this.canvasService.setSelectedElementId(null);
+          this.editingTextId = null;
+          setTimeout(() => this.initAllCanvases());
         };
         textarea.addEventListener('keydown', (e) => {
           if (e.key === 'Enter' && !e.shiftKey) {
