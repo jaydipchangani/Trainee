@@ -101,7 +101,7 @@
              [class.selected]="i === selectedPageIndex" 
              (click)="onPageClick(i)">
           <div class="canvas-page-title">{{ page.title }}</div>
-          <div class="canvas-container" #container [ngClass]="{'mobile-view': isMobileView}">
+          <div class="canvas-container" #container >
             <!-- Konva stage will be inserted here -->
           </div>
         </div>

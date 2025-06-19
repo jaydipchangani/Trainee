@@ -52,6 +52,7 @@ export class ViewOnlyComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.setIframeContent();
+    this.updateScale();
   }
 
   setIframeContent() {
@@ -158,16 +159,28 @@ export class ViewOnlyComponent implements OnInit, AfterViewInit {
 
   public isMobileView: boolean = false;
 
-  @HostListener('window:resize', ['$event'])
-  onResize(event: Event): void {
-    this.checkScreenSize();
+  @HostListener('window:resize')
+  onResize() {
+    this.updateScale();
   }
 
+  private updateScale() {
+    const container = document.querySelector('.view-container');
+    if (!container) return;
 
+    const padding = 32; // 16px padding on each side
+    const availableWidth = window.innerWidth - padding;
+    const availableHeight = window.innerHeight - padding;
+    
+    const scaleX = availableWidth / 1920;
+    const scaleY = availableHeight / 1080;
+    const scale = Math.min(scaleX, scaleY);
+    
+    document.documentElement.style.setProperty('--preview-scale', scale.toString());
+  }
 
   private checkScreenSize(): void {
     const screenWidth = window.innerWidth;
     this.isMobileView = screenWidth <= 768;
   }
-
 }

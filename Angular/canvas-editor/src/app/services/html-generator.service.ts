@@ -218,153 +218,32 @@ export class HtmlGeneratorService {
 
   private generateSinglePageHtmlDoc(pages: CanvasPage[], pageIndex: number): string {
     const containerStyle = `
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100vw;
-      height: 100vh;
-      background: #000;
+      width: 1920px;
+      height: 1080px;
       margin: 0;
       padding: 0;
       overflow: hidden;
+      background: white;
     `;
+
     const page = pages[pageIndex];
     if (!page) return '';
+
     const pageContainerStyle = `
       position: relative;
-      width: 1024px;
-      height: 768px;
+      width: 1920px;
+      height: 1080px;
       background: white;
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 16px;
       overflow: hidden;
       margin: 0;
       padding: 0;
-      display: block;
-      border-radius: 0;
-      box-shadow: none;
     `;
-    const elementsHtml = page.elements.map(element => {
-      const baseStyles = `
-        position: absolute;
-        left: ${element.x}px;
-        top: ${element.y}px;
-        width: ${element.width}px;
-        height: ${element.height}px;
-        transform: rotate(${element.rotation}deg);
-        z-index: ${element.zIndex};
-        margin: 0; padding: 0;
-        box-sizing: border-box;
-        overflow: hidden;
-      `;
-      if (element.type === 'text') {
-        const textStyles = `
-          ${baseStyles}
-          width: ${element.width}px;
-          height: ${element.height}px;
-          font-size: ${element.fontSize || 16}px;
-          color: ${element.color || '#000'};
-          font-family: Arial, Helvetica, sans-serif;
-          background: none;
-          line-height: 1.2;
-          text-align: left;
-          white-space: pre-wrap;
-          word-break: break-all;
-          font-weight: normal;
-          box-sizing: border-box;
-          overflow: visible;
-          margin: 0;
-          padding: 0;
-        `;
-        return `<div style='${textStyles}'>${this.escapeHtml(element.text || '')}</div>`;
-      } else if (element.type === 'image') {
-        const imageStyles = `
-          ${baseStyles}
-          background: none;
-        `;
-        return `<img src='${element.imageUrl}' style='${imageStyles}object-fit:contain;display:block;border:none;background:none;' alt='Canvas image element'>`;
-      } else if (
-        element.type === 'rect' ||
-        element.type === 'circle' ||
-        element.type === 'ellipse' ||
-        element.type === 'star' ||
-        element.type === 'line' ||
-        element.type === 'arrow' ||
-        element.type === 'semicircle'
-      ) {
-        // SVG wrapper for shape
-        const svgStyle = `${baseStyles} display: block;`;
-        let shapeSvg = '';
-        if (element.type === 'rect') {
-          shapeSvg = `<rect x='0' y='0' width='${element.width}' height='${element.height}' fill='${element.fill}' stroke='${element.stroke}' stroke-width='${element.strokeWidth}' rx='${element.borderRadius || 0}' opacity='${element.opacity ?? 1}' />`;
-        } else if (element.type === 'circle') {
-          const r = (element.width || 80) / 2;
-          shapeSvg = `<circle cx='${r}' cy='${r}' r='${r}' fill='${element.fill}' stroke='${element.stroke}' stroke-width='${element.strokeWidth}' opacity='${element.opacity ?? 1}' />`;
-        } else if (element.type === 'ellipse') {
-          const rx = (element.width || 80) / 2;
-          const ry = (element.height || 80) / 2;
-          shapeSvg = `<ellipse cx='${rx}' cy='${ry}' rx='${rx}' ry='${ry}' fill='${element.fill}' stroke='${element.stroke}' stroke-width='${element.strokeWidth}' opacity='${element.opacity ?? 1}' />`;
-        } else if (element.type === 'star') {
-          // Star SVG path generator
-          const numPoints = element.numPoints || 5;
-          const outerRadius = (element.width || 100) / 2;
-          const innerRadius = outerRadius / 2;
-          const cx = outerRadius, cy = outerRadius;
-          let path = '';
-          for (let i = 0; i < numPoints * 2; i++) {
-            const angle = (Math.PI / numPoints) * i;
-            const r = i % 2 === 0 ? outerRadius : innerRadius;
-            const x = cx + Math.cos(angle - Math.PI / 2) * r;
-            const y = cy + Math.sin(angle - Math.PI / 2) * r;
-            path += i === 0 ? `M${x},${y}` : `L${x},${y}`;
-          }
-          path += 'Z';
-          shapeSvg = `<path d='${path}' fill='${element.fill}' stroke='${element.stroke}' stroke-width='${element.strokeWidth}' opacity='${element.opacity ?? 1}' />`;
-        } else if (element.type === 'line') {
-          const points = element.points || [0, 0, 100, 0];
-          const bbox = this.getPointsBoundingBox(points);
-          const [x1, y1, x2, y2] = [
-            points[0] - bbox.minX,
-            points[1] - bbox.minY,
-            points[2] - bbox.minX,
-            points[3] - bbox.minY
-          ];
-          shapeSvg = `<line x1='${x1}' y1='${y1}' x2='${x2}' y2='${y2}' stroke='${element.stroke}' stroke-width='${element.strokeWidth}' opacity='${element.opacity ?? 1}' />`;
-        } else if (element.type === 'arrow') {
-          const points = element.points || [0, 0, 100, 0];
-          const arrowLength = 20;
-          const arrowAngle = Math.PI / 6; // 30 degrees
-          // Calculate arrowhead points
-          const endX = points[points.length - 2];
-          const endY = points[points.length - 1];
-          const startX = points[points.length - 4];
-          const startY = points[points.length - 3];
-          const angle = Math.atan2(endY - startY, endX - startX);
-          const arrow1X = endX - arrowLength * Math.cos(angle - arrowAngle);
-          const arrow1Y = endY - arrowLength * Math.sin(angle - arrowAngle);
-          const arrow2X = endX - arrowLength * Math.cos(angle + arrowAngle);
-          const arrow2Y = endY - arrowLength * Math.sin(angle + arrowAngle);
-          const arrowPoints = [...points, arrow1X, arrow1Y, endX, endY, arrow2X, arrow2Y];
-          const bbox = this.getPointsBoundingBox(arrowPoints);
-          // Normalize all points
-          const normPoints = arrowPoints.map((p, i) => (i % 2 === 0 ? p - bbox.minX : p - bbox.minY));
-          // For path, use M for first, L for rest
-          let pathData = '';
-          for (let i = 0; i < normPoints.length; i += 2) {
-            pathData += (i === 0 ? 'M' : 'L') + normPoints[i] + ' ' + normPoints[i + 1] + ' ';
-          }
-          shapeSvg = `<path d='${pathData.trim()}' stroke='${element.stroke}' stroke-width='${element.strokeWidth}' fill='none' opacity='${element.opacity ?? 1}' />`;
-        } else if (element.type === 'semicircle') {
-          const radius = (element.width || 100) / 2;
-          const cx = radius;
-          const cy = radius;
-          shapeSvg = `<path d='M${cx - radius},${cy} A${radius},${radius} 0 0,1 ${cx + radius},${cy}' fill='${element.fill}' stroke='${element.stroke}' stroke-width='${element.strokeWidth}' opacity='${element.opacity ?? 1}' />`;
-        }
-        return `<svg width='${element.width}' height='${element.height}' style='${svgStyle}' xmlns='http://www.w3.org/2000/svg'>${shapeSvg}</svg>`;
-      }
-      // Default return for any other element type
-      return '';
-    }).join('\n');
+
+    const elementsHtml = page.elements
+      .sort((a, b) => a.zIndex - b.zIndex)
+      .map(element => this.generateElementHtml(element))
+      .join('\n');
+
     return `<!DOCTYPE html>
 <html>
 <head>
@@ -372,55 +251,24 @@ export class HtmlGeneratorService {
   <title>Canvas Export</title>
   <style>
     html, body {
-      width: 100vw;
-      height: 100vh;
+      width: 1920px;
+      height: 1080px;
       margin: 0;
       padding: 0;
-      background: #000;
-      overflow: hidden;
-    }
-    .canvas-center-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100vw;
-      height: 100vh;
-      background: #000;
       overflow: hidden;
     }
     .canvas-preview {
-      width: 1024px;
-      height: 768px;
-      max-width: 100vw;
-      max-height: 100vh;
+      width: 1920px;
+      height: 1080px;
       background: white;
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 16px;
+      position: relative;
       overflow: hidden;
-      margin: 0;
-      padding: 0;
-      display: block;
-      border-radius: 0;
-      box-shadow: none;
-      /* Scale to fit screen while maintaining aspect ratio */
-      transform: scale(var(--canvas-scale, 1));
-      transform-origin: center center;
     }
   </style>
-  <script>
-    function fitCanvas() {
-      var w = window.innerWidth;
-      var h = window.innerHeight;
-      var scale = Math.min(w / 1024, h / 768);
-      document.documentElement.style.setProperty('--canvas-scale', scale);
-    }
-    window.addEventListener('resize', fitCanvas);
-    window.addEventListener('DOMContentLoaded', fitCanvas);
-  </script>
 </head>
 <body style='${containerStyle}'>
-  <div class='canvas-center-wrapper'>
-    <div class='canvas-preview' id='page-0' style='${pageContainerStyle}'>${elementsHtml}</div>
+  <div class='canvas-preview'>
+    ${elementsHtml}
   </div>
 </body>
 </html>`;
@@ -448,5 +296,119 @@ export class HtmlGeneratorService {
     }
 
     return { minX, minY, maxX, maxY };
+  }
+
+  private generateElementHtml(element: CanvasElement): string {
+    const baseStyles = `
+      position: absolute;
+      left: ${element.x}px;
+      top: ${element.y}px;
+      width: ${element.width}px;
+      height: ${element.height}px;
+      transform: rotate(${element.rotation}deg);
+      z-index: ${element.zIndex};
+      margin: 0; padding: 0;
+      box-sizing: border-box;
+      overflow: hidden;
+    `;
+    if (element.type === 'text') {
+      const textStyles = `
+        ${baseStyles}
+        font-size: ${element.fontSize || 16}px;
+        color: ${element.color || '#000'};
+        font-family: Arial, Helvetica, sans-serif;
+        background: none;
+        line-height: 1.2;
+        text-align: left;
+        white-space: pre-wrap;
+        word-break: break-all;
+        font-weight: normal;
+        box-sizing: border-box;
+        overflow: visible;
+        margin: 0;
+        padding: 0;
+      `;
+      return `<div style='${textStyles}'>${this.escapeHtml(element.text || '')}</div>`;
+    } else if (element.type === 'image') {
+      const imageStyles = `
+        ${baseStyles}
+        background: none;
+      `;
+      return `<img src='${element.imageUrl}' style='${imageStyles}object-fit:contain;display:block;border:none;background:none;' alt='Canvas image element'>`;
+    } else if (
+      element.type === 'rect' ||
+      element.type === 'circle' ||
+      element.type === 'ellipse' ||
+      element.type === 'star' ||
+      element.type === 'line' ||
+      element.type === 'arrow' ||
+      element.type === 'semicircle'
+    ) {
+      const svgStyle = `${baseStyles} display: block;`;
+      let shapeSvg = '';
+      if (element.type === 'rect') {
+        shapeSvg = `<rect x='0' y='0' width='${element.width}' height='${element.height}' fill='${element.fill}' stroke='${element.stroke}' stroke-width='${element.strokeWidth}' rx='${element.borderRadius || 0}' opacity='${element.opacity ?? 1}' />`;
+      } else if (element.type === 'circle') {
+        const r = (element.width || 80) / 2;
+        shapeSvg = `<circle cx='${r}' cy='${r}' r='${r}' fill='${element.fill}' stroke='${element.stroke}' stroke-width='${element.strokeWidth}' opacity='${element.opacity ?? 1}' />`;
+      } else if (element.type === 'ellipse') {
+        const rx = (element.width || 80) / 2;
+        const ry = (element.height || 80) / 2;
+        shapeSvg = `<ellipse cx='${rx}' cy='${ry}' rx='${rx}' ry='${ry}' fill='${element.fill}' stroke='${element.stroke}' stroke-width='${element.strokeWidth}' opacity='${element.opacity ?? 1}' />`;
+      } else if (element.type === 'star') {
+        const numPoints = element.numPoints || 5;
+        const outerRadius = (element.width || 100) / 2;
+        const innerRadius = outerRadius / 2;
+        const cx = outerRadius, cy = outerRadius;
+        let path = '';
+        for (let i = 0; i < numPoints * 2; i++) {
+          const angle = (Math.PI / numPoints) * i;
+          const r = i % 2 === 0 ? outerRadius : innerRadius;
+          const x = cx + Math.cos(angle - Math.PI / 2) * r;
+          const y = cy + Math.sin(angle - Math.PI / 2) * r;
+          path += i === 0 ? `M${x},${y}` : `L${x},${y}`;
+        }
+        path += 'Z';
+        shapeSvg = `<path d='${path}' fill='${element.fill}' stroke='${element.stroke}' stroke-width='${element.strokeWidth}' opacity='${element.opacity ?? 1}' />`;
+      } else if (element.type === 'line') {
+        const points = element.points || [0, 0, 100, 0];
+        const bbox = this.getPointsBoundingBox(points);
+        const [x1, y1, x2, y2] = [
+          points[0] - bbox.minX,
+          points[1] - bbox.minY,
+          points[2] - bbox.minX,
+          points[3] - bbox.minY
+        ];
+        shapeSvg = `<line x1='${x1}' y1='${y1}' x2='${x2}' y2='${y2}' stroke='${element.stroke}' stroke-width='${element.strokeWidth}' opacity='${element.opacity ?? 1}' />`;
+      } else if (element.type === 'arrow') {
+        const points = element.points || [0, 0, 100, 0];
+        const arrowLength = 20;
+        const arrowAngle = Math.PI / 6;
+        const endX = points[points.length - 2];
+        const endY = points[points.length - 1];
+        const startX = points[points.length - 4];
+        const startY = points[points.length - 3];
+        const angle = Math.atan2(endY - startY, endX - startX);
+        const arrow1X = endX - arrowLength * Math.cos(angle - arrowAngle);
+        const arrow1Y = endY - arrowLength * Math.sin(angle - arrowAngle);
+        const arrow2X = endX - arrowLength * Math.cos(angle + arrowAngle);
+        const arrow2Y = endY - arrowLength * Math.sin(angle + arrowAngle);
+        const arrowPoints = [...points, arrow1X, arrow1Y, endX, endY, arrow2X, arrow2Y];
+        const bbox = this.getPointsBoundingBox(arrowPoints);
+        const normPoints = arrowPoints.map((p, i) => (i % 2 === 0 ? p - bbox.minX : p - bbox.minY));
+        let pathData = '';
+        for (let i = 0; i < normPoints.length; i += 2) {
+          pathData += (i === 0 ? 'M' : 'L') + normPoints[i] + ' ' + normPoints[i + 1] + ' ';
+        }
+        shapeSvg = `<path d='${pathData.trim()}' stroke='${element.stroke}' stroke-width='${element.strokeWidth}' fill='none' opacity='${element.opacity ?? 1}' />`;
+      } else if (element.type === 'semicircle') {
+        const radius = (element.width || 100) / 2;
+        const cx = radius;
+        const cy = radius;
+        shapeSvg = `<path d='M${cx - radius},${cy} A${radius},${radius} 0 0,1 ${cx + radius},${cy}' fill='${element.fill}' stroke='${element.stroke}' stroke-width='${element.strokeWidth}' opacity='${element.opacity ?? 1}' />`;
+      }
+      return `<svg width='${element.width}' height='${element.height}' style='${svgStyle}' xmlns='http://www.w3.org/2000/svg'>${shapeSvg}</svg>`;
+    }
+    return '';
   }
 }
