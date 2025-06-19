@@ -16,6 +16,8 @@ export class ViewOnlyComponent implements OnInit, AfterViewInit {
   @ViewChild('previewIframe') previewIframe!: ElementRef<HTMLIFrameElement>;
   isPresentationMode = false;
   currentPresentationPage = 0;
+  hoverLeft = false;
+  hoverRight = false;
   private pageHtmlSub: Subscription | undefined;
 
   constructor(

@@ -5,11 +5,26 @@
   </div>
   <div class="preview-main" [class.presentation-mode]="isPresentationMode">
     <div class="preview-content" [class.presentation-mode]="isPresentationMode">
-      <iframe #previewIframe 
-              class="preview-iframe" 
-              [class.presentation-mode]="isPresentationMode"
-              frameborder="0">
-      </iframe>
+      <iframe #previewIframe class="preview-iframe" [class.presentation-mode]="isPresentationMode" frameborder="0"></iframe>
+      <div *ngIf="isPresentationMode" class="presentation-bar">
+        <button class="presentation-arrow left"
+          [disabled]="currentPresentationPage === 0"
+          (click)="prevPresentationPage()"
+          (mouseenter)="hoverLeft=true" (mouseleave)="hoverLeft=false">
+          <span *ngIf="!hoverLeft">&#60;</span>
+          <span *ngIf="hoverLeft">&#8592;</span>
+        </button>
+        <span class="presentation-page-indicator">
+          {{currentPresentationPage + 1}} / {{pageCountArray.length}}
+        </span>
+        <button class="presentation-arrow right"
+          [disabled]="currentPresentationPage === pageCountArray.length - 1"
+          (click)="nextPresentationPage()"
+          (mouseenter)="hoverRight=true" (mouseleave)="hoverRight=false">
+          <span *ngIf="!hoverRight">&#62;</span>
+          <span *ngIf="hoverRight">&#8594;</span>
+        </button>
+      </div>
     </div>
   </div>
 </div>
