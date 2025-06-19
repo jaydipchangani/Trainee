@@ -11,222 +11,284 @@ export interface CanvasTemplate {
 export class TemplateService {
   private templates: CanvasTemplate[] = [
     {
-      name: 'Modern Frame',
-      previewUrl: "assets/templateOne.png", // Unique image 1
+      name: 'Dark Blue White Professional Business Presentation',
+      previewUrl: "assets/BusinessProposal1.png", // Add your preview image here
       elements: [
-        {
-          id: 'frame-bg',
-          type: 'rect',
-          x: 0,
-          y: 0,
-          width: 1024,
-          height: 768,
-          rotation: 0,
-          zIndex: 0,
-          fill: '#f0f0f0',
-          stroke: '#666',
-          strokeWidth: 10,
-          opacity: 1,
-          borderRadius: 12
-        },
-        {
-          id: 'frame-inner',
-          type: 'rect',
-          x: 20,
-          y: 20,
-          width: 984,
-          height: 728,
-          rotation: 0,
-          zIndex: 1,
-          fill: '#fff',
-          stroke: '#fff',
-          strokeWidth: 0,
-          opacity: 1,
-          borderRadius: 6
-        }
-      ]
-    },
-    {
-      name: 'Sales Proposal',
-      previewUrl: "assets/templateTwo.png", // Unique image 2
-      elements: [
+        // Background
         {
           id: 'bg',
           type: 'rect',
           x: 0,
           y: 0,
-          width: 1024,
-          height: 768,
+          width: 775,
+          height: 440,
           rotation: 0,
           zIndex: 0,
-          fill: '#99b6f2',
-          stroke: '#b86b4b',
-          strokeWidth: 8,
+          fill: '#fff',
+          stroke: '#e5e5e5',
+          strokeWidth: 2,
+          opacity: 1,
+          borderRadius: 16
+        },
+        // Top-right purple shapes
+        {
+          id: 'top-right-main',
+          type: 'rect',
+          x: 600,
+          y: -20,
+          width: 200,
+          height: 80,
+          rotation: 20,
+          zIndex: 1,
+          fill: '#6b5bd8',
+          stroke: '#6b5bd8',
+          strokeWidth: 0,
           opacity: 1,
           borderRadius: 16
         },
         {
-          id: 'logo',
-          type: 'text',
-          x: 32,
-          y: 32,
-          width: 300,
+          id: 'top-right-accent',
+          type: 'rect',
+          x: 670,
+          y: 20,
+          width: 100,
           height: 30,
-          rotation: 0,
-          zIndex: 1,
-          text: 'Innovative Company',
-          fontSize: 18,
-          color: '#222',
-          fontWeight: 'normal'
+          rotation: 25,
+          zIndex: 2,
+          fill: '#3b378c',
+          stroke: '#3b378c',
+          strokeWidth: 0,
+          opacity: 1,
+          borderRadius: 8
         },
+        // Left vertical line
         {
-          id: 'title',
-          type: 'text',
-          x: 40,
-          y: 120,
-          width: 700,
-          height: 120,
+          id: 'left-line',
+          type: 'rect',
+          x: 60,
+          y: 50,
+          width: 4,
+          height: 380,
           rotation: 0,
           zIndex: 2,
-          text: 'Sales Proposal',
-          fontSize: 80,
-          color: '#222',
+          fill: '#2d3561',
+          stroke: '#2d3561',
+          strokeWidth: 0,
+          opacity: 1,
+          borderRadius: 2
+        },
+        // Logo (circle + text)
+        {
+          id: 'logo-name',
+          type: 'text',
+          x: 20,
+          y: 20,
+          width: 120,
+          height: 30,
+          rotation: 0,
+          zIndex: 3,
+          text: 'Company Logo',
+          fontSize: 16,
+          color: '#2d3561',
           fontWeight: 'normal'
         },
         {
-          id: 'button',
-          type: 'rect',
-          x: 48,
-          y: 270,
-          width: 140,
-          height: 40,
-          rotation: 0,
-          zIndex: 3,
-          fill: '#fff',
-          stroke: '#222',
-          strokeWidth: 2,
-          opacity: 1,
-          borderRadius: 20
-        },
-        {
-          id: 'button-text',
+          id: 'logo-text',
           type: 'text',
-          x: 68,
-          y: 278,
-          width: 100,
+          x: 70,
+          y: 75,
+          width: 220,
           height: 30,
           rotation: 0,
           zIndex: 4,
-          text: 'LEARN MORE',
+          text: 'Business Industry',
           fontSize: 16,
-          color: '#222',
+          color: '#2d3561',
           fontWeight: 'normal'
         },
+        // Main Title
         {
-          id: 'author',
+          id: 'main-title',
           type: 'text',
-          x: 600,
-          y: 290,
-          width: 180,
-          height: 30,
-          rotation: 0,
-          zIndex: 5,
-          text: 'BY MAEVA AHEARN\nSALES REPRESENTATIVE',
-          fontSize: 12,
-          color: '#222',
-          fontWeight: 'normal'
-        }
-      ]
-    },
-    {
-      name: 'Company Profile',
-      previewUrl: "assets/templateThree.png", // Unique image 3
-      elements: [
-        {
-          id: 'bg',
-          type: 'rect',
-          x: 0,
-          y: 0,
-          width: 1024,
-          height: 768,
-          rotation: 0,
-          zIndex: 0,
-          fill: '#fff',
-          stroke: '#e0e0e0',
-          strokeWidth: 2,
-          opacity: 1,
-          borderRadius: 16
-        },
-        {
-          id: 'blue-shape',
-          type: 'rect',
-          x: 0,
-          y: 0,
-          width: 320,
-          height: 768,
-          rotation: 25,
-          zIndex: 1,
-          fill: '#3b5b8c',
-          stroke: '#3b5b8c',
-          strokeWidth: 0,
-          opacity: 0.15,
-          borderRadius: 120
-        },
-        {
-          id: 'logo',
-          type: 'text',
-          x: 32,
-          y: 32,
-          width: 300,
-          height: 30,
-          rotation: 0,
-          zIndex: 2,
-          text: 'ADD COMPANY NAME',
-          fontSize: 18,
-          color: '#222',
-          fontWeight: 'bold'
-        },
-        {
-          id: 'title',
-          type: 'text',
-          x: 400,
-          y: 180,
-          width: 350,
+          x: 120,
+          y: 120,
+          width: 500,
           height: 80,
           rotation: 0,
-          zIndex: 3,
-          text: 'Company',
-          fontSize: 60,
-          color: '#222',
-          fontWeight: 'bold'
+          zIndex: 5,
+          text: 'Business Proposal\nPresentation',
+          fontSize: 36,
+          color: '#2d3561',
+          fontWeight: 'normal',
+          fontFamily: 'serif'
         },
+        // Subtitle
         {
           id: 'subtitle',
           type: 'text',
-          x: 400,
+          x: 120,
+          y: 210,
+          width: 400,
+          height: 30,
+          rotation: 0,
+          zIndex: 6,
+          text: 'Product Research Proposal for Ingoude Company',
+          fontSize: 18,
+          color: '#2d3561',
+          fontWeight: 'normal'
+        },
+        // Date
+        {
+          id: 'date',
+          type: 'text',
+          x: 120,
           y: 250,
-          width: 350,
-          height: 60,
+          width: 200,
+          height: 24,
+          rotation: 0,
+          zIndex: 7,
+          text: '02 May, 2024',
+          fontSize: 16,
+          color: '#2d3561',
+          fontWeight: 'normal'
+        }
+      ]
+    },
+    {
+      name: 'Green Modern Corporate Presentation ',
+      previewUrl: "assets/BusinessProposal2.png", // Add your preview image here
+      elements: [
+        // Background
+        {
+          id: 'bg',
+          type: 'rect',
+          x: 0,
+          y: 0,
+          width: 775,
+          height: 440,
+          rotation: 0,
+          zIndex: 0,
+          fill: '#fff',
+          stroke: '#e5e5e5',
+          strokeWidth: 2,
+          opacity: 1,
+          borderRadius: 16
+        },
+        // Top-right light gray rectangle
+        {
+          id: 'top-right-accent',
+          type: 'rect',
+          x: 500,
+          y: 0,
+          width: 260,
+          height: 70,
+          rotation: 0,
+          zIndex: 1,
+          fill: '#eaeae5',
+          stroke: '#eaeae5',
+          strokeWidth: 0,
+          opacity: 1,
+          borderRadius: 0
+        },
+        // Bottom-left light gray rectangle
+        {
+          id: 'bottom-left-accent',
+          type: 'rect',
+          x: 0,
+          y: 370,
+          width: 220,
+          height: 70,
+          rotation: 0,
+          zIndex: 1,
+          fill: '#eaeae5',
+          stroke: '#eaeae5',
+          strokeWidth: 0,
+          opacity: 1,
+          borderRadius: 0
+        },
+        // Left vertical dot line
+        {
+          id: 'compnay-logo',
+          type: 'text',
+          x: 30,
+          y: 40,
+          width: 180,
+          height: 18,
+          rotation: 0,
+          zIndex: 2,
+          text: 'Company Logo',
+          fontSize: 18,
+          color: '#6b7657',
+          fontWeight: 'bold',
+          fontFamily: 'sans-serif',
+          align: 'center'
+        },
+        // Main Title
+        {
+          id: 'main-title',
+          type: 'text',
+          x: 120,
+          y: 120,
+          width: 540,
+          height: 120,
           rotation: 0,
           zIndex: 4,
-          text: 'Profile',
-          fontSize: 48,
-          color: '#6b8bbd',
-          fontWeight: 'bold'
+          text: 'BUSINESS PROPOSAL\nPRESENTATION',
+          fontSize: 44,
+          color: '#6b7657',
+          fontWeight: 'bold',
+          fontFamily: 'sans-serif',
+          align: 'center'
         },
+        // Subtitle
         {
-          id: 'desc',
+          id: 'subtitle',
           type: 'text',
-          x: 400,
-          y: 320,
-          width: 350,
-          height: 40,
+          x: 150,
+          y: 250,
+          width: 480,
+          height: 30,
           rotation: 0,
           zIndex: 5,
-          text: 'Write company name here',
+          text: 'Product Research Proposal for Ingoude Company',
           fontSize: 20,
           color: '#222',
-          fontWeight: 'normal'
+          fontWeight: 'normal',
+          fontFamily: 'sans-serif',
+          align: 'center'
+        },
+        // Date
+        {
+          id: 'date',
+          type: 'text',
+          x: 600,
+          y: 390,
+          width: 180,
+          height: 24,
+          rotation: 0,
+          zIndex: 6,
+          text: '02 May, 2024',
+          fontSize: 16,
+          color: '#6b7657',
+          fontWeight: 'normal',
+          fontFamily: 'sans-serif',
+          align: 'center'
+        },
+        // Right dotted line
+        {
+          id: 'right-dots',
+          type: 'rect',
+          x: 720,
+          y: 120,
+          width: 4,
+          height: 180,
+          rotation: 0,
+          zIndex: 7,
+          fill: 'repeating-linear-gradient(to bottom, #b7bead 0 8px, transparent 8px 16px)',
+          stroke: 'transparent',
+          strokeWidth: 0,
+          opacity: 1,
+          borderRadius: 2
         }
       ]
     }
@@ -235,4 +297,4 @@ export class TemplateService {
   getTemplates(): CanvasTemplate[] {
     return this.templates;
   }
-} 
+}
