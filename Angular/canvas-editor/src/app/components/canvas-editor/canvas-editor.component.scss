@@ -1558,3 +1558,114 @@
   cursor: not-allowed;
   box-shadow: none;
 }
+
+// --- Canvas Page Preview Strip Styles ---
+.canvas-preview-strip {
+  position: fixed;
+  left: 52%;
+  transform: translateX(-52%);
+  bottom: 0;
+  width: 62vw;
+  background: #fff;
+  box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
+  z-index: 1100;
+  padding: 8px 0;
+  display: flex;
+  justify-content: center;
+  border-top: 1px solid #e0e0e0;
+}
+
+.canvas-preview-strip-inner {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  max-width: 60vw;
+  overflow-x: auto;
+  padding: 0 12px;
+  scrollbar-width: thin;
+  scrollbar-color: #bdbdbd #f5f5f5;
+}
+.canvas-preview-strip-inner::-webkit-scrollbar {
+  height: 8px;
+}
+.canvas-preview-strip-inner::-webkit-scrollbar-thumb {
+  background: #bdbdbd;
+  border-radius: 4px;
+}
+.canvas-preview-strip-inner::-webkit-scrollbar-track {
+  background: #f5f5f5;
+}
+
+.canvas-preview-thumbnail {
+  min-width: 92px;
+  max-width: 92px;
+  height: 62px;
+  background: #f8f8f8;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: box-shadow 0.18s, border 0.18s, background 0.18s;
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.canvas-preview-thumbnail:hover {
+  background: #e3f0ff;
+  box-shadow: 0 4px 16px rgba(25,118,210,0.12);
+  border-color: #90caf9;
+}
+.canvas-preview-thumbnail.selected {
+  border: 2.5px solid #1976d2;
+  background: #e3f0ff;
+  box-shadow: 0 0 0 2px #1976d2;
+}
+.thumbnail-img-wrapper {
+  width: 80px;
+  height: 48px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #f3f3f3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2px;
+  border: 1.5px solid #e0e0e0;
+  position: relative;
+}
+.thumbnail-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 6px;
+  background: #f3f3f3;
+}
+.thumbnail-img-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: #bdbdbd;
+  font-size: 26px;
+}
+
+.thumbnail-number {
+  display: none;
+}
+
+.thumbnail-number-overlay {
+  position: absolute;
+  left: 2px;
+  bottom: 2px;
+  color: rgba(30, 30, 30, 0.75);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 7px 2px 5px;
+  border-radius: 5px;
+  z-index: 2;
+  pointer-events: none;
+}

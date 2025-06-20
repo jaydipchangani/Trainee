@@ -292,6 +292,27 @@
   </div>
 </div>
 
+<!-- Canvas Page Preview Strip -->
+<div class="canvas-preview-strip">
+  <div class="canvas-preview-strip-inner">
+    <div *ngFor="let page of pages; let i = index" 
+         class="canvas-preview-thumbnail"
+         [class.selected]="i === selectedPageIndex"
+         (click)="selectPageFromPreview(i)"
+         tabindex="0"
+         [attr.aria-label]="'Go to slide ' + (i + 1)"
+         #previewThumb>
+      <div class="thumbnail-img-wrapper">
+        <img *ngIf="pageThumbnails[i]" [src]="pageThumbnails[i]" alt="Slide preview {{i+1}}" class="thumbnail-img" />
+        <div *ngIf="!pageThumbnails[i]" class="thumbnail-img-placeholder">
+          <mat-icon>image</mat-icon>
+        </div>
+        <div class="thumbnail-number-overlay">{{ i + 1 }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="left-sidebar">
   <button 
     class="sidebar-btn" 

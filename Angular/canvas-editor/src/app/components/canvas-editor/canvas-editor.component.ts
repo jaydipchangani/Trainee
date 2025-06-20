@@ -11,6 +11,10 @@ import { FileUploadService, UploadedFile } from '../../services/file-upload.serv
   styleUrls: ['./canvas-editor.component.scss']
 })
 export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
+  // --- Live Thumbnail Previews ---
+  public pageThumbnails: string[] = [];
+  private thumbnailDebounceTimeouts: any[] = [];
+
 
   private readonly BASE_WIDTH = 1920;  // Base width for 16:9
   private readonly BASE_HEIGHT = 1080; // Base height for 16:9
@@ -23,6 +27,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChildren('container') canvasContainers!: QueryList<ElementRef>;
   @ViewChildren('canvasPageWrapper') canvasPageWrappers!: QueryList<ElementRef>;
   @ViewChildren('pageRow') pageRows!: QueryList<ElementRef>;
+  @ViewChildren('previewThumb') previewThumbs!: QueryList<ElementRef>;
 
   public selectedId: string | null = null;
   public selectedPageIndex: number = 0;
@@ -53,6 +58,69 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   activeSection: string | null = null;
 
   private editingTextId: string | null = null;
+
+  // --- Canvas Preview Strip Logic ---
+  selectPageFromPreview(index: number) {
+    this.selectedPageIndex = index;
+    setTimeout(() => {
+      const wrappers = this.canvasPageWrappers?.toArray();
+      if (wrappers && wrappers[index]) {
+        wrappers[index].nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+      }
+    }, 10);
+  }
+
+  /**
+   * Generate a thumbnail for a given page index using its Konva Stage.
+   * Uses a lower pixelRatio for performance.
+   */
+  private generateThumbnail(index: number) {
+    const stage = this.stages[index];
+    if (stage) {
+      try {
+        // Use a lower pixelRatio for smaller images
+        const dataUrl = stage.toDataURL({ pixelRatio: 0.18 });
+        this.pageThumbnails[index] = dataUrl;
+      } catch (e) {
+        // If the stage is not ready or throws, fallback to blank
+        this.pageThumbnails[index] = '';
+      }
+    }
+  }
+
+  /**
+   * Debounced thumbnail update for a page index
+   */
+  private updateThumbnailDebounced(index: number) {
+    if (this.thumbnailDebounceTimeouts[index]) {
+      clearTimeout(this.thumbnailDebounceTimeouts[index]);
+    }
+    this.thumbnailDebounceTimeouts[index] = setTimeout(() => {
+      this.generateThumbnail(index);
+    }, 120);
+  }
+
+  /**
+   * Generate all thumbnails (e.g. after page structure changes)
+   */
+  private generateAllThumbnails() {
+    if (!this.stages) return;
+    for (let i = 0; i < this.stages.length; i++) {
+      this.generateThumbnail(i);
+    }
+  }
+
+  /**
+   * Call this after any canvas/page change to update thumbnails
+   */
+  private setupThumbnailListeners() {
+    if (!this.stages) return;
+    this.stages.forEach((stage, i) => {
+      // Remove previous listeners to avoid leaks
+      stage.off('draw.thumbnail');
+      stage.on('draw.thumbnail', () => this.updateThumbnailDebounced(i));
+    });
+  }
 
   // Floating text toolbar state
   public textToolbarElement: CanvasElement = {
@@ -185,6 +253,9 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
           this.isNewPageLoading = false;
           setTimeout(() => {
             this.scrollToPage(newPageIndex);
+            // Generate all thumbnails after adding a new page
+            this.generateAllThumbnails();
+            this.setupThumbnailListeners();
           }, 100);
         }).catch(error => {
           console.error('Error applying template to new page:', error);
@@ -195,7 +266,14 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       this.lastPageCount = pages.length;
       this.pages = pages;
       if (pagesChanged) {
-      setTimeout(() => this.initAllCanvases());
+      setTimeout(() => {
+        this.initAllCanvases();
+        // After canvases are initialized, generate all thumbnails and set up listeners
+        setTimeout(() => {
+          this.generateAllThumbnails();
+          this.setupThumbnailListeners();
+        }, 50);
+      });
       this.pushHistory();
       }
     });
