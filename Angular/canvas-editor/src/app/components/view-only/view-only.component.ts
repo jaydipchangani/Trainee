@@ -128,6 +128,12 @@ export class ViewOnlyComponent implements OnInit, AfterViewInit {
     }, 100);
   }
 
+  onExitPresentationClick() {
+    this.exitFullscreen();
+    // exitPresentationMode will be called by fullscreenchange event, but also call as fallback
+    setTimeout(() => this.exitPresentationMode(), 200);
+  }
+
   exitPresentationMode() {
     this.isPresentationMode = false;
     window.removeEventListener('keydown', this.handlePresentationKey);
