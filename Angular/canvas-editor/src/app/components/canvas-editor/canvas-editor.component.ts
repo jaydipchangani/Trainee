@@ -22,6 +22,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
   @ViewChildren('container') canvasContainers!: QueryList<ElementRef>;
   @ViewChildren('canvasPageWrapper') canvasPageWrappers!: QueryList<ElementRef>;
+  @ViewChildren('pageRow') pageRows!: QueryList<ElementRef>;
 
   public selectedId: string | null = null;
   public selectedPageIndex: number = 0;
@@ -1437,12 +1438,15 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onPageClick(index: number) {
     this.selectedPageIndex = index;
-    // Toggle layer visibility - if same page is clicked, hide layers; if different page, show layers for that page
     if (this.selectedPageForLayers === index) {
-      this.selectedPageForLayers = null; // Hide layers
+      this.selectedPageForLayers = null;
     } else {
-      this.selectedPageForLayers = index; // Show layers for this page
+      this.selectedPageForLayers = index;
     }
+    // Scroll the clicked page row into view
+    setTimeout(() => {
+      this.scrollToPage(index);
+    }, 100);
   }
 
   deletePage(index: number) {

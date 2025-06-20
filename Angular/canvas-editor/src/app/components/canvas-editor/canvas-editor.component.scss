@@ -233,6 +233,8 @@
   flex-direction: column;
   align-items: stretch;
   margin-left: 10px;
+  max-height: 600px; // Set your preferred max height (adjust as needed)
+  overflow-y: auto;
 }
 
 .page-table-header {
@@ -270,39 +272,69 @@
   list-style: none;
   padding: 0 8px;
   margin: 0;
-  flex: 1;
+  flex: 1 1 auto;
+  max-height: 520px; // Adjust so header + padding + scroll fit in .page-table-panel
   overflow-y: auto;
+  min-height: 0;
 }
 
 .page-table-list li {
-  display: flex;
-  align-items: center;
+  display: block; // Make each li a block so layers-section is below the row
   margin-bottom: 8px;
   border-radius: 4px;
   transition: background 0.2s;
+  background: none;
+  padding: 0;
+  position: relative;
 }
 
-.page-table-list li.selected-for-layers {
-  background: #e3f2fd;
-  border-left: 3px solid #1976d2;
+.page-table-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background: none;
+  border-radius: 4px;
+  padding: 0;
+  z-index: 1;
 }
 
-.page-table-list button {
-  flex: 1;
+.page-table-row button {
   background: none;
   border: none;
-  color: #333;
+  color: #222;
   font-size: 15px;
-  text-align: left;
-  padding: 8px 8px;
+  font-weight: 500;
   border-radius: 4px;
+  padding: 2px 8px;
+  margin-right: 4px;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, color 0.2s;
+  box-shadow: none;
+  outline: none;
 }
 
-.page-table-list button:hover {
-  background: #e6f0ff;
-  color: #007bff;
+.page-table-row button:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.page-table-row button span {
+  background: none;
+  border: none;
+  box-shadow: none;
+  color: inherit;
+}
+
+.page-table-row button:active,
+.page-table-row button.selected {
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.page-table-list li.selected-for-layers .page-table-row {
+  background: #e3f2fd;
+  border-left: 3px solid #1976d2;
 }
 
 .modal {
@@ -1059,9 +1091,14 @@
 
 // Layers Section
 .layers-section {
-  border-top: 1px solid #eee;
-  margin-top: 8px;
-  padding-top: 8px;
+  background: #e3f2fd;
+  border-radius: 8px;
+  margin: 0 0 0 0;
+  padding: 8px 0 8px 0;
+  box-shadow: 0 2px 8px rgba(25,118,210,0.06);
+  position: relative;
+  z-index: 0;
+  // Make sure it doesn't overlap the row
 }
 
 .layers-header {
@@ -1128,7 +1165,7 @@
   display: flex;
   align-items: center;
   padding: 6px 8px;
-  gap: 6px;
+  gap: 3px;
 }
 
 .layer-drag-handle {

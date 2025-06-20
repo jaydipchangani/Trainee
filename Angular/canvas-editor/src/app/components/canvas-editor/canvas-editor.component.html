@@ -124,98 +124,100 @@
         </button>
       </div>
       <ul class="page-table-list">
-        <li *ngFor="let page of pages; let i = index" [class.selected-for-layers]="i === selectedPageForLayers">
-          <button (click)="scrollToPage(i)">
-            <span *ngIf="!editingPageIndexMap[i]">{{ page.title }}</span>
-            <input *ngIf="editingPageIndexMap[i]" [(ngModel)]="page.title" (blur)="stopEditingPageName(i)" (keydown.enter)="stopEditingPageName(i)" class="page-title-input" />
-          </button>
-          <button class="edit-page-btn" (click)="editPageName(i); $event.stopPropagation();" title="Edit Page Name">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 20h9"></path>
-              <path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"></path>
-            </svg>
-          </button>
-          <button class="delete-page-btn" (click)="deletePage(i); $event.stopPropagation();" [disabled]="pages.length === 1" title="Delete Page">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d9534f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="3 6 5 6 21 6"></polyline>
-              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"></path>
-              <line x1="10" y1="11" x2="10" y2="17"></line>
-              <line x1="14" y1="11" x2="14" y2="17"></line>
-            </svg>
-          </button>
+        <li #pageRow *ngFor="let page of pages; let i = index" [class.selected-for-layers]="i === selectedPageForLayers">
+          <div class="page-table-row" (click)="onPageClick(i)">
+            <button>
+              <span *ngIf="!editingPageIndexMap[i]">{{ page.title }}</span>
+              <input *ngIf="editingPageIndexMap[i]" [(ngModel)]="page.title" (blur)="stopEditingPageName(i)" (keydown.enter)="stopEditingPageName(i)" class="page-title-input" />
+            </button>
+            <button class="edit-page-btn" (click)="editPageName(i); $event.stopPropagation();" title="Edit Page Name">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 20h9"></path>
+                <path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"></path>
+              </svg>
+            </button>
+            <button class="delete-page-btn" (click)="deletePage(i); $event.stopPropagation();" [disabled]="pages.length === 1" title="Delete Page">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d9534f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"></path>
+                <line x1="10" y1="11" x2="10" y2="17"></line>
+                <line x1="14" y1="11" x2="14" y2="17"></line>
+              </svg>
+            </button>
+          </div>
+          <!-- Layers section directly under the selected page in the table -->
+          <div *ngIf="selectedPageForLayers === i" class="layers-section">
+            <div class="layers-header">
+              <span>Layers - {{ page.title }}</span>
+            </div>
+            <ul class="layers-list">
+              <li *ngFor="let element of getSortedElements(i); let j = index"
+                  [class.selected-layer]="element.id === selectedId"
+                  [class.hidden-layer]="element.visible === false"
+                  [class.locked-layer]="element.locked === true"
+                  (click)="selectLayerElement(element.id)">
+                <div class="layer-item">
+                  <div class="layer-drag-handle">
+                    <mat-icon>drag_indicator</mat-icon>
+                  </div>
+                  <div class="layer-icon">
+                    <mat-icon *ngIf="element.type === 'text'">text_fields</mat-icon>
+                    <mat-icon *ngIf="element.type === 'image'">image</mat-icon>
+                    <mat-icon *ngIf="element.type === 'rect'">crop_square</mat-icon>
+                    <mat-icon *ngIf="element.type === 'circle'">circle</mat-icon>
+                    <mat-icon *ngIf="element.type === 'ellipse'">panorama_fish_eye</mat-icon>
+                    <mat-icon *ngIf="element.type === 'star'">star</mat-icon>
+                    <mat-icon *ngIf="element.type === 'line'">remove</mat-icon>
+                    <mat-icon *ngIf="element.type === 'arrow'">arrow_forward</mat-icon>
+                    <mat-icon *ngIf="element.type === 'semicircle'">half_circle</mat-icon>
+                  </div>
+                  <div class="layer-info">
+                    <span class="layer-name">
+                      {{ getLayerDisplayName(element) }}
+                      <span *ngIf="element.isTemplate" class="template-indicator" title="Template Element">📋</span>
+                    </span>
+                    <span class="layer-type">{{ element.type }} ({{ element.zIndex + 1 }})</span>
+                  </div>
+                  <div class="layer-actions">
+                    <button class="layer-move-btn layer-move-up"
+                            (click)="moveLayerUp(element.id); $event.stopPropagation();"
+                            [disabled]="j === 0"
+                            title="Move Up">
+                      <mat-icon>keyboard_arrow_up</mat-icon>
+                    </button>
+                    <button class="layer-move-btn layer-move-down"
+                            (click)="moveLayerDown(element.id); $event.stopPropagation();"
+                            [disabled]="j === getSortedElements(i).length - 1"
+                            title="Move Down">
+                      <mat-icon>keyboard_arrow_down</mat-icon>
+                    </button>
+                    <button class="layer-lock-btn"
+                            [class.locked]="element.locked === true"
+                            [class.unlocked]="element.locked !== true"
+                            (click)="toggleLayerLock(element.id); $event.stopPropagation();"
+                            title="Toggle Lock">
+                      <mat-icon>{{ element.locked === true ? 'lock' : 'lock_open' }}</mat-icon>
+                    </button>
+                    <button class="layer-visibility-btn"
+                            [class.visible]="element.visible !== false"
+                            [class.hidden]="element.visible === false"
+                            (click)="toggleLayerVisibility(element.id); $event.stopPropagation();"
+                            title="Toggle Visibility">
+                      <mat-icon>{{ element.visible !== false ? 'visibility' : 'visibility_off' }}</mat-icon>
+                    </button>
+                    <button class="layer-delete-btn"
+                            (click)="deleteLayerElement(element.id); $event.stopPropagation();"
+                            title="Delete Layer">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <!-- End layers section -->
         </li>
       </ul>
-      
-      <!-- Layers Section -->
-      <div *ngIf="selectedPageForLayers !== null && pages[selectedPageForLayers]" class="layers-section">
-        <div class="layers-header">
-          <span>Layers - {{ pages[selectedPageForLayers].title }}</span>
-        </div>
-        <ul class="layers-list">
-          <li *ngFor="let element of getSortedElements(selectedPageForLayers); let i = index" 
-              [class.selected-layer]="element.id === selectedId"
-              [class.hidden-layer]="element.visible === false"
-              [class.locked-layer]="element.locked === true"
-              (click)="selectLayerElement(element.id)">
-            <div class="layer-item">
-              <div class="layer-drag-handle">
-                <mat-icon>drag_indicator</mat-icon>
-              </div>
-              <div class="layer-icon">
-                <mat-icon *ngIf="element.type === 'text'">text_fields</mat-icon>
-                <mat-icon *ngIf="element.type === 'image'">image</mat-icon>
-                <mat-icon *ngIf="element.type === 'rect'">crop_square</mat-icon>
-                <mat-icon *ngIf="element.type === 'circle'">circle</mat-icon>
-                <mat-icon *ngIf="element.type === 'ellipse'">panorama_fish_eye</mat-icon>
-                <mat-icon *ngIf="element.type === 'star'">star</mat-icon>
-                <mat-icon *ngIf="element.type === 'line'">remove</mat-icon>
-                <mat-icon *ngIf="element.type === 'arrow'">arrow_forward</mat-icon>
-                <mat-icon *ngIf="element.type === 'semicircle'">half_circle</mat-icon>
-              </div>
-              <div class="layer-info">
-                <span class="layer-name">
-                  {{ getLayerDisplayName(element) }}
-                  <span *ngIf="element.isTemplate" class="template-indicator" title="Template Element">📋</span>
-                </span>
-                <span class="layer-type">{{ element.type }} ({{ element.zIndex + 1 }})</span>
-              </div>
-              <div class="layer-actions">
-                <button class="layer-move-btn layer-move-up" 
-                        (click)="moveLayerUp(element.id); $event.stopPropagation();"
-                        [disabled]="i === 0"
-                        title="Move Up">
-                  <mat-icon>keyboard_arrow_up</mat-icon>
-                </button>
-                <button class="layer-move-btn layer-move-down" 
-                        (click)="moveLayerDown(element.id); $event.stopPropagation();"
-                        [disabled]="i === getSortedElements(selectedPageForLayers).length - 1"
-                        title="Move Down">
-                  <mat-icon>keyboard_arrow_down</mat-icon>
-                </button>
-                <button class="layer-lock-btn" 
-                        [class.locked]="element.locked === true"
-                        [class.unlocked]="element.locked !== true"
-                        (click)="toggleLayerLock(element.id); $event.stopPropagation();"
-                        title="Toggle Lock">
-                  <mat-icon>{{ element.locked === true ? 'lock' : 'lock_open' }}</mat-icon>
-                </button>
-                <button class="layer-visibility-btn" 
-                        [class.visible]="element.visible !== false"
-                        [class.hidden]="element.visible === false"
-                        (click)="toggleLayerVisibility(element.id); $event.stopPropagation();"
-                        title="Toggle Visibility">
-                  <mat-icon>{{ element.visible !== false ? 'visibility' : 'visibility_off' }}</mat-icon>
-                </button>
-                <button class="layer-delete-btn" 
-                        (click)="deleteLayerElement(element.id); $event.stopPropagation();"
-                        title="Delete Layer">
-                  <mat-icon>delete</mat-icon>
-                </button>
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
     </div>
   </div>
 
