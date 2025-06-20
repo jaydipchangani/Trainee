@@ -591,12 +591,18 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
           if (isSaved) return;
           isSaved = true;
           const newValue = textarea.value;
+          const oldValue = (node as Konva.Text).text();
+          // Only delete if text was changed to empty from a non-empty value
           if (newValue.trim() !== '') {
-            (node as Konva.Text).text(newValue);
-            this.updateElementDataOnly(element.id, { text: newValue }, pageIndex);
-          }
-          else {
-            this.canvasService.deleteElement(element.id);
+            if (newValue !== oldValue) {
+              (node as Konva.Text).text(newValue);
+              this.updateElementDataOnly(element.id, { text: newValue }, pageIndex);
+            }
+          } else {
+            if (oldValue.trim() !== '') {
+              // Only delete if the original text was not already empty
+              this.canvasService.deleteElement(element.id);
+            } // else: do nothing (don't delete if text was already empty)
           }
           removeTextarea();
           this.editingTextId = null;

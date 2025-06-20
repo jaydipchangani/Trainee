@@ -15,21 +15,7 @@ export class TemplateService {
       previewUrl: "assets/BusinessProposal1.png", // Add your preview image here
       elements: [
         // Background
-        {
-          id: 'bg',
-          type: 'rect',
-          x: 0,
-          y: 0,
-          width: 775,
-          height: 440,
-          rotation: 0,
-          zIndex: 0,
-          fill: '#fff',
-          stroke: '#e5e5e5',
-          strokeWidth: 2,
-          opacity: 1,
-          borderRadius: 16
-        },
+        
         // Top-right purple shapes
         {
           id: 'top-right-main',
@@ -158,22 +144,7 @@ export class TemplateService {
       name: 'Green Modern Corporate Presentation ',
       previewUrl: "assets/BusinessProposal2.png", // Add your preview image here
       elements: [
-        // Background
-        {
-          id: 'bg',
-          type: 'rect',
-          x: 0,
-          y: 0,
-          width: 775,
-          height: 440,
-          rotation: 0,
-          zIndex: 0,
-          fill: '#fff',
-          stroke: '#e5e5e5',
-          strokeWidth: 2,
-          opacity: 1,
-          borderRadius: 16
-        },
+
         // Top-right light gray rectangle
         {
           id: 'top-right-accent',
