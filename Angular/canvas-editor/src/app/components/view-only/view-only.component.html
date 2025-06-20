@@ -5,7 +5,7 @@
   </div>
   <div class="preview-main" [class.presentation-mode]="isPresentationMode">
     <div class="preview-content" [class.presentation-mode]="isPresentationMode">
-      <iframe #previewIframe class="preview-iframe" [class.presentation-mode]="isPresentationMode" frameborder="0"></iframe>
+      <iframe #previewIframe class="preview-iframe" [class.presentation-mode]="isPresentationMode" [ngClass]="transitionClass" frameborder="0"></iframe>
       <div *ngIf="isPresentationMode" class="presentation-bar">
         <button class="presentation-arrow left"
           [disabled]="currentPresentationPage === 0"
@@ -13,6 +13,10 @@
           (mouseenter)="hoverLeft=true" (mouseleave)="hoverLeft=false">
           <span *ngIf="!hoverLeft">&#60;</span>
           <span *ngIf="hoverLeft">&#8592;</span>
+        </button>
+        <button class="slideshow-btn" (click)="toggleSlideshow()" [attr.aria-label]="isSlideshowPlaying ? 'Pause slideshow' : 'Play slideshow'">
+          <span *ngIf="!isSlideshowPlaying" style="font-size:1.3rem;">&#9654;</span>
+          <span *ngIf="isSlideshowPlaying" style="font-size:1.3rem;">&#10073;&#10073;</span>
         </button>
         <span class="presentation-page-indicator">
           {{currentPresentationPage + 1}} / {{pageCountArray.length}}

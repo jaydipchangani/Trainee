@@ -20,6 +20,50 @@ export class ViewOnlyComponent implements OnInit, AfterViewInit {
   hoverRight = false;
   private pageHtmlSub: Subscription | undefined;
 
+  // Slideshow state
+  isSlideshowPlaying = false;
+  slideshowInterval: any = null;
+  slideTransitioning = false;
+
+  get transitionClass() {
+    return this.slideTransitioning ? 'slide-fade' : '';
+  }
+
+  playSlideshow() {
+    if (this.isSlideshowPlaying || this.pageCountArray.length < 2) return;
+    this.isSlideshowPlaying = true;
+    this.slideshowInterval = setInterval(() => {
+      if (this.currentPresentationPage < this.pageCountArray.length - 1) {
+        this.nextPresentationPage(true);
+      } else {
+        this.pauseSlideshow();
+      }
+    }, 2000);
+  }
+
+  pauseSlideshow() {
+    this.isSlideshowPlaying = false;
+    if (this.slideshowInterval) {
+      clearInterval(this.slideshowInterval);
+      this.slideshowInterval = null;
+    }
+  }
+
+  toggleSlideshow() {
+    if (this.isSlideshowPlaying) {
+      this.pauseSlideshow();
+    } else {
+      this.playSlideshow();
+    }
+  }
+
+  // Clean up on exit
+  onExitPresentationClick() {
+    this.pauseSlideshow();
+    this.exitFullscreen();
+    setTimeout(() => this.exitPresentationMode(), 200);
+  }
+
   constructor(
     private route: ActivatedRoute,
     private canvasService: CanvasService,
@@ -128,14 +172,10 @@ export class ViewOnlyComponent implements OnInit, AfterViewInit {
     }, 100);
   }
 
-  onExitPresentationClick() {
-    this.exitFullscreen();
-    // exitPresentationMode will be called by fullscreenchange event, but also call as fallback
-    setTimeout(() => this.exitPresentationMode(), 200);
-  }
 
   exitPresentationMode() {
     this.isPresentationMode = false;
+    this.pauseSlideshow();
     window.removeEventListener('keydown', this.handlePresentationKey);
     document.removeEventListener('fullscreenchange', this.exitPresentationOnClose);
   }
@@ -165,18 +205,34 @@ export class ViewOnlyComponent implements OnInit, AfterViewInit {
     });
   }        
 
-  nextPresentationPage() {
+  nextPresentationPage(isAuto = false) {
     if (this.currentPresentationPage < this.pageCountArray.length - 1) {
-      this.currentPresentationPage++;
-      this.setPresentationPage();
+      this.triggerSlideTransition(() => {
+        this.currentPresentationPage++;
+        this.setPresentationPage();
+      });
+    } else if (isAuto) {
+      this.pauseSlideshow();
     }
   }
 
   prevPresentationPage() {
     if (this.currentPresentationPage > 0) {
-      this.currentPresentationPage--;
-      this.setPresentationPage();
+      this.triggerSlideTransition(() => {
+        this.currentPresentationPage--;
+        this.setPresentationPage();
+      });
     }
+  }
+
+  triggerSlideTransition(callback: () => void) {
+    this.slideTransitioning = true;
+    setTimeout(() => {
+      callback();
+      setTimeout(() => {
+        this.slideTransitioning = false;
+      }, 350);
+    }, 10);
   }
 
   exitFullscreen() {
