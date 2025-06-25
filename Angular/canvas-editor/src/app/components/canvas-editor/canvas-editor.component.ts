@@ -951,6 +951,8 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       return null;
     }
+
+
     if (!node) return null;
     node.on('transformend', () => {
       const n = node!;
@@ -962,32 +964,50 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         n.height(height);
         n.scaleX(1);
         n.scaleY(1);
-        // Update the element data without triggering visual updates
-        this.updateElementDataOnly(element.id, {
-          x: n.x(),
-          y: n.y(),
-          width,
-          height,
-          rotation: n.rotation()
-        }, pageIndex);
-      } else if (element.type === 'circle') {
+        
+        // Only update if something actually changed
+        if (
+          width !== element.width ||
+          height !== element.height ||
+          n.rotation() !== element.rotation
+        ) {
+          this.updateElementDataOnly(element.id, {
+            x: n.x(),
+            y: n.y(),
+            width,
+            height,
+            rotation: n.rotation()
+          }, pageIndex);
+        }
+      }else if (element.type === 'circle') {
         // For circles, convert center coordinates to top-left corner
         const circleNode = n as Konva.Circle;
-        const radius = circleNode.radius() * n.scaleX();
+        const radius = Math.max(1, circleNode.radius() * n.scaleX());
         const width = radius * 2;
         const height = radius * 2;
         const x = n.x() - radius;
         const y = n.y() - radius;
         n.scaleX(1);
         n.scaleY(1);
-        this.updateElementDataOnly(element.id, {
-          x,
-          y,
-          width,
-          height,
-          rotation: n.rotation()
-        }, pageIndex);
-      } else if (element.type === 'ellipse') {
+       
+        // Only update if something actually changed
+        if (
+          x !== element.x ||
+          y !== element.y ||
+          width !== element.width ||
+          height !== element.height ||
+          n.rotation() !== element.rotation
+        ) {
+          this.updateElementDataOnly(element.id, {
+            x,
+            y,
+            width,
+            height,
+            rotation: n.rotation()
+          }, pageIndex);
+        }
+      } 
+      else if (element.type === 'ellipse') {
         // For ellipses, convert center coordinates to top-left corner
         const ellipseNode = n as Konva.Ellipse;
         const radiusX = ellipseNode.radiusX() * n.scaleX();
@@ -998,13 +1018,24 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         const y = n.y() - radiusY;
         n.scaleX(1);
         n.scaleY(1);
-        this.updateElementDataOnly(element.id, {
-          x,
-          y,
-          width,
-          height,
-          rotation: n.rotation()
-        }, pageIndex);
+
+        // Only update if something actually changed
+        if (
+          x !== element.x ||
+          y !== element.y ||
+          width !== element.width ||
+          height !== element.height ||
+          n.rotation() !== element.rotation
+        ) {
+          this.updateElementDataOnly(element.id, {
+            x,
+            y,
+            width,
+            height,
+            rotation: n.rotation()
+          }, pageIndex);
+        }
+
       } else if (element.type === 'star') {
         // For stars, convert center coordinates to top-left corner
         const starNode = n as Konva.Star;
@@ -1015,13 +1046,22 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         const y = n.y() - outerRadius;
         n.scaleX(1);
         n.scaleY(1);
-        this.updateElementDataOnly(element.id, {
-          x,
-          y,
-          width,
-          height,
-          rotation: n.rotation()
-        }, pageIndex);
+        // Only update if something actually changed
+        if (
+          x !== element.x ||
+          y !== element.y ||
+          width !== element.width ||
+          height !== element.height ||
+          n.rotation() !== element.rotation
+        ) {
+          this.updateElementDataOnly(element.id, {
+            x,
+            y,
+            width,
+            height,
+            rotation: n.rotation()
+          }, pageIndex);
+        }
       } else if (element.type === 'line' || element.type === 'arrow') {
         // For line-based shapes, handle scaling and position changes
         const originalPoints = element.points || [];
@@ -1041,13 +1081,20 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         n.scaleX(1);
         n.scaleY(1);
         
-        this.updateElementDataOnly(element.id, {
-          x: n.x(),
-          y: n.y(),
-          points: newPoints,
-          rotation: n.rotation()
-        }, pageIndex);
-        
+        // Only update if something actually changed
+        if (
+          scaleX !== element.scaleX ||
+          scaleY !== element.scaleY ||
+          n.rotation() !== element.rotation
+        ) {
+          this.updateElementDataOnly(element.id, {
+            scaleX,
+            scaleY,
+            points: newPoints,
+            rotation: n.rotation()
+          }, pageIndex);
+        }
+
         // Update the visual representation directly without triggering reloads
         const layer = this.layers[pageIndex];
         if (layer) {
@@ -1071,13 +1118,22 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         const y = n.y() - radius;
         n.scaleX(1);
         n.scaleY(1);
-        this.updateElementDataOnly(element.id, {
-          x,
-          y,
-          width,
-          height,
-          rotation: n.rotation()
-        }, pageIndex);
+        // Only update if something actually changed
+        if (
+          x !== element.x ||
+          y !== element.y ||
+          width !== element.width ||
+          height !== element.height ||
+          n.rotation() !== element.rotation
+        ) {
+          this.updateElementDataOnly(element.id, {
+            x,
+            y,
+            width,
+            height,
+            rotation: n.rotation()
+          }, pageIndex);
+        }
       } else {
         // For rectangles and other shapes, use standard coordinates
         const updatedElement = {
@@ -1087,9 +1143,24 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
           height: n.height() * n.scaleY(),
           rotation: n.rotation()
         };
-        this.updateElementDataOnly(element.id, updatedElement, pageIndex);
         n.scaleX(1);
         n.scaleY(1);
+        // Only update if something actually changed
+        if (
+          updatedElement.x !== element.x ||
+          updatedElement.y !== element.y ||
+          updatedElement.width !== element.width ||
+          updatedElement.height !== element.height ||
+          updatedElement.rotation !== element.rotation
+        ) {
+          this.updateElementDataOnly(element.id, {
+            x: updatedElement.x,
+            y: updatedElement.y,
+            width: updatedElement.width,
+            height: updatedElement.height,
+            rotation: updatedElement.rotation
+          }, pageIndex);
+        }
       }
       
       // Ensure transformer stays attached and selection is preserved
