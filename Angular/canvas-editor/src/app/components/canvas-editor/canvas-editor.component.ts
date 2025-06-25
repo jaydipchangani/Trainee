@@ -493,8 +493,11 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         // Update toolbar visibility
         if (element) {
           if (element.type === 'text') {
+
+          if(element.type !== null || element.type !== undefined || element.type !== ''){
             this.updateTextToolbarElement(element);
             this.shapeToolbarVisible = false;
+          }
           } else if (['rect', 'circle', 'ellipse', 'star', 'line', 'arrow', 'semicircle'].includes(element.type)) {
             this.shapeToolbarElement = { ...element };
             this.shapeToolbarVisible = true;
@@ -597,24 +600,49 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
             if (newValue !== oldValue) {
               (node as Konva.Text).text(newValue);
               this.updateElementDataOnly(element.id, { text: newValue }, pageIndex);
-            }
-          } else {
-            if (oldValue.trim() !== '') {
-              // Only delete if the original text was not already empty
-              this.canvasService.deleteElement(element.id);
-            } // else: do nothing (don't delete if text was already empty)
           }
+        } else {
+          if (oldValue.trim() !== '') {
+            // Only delete if the original text was not already empty
+            this.canvasService.deleteElement(element.id);
+            console.log('[Text Edit] Deleted element:', element.id);
+          } // else: do nothing (don't delete if text was already empty)
+        }
+
+        // Always deselect and remove transformer after editing
+        this.selectedId = null;
+        this.canvasService.setSelectedElementId(null);
+        if (this.transformers[pageIndex]) {
+          this.transformers[pageIndex].nodes([]);
+        }
+        this.shapeToolbarVisible = false;
+
+        removeTextarea();
+        this.editingTextId = null;
+        // Only redraw the relevant layer instead of reinitializing all canvases
+        const layer = this.layers[pageIndex];
+        if (layer) {
+          layer.batchDraw();
+          // LOGGING: Layer state after redraw
+          const childrenCount = layer.getChildren().length;
+          console.log('[Text Edit] Layer children after batchDraw:', childrenCount, layer.getChildren());
+          // Fallback: If layer is empty, force reload elements for page
+          if (childrenCount === 0) {
+            console.warn('[Text Edit] Layer is empty after text edit, forcing reload of elements for page', pageIndex);
+            this.loadElementsForPage(pageIndex);
+          }
+        } else {
+          console.error('[Text Edit] No layer found for page', pageIndex);
+        }
+        // LOGGING: End
+      };
+      textarea.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          finish();
+        } else if (e.key === 'Escape') {
           removeTextarea();
-          this.editingTextId = null;
-          setTimeout(() => this.initAllCanvases());
-        };
-        textarea.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            finish();
-          } else if (e.key === 'Escape') {
-            removeTextarea();
-            this.canvasService.setSelectedElementId(null);
+          this.canvasService.setSelectedElementId(null);
           }
         });
         textarea.addEventListener('blur', () => setTimeout(finish, 100));
