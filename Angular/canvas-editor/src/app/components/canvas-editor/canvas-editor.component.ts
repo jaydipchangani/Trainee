@@ -429,6 +429,27 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         anchorShadowOpacity: 0.3,
         // Add boundBoxFunc to handle line shapes better
         boundBoxFunc: (oldBox, newBox) => {
+          // Custom boundBoxFunc for images: enforce max/min size and boundary checks
+          const nodes = transformer.nodes();
+          if (nodes.length === 1 && nodes[0] instanceof Konva.Image) {
+            const stage = transformer.getStage();
+            if (!stage) return oldBox;
+            const canvasW = stage.width();
+            const canvasH = stage.height();
+            // Max image size: 3x canvas, min image size: 10x10 px
+            const maxW = canvasW * 3;
+            const maxH = canvasH * 3;
+            const minW = 10;
+            const minH = 10;
+            let { x, y, width, height } = newBox;
+            // Clamp width/height
+            width = Math.max(minW, Math.min(maxW, width));
+            height = Math.max(minH, Math.min(maxH, height));
+            // Clamp position (optional: allow overflow, or clamp to canvas)
+            //x = Math.max(0, Math.min(canvasW - width, x));
+            //y = Math.max(0, Math.min(canvasH - height, y));
+            return { x, y, width, height, rotation: newBox.rotation };
+          }
           // For line shapes, allow any transformation
           return newBox;
         }
@@ -976,6 +997,32 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         this.selectedPageIndex = pageIndex;
       });
+      // Defensive: Clamp size on transformend (in case of direct API manipulation)
+      node.on('transformend', () => {
+        const n = node;
+        if (!n) return;
+        const stage = n.getStage();
+        if (!stage) return;
+        const canvasW = stage.width();
+        const canvasH = stage.height();
+        const maxW = canvasW * 3;
+        const maxH = canvasH * 3;
+        const minW = 10;
+        const minH = 10;
+        let width = n.width() * n.scaleX();
+        let height = n.height() * n.scaleY();
+        let scaleX = n.scaleX();
+        let scaleY = n.scaleY();
+        // Clamp width/height
+        if (n.width() !== 0 && width > maxW) { scaleX = maxW / n.width(); }
+        if (n.height() !== 0 && height > maxH) { scaleY = maxH / n.height(); }
+        if (n.width() !== 0 && width < minW) { scaleX = minW / n.width(); }
+        if (n.height() !== 0 && height < minH) { scaleY = minH / n.height(); }
+        n.scaleX(scaleX);
+        n.scaleY(scaleY);
+        const layer = n.getLayer();
+        if (layer) layer.batchDraw();
+      });
     } else {
       return null;
     }
@@ -983,7 +1030,8 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (!node) return null;
     node.on('transformend', () => {
-      const n = node!;
+      if (!node) return;
+      const n = node;
       // For images and videos, update width/height and reset scale
       if (element.type === 'image' || element.type === 'video') {
         const width = n.width() * n.scaleX();
@@ -1007,7 +1055,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
             rotation: n.rotation()
           }, pageIndex);
         }
-      }else if (element.type === 'circle') {
+      } else if (element.type === 'circle') {
         // For circles, convert center coordinates to top-left corner
         const circleNode = n as Konva.Circle;
         const radius = Math.max(1, circleNode.radius() * n.scaleX());
@@ -1377,6 +1425,31 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         rotation: element.rotation,
         draggable: element.locked !== true,
         visible: element.visible !== false
+      });
+      // Defensive: Clamp size on transformend (in case of direct API manipulation)
+      konvaNode.on('transformend', () => {
+        if (!konvaNode) return;
+        const stage = konvaNode.getStage();
+        if (!stage) return;
+        const canvasW = stage.width();
+        const canvasH = stage.height();
+        const maxW = canvasW * 3;
+        const maxH = canvasH * 3;
+        const minW = 10;
+        const minH = 10;
+        let width = konvaNode.width() * konvaNode.scaleX();
+        let height = konvaNode.height() * konvaNode.scaleY();
+        let scaleX = konvaNode.scaleX();
+        let scaleY = konvaNode.scaleY();
+        // Clamp width/height
+        if (konvaNode.width() !== 0 && width > maxW) { scaleX = maxW / konvaNode.width(); }
+        if (konvaNode.height() !== 0 && height > maxH) { scaleY = maxH / konvaNode.height(); }
+        if (konvaNode.width() !== 0 && width < minW) { scaleX = minW / konvaNode.width(); }
+        if (konvaNode.height() !== 0 && height < minH) { scaleY = minH / konvaNode.height(); }
+        konvaNode.scaleX(scaleX);
+        konvaNode.scaleY(scaleY);
+        const layer = konvaNode.getLayer();
+        if (layer) layer.batchDraw();
       });
     } else if (element.type === 'video') {
       const video = document.createElement('video');
