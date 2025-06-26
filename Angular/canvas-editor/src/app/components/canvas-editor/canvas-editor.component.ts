@@ -798,101 +798,36 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       });
       group.add(background);
       group.add(line);
-      // --- Endpoint handles ---
-      const origPoints = element.points || [0, 0, 100, 0];
-      const handle1 = new Konva.Circle({
-        x: origPoints[0],
-        y: origPoints[1],
-        radius: 7,
-        fill: '#1976d2',
-        stroke: '#fff',
-        strokeWidth: 2,
-        draggable: true,
-        visible: this.selectedId === element.id
-      });
-      const handle2 = new Konva.Circle({
-        x: origPoints[2],
-        y: origPoints[3],
-        radius: 7,
-        fill: '#1976d2',
-        stroke: '#fff',
-        strokeWidth: 2,
-        draggable: true,
-        visible: this.selectedId === element.id
-      });
-      // Drag logic for handle1
-      handle1.on('dragmove', () => {
-        const newX = handle1.x();
-        const newY = handle1.y();
-        const newPoints = [newX, newY, origPoints[2], origPoints[3]];
-        this.updateElementDataOnly(element.id, {
-          points: newPoints
-        }, pageIndex);
-        // Redraw line and handle2
-        const newDisplayPoints = isArrow ? this.getArrowDisplayPoints(newPoints) : newPoints;
-        line.points(newDisplayPoints);
-        handle2.x(newPoints[2]);
-        handle2.y(newPoints[3]);
-        handle1.x(newPoints[0]);
-        handle1.y(newPoints[1]);
-        const newBbox = this.getPointsBoundingBox(newDisplayPoints);
-        background.x(newBbox.minX);
-        background.y(newBbox.minY);
-        background.width(newBbox.maxX - newBbox.minX || 10);
-        background.height(newBbox.maxY - newBbox.minY || 10);
-      });
-      // Drag logic for handle2
-      handle2.on('dragmove', () => {
-        const newX = handle2.x();
-        const newY = handle2.y();
-        const newPoints = [origPoints[0], origPoints[1], newX, newY];
-        this.updateElementDataOnly(element.id, {
-          points: newPoints
-        }, pageIndex);
-        // Redraw line and handle1
-        const newDisplayPoints = isArrow ? this.getArrowDisplayPoints(newPoints) : newPoints;
-        line.points(newDisplayPoints);
-        handle1.x(newPoints[0]);
-        handle1.y(newPoints[1]);
-        handle2.x(newPoints[2]);
-        handle2.y(newPoints[3]);
-        const newBbox = this.getPointsBoundingBox(newDisplayPoints);
-        background.x(newBbox.minX);
-        background.y(newBbox.minY);
-        background.width(newBbox.maxX - newBbox.minX || 10);
-        background.height(newBbox.maxY - newBbox.minY || 10);
-      });
-      // Show/hide handles on selection
+      // No custom endpoint handles for lines/arrows. Only transformer anchors will be shown.
+      node = group;
+      // Attach transformer on click/select
       group.on('click', () => {
-        // Don't select if element is locked
         if (element.locked === true) return;
-        
         this.selectedId = element.id;
         this.canvasService.setSelectedElementId(element.id);
-        handle1.visible(true);
-        handle2.visible(true);
-        this.shapeToolbarElement = { ...element };
-        this.shapeToolbarVisible = true;
+        // Attach transformer to this group
+        const transformer = this.transformers[pageIndex];
+        if (transformer && group) {
+          transformer.nodes([group]);
+          this.layers[pageIndex].add(transformer);
+          this.layers[pageIndex].draw();
+        }
         this.selectedPageIndex = pageIndex;
-        group.getLayer()?.draw();
       });
       group.on('mousedown touchstart', (e) => {
-        // Don't select if element is locked
         if (element.locked === true) return;
-        
         e.cancelBubble = true;
         this.selectedId = element.id;
         this.canvasService.setSelectedElementId(element.id);
-        handle1.visible(true);
-        handle2.visible(true);
-        this.shapeToolbarElement = { ...element };
-        this.shapeToolbarVisible = true;
+        // Attach transformer to this group
+        const transformer = this.transformers[pageIndex];
+        if (transformer && group) {
+          transformer.nodes([group]);
+          this.layers[pageIndex].add(transformer);
+          this.layers[pageIndex].draw();
+        }
         this.selectedPageIndex = pageIndex;
-        group.getLayer()?.draw();
       });
-      node = group;
-      group.add(handle1);
-      group.add(handle2);
     } else if (element.type === 'semicircle') {
       // Create semicircle using Konva.Arc
       const radius = (element.width || 100) / 2;
@@ -1139,48 +1074,51 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
           }, pageIndex);
         }
       } else if (element.type === 'line' || element.type === 'arrow') {
-        // For line-based shapes, handle scaling and position changes
         const originalPoints = element.points || [];
         const scaleX = n.scaleX();
         const scaleY = n.scaleY();
-        
-        // Scale the points based on the transformation
-        const newPoints = originalPoints.map((point, index) => {
-          if (index % 2 === 0) {
-            return point * scaleX; // x coordinate
-      } else {
-            return point * scaleY; // y coordinate
-          }
-        });
-        
-        // Reset scale and update position
-        n.scaleX(1);
-        n.scaleY(1);
-        
-        // Only update if something actually changed
-        if (
-          scaleX !== element.scaleX ||
-          scaleY !== element.scaleY ||
-          n.rotation() !== element.rotation
-        ) {
-          this.updateElementDataOnly(element.id, {
-            scaleX,
-            scaleY,
-            points: newPoints,
-            rotation: n.rotation()
-          }, pageIndex);
+
+        // 1. Scale points
+        let scaledPoints = originalPoints.map((point, idx) => idx % 2 === 0 ? point * scaleX : point * scaleY);
+
+        // 2. Calculate new bounding box
+        let minX = Infinity, minY = Infinity;
+        for (let i = 0; i < scaledPoints.length; i += 2) {
+          minX = Math.min(minX, scaledPoints[i]);
+          minY = Math.min(minY, scaledPoints[i + 1]);
         }
 
-        // Update the visual representation directly without triggering reloads
+        // 3. Shift points so that top-left of bounding box is at (0,0)
+        const shiftedPoints = scaledPoints.map((point, idx) => idx % 2 === 0 ? point - minX : point - minY);
+
+        // 4. Get the group's absolute position BEFORE transform
+        const absBefore = n.getAbsolutePosition();
+
+        // 5. Calculate new group position: move by the delta of the bounding box
+        const newAbs = { x: absBefore.x + minX, y: absBefore.y + minY };
+        n.setAbsolutePosition(newAbs);
+
+        // 6. Reset scale
+        n.scaleX(1);
+        n.scaleY(1);
+
+        // 7. Update data model: pass normalized points and new group position
+        this.updateElementDataOnly(element.id, {
+          x: newAbs.x,
+          y: newAbs.y,
+          points: shiftedPoints,
+          rotation: n.rotation(),
+          scaleX: 1,
+          scaleY: 1
+        }, pageIndex);
+
+        // 8. Update visual
         const layer = this.layers[pageIndex];
         if (layer) {
           const groupNode = layer.findOne(`#${element.id}`) as Konva.Group;
           if (groupNode) {
-            // Update the line within the group
             const line = groupNode.findOne('Line') as Konva.Line;
-            if (line) {
-              line.points(newPoints);
-            }
+            if (line) line.points(shiftedPoints);
             layer.draw();
           }
         }
@@ -1267,24 +1205,10 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         const y = n.y() - outerRadius;
         this.updateElementDataOnly(element.id, { x, y }, pageIndex);
       } else if (element.type === 'line' || element.type === 'arrow') {
-        // For line-based shapes, update the points array based on the new position
-        const originalPoints = element.points || [];
-        const deltaX = n.x() - element.x;
-        const deltaY = n.y() - element.y;
-        
-        // Update all points by the delta
-        const newPoints = originalPoints.map((point, index) => {
-          if (index % 2 === 0) {
-            return point + deltaX; // x coordinate
-          } else {
-            return point + deltaY; // y coordinate
-          }
-        });
-        
+        // For line/arrow, after drag, only update group position, keep points unchanged
         this.updateElementDataOnly(element.id, {
           x: n.x(),
-          y: n.y(),
-          points: newPoints
+          y: n.y()
         }, pageIndex);
       } else if (element.type === 'semicircle') {
         // For semicircles, convert center coordinates to top-left corner
@@ -2193,13 +2117,17 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!page) return; // <-- Prevents updating a non-existent page
     const element = page.elements.find(e => e.id === id);
     if (!element) return; // <-- Prevents updating a non-existent element
-  
+
     if ((element.type === 'line' || element.type === 'arrow') && updates.points) {
       const bbox = this.getPointsBoundingBox(updates.points);
-      updates.x = bbox.minX;
-      updates.y = bbox.minY;
-      updates.width = bbox.maxX - bbox.minX;
-      updates.height = bbox.maxY - bbox.minY;
+      // Only renormalize if points are not already at (0,0)
+      if (!(bbox.minX === 0 && bbox.minY === 0)) {
+        updates.x = bbox.minX;
+        updates.y = bbox.minY;
+        updates.width = bbox.maxX - bbox.minX;
+        updates.height = bbox.maxY - bbox.minY;
+      }
+      // If points are already normalized (minX/minY == 0), don't update x/y
     }
     this.canvasService.switchPage(pageIndex);
     this.canvasService.updateElement(id, updates);
