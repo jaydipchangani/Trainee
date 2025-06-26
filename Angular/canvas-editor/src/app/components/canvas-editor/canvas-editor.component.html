@@ -90,6 +90,10 @@
         Save Template
       </button>
     </div>
+    <button style="margin-left: 10px; background: #4caf50; color: #fff; border: none; padding: 8px 14px; border-radius: 4px; font-weight: 500; cursor: pointer;" (click)="showAddHtmlModal = true">
+      <mat-icon style="vertical-align: middle; margin-right: 6px;">code</mat-icon>
+      Add to HTML
+    </button>
   </div>
 
   <div class="workspace" [style.marginLeft.px]="isSidebarOpen ? 240 : 72">
@@ -221,28 +225,20 @@
     </div>
   </div>
 
-    <!-- Add Text Modal 
-  <div class="modal" *ngIf="showAddTextModal">
-    <div class="modal-content">
-      <h2>Add Text</h2>
-      <div class="form-group">
-        <label>Text:</label>
-        <input type="text" [(ngModel)]="newText" placeholder="Enter text">
-      </div>
-      <div class="form-group">
-        <label>Font Size:</label>
-        <input type="number" [(ngModel)]="fontSize" min="8" max="72">
-      </div>
-      <div class="form-group">
-        <label>Color:</label>
-        <input type="color" [(ngModel)]="textColor">
-      </div>
-      <div class="modal-actions">
-        <button (click)="addText()">Add</button>
-        <button (click)="showAddTextModal = false">Cancel</button>
+    <!-- Add HTML Modal -->
+    <div class="modal" *ngIf="showAddHtmlModal">
+      <div class="modal-content">
+        <h2>Add HTML</h2>
+        <div class="form-group">
+          <label>Paste or type HTML:</label>
+          <textarea [(ngModel)]="htmlInput" rows="7" placeholder="&lt;h1&gt;Heading&lt;/h1&gt;\n&lt;p&gt;Paragraph&lt;/p&gt;\n&lt;div style='background:yellow'&gt;Box&lt;/div&gt;" style="width:100%; font-family:monospace; font-size:15px; padding:8px; border-radius:4px; border:1px solid #ccc;"></textarea>
+        </div>
+        <div class="modal-actions">
+          <button (click)="addHtmlToCanvas()">Add</button>
+          <button (click)="showAddHtmlModal = false; htmlInput = ''">Cancel</button>
+        </div>
       </div>
     </div>
-  </div> -->
 
   <!-- Add Image Modal -->
   <div class="modal" *ngIf="showAddImageModal">

@@ -5,11 +5,14 @@ import Konva from 'konva';
 import { TemplateService, CanvasTemplate } from '../../services/template.service';
 import { FileUploadService, UploadedFile } from '../../services/file-upload.service';
 
+import { htmlToCanvasElements } from './html-to-canvas.util';
+
 @Component({
   selector: 'app-canvas-editor',
   templateUrl: './canvas-editor.component.html',
   styleUrls: ['./canvas-editor.component.scss']
 })
+
 export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   // --- Live Thumbnail Previews ---
   public pageThumbnails: string[] = [];
@@ -163,6 +166,54 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   newTemplatePreviewUrl = '';
   userTemplates: CanvasTemplate[] = [];
   allTemplates: CanvasTemplate[] = [];
+
+  // --- Add to HTML Modal State ---
+showAddHtmlModal = false;
+htmlInput = '';
+
+/**
+ * Parse the HTML input, convert to CanvasElements, add to current page, and update the canvas layer.
+ * Ensures new elements are interactive and styled, without reinitializing the whole canvas.
+ */
+addHtmlToCanvas() {
+  if (!this.htmlInput.trim()) {
+    alert('Please enter some HTML.');
+    return;
+  }
+  try {
+    // Parse HTML to CanvasElement objects
+    const newElements = htmlToCanvasElements(this.htmlInput);
+    if (!newElements.length) {
+      alert('No valid elements were found in the HTML input.');
+      return;
+    }
+    // Assign unique zIndex and IDs, and add to current page
+    const currentPage = this.pages[this.selectedPageIndex];
+    let baseZ = currentPage.elements.length;
+    newElements.forEach((el, idx) => {
+      el.id = Date.now().toString() + Math.random();
+      el.zIndex = baseZ + idx;
+      el.locked = false;
+      el.visible = true;
+      // Optionally: ensure all required properties for interactivity
+    });
+    // Add new elements to the page
+    currentPage.elements.push(...newElements);
+    // Persist the update via the service
+    this.canvasService.updatePageElements(this.selectedPageIndex, currentPage.elements);
+    // Redraw only the relevant layer
+    this.loadElementsForPage(this.selectedPageIndex);
+    // Hide modal and clear input
+    this.showAddHtmlModal = false;
+    this.htmlInput = '';
+  }catch (error) {
+  if (error instanceof Error) {
+    console.log(error.message);
+  } else {
+    console.log(error);
+  }
+}
+}
 
   currentAppliedTemplate: CanvasTemplate | null = null;
   pendingTemplateForNewPage: boolean = false;
