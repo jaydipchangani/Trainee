@@ -456,14 +456,58 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       });
       
       // Add transform event handler to the transformer
-      transformer.on('transform', () => {
-        const nodes = transformer.nodes();
-        if (nodes.length > 0) {
-          const node = nodes[0];
-          // Force update the transformer
-          transformer.forceUpdate();
-        }
+      // --- Show rotation angle during rotation ---
+let rotationAngleText: Konva.Text | null = null;
+
+transformer.on('transform', () => {
+  const nodes = transformer.nodes();
+  if (nodes.length > 0) {
+    const node = nodes[0];
+    transformer.forceUpdate();
+
+    // Get current rotation in degrees
+    const rotation = node.rotation();
+    const angle = Math.round(rotation);
+
+    // Determine position for the angle label (above the element)
+    const absPos = node.getAbsolutePosition();
+    const width = node.width ? node.width() * (node.scaleX ? node.scaleX() : 1) : 0;
+    const x = absPos.x + width / 2;
+    const y = absPos.y - 30; // 30px above the element
+
+    // Create or update the Konva.Text node
+    if (!rotationAngleText) {
+      rotationAngleText = new Konva.Text({
+        text: `${angle}°`,
+        x: x,
+        y: y,
+        fontSize: 18,
+        fontFamily: 'Arial',
+        fill: '#787878',
+        padding: 4,
+        align: 'center',
+        listening: false,
+        name: 'rotation-angle-label',
       });
+      layer.add(rotationAngleText);
+    } else {
+      rotationAngleText.text(`${angle}°`);
+      rotationAngleText.x(x);
+      rotationAngleText.y(y);
+    }
+    rotationAngleText.moveToTop();
+    layer.batchDraw();
+  }
+});
+
+// Remove the angle label after rotation ends
+transformer.on('transformend', () => {
+  if (rotationAngleText && rotationAngleText.getLayer()) {
+    rotationAngleText.destroy();
+    rotationAngleText = null;
+    layer.batchDraw();
+  }
+});
       
       layer.add(transformer);
       this.stages[i] = stage;
@@ -773,6 +817,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       }
       const bbox = this.getPointsBoundingBox(displayPoints);
       const group = new Konva.Group({
+        rotation: element.rotation || 0,
         id: element.id,
         x: element.x || 0,
         y: element.y || 0,
@@ -792,7 +837,6 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         stroke: element.stroke || '#000000',
         strokeWidth: Math.max(3, element.strokeWidth || 3),
         opacity: element.opacity || 1,
-        rotation: element.rotation || 0,
         lineCap: 'round',
         lineJoin: 'round'
       });
@@ -1074,50 +1118,59 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
           }, pageIndex);
         }
       } else if (element.type === 'line' || element.type === 'arrow') {
+        // Normalize and update points, but unify the transformend logic to match other shapes
+        const group = n as Konva.Group;
         const originalPoints = element.points || [];
-        const scaleX = n.scaleX();
-        const scaleY = n.scaleY();
-        const groupRotation = n.rotation() || 0;
-        const theta = (groupRotation * Math.PI) / 180;
-        // 1. Unrotate points to local (unrotated) space
+        const scaleX = group.scaleX();
+        const scaleY = group.scaleY();
+        const rotation = group.rotation() || 0;
+
+        // Find minX/minY for normalization
         let minX = Infinity, minY = Infinity;
         for (let i = 0; i < originalPoints.length; i += 2) {
           minX = Math.min(minX, originalPoints[i]);
           minY = Math.min(minY, originalPoints[i + 1]);
         }
+        // Normalize points to (0,0)
         const normalizedPoints = originalPoints.map((point, idx) => idx % 2 === 0 ? point - minX : point - minY);
-        // 2. Scale points (no rotation math)
+        // Apply scaling
         const scaledPoints = normalizedPoints.map((point, idx) => idx % 2 === 0 ? point * scaleX : point * scaleY);
-        // 3. Calculate new bounding box for scaled points
+        // Find new minX/minY for scaled points
         let newMinX = Infinity, newMinY = Infinity;
         for (let i = 0; i < scaledPoints.length; i += 2) {
           newMinX = Math.min(newMinX, scaledPoints[i]);
           newMinY = Math.min(newMinY, scaledPoints[i + 1]);
         }
-        // 4. Shift points to (0,0)
+        // Shift scaled points to (0,0)
         const shiftedPoints = scaledPoints.map((point, idx) => idx % 2 === 0 ? point - newMinX : point - newMinY);
-        // 5. Get group's absolute position BEFORE transform
-        const absBefore = n.getAbsolutePosition();
-        // 6. Calculate new group position: move by delta of bounding box, apply group rotation to delta
-        const rotation = n.rotation() || 0;
+
+        // Calculate new absolute position (like other shapes)
+        const absPos = group.getAbsolutePosition();
         const rad = (rotation * Math.PI) / 180;
         const rotatedDeltaX = newMinX * Math.cos(rad) - newMinY * Math.sin(rad);
         const rotatedDeltaY = newMinX * Math.sin(rad) + newMinY * Math.cos(rad);
-        const newAbs = { x: absBefore.x + rotatedDeltaX, y: absBefore.y + rotatedDeltaY };
-        n.setAbsolutePosition(newAbs);
-        // 7. Reset scale
-        n.scaleX(1);
-        n.scaleY(1);
-        // 8. Update data model: store points (unrotated), group rotation
-        this.updateElementDataOnly(element.id, {
-          x: newAbs.x,
-          y: newAbs.y,
-          points: shiftedPoints,
-          rotation: n.rotation(),
-          scaleX: 1,
-          scaleY: 1
-        }, pageIndex);
-        // 9. Update visual
+        const newAbs = { x: absPos.x + rotatedDeltaX, y: absPos.y + rotatedDeltaY };
+
+        // Reset scale
+        group.scaleX(1);
+        group.scaleY(1);
+
+        // Only update if something actually changed
+        if (
+          newAbs.x !== element.x ||
+          newAbs.y !== element.y ||
+          rotation !== element.rotation ||
+          JSON.stringify(shiftedPoints) !== JSON.stringify(originalPoints)
+        ) {
+          this.updateElementDataOnly(element.id, {
+            x: newAbs.x,
+            y: newAbs.y,
+            points: shiftedPoints,
+            rotation: rotation
+          }, pageIndex);
+        }
+
+        // Update visual points
         const layer = this.layers[pageIndex];
         if (layer) {
           const groupNode = layer.findOne(`#${element.id}`) as Konva.Group;
