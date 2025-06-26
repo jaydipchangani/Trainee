@@ -790,7 +790,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       const line = new Konva.Line({
         points: displayPoints,
         stroke: element.stroke || '#000000',
-        strokeWidth: element.strokeWidth || 2,
+        strokeWidth: Math.max(3, element.strokeWidth || 3),
         opacity: element.opacity || 1,
         rotation: element.rotation || 0,
         lineCap: 'round',
@@ -1077,32 +1077,38 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         const originalPoints = element.points || [];
         const scaleX = n.scaleX();
         const scaleY = n.scaleY();
-
-        // 1. Scale points
-        let scaledPoints = originalPoints.map((point, idx) => idx % 2 === 0 ? point * scaleX : point * scaleY);
-
-        // 2. Calculate new bounding box
+        const groupRotation = n.rotation() || 0;
+        const theta = (groupRotation * Math.PI) / 180;
+        // 1. Unrotate points to local (unrotated) space
         let minX = Infinity, minY = Infinity;
-        for (let i = 0; i < scaledPoints.length; i += 2) {
-          minX = Math.min(minX, scaledPoints[i]);
-          minY = Math.min(minY, scaledPoints[i + 1]);
+        for (let i = 0; i < originalPoints.length; i += 2) {
+          minX = Math.min(minX, originalPoints[i]);
+          minY = Math.min(minY, originalPoints[i + 1]);
         }
-
-        // 3. Shift points so that top-left of bounding box is at (0,0)
-        const shiftedPoints = scaledPoints.map((point, idx) => idx % 2 === 0 ? point - minX : point - minY);
-
-        // 4. Get the group's absolute position BEFORE transform
+        const normalizedPoints = originalPoints.map((point, idx) => idx % 2 === 0 ? point - minX : point - minY);
+        // 2. Scale points (no rotation math)
+        const scaledPoints = normalizedPoints.map((point, idx) => idx % 2 === 0 ? point * scaleX : point * scaleY);
+        // 3. Calculate new bounding box for scaled points
+        let newMinX = Infinity, newMinY = Infinity;
+        for (let i = 0; i < scaledPoints.length; i += 2) {
+          newMinX = Math.min(newMinX, scaledPoints[i]);
+          newMinY = Math.min(newMinY, scaledPoints[i + 1]);
+        }
+        // 4. Shift points to (0,0)
+        const shiftedPoints = scaledPoints.map((point, idx) => idx % 2 === 0 ? point - newMinX : point - newMinY);
+        // 5. Get group's absolute position BEFORE transform
         const absBefore = n.getAbsolutePosition();
-
-        // 5. Calculate new group position: move by the delta of the bounding box
-        const newAbs = { x: absBefore.x + minX, y: absBefore.y + minY };
+        // 6. Calculate new group position: move by delta of bounding box, apply group rotation to delta
+        const rotation = n.rotation() || 0;
+        const rad = (rotation * Math.PI) / 180;
+        const rotatedDeltaX = newMinX * Math.cos(rad) - newMinY * Math.sin(rad);
+        const rotatedDeltaY = newMinX * Math.sin(rad) + newMinY * Math.cos(rad);
+        const newAbs = { x: absBefore.x + rotatedDeltaX, y: absBefore.y + rotatedDeltaY };
         n.setAbsolutePosition(newAbs);
-
-        // 6. Reset scale
+        // 7. Reset scale
         n.scaleX(1);
         n.scaleY(1);
-
-        // 7. Update data model: pass normalized points and new group position
+        // 8. Update data model: store points (unrotated), group rotation
         this.updateElementDataOnly(element.id, {
           x: newAbs.x,
           y: newAbs.y,
@@ -1111,8 +1117,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
           scaleX: 1,
           scaleY: 1
         }, pageIndex);
-
-        // 8. Update visual
+        // 9. Update visual
         const layer = this.layers[pageIndex];
         if (layer) {
           const groupNode = layer.findOne(`#${element.id}`) as Konva.Group;
@@ -1198,7 +1203,7 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         const y = n.y() - radiusY;
         this.updateElementDataOnly(element.id, { x, y }, pageIndex);
       } else if (element.type === 'star') {
-        // For stars, convert center coordinates to top-left corner
+        // For stars, convert center coordinates to top-left corne  r
         const starNode = n as Konva.Star;
         const outerRadius = starNode.outerRadius();
         const x = n.x() - outerRadius;
@@ -1791,6 +1796,12 @@ export class CanvasEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateShapeElement(updates: Partial<CanvasElement>) {
+    // If updating strokeWidth for line/arrow, clamp to minimum 3
+    if (this.shapeToolbarElement && (this.shapeToolbarElement.type === 'line' || this.shapeToolbarElement.type === 'arrow')) {
+      if (updates.strokeWidth !== undefined) {
+        updates.strokeWidth = Math.max(3, updates.strokeWidth);
+      }
+    }
     if (this.shapeToolbarElement) {
       this.canvasService.updateElement(this.shapeToolbarElement.id, updates);
       // Update local toolbar state for instant UI feedback
